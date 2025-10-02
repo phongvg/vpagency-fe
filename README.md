@@ -1,5 +1,5 @@
 ```markdown
-# Tổng quan hệ thống (từ ảnh)
+# Tổng quan hệ thống
 
 Tệp này tóm tắt các chức năng chính của hệ thống, mục đích, và các đối tượng (roles) sẽ sử dụng hệ thống, dựa trên bức ảnh tổng quan bạn cung cấp.
 
