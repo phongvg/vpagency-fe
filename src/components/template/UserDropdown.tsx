@@ -6,7 +6,6 @@ import { useAppSelector } from '@/store'
 import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 import { HiOutlineUser, HiOutlineCog, HiOutlineLogout } from 'react-icons/hi'
-import { FiActivity } from 'react-icons/fi'
 import type { CommonProps } from '@/@types/common'
 
 type DropdownList = {
@@ -17,19 +16,14 @@ type DropdownList = {
 
 const dropdownItemList: DropdownList[] = [
   {
-    label: 'Profile',
+    label: 'Thông tin cá nhân',
     path: '/app/account/settings/profile',
     icon: <HiOutlineUser />,
   },
   {
-    label: 'Account Setting',
+    label: 'Cài đặt tài khoản',
     path: '/app/account/settings/profile',
     icon: <HiOutlineCog />,
-  },
-  {
-    label: 'Activity Log',
-    path: '/app/account/activity-log',
-    icon: <FiActivity />,
   },
 ]
 
@@ -58,7 +52,7 @@ const _UserDropdown = ({ className }: CommonProps) => {
         placement="bottom-end"
       >
         <Dropdown.Item variant="header">
-          <div className="py-2 px-3 flex items-center gap-2">
+          <div className="flex items-center gap-2 px-3 py-2">
             <Avatar shape="circle" src={avatar} />
             <div>
               <div className="font-bold text-gray-900 dark:text-gray-100">
@@ -75,9 +69,9 @@ const _UserDropdown = ({ className }: CommonProps) => {
             eventKey={item.label}
             className="mb-1 px-0"
           >
-            <Link className="flex h-full w-full px-2" to={item.path}>
-              <span className="flex gap-2 items-center w-full">
-                <span className="text-xl opacity-50">{item.icon}</span>
+            <Link className="flex px-2 w-full h-full" to={item.path}>
+              <span className="flex items-center gap-2 w-full">
+                <span className="opacity-50 text-xl">{item.icon}</span>
                 <span>{item.label}</span>
               </span>
             </Link>
@@ -85,10 +79,10 @@ const _UserDropdown = ({ className }: CommonProps) => {
         ))}
         <Dropdown.Item variant="divider" />
         <Dropdown.Item eventKey="Sign Out" className="gap-2" onClick={signOut}>
-          <span className="text-xl opacity-50">
+          <span className="opacity-50 text-xl">
             <HiOutlineLogout />
           </span>
-          <span>Sign Out</span>
+          <span>Đăng xuất</span>
         </Dropdown.Item>
       </Dropdown>
     </div>
