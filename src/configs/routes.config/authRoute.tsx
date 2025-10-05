@@ -1,28 +1,29 @@
 import { lazy } from 'react'
 import type { Routes } from '@/@types/routes'
+import { urlConfig } from '@/configs/urls.config'
 
 const authRoute: Routes = [
   {
     key: 'signIn',
-    path: `/sign-in`,
+    path: urlConfig.signIn,
     component: lazy(() => import('@/views/auth/SignIn')),
     authority: [],
   },
   {
     key: 'signUp',
-    path: `/sign-up`,
+    path: urlConfig.signUp,
     component: lazy(() => import('@/views/auth/SignUp')),
     authority: [],
   },
   {
     key: 'forgotPassword',
-    path: `/forgot-password/:aaaa`,
+    path: urlConfig.forgotPassword,
     component: lazy(() => import('@/views/auth/ForgotPassword')),
     authority: [],
   },
   {
     key: 'resetPassword',
-    path: `/reset-password`,
+    path: urlConfig.resetPassword,
     component: lazy(() => import('@/views/auth/ResetPassword')),
     authority: [],
   },

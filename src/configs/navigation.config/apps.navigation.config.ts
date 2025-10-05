@@ -1,4 +1,3 @@
-import { APP_PREFIX_PATH } from '@/constants/route.constant'
 import {
   NAV_ITEM_TYPE_TITLE,
   NAV_ITEM_TYPE_COLLAPSE,
@@ -6,6 +5,7 @@ import {
 } from '@/constants/navigation.constant'
 import { ADMIN, USER } from '@/constants/roles.constant'
 import type { NavigationTree } from '@/@types/navigation'
+import { urlConfig } from '@/configs/urls.config'
 
 const appsNavigationConfig: NavigationTree[] = [
   {
@@ -28,7 +28,7 @@ const appsNavigationConfig: NavigationTree[] = [
         subMenu: [
           {
             key: 'taskManagement.assign',
-            path: `${APP_PREFIX_PATH}/task/assign`,
+            path: urlConfig.taskAssign,
             title: 'Giao việc',
             translateKey: '',
             icon: '',
@@ -38,7 +38,7 @@ const appsNavigationConfig: NavigationTree[] = [
           },
           {
             key: 'taskManagement.receive',
-            path: `${APP_PREFIX_PATH}/task/receive`,
+            path: urlConfig.taskReceive,
             title: 'Nhận việc',
             translateKey: '',
             icon: '',
@@ -48,7 +48,7 @@ const appsNavigationConfig: NavigationTree[] = [
           },
           {
             key: 'taskManagement.report',
-            path: `${APP_PREFIX_PATH}/task/report`,
+            path: urlConfig.taskReport,
             title: 'Báo cáo MAR',
             translateKey: '',
             icon: '',
@@ -69,7 +69,7 @@ const appsNavigationConfig: NavigationTree[] = [
         subMenu: [
           {
             key: 'customer.list',
-            path: `${APP_PREFIX_PATH}/customer/list`,
+            path: urlConfig.customerList,
             title: 'Danh sách khách hàng',
             translateKey: '',
             icon: '',
@@ -79,7 +79,7 @@ const appsNavigationConfig: NavigationTree[] = [
           },
           {
             key: 'customer.update',
-            path: `${APP_PREFIX_PATH}/customer/update`,
+            path: urlConfig.customerUpdate,
             title: 'Cập nhật khách hàng',
             translateKey: '',
             icon: '',
@@ -100,7 +100,7 @@ const appsNavigationConfig: NavigationTree[] = [
         subMenu: [
           {
             key: 'finance.sales',
-            path: `${APP_PREFIX_PATH}/finance/sales`,
+            path: urlConfig.financeSales,
             title: 'Doanh số dự án',
             translateKey: '',
             icon: '',
@@ -110,7 +110,7 @@ const appsNavigationConfig: NavigationTree[] = [
           },
           {
             key: 'finance.report',
-            path: `${APP_PREFIX_PATH}/finance/report`,
+            path: urlConfig.financeReport,
             title: 'Thống kê',
             translateKey: '',
             icon: '',
@@ -131,7 +131,7 @@ const appsNavigationConfig: NavigationTree[] = [
         subMenu: [
           {
             key: 'system.accounts',
-            path: `${APP_PREFIX_PATH}/system/accounts`,
+            path: urlConfig.systemAccount,
             title: 'Quản lý tài khoản',
             translateKey: '',
             icon: '',
@@ -141,7 +141,7 @@ const appsNavigationConfig: NavigationTree[] = [
           },
           {
             key: 'system.permissions',
-            path: `${APP_PREFIX_PATH}/system/permissions`,
+            path: urlConfig.systemPermission,
             title: 'Phân quyền hệ thống',
             translateKey: '',
             icon: '',
@@ -151,7 +151,7 @@ const appsNavigationConfig: NavigationTree[] = [
           },
           {
             key: 'system.logs',
-            path: `${APP_PREFIX_PATH}/system/logs`,
+            path: urlConfig.systemLogs,
             title: 'Thông báo',
             translateKey: '',
             icon: '',
@@ -161,7 +161,7 @@ const appsNavigationConfig: NavigationTree[] = [
           },
           {
             key: 'system.settings',
-            path: `${APP_PREFIX_PATH}/system/settings`,
+            path: urlConfig.systemSettings,
             title: 'Cấu hình hệ thống',
             translateKey: '',
             icon: '',
@@ -182,7 +182,7 @@ const appsNavigationConfig: NavigationTree[] = [
         subMenu: [
           {
             key: 'staff.rankings',
-            path: `${APP_PREFIX_PATH}/staff/rankings`,
+            path: urlConfig.staffRanking,
             title: 'Bảng xếp hạng',
             translateKey: '',
             icon: '',

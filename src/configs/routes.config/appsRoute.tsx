@@ -1,12 +1,12 @@
 import { lazy } from 'react'
-import { APP_PREFIX_PATH } from '@/constants/route.constant'
 import { ADMIN, USER } from '@/constants/roles.constant'
 import type { Routes } from '@/@types/routes'
+import { urlConfig } from '@/configs/urls.config'
 
 const appsRoute: Routes = [
   {
     key: 'taskManagement.assign',
-    path: `${APP_PREFIX_PATH}/task/assign`,
+    path: urlConfig.taskAssign,
     component: lazy(() => import('@/views/taskManagement/AssignTask')),
     authority: [ADMIN, USER],
   },
