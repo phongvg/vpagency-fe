@@ -14,7 +14,7 @@ export const urlConfig = {
   systemAccount: `${APP_PREFIX_PATH}/system/account`,
   systemPermission: `${APP_PREFIX_PATH}/system/permission`,
   systemLogs: `${APP_PREFIX_PATH}/system/logs`,
-  systemSettings: `${APP_PREFIX_PATH}/system/settings`,
+  systemSetting: `${APP_PREFIX_PATH}/system/setting`,
 
   staffRanking: `${APP_PREFIX_PATH}/staff/ranking`,
 

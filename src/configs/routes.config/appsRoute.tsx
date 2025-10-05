@@ -5,9 +5,15 @@ import { urlConfig } from '@/configs/urls.config'
 
 const appsRoute: Routes = [
   {
-    key: 'taskManagement.assign',
+    key: 'task.assign',
     path: urlConfig.taskAssign,
-    component: lazy(() => import('@/views/taskManagement/AssignTask')),
+    component: lazy(() => import('@/views/task/assignTask')),
+    authority: [ADMIN, USER],
+  },
+  {
+    key: 'system.permission',
+    path: urlConfig.systemPermission,
+    component: lazy(() => import('@/views/system/permission')),
     authority: [ADMIN, USER],
   },
 ]

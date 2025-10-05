@@ -18,7 +18,7 @@ const appsNavigationConfig: NavigationTree[] = [
     authority: [ADMIN, USER],
     subMenu: [
       {
-        key: 'apps.taskManagement',
+        key: 'apps.task',
         path: '',
         title: 'Quản lý công việc',
         translateKey: '',
@@ -27,7 +27,7 @@ const appsNavigationConfig: NavigationTree[] = [
         authority: [ADMIN, USER],
         subMenu: [
           {
-            key: 'taskManagement.assign',
+            key: 'task.assign',
             path: urlConfig.taskAssign,
             title: 'Giao việc',
             translateKey: '',
@@ -37,7 +37,7 @@ const appsNavigationConfig: NavigationTree[] = [
             subMenu: [],
           },
           {
-            key: 'taskManagement.receive',
+            key: 'task.receive',
             path: urlConfig.taskReceive,
             title: 'Nhận việc',
             translateKey: '',
@@ -47,7 +47,7 @@ const appsNavigationConfig: NavigationTree[] = [
             subMenu: [],
           },
           {
-            key: 'taskManagement.report',
+            key: 'task.report',
             path: urlConfig.taskReport,
             title: 'Báo cáo MAR',
             translateKey: '',
@@ -130,7 +130,7 @@ const appsNavigationConfig: NavigationTree[] = [
         authority: [ADMIN, USER],
         subMenu: [
           {
-            key: 'system.accounts',
+            key: 'system.account',
             path: urlConfig.systemAccount,
             title: 'Quản lý tài khoản',
             translateKey: '',
@@ -140,7 +140,7 @@ const appsNavigationConfig: NavigationTree[] = [
             subMenu: [],
           },
           {
-            key: 'system.permissions',
+            key: 'system.permission',
             path: urlConfig.systemPermission,
             title: 'Phân quyền hệ thống',
             translateKey: '',
@@ -160,8 +160,8 @@ const appsNavigationConfig: NavigationTree[] = [
             subMenu: [],
           },
           {
-            key: 'system.settings',
-            path: urlConfig.systemSettings,
+            key: 'system.setting',
+            path: urlConfig.systemSetting,
             title: 'Cấu hình hệ thống',
             translateKey: '',
             icon: '',
