@@ -92,12 +92,24 @@ export default function UserManagementTable() {
       },
       {
         header: 'Ngày tạo',
-        accessorKey: 'lastOnline',
+        accessorKey: 'createdAt',
         cell: (props) => {
           const row = props.row.original
           return (
             <div className="flex items-center">
-              {dayjs(row.createdAt).format('MM/DD/YYYY HH:mm')}
+              {dayjs(row.createdAt).format('DD/MM/YYYY HH:mm')}
+            </div>
+          )
+        },
+      },
+      {
+        header: 'Ngày cập nhật',
+        accessorKey: 'updatedAt',
+        cell: (props) => {
+          const row = props.row.original
+          return (
+            <div className="flex items-center">
+              {dayjs(row.updatedAt).format('DD/MM/YYYY HH:mm')}
             </div>
           )
         },
