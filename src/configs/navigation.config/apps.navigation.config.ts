@@ -127,16 +127,16 @@ const appsNavigationConfig: NavigationTree[] = [
         translateKey: '',
         icon: 'settings',
         type: NAV_ITEM_TYPE_COLLAPSE,
-        authority: [ADMIN, USER],
+        authority: [ADMIN],
         subMenu: [
           {
-            key: 'system.account',
-            path: urlConfig.systemAccount,
+            key: 'system.userManagement',
+            path: urlConfig.systemUserManagement,
             title: 'Quản lý tài khoản',
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN, USER],
+            authority: [ADMIN],
             subMenu: [],
           },
           {
@@ -146,7 +146,7 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN, USER],
+            authority: [ADMIN],
             subMenu: [],
           },
           {
@@ -156,7 +156,7 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN, USER],
+            authority: [ADMIN],
             subMenu: [],
           },
           {
@@ -166,7 +166,7 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN, USER],
+            authority: [ADMIN],
             subMenu: [],
           },
         ],

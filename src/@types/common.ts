@@ -17,9 +17,38 @@ export type TableQueries = {
   }
 }
 
+export type Meta = {
+  page: number
+  limit: number
+  total: number
+  totalPages: number
+  hasNext: boolean
+  hasPrev: boolean
+}
+
 export type BaseResponse<T> = {
   success: boolean
   code?: string
   message?: string
   data: T
+}
+
+export type BaseListResponse<T> = {
+  success: boolean
+  code?: string
+  message?: string
+  data: {
+    data: T[]
+    meta: Meta
+  }
+}
+
+export type SortOrder = 'asc' | 'desc'
+
+export type CommonFilterRequest = {
+  page: number
+  limit: number
+  search: string
+  sortBy: string
+  sortOrder: SortOrder
 }

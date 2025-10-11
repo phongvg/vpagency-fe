@@ -1,3 +1,5 @@
+import { StatusEnum } from '@/enums/status.enum'
+
 export type User = {
   id: string
   username: string
@@ -7,12 +9,10 @@ export type User = {
   lastName: string | null
   avatar: string | null
   roles: string[]
-  status: string
+  status: StatusEnum
   createdAt: Date
   updatedAt: Date
 }
-
-export type UserInfoResponse = User
 
 export type UpdateUserInfoPayload = {
   username: string

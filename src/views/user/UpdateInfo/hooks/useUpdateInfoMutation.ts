@@ -10,7 +10,7 @@ export const useUpdateInfoMutation = () => {
   const navigate = useNavigate()
 
   return useMutation({
-    mutationFn: async (payload: UpdateUserInfoPayload) => {
+    mutationFn: async (payload: UpdateUserInfoPayload | FormData) => {
       const response = await apiUpdateUserInfo(payload)
       return response.data.data
     },

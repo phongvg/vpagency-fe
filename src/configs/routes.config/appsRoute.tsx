@@ -1,6 +1,7 @@
 import { lazy } from 'react'
 import type { Routes } from '@/@types/routes'
 import { urlConfig } from '@/configs/urls.config'
+import { ADMIN } from '@/constants/roles.constant'
 
 const appsRoute: Routes = [
   {
@@ -22,7 +23,16 @@ const appsRoute: Routes = [
     key: 'system.permission',
     path: urlConfig.systemPermission,
     component: lazy(() => import('@/views/system/permission')),
-    authority: [],
+    authority: [ADMIN],
+  },
+  {
+    key: 'system.userManagement',
+    path: urlConfig.systemUserManagement,
+    component: lazy(() => import('@/views/system/userManagement')),
+    authority: [ADMIN],
+    meta: {
+      header: 'Quản lý tài khoản',
+    },
   },
 ]
 

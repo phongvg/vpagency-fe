@@ -7,6 +7,7 @@ import Cookies from 'js-cookie'
 import appConfig from '@/configs/app.config'
 import { TOKEN_TYPE, REQUEST_HEADER_AUTH_KEY } from '@/constants/api.constant'
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/constants/app.constant'
+import { localStorageUtils } from '@/utils/storage'
 
 let isRefreshing = false
 let failedQueue: Array<{
@@ -64,6 +65,7 @@ BaseService.interceptors.response.use(
     ) {
       return Promise.reject(error)
     }
+
     if (originalRequest._retry) {
       return Promise.reject(error)
     }
@@ -95,7 +97,7 @@ BaseService.interceptors.response.use(
         throw new Error('Refresh token not found')
       }
 
-      const userId = localStorage.getItem('userId')
+      const userId = localStorageUtils.getItem('userId')
 
       if (!userId) {
         throw new Error('User id not found')
@@ -132,7 +134,7 @@ BaseService.interceptors.response.use(
       processQueue(refreshError as Error, null)
 
       localStorage.removeItem(ACCESS_TOKEN_KEY)
-      localStorage.removeItem('userId')
+      localStorageUtils.removeItem('userId')
       Cookies.remove(REFRESH_TOKEN_KEY)
 
       window.dispatchEvent(new Event('token-expired'))

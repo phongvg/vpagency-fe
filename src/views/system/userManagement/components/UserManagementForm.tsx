@@ -1,0 +1,108 @@
+import { User } from '@/@types/user'
+import { Avatar, FormContainer, FormItem, Input } from '@/components/ui'
+import { updateUserValidationSchema } from '@/views/system/userManagement/schemas/updateUser.schema'
+import { UpdateUserRequest } from '@/views/system/userManagement/types'
+import { Field, Form, Formik, FormikProps } from 'formik'
+import { forwardRef } from 'react'
+import { HiOutlineUser } from 'react-icons/hi'
+
+interface UserManagementFormProps {
+  user: User | null
+  onFormSubmit: (values: UpdateUserRequest) => void
+}
+
+export type FormikRef = FormikProps<UpdateUserRequest>
+
+const UserManagementForm = forwardRef<FormikRef, UserManagementFormProps>(
+  (props, ref) => {
+    const { user, onFormSubmit } = props
+
+    return (
+      <Formik<UpdateUserRequest>
+        innerRef={ref}
+        initialValues={{
+          username: user?.username || '',
+          firstName: user?.firstName || '',
+          lastName: user?.lastName || '',
+          email: user?.email || '',
+        }}
+        validationSchema={updateUserValidationSchema}
+        onSubmit={(values, { setSubmitting }) => {
+          onFormSubmit?.(values)
+          setSubmitting(false)
+        }}
+      >
+        {({ touched, errors }) => (
+          <div className="p-6">
+            <Form>
+              <FormContainer>
+                <div className="flex justify-center mb-8">
+                  <Avatar
+                    className="shadow-lg border-2"
+                    size={100}
+                    shape="circle"
+                    icon={<HiOutlineUser />}
+                    src={user?.avatar || ''}
+                  />
+                </div>
+                <FormItem label="Tên đăng nhập">
+                  <Field
+                    type="text"
+                    autoComplete="off"
+                    name="username"
+                    placeholder="Tên đăng nhập"
+                    component={Input}
+                    disabled
+                  />
+                </FormItem>
+                <FormItem
+                  label="Họ"
+                  invalid={errors.firstName && touched.firstName}
+                  errorMessage={errors.firstName}
+                >
+                  <Field
+                    type="text"
+                    autoComplete="off"
+                    name="firstName"
+                    placeholder="Họ"
+                    component={Input}
+                  />
+                </FormItem>
+                <FormItem
+                  label="Tên"
+                  invalid={errors.lastName && touched.lastName}
+                  errorMessage={errors.lastName}
+                >
+                  <Field
+                    type="text"
+                    autoComplete="off"
+                    name="lastName"
+                    placeholder="Tên"
+                    component={Input}
+                  />
+                </FormItem>
+                <FormItem
+                  label="Email"
+                  invalid={errors.email && touched.email}
+                  errorMessage={errors.email}
+                >
+                  <Field
+                    type="email"
+                    autoComplete="off"
+                    name="email"
+                    placeholder="Email"
+                    component={Input}
+                  />
+                </FormItem>
+              </FormContainer>
+            </Form>
+          </div>
+        )}
+      </Formik>
+    )
+  },
+)
+
+UserManagementForm.displayName = 'UserManagementForm'
+
+export default UserManagementForm

@@ -11,7 +11,7 @@ export const urlConfig = {
   financeSales: `${APP_PREFIX_PATH}/finance/sales`,
   financeReport: `${APP_PREFIX_PATH}/finance/report`,
 
-  systemAccount: `${APP_PREFIX_PATH}/system/account`,
+  systemUserManagement: `${APP_PREFIX_PATH}/system/user`,
   systemPermission: `${APP_PREFIX_PATH}/system/permission`,
   systemLogs: `${APP_PREFIX_PATH}/system/logs`,
   systemSetting: `${APP_PREFIX_PATH}/system/setting`,

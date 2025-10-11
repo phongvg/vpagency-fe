@@ -1,13 +1,12 @@
-import { useState } from 'react'
-import { CommonProps } from '@/@types/common'
-import { urlConfig } from '@/configs/urls.config'
+import { useState, useEffect } from 'react'
 import {
   Alert,
   Button,
-  Checkbox,
   FormContainer,
   FormItem,
   Input,
+  Upload,
+  Avatar,
 } from '@/components/ui'
 import { Field, Form, Formik } from 'formik'
 import { PasswordInput } from '@/components/shared'
@@ -15,11 +14,44 @@ import { UpdateUserInfoPayload } from '@/@types/user'
 import { updateInfoValidationSchema } from '@/views/user/UpdateInfo/schemas/updateInfo.schema'
 import { useUpdateInfoMutation } from '@/views/user/UpdateInfo/hooks/useUpdateInfoMutation'
 import { MESSAGES } from '@/constants/message.constant'
+import { HiOutlineUser } from 'react-icons/hi'
+import { toastError, toastSuccess } from '@/utils/toast'
 
 export default function UpdateInfoForm() {
   const [message, setMessage] = useState<string | null>(null)
+  const [avatarFile, setAvatarFile] = useState<File | null>(null)
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
 
   const updateInfoMutation = useUpdateInfoMutation()
+
+  useEffect(() => {
+    return () => {
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview)
+      }
+    }
+  }, [avatarPreview])
+
+  const handleAvatarChange = (files: File[]) => {
+    if (files.length > 0) {
+      const file = files[0]
+
+      if (file.size > 5 * 1024 * 1024) {
+        toastError('Kích thước file không được vượt quá 5MB')
+        return
+      }
+
+      if (!file.type.startsWith('image/')) {
+        toastError('Chỉ chấp nhận file ảnh (JPG, PNG, GIF)')
+        return
+      }
+
+      setAvatarFile(file)
+
+      const previewUrl = URL.createObjectURL(file)
+      setAvatarPreview(previewUrl)
+    }
+  }
 
   const handleSubmit = async (
     values: UpdateUserInfoPayload,
@@ -27,7 +59,24 @@ export default function UpdateInfoForm() {
   ) => {
     setSubmitting(true)
 
-    updateInfoMutation.mutate(values, {
+    const formData = new FormData()
+
+    Object.keys(values).forEach((key) => {
+      const value = values[key as keyof UpdateUserInfoPayload]
+      if (value) {
+        formData.append(key, value)
+      }
+    })
+
+    if (avatarFile) {
+      formData.append('avatar', avatarFile)
+    }
+
+    updateInfoMutation.mutate(formData, {
+      onSuccess: () => {
+        toastSuccess('Cập nhật thông tin thành công!')
+        setMessage(null)
+      },
       onError: (error: any) => {
         const errorMessage =
           error?.response?.data?.message || MESSAGES.SOME_ERROR
@@ -61,6 +110,30 @@ export default function UpdateInfoForm() {
         {({ touched, errors, isSubmitting }) => (
           <Form>
             <FormContainer>
+              <FormItem label="Ảnh đại diện">
+                <div className="flex items-center space-x-4">
+                  <Avatar
+                    size={80}
+                    shape="circle"
+                    src={avatarPreview || undefined}
+                    icon={<HiOutlineUser />}
+                  />
+                  <Upload
+                    accept="image/*"
+                    multiple={false}
+                    onChange={handleAvatarChange}
+                    showList={false}
+                  >
+                    <Button type="button" size="sm" variant="twoTone">
+                      Chọn ảnh
+                    </Button>
+                  </Upload>
+                </div>
+                <p className="mt-2 text-gray-500 text-xs">
+                  Định dạng: JPG, PNG. Kích thước tối đa: 5MB
+                </p>
+              </FormItem>
+
               <FormItem
                 label="Tên đăng nhập"
                 invalid={(errors.username && touched.username) as boolean}
