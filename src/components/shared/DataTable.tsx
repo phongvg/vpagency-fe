@@ -133,7 +133,7 @@ function _DataTable<T>(
     () =>
       pageSizes.map((number) => ({
         value: number,
-        label: `${number} / page`,
+        label: number,
       })),
     [pageSizes],
   )
@@ -255,22 +255,12 @@ function _DataTable<T>(
                 return (
                   <Th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
-                      <div
-                        className={classNames(
-                          header.column.getCanSort() &&
-                            'cursor-pointer select-none point',
-                          loading && 'pointer-events-none',
-                        )}
-                        onClick={header.column.getToggleSortingHandler()}
-                      >
+                      <>
                         {flexRender(
                           header.column.columnDef.header,
                           header.getContext(),
                         )}
-                        {header.column.getCanSort() && (
-                          <Sorter sort={header.column.getIsSorted()} />
-                        )}
-                      </div>
+                      </>
                     )}
                   </Th>
                 )
@@ -310,7 +300,7 @@ function _DataTable<T>(
           </TBody>
         )}
       </Table>
-      <div className="flex items-center justify-between mt-4">
+      <div className="flex justify-between items-center mt-4">
         <Pagination
           pageSize={pageSize}
           currentPage={pageIndex}

@@ -84,8 +84,8 @@ const FormItem = forwardRef<HTMLDivElement, FormItemProps>((props, ref) => {
     return { ...style }
   }
 
-  const enterStyle = { opacity: 1, marginTop: 3, bottom: -21 }
-  const exitStyle = { opacity: 0, marginTop: -10 }
+  const enterStyle = { opacity: 1, height: 'auto' }
+  const exitStyle = { opacity: 0, height: 0 }
   const initialStyle = exitStyle
 
   return (
@@ -95,7 +95,7 @@ const FormItem = forwardRef<HTMLDivElement, FormItemProps>((props, ref) => {
         className={formLabelClass}
         style={formLabelStyle()}
       >
-        {asterisk && <span className="text-red-500 ltr:mr-1 rtl:ml-1">*</span>}
+        {asterisk && <span className="ltr:mr-1 rtl:ml-1 text-red-500">*</span>}
         {label}
         {extra && <span>{extra}</span>}
         {label && formItemLayout !== 'vertical' && ':'}
@@ -103,7 +103,7 @@ const FormItem = forwardRef<HTMLDivElement, FormItemProps>((props, ref) => {
       <div
         className={
           formItemLayout === LAYOUT.HORIZONTAL
-            ? 'w-full flex flex-col justify-center relative'
+            ? 'w-full flex flex-col justify-center'
             : ''
         }
       >

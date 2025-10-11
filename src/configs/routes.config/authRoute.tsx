@@ -4,9 +4,15 @@ import { urlConfig } from '@/configs/urls.config'
 
 const authRoute: Routes = [
   {
-    key: 'signIn',
-    path: urlConfig.signIn,
-    component: lazy(() => import('@/views/auth/SignIn')),
+    key: 'login',
+    path: urlConfig.login,
+    component: lazy(() => import('@/views/auth/Login')),
+    authority: [],
+  },
+  {
+    key: 'loginTelegram',
+    path: urlConfig.loginTelegram,
+    component: lazy(() => import('@/views/auth/LoginTelegram')),
     authority: [],
   },
   {

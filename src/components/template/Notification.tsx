@@ -70,7 +70,7 @@ const notificationTypeAvatar = (data: {
       return (
         <Avatar
           shape="circle"
-          className="bg-blue-100 text-blue-600 dark:bg-blue-500/20 dark:text-blue-100"
+          className="bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-100"
           icon={<HiOutlineCalendar />}
         />
       )
@@ -142,7 +142,7 @@ const _Notification = ({ className }: { className?: string }) => {
   }, [setUnreadNotification])
 
   useEffect(() => {
-    getNotificationCount()
+    // getNotificationCount()
   }, [getNotificationCount])
 
   const onNotificationOpen = useCallback(async () => {
@@ -193,7 +193,7 @@ const _Notification = ({ className }: { className?: string }) => {
       onOpen={onNotificationOpen}
     >
       <Dropdown.Item variant="header">
-        <div className="border-b border-gray-200 dark:border-gray-600 px-4 py-2 flex items-center justify-between">
+        <div className="flex justify-between items-center px-4 py-2 border-gray-200 dark:border-gray-600 border-b">
           <h6>Notifications</h6>
           <Tooltip title="Mark all as read">
             <Button
@@ -220,7 +220,7 @@ const _Notification = ({ className }: { className?: string }) => {
                 onClick={() => onMarkAsRead(item.id)}
               >
                 <div>{notificationTypeAvatar(item)}</div>
-                <div className="ltr:ml-3 rtl:mr-3">
+                <div className="rtl:mr-3 ltr:ml-3">
                   <div>
                     {item.target && (
                       <span className="font-semibold heading-text">
@@ -232,7 +232,7 @@ const _Notification = ({ className }: { className?: string }) => {
                   <span className="text-xs">{item.date}</span>
                 </div>
                 <Badge
-                  className="absolute top-4 ltr:right-4 rtl:left-4 mt-1.5"
+                  className="top-4 ltr:right-4 rtl:left-4 absolute mt-1.5"
                   innerClass={`${item.readed ? 'bg-gray-300' : bgTheme} `}
                 />
               </div>
@@ -268,10 +268,10 @@ const _Notification = ({ className }: { className?: string }) => {
         </ScrollBar>
       </div>
       <Dropdown.Item variant="header">
-        <div className="flex justify-center border-t border-gray-200 dark:border-gray-600 px-4 py-2">
+        <div className="flex justify-center px-4 py-2 border-gray-200 dark:border-gray-600 border-t">
           <Link
             to="/app/account/activity-log"
-            className="font-semibold cursor-pointer p-2 px-3 text-gray-600 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
+            className="p-2 px-3 font-semibold text-gray-600 hover:text-gray-900 dark:hover:text-white dark:text-gray-200 cursor-pointer"
           >
             View All Activity
           </Link>

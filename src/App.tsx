@@ -7,6 +7,7 @@ import Layout from '@/components/layouts'
 import mockServer from './mock'
 import appConfig from '@/configs/app.config'
 import './locales'
+import { QueryProvider } from '@/components/providers/QueryProvider'
 
 const environment = process.env.NODE_ENV
 
@@ -18,11 +19,13 @@ function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <BrowserRouter>
-          <Theme>
-            <Layout />
-          </Theme>
-        </BrowserRouter>
+        <QueryProvider>
+          <BrowserRouter>
+            <Theme>
+              <Layout />
+            </Theme>
+          </BrowserRouter>
+        </QueryProvider>
       </PersistGate>
     </Provider>
   )

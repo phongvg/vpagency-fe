@@ -1,5 +1,7 @@
-export type SignInCredential = {
-  userName: string
+import { User } from '@/@types/user'
+
+export type LoginPayload = {
+  username: string
   password: string
 }
 
@@ -11,6 +13,15 @@ export type SignInResponse = {
     avatar: string
     email: string
   }
+}
+
+export type LoginResponse = {
+  ok: boolean
+  accessToken: string
+  refreshToken: string
+  expiresAt: Date
+  isOnboarding: boolean
+  user: User
 }
 
 export type SignUpResponse = SignInResponse
@@ -27,4 +38,9 @@ export type ForgotPassword = {
 
 export type ResetPassword = {
   password: string
+}
+
+export type RefreshTokenResponse = {
+  accessToken: string
+  refreshToken?: string
 }

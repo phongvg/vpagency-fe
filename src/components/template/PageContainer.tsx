@@ -32,11 +32,10 @@ const PageContainer = (props: PageContainerProps) => {
     header,
     contained = false,
     extraHeader,
-    footer = true,
   } = props
 
   return (
-    <div className="h-full flex flex-auto flex-col justify-between">
+    <div className="flex flex-col flex-auto justify-between h-full">
       <main className="h-full">
         <div
           className={classNames(
@@ -77,11 +76,6 @@ const PageContainer = (props: PageContainerProps) => {
           )}
         </div>
       </main>
-      {footer && (
-        <Footer
-          pageContainerType={pageContainerType as FooterPageContainerType}
-        />
-      )}
     </div>
   )
 }

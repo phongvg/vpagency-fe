@@ -1,18 +1,28 @@
+import { BaseResponse } from '@/@types/common'
 import ApiService from './ApiService'
 import type {
-  SignInCredential,
   SignUpCredential,
   ForgotPassword,
   ResetPassword,
-  SignInResponse,
   SignUpResponse,
+  LoginResponse,
+  LoginPayload,
+  RefreshTokenResponse,
 } from '@/@types/auth'
 
-export async function apiSignIn(data: SignInCredential) {
-  return ApiService.fetchData<SignInResponse>({
-    url: '/sign-in',
+export async function apiLogin(payload: LoginPayload) {
+  return ApiService.fetchData<BaseResponse<LoginResponse>>({
+    url: '/auth/login',
     method: 'post',
-    data,
+    data: payload,
+  })
+}
+
+export async function apiLoginTelegram(code: string) {
+  return ApiService.fetchData<BaseResponse<LoginResponse>>({
+    url: '/auth/telegram',
+    method: 'get',
+    params: { code },
   })
 }
 
@@ -24,9 +34,9 @@ export async function apiSignUp(data: SignUpCredential) {
   })
 }
 
-export async function apiSignOut() {
+export async function apiLogout() {
   return ApiService.fetchData({
-    url: '/sign-out',
+    url: '/auth/logout',
     method: 'post',
   })
 }
@@ -44,5 +54,12 @@ export async function apiResetPassword(data: ResetPassword) {
     url: '/reset-password',
     method: 'post',
     data,
+  })
+}
+
+export async function apiRefreshToken() {
+  return ApiService.fetchData<BaseResponse<RefreshTokenResponse>>({
+    url: '/auth/refresh',
+    method: 'post',
   })
 }

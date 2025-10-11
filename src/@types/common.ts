@@ -16,3 +16,10 @@ export type TableQueries = {
     key: string | number
   }
 }
+
+export type BaseResponse<T> = {
+  success: boolean
+  code?: string
+  message?: string
+  data: T
+}

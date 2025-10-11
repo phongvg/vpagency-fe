@@ -1,126 +1,86 @@
-import { apiSignIn, apiSignOut, apiSignUp } from '@/services/AuthService'
-import {
-  setUser,
-  signInSuccess,
-  signOutSuccess,
-  useAppSelector,
-  useAppDispatch,
-} from '@/store'
 import appConfig from '@/configs/app.config'
-import { REDIRECT_URL_KEY } from '@/constants/app.constant'
 import { useNavigate } from 'react-router-dom'
-import useQuery from './useQuery'
-import type { SignInCredential, SignUpCredential } from '@/@types/auth'
+import { useQueryClient } from '@tanstack/react-query'
+import { useEffect } from 'react'
+import Cookies from 'js-cookie'
+import { useAuthStore } from '@/store/auth/useAuthStore'
+import { apiLogout } from '@/services/AuthService'
+import { REFRESH_TOKEN_KEY } from '@/constants/app.constant'
+import LocalStorageUtils from '@/utils/storage'
+import { urlConfig } from '@/configs/urls.config'
+import { User } from '@/@types/user'
 
-type Status = 'success' | 'failed'
+interface LoginSuccessData {
+  accessToken: string
+  refreshToken: string
+  user: User
+  isOnboarding?: boolean
+  redirectUrl?: string
+}
 
 function useAuth() {
-  const dispatch = useAppDispatch()
-
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const { isAuthenticated, token, setSession, clearSession } = useAuthStore()
 
-  const query = useQuery()
-
-  const { token, signedIn } = useAppSelector((state) => state.auth.session)
-
-  const signIn = async (
-    values: SignInCredential,
-  ): Promise<
-    | {
-        status: Status
-        message: string
-      }
-    | undefined
-  > => {
-    try {
-      const resp = await apiSignIn(values)
-      if (resp.data) {
-        const { token } = resp.data
-        dispatch(signInSuccess(token))
-        if (resp.data.user) {
-          dispatch(
-            setUser(
-              resp.data.user || {
-                avatar: '',
-                userName: 'Anonymous',
-                authority: ['USER'],
-                email: '',
-              },
-            ),
-          )
-        }
-        const redirectUrl = query.get(REDIRECT_URL_KEY)
-        navigate(redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath)
-        return {
-          status: 'success',
-          message: '',
-        }
-      }
-      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    } catch (errors: any) {
-      return {
-        status: 'failed',
-        message: errors?.response?.data?.message || errors.toString(),
-      }
+  useEffect(() => {
+    const handleTokenExpired = () => {
+      handleSignOut()
     }
-  }
 
-  const signUp = async (values: SignUpCredential) => {
-    try {
-      const resp = await apiSignUp(values)
-      if (resp.data) {
-        const { token } = resp.data
-        dispatch(signInSuccess(token))
-        if (resp.data.user) {
-          dispatch(
-            setUser(
-              resp.data.user || {
-                avatar: '',
-                userName: 'Anonymous',
-                authority: ['USER'],
-                email: '',
-              },
-            ),
-          )
-        }
-        const redirectUrl = query.get(REDIRECT_URL_KEY)
-        navigate(redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath)
-        return {
-          status: 'success',
-          message: '',
-        }
-      }
-      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    } catch (errors: any) {
-      return {
-        status: 'failed',
-        message: errors?.response?.data?.message || errors.toString(),
-      }
+    window.addEventListener('token-expired', handleTokenExpired)
+
+    return () => {
+      window.removeEventListener('token-expired', handleTokenExpired)
+    }
+  }, [navigate])
+
+  const handleLoginSuccess = ({
+    accessToken,
+    refreshToken,
+    user,
+    isOnboarding = false,
+    redirectUrl,
+  }: LoginSuccessData) => {
+    setSession(accessToken, user)
+
+    LocalStorageUtils.setItem('userId', user.id)
+
+    Cookies.set(REFRESH_TOKEN_KEY, refreshToken, {
+      secure: true,
+      sameSite: 'strict',
+    })
+
+    if (isOnboarding) {
+      navigate(urlConfig.userUpdateInfo, { replace: true })
+    } else if (redirectUrl) {
+      navigate(redirectUrl)
+    } else {
+      navigate(appConfig.authenticatedEntryPath, { replace: true })
     }
   }
 
   const handleSignOut = () => {
-    dispatch(signOutSuccess())
-    dispatch(
-      setUser({
-        avatar: '',
-        userName: '',
-        email: '',
-        authority: [],
-      }),
-    )
+    clearSession()
+    queryClient.clear()
+    Cookies.remove(REFRESH_TOKEN_KEY)
+    LocalStorageUtils.removeItem('userId')
     navigate(appConfig.unAuthenticatedEntryPath)
   }
 
   const signOut = async () => {
-    await apiSignOut()
-    handleSignOut()
+    try {
+      await apiLogout()
+      handleSignOut()
+    } catch (error) {
+      console.error(error)
+      handleSignOut()
+    }
   }
 
   return {
-    authenticated: token && signedIn,
-    signIn,
-    signUp,
+    authenticated: !!token && isAuthenticated,
+    handleLoginSuccess,
     signOut,
   }
 }

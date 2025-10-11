@@ -1,5 +1,5 @@
 .form-item {
-  @apply mb-7 relative;
+  @apply relative mb-7;
 
   &.horizontal {
     @apply flex flex-auto;
@@ -27,7 +27,7 @@
 }
 
 .form-explain {
-  @apply text-red-500 absolute;
+  @apply mt-1 text-red-500 text-sm;
 }
 
 .form-container {

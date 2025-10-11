@@ -6,7 +6,6 @@ export interface Meta {
   header?: string | ReactNode
   headerContainer?: boolean
   extraHeader?: LazyExoticComponent<() => JSX.Element>
-  footer?: boolean
   layout?: LayoutType
 }
 

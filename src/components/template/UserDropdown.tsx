@@ -2,11 +2,12 @@ import Avatar from '@/components/ui/Avatar'
 import Dropdown from '@/components/ui/Dropdown'
 import withHeaderItem from '@/utils/hoc/withHeaderItem'
 import useAuth from '@/utils/hooks/useAuth'
-import { useAppSelector } from '@/store'
 import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 import { HiOutlineUser, HiOutlineCog, HiOutlineLogout } from 'react-icons/hi'
 import type { CommonProps } from '@/@types/common'
+import { useAuthStore } from '@/store/auth/useAuthStore'
+import { useMemo } from 'react'
 
 type DropdownList = {
   label: string
@@ -28,18 +29,21 @@ const dropdownItemList: DropdownList[] = [
 ]
 
 const _UserDropdown = ({ className }: CommonProps) => {
-  const { avatar, userName, authority, email } = useAppSelector(
-    (state) => state.auth.user,
-  )
+  const { user } = useAuthStore()
 
   const { signOut } = useAuth()
 
+  const displayName = useMemo(() => {
+    return user?.firstName && user?.lastName
+      ? `${user.firstName} ${user.lastName}`
+      : user?.username
+  }, [user])
+
   const UserAvatar = (
     <div className={classNames(className, 'flex items-center gap-2')}>
-      <Avatar size={32} shape="circle" src={avatar} />
+      <Avatar size={32} shape="circle" src={user?.avatar ?? ''} />
       <div className="hidden md:block">
-        <div className="text-xs capitalize">{authority?.[0] || 'guest'}</div>
-        <div className="font-bold">{userName}</div>
+        <div className="max-w-[150px] font-bold truncate">{displayName}</div>
       </div>
     </div>
   )
@@ -53,12 +57,12 @@ const _UserDropdown = ({ className }: CommonProps) => {
       >
         <Dropdown.Item variant="header">
           <div className="flex items-center gap-2 px-3 py-2">
-            <Avatar shape="circle" src={avatar} />
+            <Avatar shape="circle" src={user?.avatar ?? ''} />
             <div>
-              <div className="font-bold text-gray-900 dark:text-gray-100">
-                {userName}
+              <div className="max-w-[150px] font-bold text-gray-900 truncate">
+                {displayName}
               </div>
-              <div className="text-xs">{email}</div>
+              <div className="text-xs">{user?.email}</div>
             </div>
           </div>
         </Dropdown.Item>

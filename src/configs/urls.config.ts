@@ -18,8 +18,16 @@ export const urlConfig = {
 
   staffRanking: `${APP_PREFIX_PATH}/staff/ranking`,
 
+  userUpdateInfo: `${APP_PREFIX_PATH}/update-info`,
+
+  login: '/auth/login',
+  loginTelegram: '/auth/telegram',
+
   signIn: '/sign-in',
+  signInTelegram: '/auth/telegram',
   signUp: '/sign-up',
   forgotPassword: '/forgot-password',
   resetPassword: '/reset-password',
+
+  accessDenied: '/access-denied',
 }
