@@ -33,7 +33,7 @@ export default function LoginTelegram() {
     } else {
       navigate(urlConfig.login)
     }
-  }, [code, navigate, handleLoginSuccess])
+  }, [code, navigate])
 
   if (loginTelegramMutation.isPending) {
     return (
