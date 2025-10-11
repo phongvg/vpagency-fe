@@ -6,9 +6,11 @@ import Cookies from 'js-cookie'
 import { useAuthStore } from '@/store/auth/useAuthStore'
 import { apiLogout } from '@/services/AuthService'
 import { REFRESH_TOKEN_KEY } from '@/constants/app.constant'
-import LocalStorageUtils from '@/utils/storage'
 import { urlConfig } from '@/configs/urls.config'
 import { User } from '@/@types/user'
+import { localStorageUtils } from '@/utils/storage'
+import { toastSuccess } from '@/utils/toast'
+import { MESSAGES } from '@/constants/message.constant'
 
 interface LoginSuccessData {
   accessToken: string
@@ -44,12 +46,14 @@ function useAuth() {
   }: LoginSuccessData) => {
     setSession(accessToken, user)
 
-    LocalStorageUtils.setItem('userId', user.id)
+    localStorageUtils.setItem('userId', user.id)
 
     Cookies.set(REFRESH_TOKEN_KEY, refreshToken, {
       secure: true,
       sameSite: 'strict',
     })
+
+    toastSuccess(MESSAGES.LOGIN_SUCCESS)
 
     if (isOnboarding) {
       navigate(urlConfig.userUpdateInfo, { replace: true })
@@ -64,7 +68,10 @@ function useAuth() {
     clearSession()
     queryClient.clear()
     Cookies.remove(REFRESH_TOKEN_KEY)
-    LocalStorageUtils.removeItem('userId')
+    localStorageUtils.removeItem('userId')
+
+    toastSuccess(MESSAGES.LOGOUT_SUCCESS)
+
     navigate(appConfig.unAuthenticatedEntryPath)
   }
 
