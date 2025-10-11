@@ -124,7 +124,7 @@ export default function LoginForm(props: LoginFormProps) {
                 <Field className="mb-0" name="rememberMe" component={Checkbox}>
                   Lưu thông tin đăng nhập
                 </Field>
-                <ActionLink to={forgotPasswordUrl}>Quên mật khẩu?</ActionLink>
+                {/* <ActionLink to={forgotPasswordUrl}>Quên mật khẩu?</ActionLink> */}
               </div>
               <Button
                 block
@@ -134,10 +134,10 @@ export default function LoginForm(props: LoginFormProps) {
               >
                 Đăng nhập
               </Button>
-              <div className="mt-4 text-center">
+              {/* <div className="mt-4 text-center">
                 <span>Chưa có tài khoản? </span>
                 <ActionLink to={signUpUrl}>Đăng ký</ActionLink>
-              </div>
+              </div> */}
             </FormContainer>
           </Form>
         )}
