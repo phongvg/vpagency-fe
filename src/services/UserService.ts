@@ -17,7 +17,6 @@ export async function apiUpdateUserInfo(
   payload: UpdateUserInfoPayload | FormData,
 ) {
   if (payload instanceof FormData) {
-    // Sử dụng BaseService trực tiếp cho FormData
     const { default: BaseService } = await import('./BaseService')
     return BaseService.put<BaseResponse<User>>('/me', payload, {
       headers: {
@@ -26,7 +25,6 @@ export async function apiUpdateUserInfo(
     })
   }
 
-  // Sử dụng ApiService cho JSON payload
   return ApiService.fetchData<BaseResponse<User>>({
     url: '/me',
     method: 'put',

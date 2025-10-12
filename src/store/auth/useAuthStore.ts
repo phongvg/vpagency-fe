@@ -2,9 +2,12 @@ import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { AuthState } from '@/store/auth/types'
 import { ACCESS_TOKEN_KEY } from '@/constants/app.constant'
+import { localStorageUtils } from '@/utils/storage'
 
 const tokenStorage =
-  typeof window !== 'undefined' ? localStorage.getItem(ACCESS_TOKEN_KEY) : null
+  typeof window !== 'undefined'
+    ? localStorageUtils.getItem(ACCESS_TOKEN_KEY)
+    : null
 
 const initialState = {
   isAuthenticated: !!tokenStorage,
@@ -25,9 +28,9 @@ export const useAuthStore = create<AuthState>()(
 
       if (typeof window !== 'undefined') {
         if (token) {
-          localStorage.setItem(ACCESS_TOKEN_KEY, token)
+          localStorageUtils.setItem(ACCESS_TOKEN_KEY, token)
         } else {
-          localStorage.removeItem(ACCESS_TOKEN_KEY)
+          localStorageUtils.removeItem(ACCESS_TOKEN_KEY)
         }
       }
     },
@@ -47,7 +50,7 @@ export const useAuthStore = create<AuthState>()(
       })
 
       if (typeof window !== 'undefined') {
-        localStorage.removeItem(ACCESS_TOKEN_KEY)
+        localStorageUtils.removeItem(ACCESS_TOKEN_KEY)
       }
     },
   })),

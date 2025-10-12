@@ -4,13 +4,13 @@ import { useUserStore } from '@/views/system/userManagement/store/useUserStore'
 import UserManagementForm, {
   FormikRef,
 } from '@/views/system/userManagement/components/UserManagementForm'
-import { useUpdateUser } from '@/views/system/userManagement/hooks/useUsersQueries'
+import { useUpdateUserMutation } from '@/views/system/userManagement/hooks/useUsersQueries'
 import { toastError, toastSuccess } from '@/utils/toast'
 
 const UserManagemetEditContent = forwardRef<FormikRef>((_, ref) => {
   const { selectedUser, setDrawerOpen } = useUserStore()
 
-  const userMutation = useUpdateUser()
+  const userMutation = useUpdateUserMutation()
 
   const handleSubmit = (values: UpdateUserRequest) => {
     if (!selectedUser) return

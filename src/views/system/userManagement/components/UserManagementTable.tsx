@@ -1,15 +1,14 @@
 import { useMemo } from 'react'
 import {
   useGetUsersQuery,
-  useUpdateStatusUser,
+  useUpdateStatusUserMutation,
 } from '@/views/system/userManagement/hooks/useUsersQueries'
 import { ColumnDef } from '@tanstack/react-table'
 import { User } from '@/@types/user'
 import useThemeClass from '@/utils/hooks/useThemeClass'
-import { Avatar, Badge, Button, Switcher } from '@/components/ui'
+import { Avatar, Badge, Switcher } from '@/components/ui'
 import { Link } from 'react-router-dom'
 import { DataTable } from '@/components/shared'
-import { cloneDeep } from 'lodash'
 import { useUserStore } from '@/views/system/userManagement/store/useUserStore'
 import { StatusEnum } from '@/enums/status.enum'
 import dayjs from 'dayjs'
@@ -48,10 +47,13 @@ const NameColumn = ({ row }: { row: User }) => {
 
 export default function UserManagementTable() {
   const { filter, setFilter, setDrawerOpen, setSelectedUser } = useUserStore()
-  const { data, isLoading } = useGetUsersQuery()
-  const metaTableData = useMemo(() => data?.data.data.meta, [data])
+  const { data: getUsersResponse, isLoading } = useGetUsersQuery()
+  const userMutation = useUpdateStatusUserMutation()
 
-  const userMutation = useUpdateStatusUser()
+  const metaTableData = useMemo(
+    () => getUsersResponse?.meta,
+    [getUsersResponse],
+  )
 
   const columns: ColumnDef<User>[] = useMemo(
     () => [
@@ -168,7 +170,7 @@ export default function UserManagementTable() {
 
       <DataTable
         columns={columns}
-        data={data?.data.data.data ?? []}
+        data={getUsersResponse?.data ?? []}
         skeletonAvatarColumns={[0]}
         skeletonAvatarProps={{ width: 28, height: 28 }}
         loading={isLoading}

@@ -3,20 +3,30 @@ import {
   NAV_ITEM_TYPE_COLLAPSE,
   NAV_ITEM_TYPE_ITEM,
 } from '@/constants/navigation.constant'
-import { ADMIN, USER } from '@/constants/roles.constant'
 import type { NavigationTree } from '@/@types/navigation'
 import { urlConfig } from '@/configs/urls.config'
+import { Role } from '@/enums/role.enum'
 
 const appsNavigationConfig: NavigationTree[] = [
   {
     key: 'apps',
     path: '',
-    title: 'Dashboard',
+    title: '',
     translateKey: '',
     icon: 'apps',
     type: NAV_ITEM_TYPE_TITLE,
-    authority: [ADMIN, USER],
+    authority: [],
     subMenu: [
+      {
+        key: 'apps.dashboard',
+        path: urlConfig.dashboard,
+        title: 'Dashboard',
+        translateKey: '',
+        icon: 'apps',
+        type: NAV_ITEM_TYPE_ITEM,
+        authority: [Role.ADMIN],
+        subMenu: [],
+      },
       {
         key: 'apps.task',
         path: '',
@@ -24,7 +34,7 @@ const appsNavigationConfig: NavigationTree[] = [
         translateKey: '',
         icon: 'project',
         type: NAV_ITEM_TYPE_COLLAPSE,
-        authority: [ADMIN, USER],
+        authority: [Role.ADMIN, Role.USER],
         subMenu: [
           {
             key: 'task.assign',
@@ -33,7 +43,7 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN, USER],
+            authority: [Role.ADMIN, Role.USER],
             subMenu: [],
           },
           {
@@ -43,7 +53,7 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN, USER],
+            authority: [Role.ADMIN, Role.USER],
             subMenu: [],
           },
           {
@@ -53,7 +63,7 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN, USER],
+            authority: [Role.ADMIN, Role.USER],
             subMenu: [],
           },
         ],
@@ -65,7 +75,7 @@ const appsNavigationConfig: NavigationTree[] = [
         translateKey: '',
         icon: 'crm',
         type: NAV_ITEM_TYPE_COLLAPSE,
-        authority: [ADMIN, USER],
+        authority: [Role.ADMIN, Role.USER],
         subMenu: [
           {
             key: 'customer.list',
@@ -74,7 +84,7 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN, USER],
+            authority: [Role.ADMIN, Role.USER],
             subMenu: [],
           },
           {
@@ -84,7 +94,7 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN, USER],
+            authority: [Role.ADMIN, Role.USER],
             subMenu: [],
           },
         ],
@@ -96,7 +106,7 @@ const appsNavigationConfig: NavigationTree[] = [
         translateKey: '',
         icon: 'sales',
         type: NAV_ITEM_TYPE_COLLAPSE,
-        authority: [ADMIN, USER],
+        authority: [Role.ADMIN, Role.USER],
         subMenu: [
           {
             key: 'finance.sales',
@@ -105,7 +115,7 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN, USER],
+            authority: [Role.ADMIN, Role.USER],
             subMenu: [],
           },
           {
@@ -115,7 +125,7 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN, USER],
+            authority: [Role.ADMIN, Role.USER],
             subMenu: [],
           },
         ],
@@ -127,7 +137,7 @@ const appsNavigationConfig: NavigationTree[] = [
         translateKey: '',
         icon: 'settings',
         type: NAV_ITEM_TYPE_COLLAPSE,
-        authority: [ADMIN],
+        authority: [Role.ADMIN],
         subMenu: [
           {
             key: 'system.userManagement',
@@ -136,17 +146,7 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN],
-            subMenu: [],
-          },
-          {
-            key: 'system.permission',
-            path: urlConfig.systemPermission,
-            title: 'Phân quyền hệ thống',
-            translateKey: '',
-            icon: '',
-            type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN],
+            authority: [Role.ADMIN],
             subMenu: [],
           },
           {
@@ -156,7 +156,7 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN],
+            authority: [Role.ADMIN],
             subMenu: [],
           },
           {
@@ -166,7 +166,7 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN],
+            authority: [Role.ADMIN],
             subMenu: [],
           },
         ],
@@ -178,7 +178,7 @@ const appsNavigationConfig: NavigationTree[] = [
         translateKey: '',
         icon: 'account',
         type: NAV_ITEM_TYPE_COLLAPSE,
-        authority: [ADMIN, USER],
+        authority: [Role.ADMIN, Role.USER],
         subMenu: [
           {
             key: 'staff.rankings',
@@ -187,7 +187,7 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [ADMIN, USER],
+            authority: [Role.ADMIN, Role.USER],
             subMenu: [],
           },
         ],

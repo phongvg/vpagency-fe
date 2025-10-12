@@ -13,13 +13,14 @@ export const useGetUsersQuery = () => {
 
   return useQuery({
     queryKey: [GET_USER_LIST, filter],
-    queryFn: () => {
-      return apiGetUserList(filter)
+    queryFn: async () => {
+      const response = await apiGetUserList(filter)
+      return response.data.data
     },
   })
 }
 
-export const useUpdateStatusUser = () => {
+export const useUpdateStatusUserMutation = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -30,7 +31,7 @@ export const useUpdateStatusUser = () => {
   })
 }
 
-export const useUpdateUser = () => {
+export const useUpdateUserMutation = () => {
   const queryClient = useQueryClient()
 
   return useMutation({

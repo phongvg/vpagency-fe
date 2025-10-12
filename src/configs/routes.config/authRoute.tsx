@@ -15,24 +15,6 @@ const authRoute: Routes = [
     component: lazy(() => import('@/views/auth/LoginTelegram')),
     authority: [],
   },
-  {
-    key: 'signUp',
-    path: urlConfig.signUp,
-    component: lazy(() => import('@/views/auth/SignUp')),
-    authority: [],
-  },
-  {
-    key: 'forgotPassword',
-    path: urlConfig.forgotPassword,
-    component: lazy(() => import('@/views/auth/ForgotPassword')),
-    authority: [],
-  },
-  {
-    key: 'resetPassword',
-    path: urlConfig.resetPassword,
-    component: lazy(() => import('@/views/auth/ResetPassword')),
-    authority: [],
-  },
 ]
 
 export default authRoute

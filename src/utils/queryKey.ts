@@ -1,2 +1,3 @@
 export const GET_USER_INFO = 'GET_USER_INFO'
 export const GET_USER_LIST = 'GET_USER_LIST'
+export const GET_USER_STATISTIC = 'GET_USER_STATISTIC'

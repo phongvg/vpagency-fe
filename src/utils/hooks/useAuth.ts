@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import Cookies from 'js-cookie'
 import { useAuthStore } from '@/store/auth/useAuthStore'
 import { apiLogout } from '@/services/AuthService'
-import { REFRESH_TOKEN_KEY } from '@/constants/app.constant'
+import { REFRESH_TOKEN_KEY, USER_ID } from '@/constants/app.constant'
 import { urlConfig } from '@/configs/urls.config'
 import { User } from '@/@types/user'
 import { localStorageUtils } from '@/utils/storage'
@@ -46,7 +46,7 @@ function useAuth() {
   }: LoginSuccessData) => {
     setSession(accessToken, user)
 
-    localStorageUtils.setItem('userId', user.id)
+    localStorageUtils.setItem(USER_ID, user.id)
 
     Cookies.set(REFRESH_TOKEN_KEY, refreshToken, {
       secure: true,
@@ -68,7 +68,7 @@ function useAuth() {
     clearSession()
     queryClient.clear()
     Cookies.remove(REFRESH_TOKEN_KEY)
-    localStorageUtils.removeItem('userId')
+    localStorageUtils.removeItem(USER_ID)
 
     toastSuccess(MESSAGES.LOGOUT_SUCCESS)
 

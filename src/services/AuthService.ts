@@ -7,7 +7,6 @@ import type {
   SignUpResponse,
   LoginResponse,
   LoginPayload,
-  RefreshTokenResponse,
 } from '@/@types/auth'
 
 export async function apiLogin(payload: LoginPayload) {
@@ -54,12 +53,5 @@ export async function apiResetPassword(data: ResetPassword) {
     url: '/reset-password',
     method: 'post',
     data,
-  })
-}
-
-export async function apiRefreshToken() {
-  return ApiService.fetchData<BaseResponse<RefreshTokenResponse>>({
-    url: '/auth/refresh',
-    method: 'post',
   })
 }

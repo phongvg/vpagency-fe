@@ -3,11 +3,13 @@ import axios, {
   AxiosError,
   InternalAxiosRequestConfig,
 } from 'axios'
-import Cookies from 'js-cookie'
 import appConfig from '@/configs/app.config'
 import { TOKEN_TYPE, REQUEST_HEADER_AUTH_KEY } from '@/constants/api.constant'
-import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/constants/app.constant'
+import { ACCESS_TOKEN_KEY, USER_ID } from '@/constants/app.constant'
 import { localStorageUtils } from '@/utils/storage'
+import { urlConfig } from '@/configs/urls.config'
+import { BaseResponse } from '@/@types/common'
+import { RefreshTokenResponse } from '@/@types/auth'
 
 let isRefreshing = false
 let failedQueue: Array<{
@@ -17,13 +19,9 @@ let failedQueue: Array<{
 
 const processQueue = (error: Error | null, token: string | null = null) => {
   failedQueue.forEach((prom) => {
-    if (error) {
-      prom.reject(error)
-    } else {
-      prom.resolve(token)
-    }
+    if (error) prom.reject(error)
+    else prom.resolve(token)
   })
-
   failedQueue = []
 }
 
@@ -38,7 +36,7 @@ const BaseService = axios.create({
 
 BaseService.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY)
+    const accessToken = localStorageUtils.getItem(ACCESS_TOKEN_KEY)
 
     if (accessToken) {
       config.headers[REQUEST_HEADER_AUTH_KEY] = `${TOKEN_TYPE}${accessToken}`
@@ -59,90 +57,60 @@ BaseService.interceptors.response.use(
     }
 
     if (
-      !error.response ||
-      error.response.status !== HttpStatusCode.Unauthorized ||
-      originalRequest.url?.includes('/auth/refresh')
+      error.response?.status === HttpStatusCode.Unauthorized &&
+      !originalRequest._retry
     ) {
-      return Promise.reject(error)
-    }
-
-    if (originalRequest._retry) {
-      return Promise.reject(error)
-    }
-
-    if (isRefreshing) {
-      return new Promise((resolve, reject) => {
-        failedQueue.push({ resolve, reject })
-      })
-        .then((token) => {
-          if (originalRequest.headers && token) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject })
+        })
+          .then((token) => {
             originalRequest.headers[REQUEST_HEADER_AUTH_KEY] =
               `${TOKEN_TYPE}${token}`
-          }
-          originalRequest._retry = false
-          return BaseService(originalRequest)
-        })
-        .catch((err) => {
-          return Promise.reject(err)
-        })
-    }
-
-    originalRequest._retry = true
-    isRefreshing = true
-
-    try {
-      const refreshToken = Cookies.get(REFRESH_TOKEN_KEY)
-
-      if (!refreshToken) {
-        throw new Error('Refresh token not found')
+            return BaseService(originalRequest)
+          })
+          .catch((err) => Promise.reject(err))
       }
 
-      const userId = localStorageUtils.getItem('userId')
+      originalRequest._retry = true
+      isRefreshing = true
 
-      if (!userId) {
-        throw new Error('User id not found')
-      }
+      try {
+        const userId = localStorageUtils.getItem(USER_ID)
 
-      const response = await axios.post(
-        `${appConfig.apiPrefix}/auth/refresh`,
-        {
-          userId,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await axios.post<BaseResponse<RefreshTokenResponse>>(
+          `${appConfig.apiPrefix}/auth/refresh`,
+          {
+            userId,
           },
-          withCredentials: true,
-        },
-      )
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+          },
+        )
 
-      const { accessToken } = response.data.data
+        const newAccessToken = response.data.data.accessToken
 
-      localStorage.setItem(ACCESS_TOKEN_KEY, accessToken)
+        localStorageUtils.setItem(ACCESS_TOKEN_KEY, newAccessToken)
 
-      if (originalRequest.headers) {
-        originalRequest.headers[REQUEST_HEADER_AUTH_KEY] =
-          `${TOKEN_TYPE}${accessToken}`
+        BaseService.defaults.headers[REQUEST_HEADER_AUTH_KEY] =
+          `${TOKEN_TYPE}${newAccessToken}`
+
+        processQueue(null, newAccessToken)
+        return BaseService(originalRequest)
+      } catch (err: Error | any) {
+        processQueue(err, null)
+        localStorage.clear()
+        window.location.href = urlConfig.login
+        return Promise.reject(err)
+      } finally {
+        isRefreshing = false
       }
-
-      processQueue(null, accessToken)
-
-      originalRequest._retry = false
-
-      return BaseService(originalRequest)
-    } catch (refreshError) {
-      processQueue(refreshError as Error, null)
-
-      localStorage.removeItem(ACCESS_TOKEN_KEY)
-      localStorageUtils.removeItem('userId')
-      Cookies.remove(REFRESH_TOKEN_KEY)
-
-      window.dispatchEvent(new Event('token-expired'))
-
-      return Promise.reject(refreshError)
-    } finally {
-      isRefreshing = false
     }
+
+    return Promise.reject(error)
   },
 )
 
