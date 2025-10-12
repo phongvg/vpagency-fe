@@ -13,6 +13,7 @@ import useResponsive from '@/utils/hooks/useResponsive'
 import isEmpty from 'lodash/isEmpty'
 import { useAppSelector } from '@/store'
 import { useTranslation } from 'react-i18next'
+import { useAuthStore } from '@/store/auth/useAuthStore'
 
 const stackedSideNavDefaultStyle = {
   width: SPLITTED_SIDE_NAV_MINI_WIDTH,
@@ -34,7 +35,7 @@ const StackedSideNav = () => {
   const currentRouteKey = useAppSelector(
     (state) => state.base.common.currentRouteKey,
   )
-  const userAuthority = useAppSelector((state) => state.auth.user.authority)
+  const userAuthority = useAuthStore((state) => state.user?.roles) || []
 
   const { larger } = useResponsive()
 

@@ -18,16 +18,15 @@ import {
 import storage from 'redux-persist/lib/storage'
 import { PERSIST_STORE_NAME } from '@/constants/app.constant'
 import rootReducer, { RootState, AsyncReducers } from './rootReducer'
-import RtkQueryService from '@/services/RtkQueryService'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const middlewares: any[] = [RtkQueryService.middleware]
+const middlewares: any[] = []
 
 const persistConfig = {
   key: PERSIST_STORE_NAME,
   keyPrefix: '',
   storage,
-  whitelist: ['auth', 'theme', 'locale'],
+  whitelist: ['theme', 'locale'],
 }
 
 interface CustomStore extends Store<RootState, AnyAction> {

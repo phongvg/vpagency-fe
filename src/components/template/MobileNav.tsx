@@ -11,6 +11,7 @@ import NavToggle from '@/components/shared/NavToggle'
 import navigationConfig from '@/configs/navigation.config'
 import useResponsive from '@/utils/hooks/useResponsive'
 import { useAppSelector } from '@/store'
+import { useAuthStore } from '@/store/auth/useAuthStore'
 
 const VerticalMenuContent = lazy(
   () => import('@/components/template/VerticalMenuContent'),
@@ -48,7 +49,7 @@ const MobileNav = () => {
   const sideNavCollapse = useAppSelector(
     (state) => state.theme.layout.sideNavCollapse,
   )
-  const userAuthority = useAppSelector((state) => state.auth.user.authority)
+  const userAuthority = useAuthStore((state) => state.user?.roles) || []
 
   const { smaller } = useResponsive()
 
