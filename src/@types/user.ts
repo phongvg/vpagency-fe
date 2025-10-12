@@ -16,10 +16,10 @@ export type User = {
 }
 
 export type UpdateUserInfoPayload = {
-  username: string
+  username?: string
   firstName: string
   lastName: string
   email: string
-  password: string
+  password?: string
   avatar?: string | null
 }

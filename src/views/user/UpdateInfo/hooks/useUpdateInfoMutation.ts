@@ -5,7 +5,7 @@ import { useAuthStore } from '@/store/auth/useAuthStore'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 
-export const useUpdateInfoMutation = () => {
+export const useUpdateInfoMutation = (isNavigate?: boolean) => {
   const { updateUser } = useAuthStore()
   const navigate = useNavigate()
 
@@ -16,7 +16,10 @@ export const useUpdateInfoMutation = () => {
     },
     onSuccess: (data) => {
       updateUser(data)
-      navigate(appConfig.authenticatedEntryPath, { replace: true })
+
+      if (isNavigate) {
+        navigate(appConfig.authenticatedEntryPath, { replace: true })
+      }
     },
   })
 }

@@ -4,10 +4,11 @@ import withHeaderItem from '@/utils/hoc/withHeaderItem'
 import useAuth from '@/utils/hooks/useAuth'
 import { Link } from 'react-router-dom'
 import classNames from 'classnames'
-import { HiOutlineUser, HiOutlineCog, HiOutlineLogout } from 'react-icons/hi'
+import { HiOutlineUser, HiOutlineLogout } from 'react-icons/hi'
 import type { CommonProps } from '@/@types/common'
 import { useAuthStore } from '@/store/auth/useAuthStore'
 import { useMemo } from 'react'
+import { urlConfig } from '@/configs/urls.config'
 
 type DropdownList = {
   label: string
@@ -18,13 +19,8 @@ type DropdownList = {
 const dropdownItemList: DropdownList[] = [
   {
     label: 'Thông tin cá nhân',
-    path: '/app/account/settings/profile',
+    path: urlConfig.userProfile,
     icon: <HiOutlineUser />,
-  },
-  {
-    label: 'Cài đặt tài khoản',
-    path: '/app/account/settings/profile',
-    icon: <HiOutlineCog />,
   },
 ]
 
@@ -62,7 +58,7 @@ const _UserDropdown = ({ className }: CommonProps) => {
               <div className="max-w-[150px] font-bold text-gray-900 truncate">
                 {displayName}
               </div>
-              <div className="text-xs">{user?.email}</div>
+              <div className="text-xs">{user?.username}</div>
             </div>
           </div>
         </Dropdown.Item>

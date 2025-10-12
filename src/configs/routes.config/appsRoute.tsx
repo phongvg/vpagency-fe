@@ -34,6 +34,15 @@ const appsRoute: Routes = [
       layout: 'blank',
     },
   },
+  {
+    key: 'user.profile',
+    path: urlConfig.userProfile,
+    component: lazy(() => import('@/views/user/Profile')),
+    authority: [],
+    meta: {
+      header: 'Thông tin cá nhân',
+    },
+  },
 ]
 
 export default appsRoute

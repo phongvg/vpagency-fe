@@ -22,7 +22,7 @@ export default function UpdateInfoForm() {
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
 
-  const updateInfoMutation = useUpdateInfoMutation()
+  const updateInfoMutation = useUpdateInfoMutation(true)
 
   useEffect(() => {
     return () => {
@@ -37,12 +37,12 @@ export default function UpdateInfoForm() {
       const file = files[0]
 
       if (file.size > 5 * 1024 * 1024) {
-        toastError('Kích thước file không được vượt quá 5MB')
+        toastError(MESSAGES.MAX_FILE_SIZE)
         return
       }
 
       if (!file.type.startsWith('image/')) {
-        toastError('Chỉ chấp nhận file ảnh (JPG, PNG, GIF)')
+        toastError(MESSAGES.INVALID_FILE_TYPE)
         return
       }
 
@@ -74,12 +74,12 @@ export default function UpdateInfoForm() {
 
     updateInfoMutation.mutate(formData, {
       onSuccess: () => {
-        toastSuccess('Cập nhật thông tin thành công!')
+        toastSuccess(MESSAGES.UPDATE_PROFILE_SUCCESS)
         setMessage(null)
       },
       onError: (error: any) => {
         const errorMessage =
-          error?.response?.data?.message || MESSAGES.SOME_ERROR
+          error?.response?.data?.message || MESSAGES.UPDATE_PROFILE_ERROR
         setMessage(errorMessage)
       },
     })

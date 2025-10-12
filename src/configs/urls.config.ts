@@ -14,6 +14,7 @@ export const urlConfig = {
   systemSetting: `${APP_PREFIX_PATH}/system/setting`,
   staffRanking: `${APP_PREFIX_PATH}/staff/ranking`,
   userUpdateInfo: `${APP_PREFIX_PATH}/update-info`,
+  userProfile: `${APP_PREFIX_PATH}/profile`,
   accessDenied: `${APP_PREFIX_PATH}/access-denied`,
 
   login: `${AUTH_PREFIX_PATH}/login`,
