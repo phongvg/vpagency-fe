@@ -78,9 +78,9 @@ function useAuth() {
   const signOut = async () => {
     try {
       await apiLogout()
-      handleSignOut()
     } catch (error) {
       console.error(error)
+    } finally {
       handleSignOut()
     }
   }

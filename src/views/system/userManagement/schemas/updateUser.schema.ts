@@ -7,4 +7,7 @@ export const updateUserValidationSchema = Yup.object().shape({
   email: Yup.string()
     .email('Email không hợp lệ')
     .required('Email không được bỏ trống'),
+  roles: Yup.array()
+    .min(1, 'Vai trò không được bỏ trống')
+    .required('Vai trò không được bỏ trống'),
 })

@@ -5,6 +5,7 @@ import { UpdateUserRequest } from '@/views/system/userManagement/types'
 import { Field, Form, Formik, FormikProps } from 'formik'
 import { forwardRef } from 'react'
 import { HiOutlineUser } from 'react-icons/hi'
+import UserRoleManagerField from './UserRoleManager'
 
 interface UserManagementFormProps {
   user: User | null
@@ -25,6 +26,7 @@ const UserManagementForm = forwardRef<FormikRef, UserManagementFormProps>(
           firstName: user?.firstName || '',
           lastName: user?.lastName || '',
           email: user?.email || '',
+          roles: user?.roles || [],
         }}
         validationSchema={updateUserValidationSchema}
         onSubmit={(values, { setSubmitting }) => {
@@ -93,6 +95,16 @@ const UserManagementForm = forwardRef<FormikRef, UserManagementFormProps>(
                     placeholder="Email"
                     component={Input}
                   />
+                </FormItem>
+                <FormItem
+                  label="Phân quyền"
+                  invalid={errors.roles && touched.roles}
+                  errorMessage={
+                    typeof errors.roles === 'string' ? errors.roles : undefined
+                  }
+                  className="mb-0"
+                >
+                  <Field name="roles" component={UserRoleManagerField} />
                 </FormItem>
               </FormContainer>
             </Form>

@@ -1,4 +1,5 @@
 import { StatusEnum } from '@/enums/status.enum'
+import { Role } from '@/enums/role.enum'
 
 export type User = {
   id: string
@@ -8,7 +9,7 @@ export type User = {
   firstName: string | null
   lastName: string | null
   avatar: string | null
-  roles: string[]
+  roles: Role[]
   status: StatusEnum
   createdAt: Date
   updatedAt: Date

@@ -15,6 +15,8 @@ import { StatusEnum } from '@/enums/status.enum'
 import dayjs from 'dayjs'
 import { HiOutlinePencilAlt } from 'react-icons/hi'
 import UserManagementEditDialog from '@/views/system/userManagement/components/UserManagementEditDialog'
+import UserRoleBadges from '@/views/system/userManagement/components/UserRoleBadges'
+import RoleTabs from '@/views/system/userManagement/components/RoleTabs'
 
 const statusColor: Record<StatusEnum, string> = {
   [StatusEnum.OnBoarding]: 'bg-blue-500',
@@ -76,6 +78,14 @@ export default function UserManagementTable() {
       {
         header: 'Email',
         accessorKey: 'email',
+      },
+      {
+        header: 'Vai trò',
+        accessorKey: 'roles',
+        cell: (props) => {
+          const row = props.row.original
+          return <UserRoleBadges roles={row.roles} maxDisplay={2} />
+        },
       },
       {
         header: 'Trạng thái',
@@ -154,6 +164,8 @@ export default function UserManagementTable() {
 
   return (
     <>
+      <RoleTabs />
+
       <DataTable
         columns={columns}
         data={data?.data.data.data ?? []}

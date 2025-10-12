@@ -43,7 +43,9 @@ export type BaseListResponse<T> = {
   }
 }
 
-export type SortOrder = 'asc' | 'desc'
+export type SortOrder = 'asc' | 'desc' | ''
+
+import { Role } from '@/enums/role.enum'
 
 export type CommonFilterRequest = {
   page: number
@@ -51,4 +53,5 @@ export type CommonFilterRequest = {
   search: string
   sortBy: string
   sortOrder: SortOrder
+  role?: Role
 }

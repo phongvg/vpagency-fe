@@ -26,7 +26,7 @@ import {
   CellContext,
 } from '@tanstack/react-table'
 import type { SkeletonProps } from '@/components/ui/Skeleton'
-import type { ForwardedRef, ChangeEvent } from 'react'
+import type { ForwardedRef, ChangeEvent, ReactNode } from 'react'
 import type { CheckboxProps } from '@/components/ui/Checkbox'
 
 export type OnSortParam = { order: 'asc' | 'desc' | ''; key: string | number }
@@ -49,6 +49,9 @@ type DataTableProps<T> = {
     pageIndex: number
     pageSize: number
   }
+  emptyContent?: ReactNode
+  emptyTitle?: string
+  emptyDescription?: string
 }
 
 type CheckBoxChangeEvent = ChangeEvent<HTMLInputElement>
@@ -61,6 +64,48 @@ interface IndeterminateCheckboxProps extends Omit<CheckboxProps, 'onChange'> {
 }
 
 const { Tr, Th, Td, THead, TBody, Sorter } = Table
+
+const EmptyState = ({
+  title = 'Không có dữ liệu',
+  description = 'Không tìm thấy dữ liệu nào để hiển thị',
+  children,
+  colSpan,
+}: {
+  title?: string
+  description?: string
+  children?: ReactNode
+  colSpan: number
+}) => {
+  if (children) {
+    return (
+      <TBody>
+        <Tr>
+          <Td colSpan={colSpan} className="py-12 text-center">
+            {children}
+          </Td>
+        </Tr>
+      </TBody>
+    )
+  }
+
+  return (
+    <TBody>
+      <Tr>
+        <Td colSpan={colSpan} className="py-12 text-center">
+          <div className="flex flex-col justify-center items-center space-y-4">
+            <div className="flex justify-center items-center">
+              <img src="/img/empty.svg" alt="" />
+            </div>
+            <div className="text-center">
+              <h3 className="mb-1 font-medium text-gray-600">{title}</h3>
+              <p className="text-gray-500 text-sm">{description}</p>
+            </div>
+          </div>
+        </Td>
+      </Tr>
+    </TBody>
+  )
+}
 
 const IndeterminateCheckbox = (props: IndeterminateCheckboxProps) => {
   const {
@@ -123,6 +168,9 @@ function _DataTable<T>(
       pageIndex: 1,
       pageSize: 10,
     },
+    emptyContent,
+    emptyTitle,
+    emptyDescription,
   } = props
 
   const { pageSize, pageIndex, total } = pagingData
@@ -276,6 +324,14 @@ function _DataTable<T>(
             avatarInColumns={skeletonAvatarColumns}
             avatarProps={skeletonAvatarProps}
           />
+        ) : data.length === 0 ? (
+          <EmptyState
+            title={emptyTitle}
+            description={emptyDescription}
+            colSpan={(finalColumns as Array<T>).length}
+          >
+            {emptyContent}
+          </EmptyState>
         ) : (
           <TBody>
             {table
@@ -300,24 +356,29 @@ function _DataTable<T>(
           </TBody>
         )}
       </Table>
-      <div className="flex justify-between items-center mt-4">
-        <Pagination
-          pageSize={pageSize}
-          currentPage={pageIndex}
-          total={total}
-          onChange={handlePaginationChange}
-        />
-        <div style={{ minWidth: 130 }}>
-          <Select
-            size="sm"
-            menuPlacement="top"
-            isSearchable={false}
-            value={pageSizeOption.filter((option) => option.value === pageSize)}
-            options={pageSizeOption}
-            onChange={(option) => handleSelectChange(option?.value)}
+      {/* Only show pagination if there's data or loading */}
+      {(data.length > 0 || loading) && (
+        <div className="flex justify-between items-center mt-4">
+          <Pagination
+            pageSize={pageSize}
+            currentPage={pageIndex}
+            total={total}
+            onChange={handlePaginationChange}
           />
+          <div style={{ minWidth: 130 }}>
+            <Select
+              size="sm"
+              menuPlacement="top"
+              isSearchable={false}
+              value={pageSizeOption.filter(
+                (option) => option.value === pageSize,
+              )}
+              options={pageSizeOption}
+              onChange={(option) => handleSelectChange(option?.value)}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </Loading>
   )
 }

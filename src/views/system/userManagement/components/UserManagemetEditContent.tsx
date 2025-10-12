@@ -5,6 +5,7 @@ import UserManagementForm, {
   FormikRef,
 } from '@/views/system/userManagement/components/UserManagementForm'
 import { useUpdateUser } from '@/views/system/userManagement/hooks/useUsersQueries'
+import { toastError, toastSuccess } from '@/utils/toast'
 
 const UserManagemetEditContent = forwardRef<FormikRef>((_, ref) => {
   const { selectedUser, setDrawerOpen } = useUserStore()
@@ -14,12 +15,21 @@ const UserManagemetEditContent = forwardRef<FormikRef>((_, ref) => {
   const handleSubmit = (values: UpdateUserRequest) => {
     if (!selectedUser) return
 
-    userMutation.mutate({
-      userId: selectedUser.id,
-      payload: values,
-    })
-
-    setDrawerOpen(false)
+    userMutation.mutate(
+      {
+        userId: selectedUser.id,
+        payload: values,
+      },
+      {
+        onSuccess: () => {
+          toastSuccess('Cập nhật thông tin người dùng thành công!')
+          setDrawerOpen(false)
+        },
+        onError: () => {
+          toastError('Cập nhật thông tin người dùng thất bại!')
+        },
+      },
+    )
   }
 
   return (
