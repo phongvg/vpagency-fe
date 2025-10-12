@@ -1,9 +1,9 @@
 import { forwardRef } from 'react'
 import { UpdateUserRequest } from '@/views/system/userManagement/types'
 import { useUserStore } from '@/views/system/userManagement/store/useUserStore'
-import UserForm, {
+import UserEditForm, {
   FormikRef,
-} from '@/views/system/userManagement/components/UserForm'
+} from '@/views/system/userManagement/components/UserEditForm'
 import { useUpdateUserMutation } from '@/views/system/userManagement/hooks/useUsersQueries'
 import { toastError, toastSuccess } from '@/utils/toast'
 import { MESSAGES } from '@/constants/message.constant'
@@ -33,7 +33,9 @@ const UserEditContent = forwardRef<FormikRef>((_, ref) => {
     )
   }
 
-  return <UserForm ref={ref} user={selectedUser} onFormSubmit={handleSubmit} />
+  return (
+    <UserEditForm ref={ref} user={selectedUser} onFormSubmit={handleSubmit} />
+  )
 })
 
 UserEditContent.displayName = 'UserEditContent'

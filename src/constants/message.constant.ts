@@ -8,4 +8,5 @@ export const MESSAGES = {
   UPDATE_PROFILE_ERROR: 'Cập nhật thông tin thất bại',
   UPDATE_USER_SUCCESS: 'Cập nhật thông tin người dùng thành công',
   UPDATE_USER_ERROR: 'Cập nhật thông tin người dùng thất bại',
+  RESET_PASSWORD_SUCCESS: 'Đặt lại mật khẩu thành công',
 }

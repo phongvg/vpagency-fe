@@ -1,11 +1,15 @@
 import {
   apiGetUserList,
+  apiResetPasswordUser,
   apiUpdateStatusUser,
   apiUpdateUser,
 } from '@/services/UserService'
 import { GET_USER_LIST } from '@/utils/queryKey'
 import { useUserStore } from '@/views/system/userManagement/store/useUserStore'
-import { UpdateUserRequest } from '@/views/system/userManagement/types'
+import {
+  ResetPasswordUserRequest,
+  UpdateUserRequest,
+} from '@/views/system/userManagement/types'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 export const useGetUsersQuery = () => {
@@ -45,5 +49,17 @@ export const useUpdateUserMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [GET_USER_LIST] })
     },
+  })
+}
+
+export const useResetPasswordUserMutation = () => {
+  return useMutation({
+    mutationFn: ({
+      userId,
+      payload,
+    }: {
+      userId: string
+      payload: ResetPasswordUserRequest
+    }) => apiResetPasswordUser(userId, payload),
   })
 }

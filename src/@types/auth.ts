@@ -1,6 +1,6 @@
 import { User } from '@/@types/user'
 
-export type LoginPayload = {
+export type LoginRequest = {
   username: string
   password: string
 }

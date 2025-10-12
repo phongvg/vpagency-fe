@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
 import { apiLogin } from '@/services/AuthService'
-import { LoginPayload } from '@/@types/auth'
+import { LoginRequest } from '@/@types/auth'
 
 export const useLoginMutation = () => {
   return useMutation({
-    mutationFn: (payload: LoginPayload) => apiLogin(payload),
+    mutationFn: (payload: LoginRequest) => apiLogin(payload),
   })
 }

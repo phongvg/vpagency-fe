@@ -1,15 +1,8 @@
 import { BaseResponse } from '@/@types/common'
 import ApiService from './ApiService'
-import type {
-  SignUpCredential,
-  ForgotPassword,
-  ResetPassword,
-  SignUpResponse,
-  LoginResponse,
-  LoginPayload,
-} from '@/@types/auth'
+import type { LoginResponse, LoginRequest } from '@/@types/auth'
 
-export async function apiLogin(payload: LoginPayload) {
+export async function apiLogin(payload: LoginRequest) {
   return ApiService.fetchData<BaseResponse<LoginResponse>>({
     url: '/auth/login',
     method: 'post',
@@ -25,33 +18,9 @@ export async function apiLoginTelegram(code: string) {
   })
 }
 
-export async function apiSignUp(data: SignUpCredential) {
-  return ApiService.fetchData<SignUpResponse>({
-    url: '/sign-up',
-    method: 'post',
-    data,
-  })
-}
-
 export async function apiLogout() {
   return ApiService.fetchData({
     url: '/auth/logout',
     method: 'post',
-  })
-}
-
-export async function apiForgotPassword(data: ForgotPassword) {
-  return ApiService.fetchData({
-    url: '/forgot-password',
-    method: 'post',
-    data,
-  })
-}
-
-export async function apiResetPassword(data: ResetPassword) {
-  return ApiService.fetchData({
-    url: '/reset-password',
-    method: 'post',
-    data,
   })
 }

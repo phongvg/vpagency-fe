@@ -10,3 +10,8 @@ export type UpdateUserRequest = {
   email: string
   roles: Role[]
 }
+
+export type ResetPasswordUserRequest = {
+  newPassword: string
+  confirmPassword?: string
+}

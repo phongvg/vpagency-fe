@@ -8,12 +8,14 @@ type UserState = {
   users: User[]
   selectedUser: User | null
   drawerOpen: boolean
+  resetPasswordDrawerOpen: boolean
 
   setFilter: (filter: CommonFilterRequest) => void
   setSearch: (search: string) => void
   setUsers: (users: User[]) => void
   setSelectedUser: (user: User | null) => void
   setDrawerOpen: (open: boolean) => void
+  setResetPasswordDrawerOpen: (open: boolean) => void
   clearFilter: () => void
 }
 
@@ -28,6 +30,7 @@ export const initialUserState = {
   users: [],
   selectedUser: null,
   drawerOpen: false,
+  resetPasswordDrawerOpen: false,
 }
 
 export const useUserStore = create<UserState>()(
@@ -42,6 +45,8 @@ export const useUserStore = create<UserState>()(
     setUsers: (users) => set({ users }),
     setSelectedUser: (user) => set({ selectedUser: user }),
     setDrawerOpen: (open) => set({ drawerOpen: open }),
+    setResetPasswordDrawerOpen: (open) =>
+      set({ resetPasswordDrawerOpen: open }),
     clearFilter: () => set({ filter: initialUserState.filter }),
   })),
 )

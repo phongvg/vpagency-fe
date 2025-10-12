@@ -1,7 +1,12 @@
 import { BaseListResponse, BaseResponse } from '@/@types/common'
 import ApiService from './ApiService'
-import { UpdateUserInfoPayload, User } from '@/@types/user'
 import {
+  ResetPasswordResponse,
+  UpdateUserInfoPayload,
+  User,
+} from '@/@types/user'
+import {
+  ResetPasswordUserRequest,
   UpdateUserRequest,
   UserListFilterRequest,
 } from '@/views/system/userManagement/types'
@@ -55,5 +60,16 @@ export async function apiUpdateStatusUser(userId: string) {
   return ApiService.fetchData<BaseResponse<User>>({
     url: `/admin/users/${userId}/toggle-status`,
     method: 'post',
+  })
+}
+
+export async function apiResetPasswordUser(
+  userId: string,
+  payload: ResetPasswordUserRequest,
+) {
+  return ApiService.fetchData<BaseResponse<ResetPasswordResponse>>({
+    url: `/admin/users/${userId}/reset-password`,
+    method: 'post',
+    data: payload,
   })
 }

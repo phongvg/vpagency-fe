@@ -1,17 +1,20 @@
 import { useRef } from 'react'
 import { Drawer } from '@/components/ui'
-import { useUserStore } from '@/views/system/userManagement/store/useUserStore'
-import UserEditContent, {
-  FormikRef,
-} from '@/views/system/userManagement/components/UserEditContent'
 import { DrawerFooter } from '@/views/system/userManagement/components/DrawerFooter'
+import { useUserStore } from '@/views/system/userManagement/store/useUserStore'
+import UserResetPasswordContent from '@/views/system/userManagement/components/UserResetPasswordContent'
+import { FormikRef } from '@/views/system/userManagement/components/UserResetPasswordForm'
 
-export default function UserEditDialog() {
+export default function UserResetPasswordDialog() {
   const formikRef = useRef<FormikRef>(null)
-  const { drawerOpen, setDrawerOpen, setSelectedUser } = useUserStore()
+  const {
+    resetPasswordDrawerOpen,
+    setResetPasswordDrawerOpen,
+    setSelectedUser,
+  } = useUserStore()
 
   const onDrawerClose = () => {
-    setDrawerOpen(false)
+    setResetPasswordDrawerOpen(false)
     setSelectedUser(null)
   }
 
@@ -21,7 +24,7 @@ export default function UserEditDialog() {
 
   return (
     <Drawer
-      isOpen={drawerOpen}
+      isOpen={resetPasswordDrawerOpen}
       closable={false}
       bodyClass="p-0"
       footer={
@@ -30,7 +33,7 @@ export default function UserEditDialog() {
       onClose={onDrawerClose}
       onRequestClose={onDrawerClose}
     >
-      <UserEditContent ref={formikRef} />
+      <UserResetPasswordContent ref={formikRef} />
     </Drawer>
   )
 }

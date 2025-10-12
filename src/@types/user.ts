@@ -23,3 +23,8 @@ export type UpdateUserInfoPayload = {
   password?: string
   avatar?: string | null
 }
+
+export type ResetPasswordResponse = {
+  message: string
+  user: User
+}

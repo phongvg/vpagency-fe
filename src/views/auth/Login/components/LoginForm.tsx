@@ -21,17 +21,10 @@ import useAuth from '@/utils/hooks/useAuth'
 
 interface LoginFormProps extends CommonProps {
   disableSubmit?: boolean
-  forgotPasswordUrl?: string
-  signUpUrl?: string
 }
 
 export default function LoginForm(props: LoginFormProps) {
-  const {
-    disableSubmit = false,
-    className,
-    forgotPasswordUrl = urlConfig.forgotPassword,
-    signUpUrl = urlConfig.signUp,
-  } = props
+  const { disableSubmit = false, className } = props
   const query = useQuery()
   const [message, setMessage] = useState<string | null>(null)
   const { handleLoginSuccess } = useAuth()

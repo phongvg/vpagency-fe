@@ -5,17 +5,15 @@ import {
 } from '@/views/system/userManagement/hooks/useUsersQueries'
 import { ColumnDef } from '@tanstack/react-table'
 import { User } from '@/@types/user'
-import useThemeClass from '@/utils/hooks/useThemeClass'
 import { Avatar, Badge, Switcher } from '@/components/ui'
-import { Link } from 'react-router-dom'
 import { DataTable } from '@/components/shared'
 import { useUserStore } from '@/views/system/userManagement/store/useUserStore'
 import { StatusEnum } from '@/enums/status.enum'
 import dayjs from 'dayjs'
-import { HiOutlinePencilAlt } from 'react-icons/hi'
+import { HiOutlineKey, HiOutlinePencilAlt } from 'react-icons/hi'
 import UserEditDialog from '@/views/system/userManagement/components/UserEditDialog'
-import UserRoleBadges from '@/views/system/userManagement/components/UserRoleBadges'
 import RoleTabs from '@/views/system/userManagement/components/RoleTabs'
+import UserResetPasswordDialog from '@/views/system/userManagement/components/UserResetPasswordDialog'
 
 const statusColor: Record<StatusEnum, string> = {
   [StatusEnum.OnBoarding]: 'bg-blue-500',
@@ -30,23 +28,24 @@ const statusLabel: Record<StatusEnum, string> = {
 }
 
 const NameColumn = ({ row }: { row: User }) => {
-  const { textTheme } = useThemeClass()
-
   return (
     <div className="flex items-center">
       <Avatar size={38} shape="circle" src={row.avatar ?? ''} />
-      <Link
-        className={`hover:${textTheme} ml-2 rtl:mr-2 font-semibold max-w-[150px] truncate`}
-        to={`/app/crm/customer-details?id=${row.id}`}
-      >
+      <span className="rtl:mr-2 ml-2 max-w-[150px] font-semibold truncate">
         {row.firstName} {row.lastName}
-      </Link>
+      </span>
     </div>
   )
 }
 
 export default function UserTable() {
-  const { filter, setFilter, setDrawerOpen, setSelectedUser } = useUserStore()
+  const {
+    filter,
+    setFilter,
+    setDrawerOpen,
+    setResetPasswordDrawerOpen,
+    setSelectedUser,
+  } = useUserStore()
   const { data: getUsersResponse, isLoading } = useGetUsersQuery()
   const userMutation = useUpdateStatusUserMutation()
 
@@ -80,14 +79,6 @@ export default function UserTable() {
       {
         header: 'Email',
         accessorKey: 'email',
-      },
-      {
-        header: 'Vai trò',
-        accessorKey: 'roles',
-        cell: (props) => {
-          const row = props.row.original
-          return <UserRoleBadges roles={row.roles} maxDisplay={2} />
-        },
       },
       {
         header: 'Trạng thái',
@@ -146,6 +137,15 @@ export default function UserTable() {
               >
                 <HiOutlinePencilAlt size={24} />
               </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedUser(row)
+                  setResetPasswordDrawerOpen(true)
+                }}
+              >
+                <HiOutlineKey size={24} />
+              </button>
             </div>
           )
         },
@@ -171,8 +171,8 @@ export default function UserTable() {
       <DataTable
         columns={columns}
         data={getUsersResponse?.data ?? []}
-        skeletonAvatarColumns={[0]}
-        skeletonAvatarProps={{ width: 28, height: 28 }}
+        skeletonAvatarColumns={[1]}
+        skeletonAvatarProps={{ width: 38, height: 38 }}
         loading={isLoading}
         pagingData={{
           total: metaTableData?.total as number,
@@ -184,6 +184,7 @@ export default function UserTable() {
       />
 
       <UserEditDialog />
+      <UserResetPasswordDialog />
     </>
   )
 }

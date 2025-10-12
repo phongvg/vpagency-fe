@@ -7,14 +7,14 @@ import { forwardRef } from 'react'
 import { HiOutlineUser } from 'react-icons/hi'
 import UserRoleManagerField from './UserRoleManager'
 
-interface UserFormProps {
+interface UserEditFormProps {
   user: User | null
   onFormSubmit: (values: UpdateUserRequest) => void
 }
 
 export type FormikRef = FormikProps<UpdateUserRequest>
 
-const UserForm = forwardRef<FormikRef, UserFormProps>((props, ref) => {
+const UserEditForm = forwardRef<FormikRef, UserEditFormProps>((props, ref) => {
   const { user, onFormSubmit } = props
 
   return (
@@ -113,6 +113,6 @@ const UserForm = forwardRef<FormikRef, UserFormProps>((props, ref) => {
   )
 })
 
-UserForm.displayName = 'UserForm'
+UserEditForm.displayName = 'UserEditForm'
 
-export default UserForm
+export default UserEditForm
