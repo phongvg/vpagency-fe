@@ -1,15 +1,15 @@
 import { Button } from '@/components/ui'
-import UserManagementSearch from '@/views/system/userManagement/components/UserManagementSearch'
+import UserSearch from '@/views/system/userManagement/components/UserSearch'
 import { useUserStore } from '@/views/system/userManagement/store/useUserStore'
 import { HiOutlineRefresh } from 'react-icons/hi'
 
-export default function UserManagementTableTools() {
+export default function UserTableTools() {
   const { clearFilter } = useUserStore()
 
   return (
     <div className="flex justify-between items-center mb-4">
       <div className="flex items-center space-x-2">
-        <UserManagementSearch />
+        <UserSearch />
         <Button size="sm" onClick={clearFilter}>
           <HiOutlineRefresh />
         </Button>

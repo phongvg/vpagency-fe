@@ -1,7 +1,7 @@
 import { MouseEvent, useRef } from 'react'
 import { Button, Drawer } from '@/components/ui'
 import { useUserStore } from '@/views/system/userManagement/store/useUserStore'
-import UserManagemetEditContent from '@/views/system/userManagement/components/UserManagemetEditContent'
+import UserEditContent from '@/views/system/userManagement/components/UserEditContent'
 
 type DrawerFooterProps = {
   onSaveClick: (event: MouseEvent<HTMLButtonElement>) => void
@@ -21,7 +21,7 @@ const DrawerFooter = ({ onSaveClick, onCancel }: DrawerFooterProps) => {
   )
 }
 
-export default function UserManagementEditDialog() {
+export default function UserEditDialog() {
   const formikRef = useRef<any>(null)
   const { drawerOpen, setDrawerOpen, setSelectedUser } = useUserStore()
 
@@ -45,7 +45,7 @@ export default function UserManagementEditDialog() {
       onClose={onDrawerClose}
       onRequestClose={onDrawerClose}
     >
-      <UserManagemetEditContent ref={formikRef} />
+      <UserEditContent ref={formikRef} />
     </Drawer>
   )
 }

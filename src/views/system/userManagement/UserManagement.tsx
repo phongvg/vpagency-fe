@@ -1,14 +1,14 @@
 import { AdaptableCard } from '@/components/shared'
 import { Card } from '@/components/ui'
-import UserManagementTable from '@/views/system/userManagement/components/UserManagementTable'
-import UserManagementTableTools from '@/views/system/userManagement/components/UserManagementTableTools'
+import UserTable from '@/views/system/userManagement/components/UserTable'
+import UserTableTools from '@/views/system/userManagement/components/UserTableTools'
 
 export default function UserManagement() {
   return (
     <AdaptableCard className="h-full" bodyClass="h-full">
-      <UserManagementTableTools />
+      <UserTableTools />
       <Card>
-        <UserManagementTable />
+        <UserTable />
       </Card>
     </AdaptableCard>
   )

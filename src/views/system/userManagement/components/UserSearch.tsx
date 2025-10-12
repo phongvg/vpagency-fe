@@ -4,7 +4,7 @@ import { HiOutlineSearch } from 'react-icons/hi'
 import { useUserStore } from '@/views/system/userManagement/store/useUserStore'
 import { debounce } from 'lodash'
 
-export default function UserManagementSearch() {
+export default function UserSearch() {
   const { filter, setSearch } = useUserStore()
   const [searchValue, setSearchValue] = useState(filter.search)
 

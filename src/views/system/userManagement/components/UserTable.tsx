@@ -13,7 +13,7 @@ import { useUserStore } from '@/views/system/userManagement/store/useUserStore'
 import { StatusEnum } from '@/enums/status.enum'
 import dayjs from 'dayjs'
 import { HiOutlinePencilAlt } from 'react-icons/hi'
-import UserManagementEditDialog from '@/views/system/userManagement/components/UserManagementEditDialog'
+import UserEditDialog from '@/views/system/userManagement/components/UserEditDialog'
 import UserRoleBadges from '@/views/system/userManagement/components/UserRoleBadges'
 import RoleTabs from '@/views/system/userManagement/components/RoleTabs'
 
@@ -45,7 +45,7 @@ const NameColumn = ({ row }: { row: User }) => {
   )
 }
 
-export default function UserManagementTable() {
+export default function UserTable() {
   const { filter, setFilter, setDrawerOpen, setSelectedUser } = useUserStore()
   const { data: getUsersResponse, isLoading } = useGetUsersQuery()
   const userMutation = useUpdateStatusUserMutation()
@@ -183,7 +183,7 @@ export default function UserManagementTable() {
         onSelectChange={onSelectChange}
       />
 
-      <UserManagementEditDialog />
+      <UserEditDialog />
     </>
   )
 }
