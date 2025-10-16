@@ -5,11 +5,11 @@ import {
   apiUpdateUser,
 } from '@/services/UserService'
 import { GET_USER_LIST } from '@/utils/queryKey'
-import { useUserStore } from '@/views/system/userManagement/store/useUserStore'
+import { useUserStore } from '@/views/systems/users/store/useUserStore'
 import {
   ResetPasswordUserRequest,
   UpdateUserRequest,
-} from '@/views/system/userManagement/types'
+} from '@/views/systems/users/types'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 export const useGetUsersQuery = () => {

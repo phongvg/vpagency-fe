@@ -1,13 +1,13 @@
 import { Field, Form, Formik } from 'formik'
 import { Avatar, Button, FormContainer, Input, Upload } from '@/components/ui'
-import FormRow from '@/views/user/Profile/components/FormRow'
+import FormRow from '@/views/user/profile/components/FormRow'
 import { HiOutlineUser } from 'react-icons/hi'
 import { useAuthStore } from '@/store/auth/useAuthStore'
 import { UpdateUserInfoPayload } from '@/@types/user'
 import { useEffect, useState } from 'react'
 import { toastError, toastSuccess } from '@/utils/toast'
-import { updateProfileValidationSchema } from '@/views/user/Profile/schemas/updateProfile.schema'
-import { useUpdateInfoMutation } from '@/views/user/UpdateInfo/hooks/useUpdateInfoMutation'
+import { updateProfileValidationSchema } from '@/views/user/profile/schemas/updateProfile.schema'
+import { useUpdateInfoMutation } from '@/views/user/updateInfo/hooks/useUpdateInfoMutation'
 import { MESSAGES } from '@/constants/message.constant'
 
 export default function Profile() {

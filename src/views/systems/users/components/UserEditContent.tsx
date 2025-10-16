@@ -1,10 +1,10 @@
 import { forwardRef } from 'react'
-import { UpdateUserRequest } from '@/views/system/userManagement/types'
-import { useUserStore } from '@/views/system/userManagement/store/useUserStore'
+import { UpdateUserRequest } from '@/views/systems/users/types'
+import { useUserStore } from '@/views/systems/users/store/useUserStore'
 import UserEditForm, {
   FormikRef,
-} from '@/views/system/userManagement/components/UserEditForm'
-import { useUpdateUserMutation } from '@/views/system/userManagement/hooks/useUsersQueries'
+} from '@/views/systems/users/components/UserEditForm'
+import { useUpdateUserMutation } from '@/views/systems/users/hooks/useUsersQueries'
 import { toastError, toastSuccess } from '@/utils/toast'
 import { MESSAGES } from '@/constants/message.constant'
 

@@ -1,7 +1,7 @@
 import { PasswordInput } from '@/components/shared'
 import { FormContainer, FormItem } from '@/components/ui'
-import { resetPasswordValidationSchema } from '@/views/system/userManagement/schemas/resetPassword.schema'
-import { ResetPasswordUserRequest } from '@/views/system/userManagement/types'
+import { resetPasswordValidationSchema } from '@/views/systems/users/schemas/resetPassword.schema'
+import { ResetPasswordUserRequest } from '@/views/systems/users/types'
 import { Field, Form, Formik, FormikProps } from 'formik'
 import { forwardRef } from 'react'
 

@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui'
-import UpdateInfoForm from '@/views/user/UpdateInfo/components/UpdateInfoForm'
+import UpdateInfoForm from '@/views/user/updateInfo/components/UpdateInfoForm'
 
 export default function UpdateInfo() {
   return (

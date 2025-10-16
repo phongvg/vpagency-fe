@@ -1,10 +1,10 @@
 import { useRef } from 'react'
 import { Drawer } from '@/components/ui'
-import { useUserStore } from '@/views/system/userManagement/store/useUserStore'
+import { useUserStore } from '@/views/systems/users/store/useUserStore'
 import UserEditContent, {
   FormikRef,
-} from '@/views/system/userManagement/components/UserEditContent'
-import { DrawerFooter } from '@/views/system/userManagement/components/DrawerFooter'
+} from '@/views/systems/users/components/UserEditContent'
+import { DrawerFooter } from '@/views/systems/users/components/DrawerFooter'
 
 export default function UserEditDialog() {
   const formikRef = useRef<FormikRef>(null)

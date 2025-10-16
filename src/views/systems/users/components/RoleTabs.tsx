@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Tabs } from '@/components/ui'
-import { useUserStore } from '@/views/system/userManagement/store/useUserStore'
+import { useUserStore } from '@/views/systems/users/store/useUserStore'
 import { Role, getRoleLabel, getAllRoles } from '@/enums/role.enum'
 
 interface RoleTabsProps {

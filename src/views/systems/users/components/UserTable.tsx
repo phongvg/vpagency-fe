@@ -2,18 +2,18 @@ import { useMemo } from 'react'
 import {
   useGetUsersQuery,
   useUpdateStatusUserMutation,
-} from '@/views/system/userManagement/hooks/useUsersQueries'
+} from '@/views/systems/users/hooks/useUsersQueries'
 import { ColumnDef } from '@tanstack/react-table'
 import { User } from '@/@types/user'
 import { Avatar, Badge, Switcher } from '@/components/ui'
 import { DataTable } from '@/components/shared'
-import { useUserStore } from '@/views/system/userManagement/store/useUserStore'
+import { useUserStore } from '@/views/systems/users/store/useUserStore'
 import { StatusEnum } from '@/enums/status.enum'
 import dayjs from 'dayjs'
 import { HiOutlineKey, HiOutlinePencilAlt } from 'react-icons/hi'
-import UserEditDialog from '@/views/system/userManagement/components/UserEditDialog'
-import RoleTabs from '@/views/system/userManagement/components/RoleTabs'
-import UserResetPasswordDialog from '@/views/system/userManagement/components/UserResetPasswordDialog'
+import UserEditDialog from '@/views/systems/users/components/UserEditDialog'
+import RoleTabs from '@/views/systems/users/components/RoleTabs'
+import UserResetPasswordDialog from '@/views/systems/users/components/UserResetPasswordDialog'
 
 const statusColor: Record<StatusEnum, string> = {
   [StatusEnum.OnBoarding]: 'bg-blue-500',

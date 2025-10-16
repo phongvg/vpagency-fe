@@ -28,7 +28,7 @@ const appsNavigationConfig: NavigationTree[] = [
         subMenu: [],
       },
       {
-        key: 'apps.task',
+        key: 'apps.tasks',
         path: '',
         title: 'Quản lý công việc',
         translateKey: '',
@@ -37,27 +37,17 @@ const appsNavigationConfig: NavigationTree[] = [
         authority: [Role.ADMIN, Role.USER],
         subMenu: [
           {
-            key: 'task.assign',
+            key: 'tasks.assign',
             path: urlConfig.taskAssign,
             title: 'Giao việc',
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [Role.ADMIN, Role.USER],
+            authority: [Role.ADMIN],
             subMenu: [],
           },
           {
-            key: 'task.receive',
-            path: urlConfig.taskReceive,
-            title: 'Nhận việc',
-            translateKey: '',
-            icon: '',
-            type: NAV_ITEM_TYPE_ITEM,
-            authority: [Role.ADMIN, Role.USER],
-            subMenu: [],
-          },
-          {
-            key: 'task.report',
+            key: 'tasks.reports',
             path: urlConfig.taskReport,
             title: 'Báo cáo MAR',
             translateKey: '',
@@ -69,7 +59,7 @@ const appsNavigationConfig: NavigationTree[] = [
         ],
       },
       {
-        key: 'apps.customer',
+        key: 'apps.customers',
         path: '',
         title: 'Quản lý khách hàng',
         translateKey: '',
@@ -78,7 +68,7 @@ const appsNavigationConfig: NavigationTree[] = [
         authority: [Role.ADMIN, Role.USER],
         subMenu: [
           {
-            key: 'customer.list',
+            key: 'customers.list',
             path: urlConfig.customerList,
             title: 'Danh sách khách hàng',
             translateKey: '',
@@ -88,7 +78,7 @@ const appsNavigationConfig: NavigationTree[] = [
             subMenu: [],
           },
           {
-            key: 'customer.update',
+            key: 'customers.update',
             path: urlConfig.customerUpdate,
             title: 'Cập nhật khách hàng',
             translateKey: '',
@@ -100,7 +90,7 @@ const appsNavigationConfig: NavigationTree[] = [
         ],
       },
       {
-        key: 'apps.finance',
+        key: 'apps.finances',
         path: '',
         title: 'Quản lý tài chính',
         translateKey: '',
@@ -109,7 +99,7 @@ const appsNavigationConfig: NavigationTree[] = [
         authority: [Role.ADMIN, Role.USER],
         subMenu: [
           {
-            key: 'finance.sales',
+            key: 'finances.sales',
             path: urlConfig.financeSales,
             title: 'Doanh số dự án',
             translateKey: '',
@@ -119,7 +109,7 @@ const appsNavigationConfig: NavigationTree[] = [
             subMenu: [],
           },
           {
-            key: 'finance.report',
+            key: 'finances.reports',
             path: urlConfig.financeReport,
             title: 'Thống kê',
             translateKey: '',
@@ -131,7 +121,7 @@ const appsNavigationConfig: NavigationTree[] = [
         ],
       },
       {
-        key: 'apps.system',
+        key: 'apps.systems',
         path: '',
         title: 'Quản trị hệ thống',
         translateKey: '',
@@ -140,8 +130,8 @@ const appsNavigationConfig: NavigationTree[] = [
         authority: [Role.ADMIN],
         subMenu: [
           {
-            key: 'system.userManagement',
-            path: urlConfig.systemUserManagement,
+            key: 'systems.users',
+            path: urlConfig.systemUsers,
             title: 'Quản lý tài khoản',
             translateKey: '',
             icon: '',

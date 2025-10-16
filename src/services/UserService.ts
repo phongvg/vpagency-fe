@@ -9,7 +9,7 @@ import {
   ResetPasswordUserRequest,
   UpdateUserRequest,
   UserListFilterRequest,
-} from '@/views/system/userManagement/types'
+} from '@/views/systems/users/types'
 
 export async function apiGetUserInfo() {
   return ApiService.fetchData<BaseResponse<User>>({

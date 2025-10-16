@@ -2,10 +2,10 @@ import { MESSAGES } from '@/constants/message.constant'
 import { toastSuccess } from '@/utils/toast'
 import UserResetPasswordForm, {
   FormikRef,
-} from '@/views/system/userManagement/components/UserResetPasswordForm'
-import { useResetPasswordUserMutation } from '@/views/system/userManagement/hooks/useUsersQueries'
-import { useUserStore } from '@/views/system/userManagement/store/useUserStore'
-import { ResetPasswordUserRequest } from '@/views/system/userManagement/types'
+} from '@/views/systems/users/components/UserResetPasswordForm'
+import { useResetPasswordUserMutation } from '@/views/systems/users/hooks/useUsersQueries'
+import { useUserStore } from '@/views/systems/users/store/useUserStore'
+import { ResetPasswordUserRequest } from '@/views/systems/users/types'
 import { forwardRef } from 'react'
 
 const UserResetPasswordContent = forwardRef<FormikRef>((_, ref) => {

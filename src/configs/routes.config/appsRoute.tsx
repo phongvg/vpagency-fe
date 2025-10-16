@@ -11,9 +11,9 @@ const appsRoute: Routes = [
     authority: [Role.ADMIN],
   },
   {
-    key: 'system.userManagement',
-    path: urlConfig.systemUserManagement,
-    component: lazy(() => import('@/views/system/userManagement')),
+    key: 'systems.users',
+    path: urlConfig.systemUsers,
+    component: lazy(() => import('@/views/systems/users')),
     authority: [Role.ADMIN],
     meta: {
       header: 'Quản lý tài khoản',
@@ -28,7 +28,7 @@ const appsRoute: Routes = [
   {
     key: 'user.updateInfo',
     path: urlConfig.userUpdateInfo,
-    component: lazy(() => import('@/views/user/UpdateInfo')),
+    component: lazy(() => import('@/views/user/updateInfo')),
     authority: [],
     meta: {
       layout: 'blank',
@@ -37,10 +37,19 @@ const appsRoute: Routes = [
   {
     key: 'user.profile',
     path: urlConfig.userProfile,
-    component: lazy(() => import('@/views/user/Profile')),
+    component: lazy(() => import('@/views/user/profile')),
     authority: [],
     meta: {
       header: 'Thông tin cá nhân',
+    },
+  },
+  {
+    key: 'tasks.assign',
+    path: urlConfig.taskAssign,
+    component: lazy(() => import('@/views/tasks/assign')),
+    authority: [Role.ADMIN],
+    meta: {
+      header: 'Giao việc',
     },
   },
 ]

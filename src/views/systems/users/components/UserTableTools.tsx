@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui'
-import UserSearch from '@/views/system/userManagement/components/UserSearch'
-import { useUserStore } from '@/views/system/userManagement/store/useUserStore'
+import UserSearch from '@/views/systems/users/components/UserSearch'
+import { useUserStore } from '@/views/systems/users/store/useUserStore'
 import { HiOutlineRefresh } from 'react-icons/hi'
 
 export default function UserTableTools() {

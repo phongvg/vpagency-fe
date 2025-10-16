@@ -1,8 +1,4 @@
-import axios, {
-  HttpStatusCode,
-  AxiosError,
-  InternalAxiosRequestConfig,
-} from 'axios'
+import axios, { HttpStatusCode, AxiosError, InternalAxiosRequestConfig } from 'axios'
 import appConfig from '@/configs/app.config'
 import { TOKEN_TYPE, REQUEST_HEADER_AUTH_KEY } from '@/constants/api.constant'
 import { ACCESS_TOKEN_KEY, USER_ID } from '@/constants/app.constant'
@@ -56,17 +52,13 @@ BaseService.interceptors.response.use(
       _retry?: boolean
     }
 
-    if (
-      error.response?.status === HttpStatusCode.Unauthorized &&
-      !originalRequest._retry
-    ) {
+    if (error.response?.status === HttpStatusCode.Unauthorized && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject })
         })
           .then((token) => {
-            originalRequest.headers[REQUEST_HEADER_AUTH_KEY] =
-              `${TOKEN_TYPE}${token}`
+            originalRequest.headers[REQUEST_HEADER_AUTH_KEY] = `${TOKEN_TYPE}${token}`
             return BaseService(originalRequest)
           })
           .catch((err) => Promise.reject(err))
@@ -80,9 +72,7 @@ BaseService.interceptors.response.use(
 
         const response = await axios.post<BaseResponse<RefreshTokenResponse>>(
           `${appConfig.apiPrefix}/auth/refresh`,
-          {
-            userId,
-          },
+          { userId },
           {
             headers: {
               'Content-Type': 'application/json',
@@ -95,10 +85,10 @@ BaseService.interceptors.response.use(
 
         localStorageUtils.setItem(ACCESS_TOKEN_KEY, newAccessToken)
 
-        BaseService.defaults.headers[REQUEST_HEADER_AUTH_KEY] =
-          `${TOKEN_TYPE}${newAccessToken}`
+        BaseService.defaults.headers[REQUEST_HEADER_AUTH_KEY] = `${TOKEN_TYPE}${newAccessToken}`
 
         processQueue(null, newAccessToken)
+
         return BaseService(originalRequest)
       } catch (err: Error | any) {
         processQueue(err, null)

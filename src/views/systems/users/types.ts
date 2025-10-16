@@ -1,7 +1,9 @@
 import { CommonFilterRequest } from '@/@types/common'
 import { Role } from '@/enums/role.enum'
 
-export type UserListFilterRequest = CommonFilterRequest
+export type UserListFilterRequest = CommonFilterRequest & {
+  role?: Role
+}
 
 export type UpdateUserRequest = {
   username: string
