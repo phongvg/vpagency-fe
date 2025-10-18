@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import Tooltip from '@/components/ui/Tooltip'
 import Avatar from '@/components/ui/Avatar'
 import acronym from '@/utils/acronym'
-import useTwColorByName from '@/utils/hooks/useTwColorByName'
 import type { AvatarProps, AvatarGroupProps } from '@/components/ui/Avatar'
 import { User } from '@/@types/user'
 
@@ -25,8 +24,6 @@ const UsersAvatarGroup = (props: UsersAvatarGroupProps) => {
     users = [],
     ...rest
   } = props
-
-  const bgColor = useTwColorByName()
 
   const defaultAvatarProps = useMemo(() => {
     return {

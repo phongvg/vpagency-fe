@@ -1,93 +1,162 @@
 import { Task } from '@/@types/task'
-import { Loading } from '@/components/shared'
+import { TaskStatus } from '@/enums/task.enum'
 import { toastError, toastSuccess } from '@/utils/toast'
 import BoardColumn from '@/views/tasks/assign/components/BoardColumn'
 import { useTasksBoard, useUpdateTaskStatus } from '@/views/tasks/assign/hooks/useTaskQueries'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
-import { reorderQuoteMap } from '@/views/tasks/assign/utils'
-import { useCallback, useMemo } from 'react'
-import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverEvent,
+  DragStartEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
+import { arrayMove } from '@dnd-kit/sortable'
+import { useState } from 'react'
 
 export default function Board() {
-  const { board, isLoading } = useTasksBoard()
+  const { board } = useTasksBoard()
   const { setBoard } = useBoardStore()
   const updateTaskStatus = useUpdateTaskStatus()
+  const [originalContainer, setOriginalContainer] = useState<string | null>(null)
 
-  const onDragEnd = useCallback(
-    async (result: DropResult) => {
-      if (!result.destination) return
-
-      const { source, destination, draggableId } = result
-
-      if (source.droppableId === destination.droppableId && source.index === destination.index) return
-
-      if (source.droppableId === destination.droppableId) {
-        const newData = reorderQuoteMap({
-          quoteMap: board,
-          source,
-          destination,
-        })
-        setBoard(newData.quoteMap)
-        return
-      }
-
-      try {
-        const response = await updateTaskStatus.mutateAsync({
-          taskId: draggableId,
-          status: destination.droppableId,
-        })
-
-        const newData = reorderQuoteMap({
-          quoteMap: board,
-          source,
-          destination,
-        })
-        setBoard(newData.quoteMap)
-
-        toastSuccess(response.message)
-      } catch (error) {
-        toastError('Cập nhật trạng thái thất bại')
-      }
-    },
-    [board, setBoard, updateTaskStatus],
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
   )
 
-  const boardEntries = useMemo(() => {
-    return board ? Object.entries(board) : []
-  }, [board])
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event
+    const activeId = active.id as string
+
+    const container = findContainer(activeId)
+    setOriginalContainer(container)
+  }
+
+  const handleDragOver = (event: DragOverEvent) => {
+    const { active, over } = event
+
+    if (!over) return
+
+    const activeId = active.id as string
+    const overId = over.id as string
+
+    const activeContainer = findContainer(activeId)
+    const overContainer = [
+      TaskStatus.PENDING,
+      TaskStatus.IN_PROGRESS,
+      TaskStatus.COMPLETED,
+      TaskStatus.CANCELLED,
+    ].includes(overId as TaskStatus)
+      ? overId
+      : findContainer(overId)
+
+    if (!activeContainer || !overContainer) return
+    if (activeContainer === overContainer) return
+
+    // Di chuyển task giữa các containers
+    setBoard((prev) => {
+      const activeItems = prev[activeContainer]
+      const overItems = prev[overContainer]
+
+      if (!activeItems || !overItems) return prev
+
+      const activeIndex = activeItems.findIndex((item: Task) => item.id === activeId)
+      const activeItem = activeItems[activeIndex]
+
+      if (!activeItem) return prev
+
+      const newActiveItems = activeItems.filter((item: Task) => item.id !== activeId)
+      const newOverItems = [...overItems, activeItem]
+
+      return {
+        ...prev,
+        [activeContainer]: newActiveItems,
+        [overContainer]: newOverItems,
+      }
+    })
+  }
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event
+
+    if (!over) {
+      setOriginalContainer(null)
+      return
+    }
+
+    const activeId = active.id as string
+    const overId = over.id as string
+
+    const activeContainer = originalContainer
+    const overContainer = [
+      TaskStatus.PENDING,
+      TaskStatus.IN_PROGRESS,
+      TaskStatus.COMPLETED,
+      TaskStatus.CANCELLED,
+    ].includes(overId as TaskStatus)
+      ? overId
+      : findContainer(overId)
+
+    if (!activeContainer || !overContainer) {
+      setOriginalContainer(null)
+      return
+    }
+
+    // Nếu di chuyển trong cùng cột
+    if (activeContainer === overContainer) {
+      setBoard((prev) => {
+        const items = prev[activeContainer]
+        const oldIndex = items.findIndex((item: Task) => item.id === activeId)
+        const newIndex = items.findIndex((item: Task) => item.id === overId)
+
+        return {
+          ...prev,
+          [activeContainer]: arrayMove(items, oldIndex, newIndex >= 0 ? newIndex : items.length - 1),
+        }
+      })
+      setOriginalContainer(null)
+      return
+    }
+
+    try {
+      const response = await updateTaskStatus.mutateAsync({
+        taskId: activeId,
+        status: overContainer,
+      })
+
+      toastSuccess(response.message)
+    } catch (error) {
+      toastError('Cập nhật trạng thái thất bại')
+    }
+
+    setOriginalContainer(null)
+  }
+
+  const findContainer = (id: string): string | null => {
+    for (const [status, tasks] of Object.entries(board)) {
+      if (tasks.some((task) => task.id === id)) {
+        return status
+      }
+    }
+
+    return null
+  }
 
   return (
-    <Loading loading={isLoading}>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="board" type="COLUMN" direction="horizontal">
-          {(provided, snapshot) => (
-            <div
-              ref={provided.innerRef}
-              className={`flex flex-col flex-auto mb-2 w-full h-full scrumboard ${
-                snapshot.isDraggingOver ? 'dragging-over' : ''
-              }`}
-              {...provided.droppableProps}
-              style={{
-                transition: snapshot.isDraggingOver ? 'none' : undefined,
-              }}
-            >
-              <div className="gap-6 grid grid-cols-4 mt-4 max-w-full h-full scrumboard-body">
-                {boardEntries.map(([status, tasks], index) => (
-                  <BoardColumn
-                    key={status}
-                    title={status}
-                    index={index}
-                    isScrollable={false}
-                    contents={tasks as Task[]}
-                    isCombineEnabled={false}
-                  />
-                ))}
-                {provided.placeholder}
-              </div>
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    </Loading>
+    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
+      <div className="flex flex-col flex-auto mb-2 w-full h-full scrumboard">
+        <div className="gap-6 grid grid-cols-4 mt-4 max-w-full h-full scrumboard-body">
+          {Object.entries(board).map(([status, tasks]) => (
+            <BoardColumn key={status} title={status} tasks={tasks as Task[]} />
+          ))}
+        </div>
+      </div>
+    </DndContext>
   )
 }

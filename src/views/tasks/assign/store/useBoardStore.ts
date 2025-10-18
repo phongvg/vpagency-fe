@@ -5,7 +5,7 @@ import { devtools } from 'zustand/middleware'
 type BoardState = {
   board: Columns
 
-  setBoard: (board: Columns) => void
+  setBoard: (board: Columns | ((prev: Columns) => Columns)) => void
   clearBoard: () => void
 }
 
@@ -22,7 +22,10 @@ export const useBoardStore = create<BoardState>()(
   devtools((set) => ({
     ...initialBoardState,
 
-    setBoard: (board) => set(() => ({ board })),
+    setBoard: (board) =>
+      set((state) => ({
+        board: typeof board === 'function' ? board(state.board) : board,
+      })),
     clearBoard: () => set(() => ({ ...initialBoardState })),
   })),
 )

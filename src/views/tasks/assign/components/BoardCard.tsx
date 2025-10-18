@@ -1,12 +1,13 @@
 import { Task } from '@/@types/task'
-import { Card, CardProps, Tag } from '@/components/ui'
+import { Card, Tag } from '@/components/ui'
 import { TaskPriority, TaskType, TaskTypeLabels } from '@/enums/task.enum'
 import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
-import { forwardRef } from 'react'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import { HiChevronDoubleUp, HiChevronDown, HiMenu, HiMenuAlt4 } from 'react-icons/hi'
 
-interface BoardCardProps extends CardProps {
-  data: Task
+type Props = {
+  task: Task
 }
 
 const priorityIcons: Record<TaskPriority, JSX.Element> = {
@@ -26,30 +27,38 @@ const taskTypeColors: Record<TaskType, string> = {
   [TaskType.RESEARCH]: 'bg-pink-500',
 }
 
-const BoardCard = forwardRef<HTMLDivElement, BoardCardProps>((props, ref) => {
-  const { data, ...rest } = props
+export default function BoardCard({ task }: Props) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: task.id,
+  })
 
-  const { id, name, assignedUsers } = data
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  }
 
   return (
-    <Card ref={ref} clickable className="bg-gray-50 hover:shadow-lg rounded-lg" bodyClass="p-4" {...rest}>
+    <Card
+      ref={setNodeRef}
+      style={style}
+      className="bg-gray-50 hover:shadow-lg rounded-lg cursor-grab active:cursor-grabbing"
+      bodyClass="p-4"
+      {...attributes}
+      {...listeners}
+    >
       <div className="flex flex-col gap-2">
-        <div className="flex justify-between items-center">
-          <p className="text-slate-400 text-sm">{id}</p>
-          <Tag prefix prefixClass={`${taskTypeColors[data.type]}`}>
-            {TaskTypeLabels[data.type]}
+        <div>
+          <Tag prefix prefixClass={`${taskTypeColors[task.type]}`}>
+            {TaskTypeLabels[task.type]}
           </Tag>
         </div>
-        <h6>{name}</h6>
-        <div className="flex justify-between items-center mt-3">
-          <UsersAvatarGroup avatarProps={{ size: 25 }} users={assignedUsers} />
-          <div className="flex items-center gap-2">{priorityIcons[data.priority]}</div>
+        <h6>{task.name}</h6>
+        <div className="flex justify-between items-center">
+          <UsersAvatarGroup avatarProps={{ size: 25 }} users={task.assignedUsers} />
+          <div className="flex items-center gap-2">{priorityIcons[task.priority]}</div>
         </div>
       </div>
     </Card>
   )
-})
-
-BoardCard.displayName = 'BoardCard'
-
-export default BoardCard
+}
