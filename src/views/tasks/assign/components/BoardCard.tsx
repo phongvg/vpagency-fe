@@ -2,6 +2,7 @@ import { Task } from '@/@types/task'
 import { Card, Tag } from '@/components/ui'
 import { TaskPriority, TaskType, TaskTypeLabels } from '@/enums/task.enum'
 import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
+import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { HiChevronDoubleUp, HiChevronDown, HiMenu, HiMenuAlt4 } from 'react-icons/hi'
@@ -28,6 +29,7 @@ const taskTypeColors: Record<TaskType, string> = {
 }
 
 export default function BoardCard({ task }: Props) {
+  const { openDialog, setSelectedTask } = useBoardStore()
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: task.id,
   })
@@ -38,12 +40,18 @@ export default function BoardCard({ task }: Props) {
     opacity: isDragging ? 0.5 : 1,
   }
 
+  const handleClick = () => {
+    setSelectedTask(task)
+    openDialog('VIEW', task.id)
+  }
+
   return (
     <Card
       ref={setNodeRef}
       style={style}
       className="bg-gray-50 hover:shadow-lg rounded-lg cursor-grab active:cursor-grabbing"
       bodyClass="p-4"
+      onClick={handleClick}
       {...attributes}
       {...listeners}
     >

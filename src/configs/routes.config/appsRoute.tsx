@@ -48,9 +48,6 @@ const appsRoute: Routes = [
     path: urlConfig.taskAssign,
     component: lazy(() => import('@/views/tasks/assign')),
     authority: [Role.ADMIN],
-    meta: {
-      header: 'Giao việc',
-    },
   },
 ]
 

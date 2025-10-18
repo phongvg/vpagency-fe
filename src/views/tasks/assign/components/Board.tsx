@@ -2,7 +2,7 @@ import { Task } from '@/@types/task'
 import { TaskStatus } from '@/enums/task.enum'
 import { toastError, toastSuccess } from '@/utils/toast'
 import BoardColumn from '@/views/tasks/assign/components/BoardColumn'
-import { useTasksBoard, useUpdateTaskStatus } from '@/views/tasks/assign/hooks/useTaskQueries'
+import { useGetTasksGroupedByStatus, useUpdateTaskStatus } from '@/views/tasks/assign/hooks/useTaskQueries'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import {
   DndContext,
@@ -14,11 +14,18 @@ import {
   useSensors,
 } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function Board() {
-  const { board } = useTasksBoard()
-  const { setBoard } = useBoardStore()
+  const { board, setBoard } = useBoardStore()
+  const query = useGetTasksGroupedByStatus()
+
+  useEffect(() => {
+    if (query.data && query.isSuccess) {
+      setBoard(query.data)
+    }
+  }, [query.data, query.isSuccess, setBoard])
+
   const updateTaskStatus = useUpdateTaskStatus()
   const [originalContainer, setOriginalContainer] = useState<string | null>(null)
 

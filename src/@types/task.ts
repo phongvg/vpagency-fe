@@ -1,3 +1,4 @@
+import { CommonFilterRequest } from '@/@types/common'
 import { User } from '@/@types/user'
 import { TaskFrequency, TaskPriority, TaskStatus, TaskType } from '@/enums/task.enum'
 
@@ -26,4 +27,14 @@ export type TasksGroupedByStatus = {
   IN_PROGRESS: Task[]
   COMPLETED: Task[]
   CANCELLED: Task[]
+}
+
+export type TasksFilterRequest = CommonFilterRequest & {
+  status?: TaskStatus
+  type?: TaskType
+  priority?: TaskPriority
+  assignedUserId?: string
+  creatorId?: string
+  fromDate?: string
+  toDate?: string
 }

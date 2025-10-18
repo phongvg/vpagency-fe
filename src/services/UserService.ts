@@ -1,15 +1,7 @@
 import { BaseListResponse, BaseResponse } from '@/@types/common'
 import ApiService from './ApiService'
-import {
-  ResetPasswordResponse,
-  UpdateUserInfoPayload,
-  User,
-} from '@/@types/user'
-import {
-  ResetPasswordUserRequest,
-  UpdateUserRequest,
-  UserListFilterRequest,
-} from '@/views/systems/users/types'
+import { ResetPasswordResponse, UpdateUserInfoPayload, User } from '@/@types/user'
+import { ResetPasswordUserRequest, UpdateUserRequest, UserListFilterRequest } from '@/views/systems/users/types'
 
 export async function apiGetUserInfo() {
   return ApiService.fetchData<BaseResponse<User>>({
@@ -18,9 +10,7 @@ export async function apiGetUserInfo() {
   })
 }
 
-export async function apiUpdateUserInfo(
-  payload: UpdateUserInfoPayload | FormData,
-) {
+export async function apiUpdateUserInfo(payload: UpdateUserInfoPayload | FormData) {
   if (payload instanceof FormData) {
     const { default: BaseService } = await import('./BaseService')
     return BaseService.put<BaseResponse<User>>('/me', payload, {
@@ -45,10 +35,7 @@ export async function apiGetUserList(params: UserListFilterRequest) {
   })
 }
 
-export async function apiUpdateUser(
-  userId: string,
-  payload: UpdateUserRequest,
-) {
+export async function apiUpdateUser(userId: string, payload: UpdateUserRequest) {
   return ApiService.fetchData<BaseResponse<User>>({
     url: `/admin/users/${userId}`,
     method: 'put',
@@ -63,10 +50,7 @@ export async function apiUpdateStatusUser(userId: string) {
   })
 }
 
-export async function apiResetPasswordUser(
-  userId: string,
-  payload: ResetPasswordUserRequest,
-) {
+export async function apiResetPasswordUser(userId: string, payload: ResetPasswordUserRequest) {
   return ApiService.fetchData<BaseResponse<ResetPasswordResponse>>({
     url: `/admin/users/${userId}/reset-password`,
     method: 'post',

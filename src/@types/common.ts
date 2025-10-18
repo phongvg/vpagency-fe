@@ -51,6 +51,6 @@ export type CommonFilterRequest = {
   page: number
   limit: number
   search: string
-  sortBy: string
-  sortOrder: SortOrder
+  sortBy?: string
+  sortOrder?: SortOrder
 }
