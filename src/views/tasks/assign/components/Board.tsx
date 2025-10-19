@@ -132,12 +132,12 @@ export default function Board() {
     }
 
     try {
-      const response = await updateTaskStatus.mutateAsync({
+      await updateTaskStatus.mutateAsync({
         taskId: activeId,
         status: overContainer,
       })
 
-      toastSuccess(response.message)
+      toastSuccess('Cập nhật trạng thái thành công')
     } catch (error) {
       toastError('Cập nhật trạng thái thất bại')
     }
@@ -160,7 +160,7 @@ export default function Board() {
       <div className="flex flex-col flex-auto mb-2 w-full h-full scrumboard">
         <div className="gap-6 grid grid-cols-4 mt-4 max-w-full h-full scrumboard-body">
           {Object.entries(board).map(([status, tasks]) => (
-            <BoardColumn key={status} title={status} tasks={tasks as Task[]} />
+            <BoardColumn key={status} title={status} tasks={tasks} />
           ))}
         </div>
       </div>

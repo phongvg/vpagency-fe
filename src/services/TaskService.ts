@@ -54,3 +54,11 @@ export async function apiDeleteTask(taskId: string) {
     method: 'delete',
   })
 }
+
+export async function apiUpdateTaskProgress(taskId: string, progress: number) {
+  return ApiService.fetchData<BaseResponse<Task>>({
+    url: `/tasks/${taskId}/progress`,
+    method: 'put',
+    data: { progress },
+  })
+}

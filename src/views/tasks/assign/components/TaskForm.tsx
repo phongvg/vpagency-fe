@@ -117,7 +117,6 @@ export default function TaskForm({
         }}
       >
         {({ values, errors, touched, setFieldValue, handleChange, handleBlur, dirty }) => {
-          // Đồng bộ assignedUserIds với selectedUsers khi form được khởi tạo
           useEffect(() => {
             if (selectedUsers.length > 0) {
               setFieldValue(
@@ -127,7 +126,6 @@ export default function TaskForm({
             }
           }, [selectedUsers, setFieldValue])
 
-          // Theo dõi thay đổi form
           useEffect(() => {
             if (onFormChange) {
               onFormChange(dirty || selectedUsers.length !== (task?.assignedUsers?.length || 0))

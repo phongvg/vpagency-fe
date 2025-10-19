@@ -29,10 +29,7 @@ export type Meta = {
 export type BaseResponse<T> = {
   success: boolean
   code?: string
-  data: {
-    message?: string
-    data: T
-  }
+  data: T
 }
 
 export type BaseListResponse<T> = {

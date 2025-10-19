@@ -13,6 +13,10 @@ import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
 import { HiOutlineCalendar, HiOutlineClock, HiOutlineStar, HiUsers } from 'react-icons/hi'
+import { useState } from 'react'
+import UpdateProgressModal from './UpdateProgressModal'
+import { useUpdateTaskProgress } from '@/views/tasks/assign/hooks/useTaskQueries'
+import { toastSuccess, toastError } from '@/utils/toast'
 
 interface TaskDetailViewProps {
   task: Task
@@ -22,6 +26,18 @@ interface TaskDetailViewProps {
 
 export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailViewProps) {
   const { closeDialog } = useBoardStore()
+  const [isProgressModalOpen, setIsProgressModalOpen] = useState(false)
+  const updateProgressMutation = useUpdateTaskProgress()
+
+  const handleUpdateProgress = async (progress: number) => {
+    try {
+      await updateProgressMutation.mutateAsync({ taskId: task.id, progress })
+      toastSuccess('Cập nhật tiến độ thành công')
+      setIsProgressModalOpen(false)
+    } catch (error: any) {
+      toastError(error?.response?.data?.message || 'Cập nhật tiến độ thất bại')
+    }
+  }
 
   const getPriorityColor = (priority: TaskPriority) => {
     switch (priority) {
@@ -103,11 +119,16 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
         </div>
 
         <div className="mb-6">
-          <div className="flex items-center gap-3 mb-2">
-            <span className="font-medium text-gray-700 text-sm">Tiến độ</span>
-            <div>
-              <Progress variant="circle" percent={task.progress} gapDegree={70} gapPosition="bottom" size="sm" />
+          <div className="flex justify-between items-center mb-2">
+            <div className="flex items-center gap-3">
+              <span className="font-medium text-gray-700 text-sm">Tiến độ</span>
+              <div>
+                <Progress variant="circle" percent={task.progress} gapDegree={70} gapPosition="bottom" size="sm" />
+              </div>
             </div>
+            <Button size="xs" variant="twoTone" onClick={() => setIsProgressModalOpen(true)}>
+              Cập nhật tiến độ
+            </Button>
           </div>
         </div>
 
@@ -189,6 +210,15 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
           </Button>
         </div>
       </div>
+
+      <UpdateProgressModal
+        isOpen={isProgressModalOpen}
+        currentProgress={task.progress}
+        taskName={task.name}
+        onClose={() => setIsProgressModalOpen(false)}
+        onConfirm={handleUpdateProgress}
+        isLoading={updateProgressMutation.isPending}
+      />
     </div>
   )
 }

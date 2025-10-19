@@ -2,20 +2,35 @@ import { Task } from '@/@types/task'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import TaskDetailPanel from '@/views/tasks/assign/components/TaskDetailPanel'
 import TaskFormContent from '@/views/tasks/assign/components/TaskFormContent'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Loading } from '@/components/shared'
 import { Suspense } from 'react'
-import { useGetTasksWithFilters } from '@/views/tasks/assign/hooks/useTaskQueries'
+import { useGetTasksWithFilters, useGetTaskDetail } from '@/views/tasks/assign/hooks/useTaskQueries'
 
 export default function TaskSplitView() {
-  const { selectedTask, dialogView, setSelectedTask } = useBoardStore()
-  const { data: tasksResponse, isLoading } = useGetTasksWithFilters(true)
-
+  const { dialogView, setSelectedTask } = useBoardStore()
+  const { data: tasksResponse } = useGetTasksWithFilters(true)
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
+
+  const { data: taskDetail, isLoading: isLoadingTask } = useGetTaskDetail(selectedTaskId, true)
+
+  console.log(taskDetail)
+
+  useEffect(() => {
+    if (taskDetail) {
+      setSelectedTask(taskDetail)
+    }
+  }, [taskDetail, setSelectedTask])
+
+  useEffect(() => {
+    return () => {
+      setSelectedTask(null)
+      setSelectedTaskId(null)
+    }
+  }, [])
 
   const handleTaskSelect = (task: Task) => {
     setSelectedTaskId(task.id)
-    setSelectedTask(task)
   }
 
   return (
@@ -25,21 +40,33 @@ export default function TaskSplitView() {
       </div>
 
       <div className="flex flex-col col-span-2">
-        {selectedTask ? (
+        {selectedTaskId ? (
           <div className="flex flex-col h-full overflow-hidden">
             <div className="flex-1 overflow-hidden">
-              {dialogView === 'EDIT' ? (
-                <Suspense fallback={<Loading />}>
-                  <div className="p-6 h-full overflow-y-auto">
-                    <TaskFormContent inSplitView={true} />
-                  </div>
-                </Suspense>
+              {isLoadingTask ? (
+                <div className="flex justify-center items-center h-full">
+                  <Loading loading={true} />
+                </div>
+              ) : taskDetail ? (
+                <>
+                  {dialogView === 'EDIT' ? (
+                    <Suspense fallback={<Loading />}>
+                      <div className="p-6 h-full overflow-y-auto">
+                        <TaskFormContent inSplitView={true} />
+                      </div>
+                    </Suspense>
+                  ) : (
+                    <Suspense fallback={<Loading />}>
+                      <div className="p-6 h-full overflow-y-auto">
+                        <TaskDetailPanel inSplitView={true} />
+                      </div>
+                    </Suspense>
+                  )}
+                </>
               ) : (
-                <Suspense fallback={<Loading />}>
-                  <div className="p-6 h-full overflow-y-auto">
-                    <TaskDetailPanel inSplitView={true} />
-                  </div>
-                </Suspense>
+                <div className="flex justify-center items-center h-full text-gray-500">
+                  <p>Không tìm thấy công việc</p>
+                </div>
               )}
             </div>
           </div>

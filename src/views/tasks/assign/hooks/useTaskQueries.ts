@@ -6,6 +6,7 @@ import {
   apiUpdateTask,
   apiDeleteTask,
   apiGetTasks,
+  apiUpdateTaskProgress,
 } from '@/services/TaskService'
 import { GET_TASK_DETAIL, GET_TASK_LIST, GET_TASKS_GROUPED_BY_STATUS } from '@/utils/queryKey'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -31,7 +32,7 @@ export const useGetTasksGroupedByStatus = () => {
     queryKey: [GET_TASKS_GROUPED_BY_STATUS, activeView],
     queryFn: async () => {
       const response = await apiGetTasksGroupedByStatus()
-      return response.data.data.data
+      return response.data.data
     },
   })
 }
@@ -45,13 +46,15 @@ export const useUpdateTaskStatus = () => {
   })
 }
 
-export const useGetTaskDetail = (taskId: string) => {
+export const useGetTaskDetail = (taskId: string | null, enabled: boolean = true) => {
   return useQuery({
     queryKey: [GET_TASK_DETAIL, taskId],
     queryFn: async () => {
+      if (!taskId) return null
       const response = await apiGetTaskDetail(taskId)
       return response.data.data
     },
+    enabled: enabled && !!taskId,
   })
 }
 
@@ -65,6 +68,7 @@ export const useCreateTask = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [GET_TASK_LIST] })
+      queryClient.invalidateQueries({ queryKey: [GET_TASKS_GROUPED_BY_STATUS] })
     },
   })
 }
@@ -79,6 +83,8 @@ export const useUpdateTask = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [GET_TASK_LIST] })
+      queryClient.invalidateQueries({ queryKey: [GET_TASKS_GROUPED_BY_STATUS] })
+      queryClient.invalidateQueries({ queryKey: [GET_TASK_DETAIL] })
     },
   })
 }
@@ -93,6 +99,24 @@ export const useDeleteTask = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [GET_TASK_LIST] })
+      queryClient.invalidateQueries({ queryKey: [GET_TASKS_GROUPED_BY_STATUS] })
+      queryClient.invalidateQueries({ queryKey: [GET_TASK_DETAIL] })
+    },
+  })
+}
+
+export const useUpdateTaskProgress = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({ taskId, progress }: { taskId: string; progress: number }) => {
+      const response = await apiUpdateTaskProgress(taskId, progress)
+      return response.data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [GET_TASK_LIST] })
+      queryClient.invalidateQueries({ queryKey: [GET_TASKS_GROUPED_BY_STATUS] })
+      queryClient.invalidateQueries({ queryKey: [GET_TASK_DETAIL] })
     },
   })
 }
