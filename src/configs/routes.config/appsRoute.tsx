@@ -16,7 +16,16 @@ const appsRoute: Routes = [
     component: lazy(() => import('@/views/systems/users')),
     authority: [Role.ADMIN],
     meta: {
-      header: 'Quản lý tài khoản',
+      header: 'Tài khoản hệ thống',
+    },
+  },
+  {
+    key: 'systems.adsGroups',
+    path: urlConfig.systemAdsGroups,
+    component: lazy(() => import('@/views/systems/adsGroups')),
+    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY],
+    meta: {
+      header: 'Nhóm tài khoản Ads',
     },
   },
   {

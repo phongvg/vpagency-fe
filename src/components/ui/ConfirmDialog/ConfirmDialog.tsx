@@ -67,7 +67,7 @@ export default function ConfirmDialog({
 
         <p className="mb-6 text-gray-500 text-sm">{message}</p>
 
-        <div className="flex justify-center gap-3">
+        <div className="flex justify-end items-center gap-3">
           <Button variant="plain" onClick={onCancel} disabled={loading}>
             {cancelText}
           </Button>

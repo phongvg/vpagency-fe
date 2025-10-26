@@ -64,7 +64,7 @@ export const useBoardStore = create<BoardState>()(
       })),
     clearBoard: () => set(() => ({ ...initialBoardState })),
     openDialog: (view, taskId) => set(() => ({ dialogView: view, dialogOpen: true, taskId })),
-    closeDialog: () => set(() => ({ dialogView: '', dialogOpen: false, taskId: null, selectedTask: null })),
+    closeDialog: () => set(() => ({ dialogView: '', dialogOpen: false, taskId: null })),
     setDialogView: (view) => set(() => ({ dialogView: view })),
     setSelectedTask: (task) => set(() => ({ selectedTask: task })),
     setActiveView: (view) => set(() => ({ activeView: view })),

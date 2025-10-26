@@ -1,8 +1,4 @@
-import {
-  NAV_ITEM_TYPE_TITLE,
-  NAV_ITEM_TYPE_COLLAPSE,
-  NAV_ITEM_TYPE_ITEM,
-} from '@/constants/navigation.constant'
+import { NAV_ITEM_TYPE_TITLE, NAV_ITEM_TYPE_COLLAPSE, NAV_ITEM_TYPE_ITEM } from '@/constants/navigation.constant'
 import type { NavigationTree } from '@/@types/navigation'
 import { urlConfig } from '@/configs/urls.config'
 import { Role } from '@/enums/role.enum'
@@ -132,7 +128,17 @@ const appsNavigationConfig: NavigationTree[] = [
           {
             key: 'systems.users',
             path: urlConfig.systemUsers,
-            title: 'Quản lý tài khoản',
+            title: 'Tài khoản',
+            translateKey: '',
+            icon: '',
+            type: NAV_ITEM_TYPE_ITEM,
+            authority: [Role.ADMIN],
+            subMenu: [],
+          },
+          {
+            key: 'systems.adsGroups',
+            path: urlConfig.systemAdsGroups,
+            title: 'Nhóm tài khoản Ads',
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,

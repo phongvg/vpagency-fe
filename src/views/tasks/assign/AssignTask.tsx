@@ -1,4 +1,4 @@
-import { AdaptableCard, Loading } from '@/components/shared'
+import { AdaptableCard } from '@/components/shared'
 import { Dialog } from '@/components/ui'
 import { TaskViewType } from '@/enums/taskView.enum'
 import Board from '@/views/tasks/assign/components/Board'
