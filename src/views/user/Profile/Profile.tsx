@@ -46,10 +46,7 @@ export default function Profile() {
     }
   }
 
-  const onSubmit = (
-    values: UpdateUserInfoPayload,
-    setSubmitting: (isSubmitting: boolean) => void,
-  ) => {
+  const onSubmit = (values: UpdateUserInfoPayload, setSubmitting: (isSubmitting: boolean) => void) => {
     setSubmitting(true)
 
     const formData = new FormData()
@@ -95,56 +92,35 @@ export default function Profile() {
         const validatorProps = { touched, errors }
         return (
           <Form>
-            <FormContainer>
-              <FormRow name="avatar" label="Ảnh đại diện" {...validatorProps}>
-                <Upload
-                  className="cursor-pointer"
-                  showList={false}
-                  uploadLimit={1}
-                  onChange={handleAvatarChange}
-                >
-                  <Avatar
-                    className="shadow-lg"
-                    size={140}
-                    shape="circle"
-                    icon={<HiOutlineUser />}
-                    src={avatarPreview || user?.avatar || undefined}
-                  />
-                </Upload>
-              </FormRow>
-              <FormRow name="firstName" label="Họ" {...validatorProps}>
-                <Field
-                  type="text"
-                  autoComplete="off"
-                  name="firstName"
-                  placeholder="Nhập họ"
-                  component={Input}
-                />
-              </FormRow>
-              <FormRow name="lastName" label="Tên" {...validatorProps}>
-                <Field
-                  type="text"
-                  autoComplete="off"
-                  name="lastName"
-                  placeholder="Nhập tên"
-                  component={Input}
-                />
-              </FormRow>
-              <FormRow name="email" label="Email" {...validatorProps}>
-                <Field
-                  type="email"
-                  autoComplete="off"
-                  name="email"
-                  placeholder="Nhập email"
-                  component={Input}
-                />
-              </FormRow>
-              <div className="mt-4 ltr:text-right">
-                <Button variant="solid" loading={isSubmitting} type="submit">
-                  Cập nhật
-                </Button>
-              </div>
-            </FormContainer>
+            <div className="mx-auto max-w-2xl">
+              <FormContainer>
+                <FormRow name="avatar" label="Ảnh đại diện" {...validatorProps}>
+                  <Upload className="cursor-pointer" showList={false} uploadLimit={1} onChange={handleAvatarChange}>
+                    <Avatar
+                      className="shadow-lg"
+                      size={140}
+                      shape="circle"
+                      icon={<HiOutlineUser />}
+                      src={avatarPreview || user?.avatar || undefined}
+                    />
+                  </Upload>
+                </FormRow>
+                <FormRow name="firstName" label="Họ" {...validatorProps}>
+                  <Field type="text" autoComplete="off" name="firstName" placeholder="Nhập họ" component={Input} />
+                </FormRow>
+                <FormRow name="lastName" label="Tên" {...validatorProps}>
+                  <Field type="text" autoComplete="off" name="lastName" placeholder="Nhập tên" component={Input} />
+                </FormRow>
+                <FormRow name="email" label="Email" {...validatorProps}>
+                  <Field type="email" autoComplete="off" name="email" placeholder="Nhập email" component={Input} />
+                </FormRow>
+                <div className="mt-4 ltr:text-right">
+                  <Button variant="solid" loading={isSubmitting} type="submit">
+                    Cập nhật
+                  </Button>
+                </div>
+              </FormContainer>
+            </div>
           </Form>
         )
       }}

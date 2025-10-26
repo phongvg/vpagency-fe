@@ -93,7 +93,7 @@ export default function TaskDetailPanel({ inSplitView = false }: TaskDetailPanel
           <Accordion.Item itemKey="1" title="Thông tin chung">
             <TaskDetailSection task={selectedTask} />
           </Accordion.Item>
-          <Accordion.Item itemKey="2" title="Mô tả">
+          <Accordion.Item itemKey="2" title="Ghi chú">
             <div>{selectedTask.note}</div>
           </Accordion.Item>
           {[TaskType.LAUNCH_CAMPAIGN, TaskType.SET_CAMPAIGN].includes(selectedTask.type) && (
@@ -208,7 +208,7 @@ function TaskDetailSection({ task }: TaskPanelProps) {
       </li>
       <li className="flex justify-between items-center">
         <span>Deadline:</span>
-        <span>{format(new Date(task.deadline), 'dd/MM/yyyy - HH:mm', { locale: vi })}</span>
+        <span>{format(new Date(task.deadline), 'dd/MM/yyyy', { locale: vi })}</span>
       </li>
     </ul>
   )

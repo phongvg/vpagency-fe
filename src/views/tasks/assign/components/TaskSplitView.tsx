@@ -12,8 +12,7 @@ export default function TaskSplitView() {
   const id = useQueryParam('id')
   const navigate = useNavigate()
   const { selectedTask, setSelectedTask } = useBoardStore()
-  const { data } = useGetTasksWithFilters(true)
-
+  const { data: taskList } = useGetTasksWithFilters(true)
   const { data: taskDetail, isLoading: isLoadingTask } = useGetTaskDetail(id, true)
 
   useEffect(() => {
@@ -35,34 +34,36 @@ export default function TaskSplitView() {
   return (
     <div className="grid grid-cols-3 h-full">
       <div className="flex flex-col col-span-1 border-gray-200 border-r">
-        <TaskListPanel tasks={data ?? []} selectedTaskId={selectedTask?.id ?? null} onTaskSelect={handleTaskSelect} />
+        <TaskListPanel
+          tasks={taskList ?? []}
+          selectedTaskId={selectedTask?.id ?? null}
+          onTaskSelect={handleTaskSelect}
+        />
       </div>
 
       <div className="flex flex-col col-span-2">
-        {taskDetail && (
-          <div className="flex flex-col h-full overflow-hidden">
-            <div className="flex-1 overflow-hidden">
-              {isLoadingTask ? (
-                <div className="flex justify-center items-center h-full">
-                  <Loading loading={true} />
+        <div className="flex flex-col h-full overflow-hidden">
+          <div className="flex-1 overflow-hidden">
+            {isLoadingTask ? (
+              <div className="flex justify-center items-center h-full">
+                <Loading loading={true} />
+              </div>
+            ) : selectedTask ? (
+              <Suspense fallback={<Loading />}>
+                <div className="p-6 h-full overflow-y-auto">
+                  <TaskDetailPanel inSplitView />
                 </div>
-              ) : selectedTask ? (
-                <Suspense fallback={<Loading />}>
-                  <div className="p-6 h-full overflow-y-auto">
-                    <TaskDetailPanel inSplitView />
-                  </div>
-                </Suspense>
-              ) : (
-                <div className="flex justify-center items-center h-full text-gray-500">
-                  <div className="text-center">
-                    <p className="mb-2 font-medium text-lg">Chọn một công việc</p>
-                    <p className="text-sm">Chọn một công việc từ danh sách bên trái để xem chi tiết</p>
-                  </div>
+              </Suspense>
+            ) : (
+              <div className="flex justify-center items-center h-full text-gray-500">
+                <div className="text-center">
+                  <p className="mb-2 font-medium text-lg">Chọn một công việc</p>
+                  <p className="text-sm">Chọn một công việc từ danh sách bên trái để xem chi tiết</p>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   )
