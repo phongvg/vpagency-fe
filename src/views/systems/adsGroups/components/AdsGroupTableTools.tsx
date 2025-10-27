@@ -4,11 +4,11 @@ import { useAdsGroupStore } from '@/views/systems/adsGroups/store/useAdsGroupSto
 import { HiOutlinePlus, HiOutlineRefresh } from 'react-icons/hi'
 
 export default function AdsGroupTableTools() {
-  const { clearFilter, setDrawerOpen, setSelectedAdsGroup } = useAdsGroupStore()
+  const { clearFilter, setDialogOpen, setSelectedAdsGroup } = useAdsGroupStore()
 
   const handleAddNew = () => {
     setSelectedAdsGroup(null)
-    setDrawerOpen(true)
+    setDialogOpen(true)
   }
 
   return (

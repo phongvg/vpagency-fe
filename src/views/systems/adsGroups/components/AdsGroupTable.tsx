@@ -25,7 +25,7 @@ const ManagerColumn = ({ row }: { row: AdsGroup }) => {
 }
 
 export default function AdsGroupTable() {
-  const { filter, setFilter, setDrawerOpen, setSelectedAdsGroup } = useAdsGroupStore()
+  const { filter, setFilter, setDialogOpen, setSelectedAdsGroup } = useAdsGroupStore()
   const { data: getAdsGroupsResponse, isLoading } = useGetAdsGroupsQuery()
   const deleteAdsGroupMutation = useDeleteAdsGroupMutation()
 
@@ -33,7 +33,7 @@ export default function AdsGroupTable() {
 
   const handleEdit = (row: AdsGroup) => {
     setSelectedAdsGroup(row)
-    setDrawerOpen(true)
+    setDialogOpen(true)
   }
 
   const handleDelete = async (id: string) => {
@@ -57,7 +57,7 @@ export default function AdsGroupTable() {
         accessorKey: 'name',
         cell: (props) => {
           const row = props.row.original
-          return <span className="font-semibold">{row.name}</span>
+          return <span>{row.name}</span>
         },
       },
       {
@@ -98,20 +98,13 @@ export default function AdsGroupTable() {
         cell: (props) => {
           const row = props.row.original
           return (
-            <div className="flex items-center space-x-2">
-              <Button
-                size="sm"
-                variant="plain"
-                icon={<HiOutlinePencilAlt size={24} />}
-                onClick={() => handleEdit(row)}
-              />
-              <Button
-                size="sm"
-                variant="plain"
-                icon={<HiOutlineTrash size={24} />}
-                onClick={() => handleDelete(row.id)}
-                loading={deleteAdsGroupMutation.isPending}
-              />
+            <div className="flex items-center gap-4">
+              <button type="button" onClick={() => handleEdit(row)}>
+                <HiOutlinePencilAlt size={24} />
+              </button>
+              <button type="button" onClick={() => handleDelete(row.id)}>
+                <HiOutlineTrash size={24} />
+              </button>
             </div>
           )
         },

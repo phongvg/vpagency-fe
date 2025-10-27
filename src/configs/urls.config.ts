@@ -10,6 +10,7 @@ export const urlConfig = {
   financeReport: `${APP_PREFIX_PATH}/finances/reports`,
   systemUsers: `${APP_PREFIX_PATH}/systems/users`,
   systemAdsGroups: `${APP_PREFIX_PATH}/systems/ads-groups`,
+  systemProjects: `${APP_PREFIX_PATH}/systems/projects`,
   systemLogs: `${APP_PREFIX_PATH}/systems/logs`,
   systemSetting: `${APP_PREFIX_PATH}/systems/settings`,
   staffRanking: `${APP_PREFIX_PATH}/staffs/rankings`,

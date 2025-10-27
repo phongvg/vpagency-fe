@@ -29,6 +29,15 @@ const appsRoute: Routes = [
     },
   },
   {
+    key: 'systems.projects',
+    path: urlConfig.systemProjects,
+    component: lazy(() => import('@/views/systems/projects')),
+    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY],
+    meta: {
+      header: 'Dự án',
+    },
+  },
+  {
     key: 'access.denied',
     path: urlConfig.accessDenied,
     component: lazy(() => import('@/views/accessDenied')),

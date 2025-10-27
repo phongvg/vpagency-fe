@@ -7,14 +7,14 @@ type AdsGroupState = {
   filter: CommonFilterRequest
   adsGroups: AdsGroup[]
   selectedAdsGroup: AdsGroup | null
-  drawerOpen: boolean
+  dialogOpen: boolean
   deleteDialogOpen: boolean
 
   setFilter: (filter: CommonFilterRequest) => void
   setSearch: (search: string) => void
   setAdsGroups: (adsGroups: AdsGroup[]) => void
   setSelectedAdsGroup: (adsGroup: AdsGroup | null) => void
-  setDrawerOpen: (open: boolean) => void
+  setDialogOpen: (open: boolean) => void
   setDeleteDialogOpen: (open: boolean) => void
   clearFilter: () => void
 }
@@ -29,7 +29,7 @@ export const initialAdsGroupState = {
   },
   adsGroups: [],
   selectedAdsGroup: null,
-  drawerOpen: false,
+  dialogOpen: false,
   deleteDialogOpen: false,
 }
 
@@ -44,7 +44,7 @@ export const useAdsGroupStore = create<AdsGroupState>()(
     },
     setAdsGroups: (adsGroups) => set({ adsGroups }),
     setSelectedAdsGroup: (adsGroup) => set({ selectedAdsGroup: adsGroup }),
-    setDrawerOpen: (open) => set({ drawerOpen: open }),
+    setDialogOpen: (open) => set({ dialogOpen: open }),
     setDeleteDialogOpen: (open) => set({ deleteDialogOpen: open }),
     clearFilter: () => set({ filter: initialAdsGroupState.filter }),
   })),

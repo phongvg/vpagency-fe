@@ -146,6 +146,16 @@ const appsNavigationConfig: NavigationTree[] = [
             subMenu: [],
           },
           {
+            key: 'systems.projects',
+            path: urlConfig.systemProjects,
+            title: 'Dự án',
+            translateKey: '',
+            icon: '',
+            type: NAV_ITEM_TYPE_ITEM,
+            authority: [Role.ADMIN],
+            subMenu: [],
+          },
+          {
             key: 'system.logs',
             path: urlConfig.systemLogs,
             title: 'Thông báo',

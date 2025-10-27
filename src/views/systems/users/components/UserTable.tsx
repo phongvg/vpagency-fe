@@ -1,8 +1,5 @@
 import { useMemo } from 'react'
-import {
-  useGetUsersQuery,
-  useUpdateStatusUserMutation,
-} from '@/views/systems/users/hooks/useUsersQueries'
+import { useGetUsersQuery, useUpdateStatusUserMutation } from '@/views/systems/users/hooks/useUsersQueries'
 import { ColumnDef } from '@tanstack/react-table'
 import { User } from '@/@types/user'
 import { Avatar, Badge, Switcher } from '@/components/ui'
@@ -39,20 +36,11 @@ const NameColumn = ({ row }: { row: User }) => {
 }
 
 export default function UserTable() {
-  const {
-    filter,
-    setFilter,
-    setDrawerOpen,
-    setResetPasswordDrawerOpen,
-    setSelectedUser,
-  } = useUserStore()
+  const { filter, setFilter, setDrawerOpen, setResetPasswordDrawerOpen, setSelectedUser } = useUserStore()
   const { data: getUsersResponse, isLoading } = useGetUsersQuery()
   const userMutation = useUpdateStatusUserMutation()
 
-  const metaTableData = useMemo(
-    () => getUsersResponse?.meta,
-    [getUsersResponse],
-  )
+  const metaTableData = useMemo(() => getUsersResponse?.meta, [getUsersResponse])
 
   const columns: ColumnDef<User>[] = useMemo(
     () => [
@@ -85,12 +73,7 @@ export default function UserTable() {
         accessorKey: 'status',
         cell: (props) => {
           const row = props.row.original
-          return (
-            <Badge
-              className={statusColor[row.status]}
-              content={statusLabel[row.status]}
-            />
-          )
+          return <Badge className={statusColor[row.status]} content={statusLabel[row.status]} />
         },
       },
       {
@@ -98,11 +81,7 @@ export default function UserTable() {
         accessorKey: 'createdAt',
         cell: (props) => {
           const row = props.row.original
-          return (
-            <div className="flex items-center">
-              {dayjs(row.createdAt).format('DD/MM/YYYY HH:mm')}
-            </div>
-          )
+          return <div className="flex items-center">{dayjs(row.createdAt).format('DD/MM/YYYY HH:mm')}</div>
         },
       },
       {
@@ -110,11 +89,7 @@ export default function UserTable() {
         accessorKey: 'updatedAt',
         cell: (props) => {
           const row = props.row.original
-          return (
-            <div className="flex items-center">
-              {dayjs(row.updatedAt).format('DD/MM/YYYY HH:mm')}
-            </div>
-          )
+          return <div className="flex items-center">{dayjs(row.updatedAt).format('DD/MM/YYYY HH:mm')}</div>
         },
       },
       {
@@ -123,11 +98,8 @@ export default function UserTable() {
         cell: (props) => {
           const row = props.row.original
           return (
-            <div className="flex items-center space-x-4">
-              <Switcher
-                checked={row.status === StatusEnum.Active}
-                onChange={() => userMutation.mutate(row.id)}
-              />
+            <div className="flex items-center gap-4">
+              <Switcher checked={row.status === StatusEnum.Active} onChange={() => userMutation.mutate(row.id)} />
               <button
                 type="button"
                 onClick={() => {

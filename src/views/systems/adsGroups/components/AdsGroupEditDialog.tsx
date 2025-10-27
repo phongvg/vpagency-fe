@@ -3,14 +3,14 @@ import { useAdsGroupStore } from '@/views/systems/adsGroups/store/useAdsGroupSto
 import AdsGroupForm from '@/views/systems/adsGroups/components/AdsGroupForm'
 
 export default function AdsGroupEditDialog() {
-  const { drawerOpen, setDrawerOpen, selectedAdsGroup } = useAdsGroupStore()
+  const { dialogOpen, setDialogOpen, selectedAdsGroup } = useAdsGroupStore()
 
   const onDialogClose = () => {
-    setDrawerOpen(false)
+    setDialogOpen(false)
   }
 
   return (
-    <Dialog isOpen={drawerOpen} onClose={onDialogClose} onRequestClose={onDialogClose}>
+    <Dialog isOpen={dialogOpen} onClose={onDialogClose} onRequestClose={onDialogClose}>
       <h5 className="mb-4">{selectedAdsGroup ? 'Cập nhật nhóm quảng cáo' : 'Thêm nhóm quảng cáo'}</h5>
       <AdsGroupForm onClose={onDialogClose} />
     </Dialog>
