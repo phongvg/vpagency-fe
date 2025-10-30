@@ -12,20 +12,22 @@ export interface UserOption {
 
 interface UserSelectProps {
   value?: UserOption | UserOption[] | null
-  onChange?: (option: any) => void
   isMulti?: boolean
   placeholder?: string
   isClearable?: boolean
   className?: string
+  size?: 'sm' | 'md' | 'lg'
+  onChange?: (option: any) => void
 }
 
 export default function UserSelect({
   value,
-  onChange,
   isMulti = false,
   placeholder = 'Tìm kiếm tài khoản...',
   isClearable = true,
   className,
+  size,
+  onChange,
 }: UserSelectProps) {
   const loadOptions = async (inputValue: string): Promise<UserOption[]> => {
     if (!inputValue || inputValue.length === 0) {
@@ -83,6 +85,7 @@ export default function UserSelect({
       components={{
         Option: CustomOption,
       }}
+      size={size}
       defaultOptions={false}
       cacheOptions
     />

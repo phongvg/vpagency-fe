@@ -95,6 +95,7 @@ export default function TaskFilters({
               placeholder="Tìm kiếm theo tên công việc..."
               value={localFilters.search}
               onChange={(e) => handleFilterChange('search', e.target.value)}
+              size="sm"
             />
           </div>
         </div>
@@ -107,6 +108,7 @@ export default function TaskFilters({
             options={statusOptions}
             placeholder="Trạng thái"
             className="min-w-[160px]"
+            size="sm"
           />
         </div>
 
@@ -118,6 +120,7 @@ export default function TaskFilters({
             options={typeOptions}
             placeholder="Loại công việc"
             className="min-w-[160px]"
+            size="sm"
           />
         </div>
 
@@ -129,15 +132,16 @@ export default function TaskFilters({
             options={priorityOptions}
             placeholder="Độ ưu tiên"
             className="min-w-[140px]"
+            size="sm"
           />
         </div>
 
         <div className="flex items-center gap-3">
-          <Button size="md" variant="solid" onClick={handleSearch} icon={<HiOutlineSearch />}>
+          <Button size="sm" variant="solid" onClick={handleSearch} icon={<HiOutlineSearch />}>
             Tìm kiếm
           </Button>
           {isFiltered && (
-            <Button size="md" variant="twoTone" onClick={handleClearFilters}>
+            <Button size="sm" variant="twoTone" onClick={handleClearFilters}>
               Xóa bộ lọc
             </Button>
           )}

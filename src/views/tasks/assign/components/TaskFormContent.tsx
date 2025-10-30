@@ -1,27 +1,12 @@
-import { useState } from 'react'
-import { ConfirmDialog } from '@/components/ui'
-import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { useCreateTask, useUpdateTask } from '@/views/tasks/assign/hooks/useTaskQueries'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import { toastError, toastSuccess } from '@/utils/toast'
 import TaskForm from './TaskForm'
 
-interface TaskFormContentProps {
-  inSplitView?: boolean
-}
-
-export default function TaskFormContent({ inSplitView = false }: TaskFormContentProps) {
-  const { dialogView, selectedTask, closeDialog, setDialogView } = useBoardStore()
+export default function TaskFormContent() {
+  const { dialogView, selectedTask, closeDialog } = useBoardStore()
   const createTask = useCreateTask()
   const updateTask = useUpdateTask()
-  const [formChanged, setFormChanged] = useState(false)
-  const { showConfirm, confirmProps } = useConfirmDialog({
-    title: 'Hủy thay đổi',
-    message: 'Bạn có những thay đổi chưa lưu. Bạn có chắc chắn muốn hủy?',
-    type: 'warning',
-    confirmText: 'Hủy thay đổi',
-    cancelText: 'Tiếp tục chỉnh sửa',
-  })
 
   const isEdit = dialogView === 'EDIT'
   const loading = createTask.isPending || updateTask.isPending
@@ -38,11 +23,7 @@ export default function TaskFormContent({ inSplitView = false }: TaskFormContent
         await createTask.mutateAsync(values)
         toastSuccess('Tạo công việc thành công')
       }
-      if (inSplitView) {
-        setDialogView('VIEW')
-      } else {
-        closeDialog()
-      }
+      closeDialog()
     } catch (error: any) {
       const message =
         error?.response?.data?.message || (isEdit ? 'Cập nhật công việc thất bại' : 'Tạo công việc thất bại')
@@ -54,21 +35,9 @@ export default function TaskFormContent({ inSplitView = false }: TaskFormContent
     closeDialog()
   }
 
-  const handleFormChange = (changed: boolean) => {
-    setFormChanged(changed)
-  }
-
   return (
     <>
-      <TaskForm
-        task={selectedTask}
-        isEdit={isEdit}
-        onSubmit={handleSubmit}
-        onCancel={handleCancel}
-        loading={loading}
-        onFormChange={handleFormChange}
-      />
-      <ConfirmDialog {...confirmProps} />
+      <TaskForm task={selectedTask} isEdit={isEdit} onSubmit={handleSubmit} onCancel={handleCancel} loading={loading} />
     </>
   )
 }

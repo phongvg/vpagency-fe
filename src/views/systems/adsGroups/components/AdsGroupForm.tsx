@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Button, FormContainer, FormItem, Input } from '@/components/ui'
+import { Button, FormContainer, FormItem, Input, Select } from '@/components/ui'
 import UserSelect, { UserOption } from '@/components/ui/UserSelect/UserSelect'
 import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
@@ -9,11 +9,15 @@ import {
   useUpdateAdsGroupMutation,
 } from '@/views/systems/adsGroups/hooks/useAdsGroupsQueries'
 import type { CreateAdsGroupRequest } from '@/views/systems/adsGroups/types'
+import { toastError } from '@/utils/toast'
+import AsyncSelect from 'react-select/async'
+import { apiGetProjectList } from '@/services/ProjectService'
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Vui lòng nhập tên nhóm'),
   description: Yup.string(),
   managerId: Yup.string(),
+  projectId: Yup.string(),
 })
 
 type AdsGroupFormProps = {
@@ -25,10 +29,10 @@ export default function AdsGroupForm({ onClose }: AdsGroupFormProps) {
   const createMutation = useCreateAdsGroupMutation()
   const updateMutation = useUpdateAdsGroupMutation()
   const [selectedManager, setSelectedManager] = useState<UserOption | null>(null)
+  const [selectedProject, setSelectedProject] = useState<{ value: string; label: string } | null>(null)
 
   const isEdit = !!selectedAdsGroup
 
-  // Set initial manager value khi edit
   useEffect(() => {
     if (selectedAdsGroup?.manager) {
       setSelectedManager({
@@ -36,10 +40,19 @@ export default function AdsGroupForm({ onClose }: AdsGroupFormProps) {
         label: `${selectedAdsGroup.manager.firstName || ''} ${selectedAdsGroup.manager.lastName || ''} (${
           selectedAdsGroup.manager.username
         })`.trim(),
-        user: selectedAdsGroup.manager as any,
+        user: selectedAdsGroup.manager,
       })
     } else {
       setSelectedManager(null)
+    }
+
+    if (selectedAdsGroup?.project) {
+      setSelectedProject({
+        value: selectedAdsGroup.project.id,
+        label: selectedAdsGroup.project.name || '',
+      })
+    } else {
+      setSelectedProject(null)
     }
   }, [selectedAdsGroup])
 
@@ -47,6 +60,22 @@ export default function AdsGroupForm({ onClose }: AdsGroupFormProps) {
     name: selectedAdsGroup?.name || '',
     description: selectedAdsGroup?.description || '',
     managerId: selectedAdsGroup?.managerId || undefined,
+    projectId: selectedAdsGroup?.projectId || undefined,
+  }
+
+  const fetchProjectOptions = async (inputValue: string) => {
+    if (!inputValue || inputValue.length < 2) return []
+
+    try {
+      const response = await apiGetProjectList({ search: inputValue, page: 1, limit: 10 })
+      return response.data.data.data.map((project) => ({
+        value: project.id,
+        label: project.name,
+      }))
+    } catch (error) {
+      console.error('Error fetching project options:', error)
+      return []
+    }
   }
 
   const handleSubmit = async (values: CreateAdsGroupRequest) => {
@@ -60,8 +89,11 @@ export default function AdsGroupForm({ onClose }: AdsGroupFormProps) {
         await createMutation.mutateAsync(values)
       }
       onClose()
-    } catch (error) {
-      console.error('Error submitting form:', error)
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        (isEdit ? 'Cập nhật nhóm tài khoản ads thất bại' : 'Tạo nhóm tài khoản ads thất bại')
+      toastError(message)
     }
   }
 
@@ -72,10 +104,10 @@ export default function AdsGroupForm({ onClose }: AdsGroupFormProps) {
       onSubmit={handleSubmit}
       enableReinitialize
     >
-      {({ errors, touched, isSubmitting, setFieldValue, values }) => (
+      {({ errors, touched, isSubmitting, setFieldValue }) => (
         <Form>
           <FormContainer>
-            <FormItem label="Tên nhóm" invalid={errors.name && touched.name} errorMessage={errors.name}>
+            <FormItem label="Tên nhóm" asterisk invalid={errors.name && touched.name} errorMessage={errors.name}>
               <Field type="text" autoComplete="off" name="name" placeholder="Nhập tên nhóm" component={Input} />
             </FormItem>
 
@@ -108,6 +140,28 @@ export default function AdsGroupForm({ onClose }: AdsGroupFormProps) {
                 }}
                 placeholder="Chọn người quản lý..."
                 isClearable={true}
+              />
+            </FormItem>
+
+            <FormItem
+              label="Dự án"
+              invalid={touched.projectId && Boolean(errors.projectId)}
+              errorMessage={errors.projectId as string}
+            >
+              <Select
+                componentAs={AsyncSelect}
+                placeholder="Chọn dự án..."
+                value={selectedProject}
+                onChange={(option) => {
+                  setSelectedProject(option)
+                  setFieldValue('projectId', option?.value)
+                }}
+                loadOptions={fetchProjectOptions}
+                noOptionsMessage={({ inputValue }) =>
+                  inputValue.length < 2 ? 'Nhập tên dự án để tìm kiếm' : 'Không tìm thấy dự án hợp lệ'
+                }
+                defaultOptions={false}
+                cacheOptions
               />
             </FormItem>
 

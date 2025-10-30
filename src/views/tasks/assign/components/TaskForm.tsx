@@ -3,8 +3,10 @@ import { User } from '@/@types/user'
 import { Button, DatePicker, FormItem, Input, Select, Textarea, UserSelect } from '@/components/ui'
 import { UserOption } from '@/components/ui/UserSelect/UserSelect'
 import { TaskFrequency, TaskPriority, TaskType, TaskTypeLabels, TaskPriorityLabels } from '@/enums/task.enum'
+import { apiGetProjectList } from '@/services/ProjectService'
 import { Form, Formik, FormikProps } from 'formik'
 import { useEffect, useRef, useState } from 'react'
+import AsyncSelect from 'react-select/async'
 import * as Yup from 'yup'
 
 interface TaskFormData {
@@ -14,6 +16,7 @@ interface TaskFormData {
   priority: TaskPriority | null
   deadline: Date | null
   assignedUserIds: string[]
+  projectId: string | null
   note: string
   numberOfCampaigns?: number
   numberOfBackupCampaigns?: number
@@ -27,7 +30,6 @@ interface TaskFormProps {
   loading?: boolean
   onSubmit: (values: TaskFormData) => void
   onCancel: () => void
-  onFormChange?: (changed: boolean) => void
 }
 
 const validationSchema = Yup.object().shape({
@@ -35,19 +37,29 @@ const validationSchema = Yup.object().shape({
   type: Yup.string().required('Loại công việc là bắt buộc'),
   frequency: Yup.string().required('Tần suất là bắt buộc'),
   priority: Yup.string().required('Độ ưu tiên là bắt buộc'),
-  deadline: Yup.date().required('Hạn chót là bắt buộc'),
+  projectId: Yup.string().required('Dự án là bắt buộc'),
+  deadline: Yup.date().required('Deadline là bắt buộc'),
   assignedUserIds: Yup.array().min(1, 'Phải chọn ít nhất một người được giao việc'),
 })
 
-export default function TaskForm({
-  task,
-  isEdit = false,
-  loading = false,
-  onSubmit,
-  onCancel,
-  onFormChange,
-}: TaskFormProps) {
+const typeOptions = Object.values(TaskType).map((type) => ({
+  value: type,
+  label: TaskTypeLabels[type],
+}))
+
+const frequencyOptions = Object.values(TaskFrequency).map((freq) => ({
+  value: freq,
+  label: freq === TaskFrequency.ONCE ? 'Một lần' : 'Hàng ngày',
+}))
+
+const priorityOptions = Object.values(TaskPriority).map((priority) => ({
+  value: priority,
+  label: TaskPriorityLabels[priority],
+}))
+
+export default function TaskForm({ task, isEdit = false, loading = false, onSubmit, onCancel }: TaskFormProps) {
   const [selectedUsers, setSelectedUsers] = useState<{ value: string; label: string; user: User }[]>([])
+  const [selectedProject, setSelectedProject] = useState<{ value: string; label: string } | null>(null)
   const formikRef = useRef<FormikProps<TaskFormData>>(null)
 
   const initialValues: TaskFormData = {
@@ -57,6 +69,7 @@ export default function TaskForm({
     priority: task?.priority || null,
     deadline: task ? new Date(task.deadline) : null,
     assignedUserIds: task?.assignedUsers?.map((u) => u.id) || [],
+    projectId: task?.project?.id || null,
     note: task?.note || '',
     numberOfCampaigns: task?.numberOfCampaigns || undefined,
     numberOfBackupCampaigns: task?.numberOfBackupCampaigns || undefined,
@@ -75,29 +88,41 @@ export default function TaskForm({
     } else {
       setSelectedUsers([])
     }
+
+    if (task?.project) {
+      setSelectedProject({
+        value: task.project.id,
+        label: task.project.name,
+      })
+    } else {
+      setSelectedProject(null)
+    }
   }, [task])
 
   useEffect(() => {
     if (formikRef.current && !task) {
       formikRef.current.resetForm()
       setSelectedUsers([])
+      setSelectedProject(null)
     }
   }, [task])
 
-  const typeOptions = Object.values(TaskType).map((type) => ({
-    value: type,
-    label: TaskTypeLabels[type],
-  }))
+  const fetchProjectOptions = async (inputValue: string) => {
+    if (!inputValue || inputValue.length < 2) return []
 
-  const frequencyOptions = Object.values(TaskFrequency).map((freq) => ({
-    value: freq,
-    label: freq === TaskFrequency.ONCE ? 'Một lần' : 'Hàng ngày',
-  }))
-
-  const priorityOptions = Object.values(TaskPriority).map((priority) => ({
-    value: priority,
-    label: TaskPriorityLabels[priority],
-  }))
+    try {
+      const response = await apiGetProjectList({ search: inputValue, page: 1, limit: 10 })
+      if (response.data?.data?.data) {
+        return response.data.data.data.map((project) => ({
+          value: project.id,
+          label: project.name,
+        }))
+      }
+      return []
+    } catch (error) {
+      return []
+    }
+  }
 
   return (
     <div className="task-form">
@@ -117,7 +142,7 @@ export default function TaskForm({
           })
         }}
       >
-        {({ values, errors, touched, setFieldValue, handleChange, handleBlur, dirty }) => {
+        {({ values, errors, touched, setFieldValue, handleChange, handleBlur }) => {
           useEffect(() => {
             if (selectedUsers.length > 0) {
               setFieldValue(
@@ -127,165 +152,188 @@ export default function TaskForm({
             }
           }, [selectedUsers, setFieldValue])
 
-          useEffect(() => {
-            if (onFormChange) {
-              onFormChange(dirty || selectedUsers.length !== (task?.assignedUsers?.length || 0))
-            }
-          }, [dirty, selectedUsers, task, onFormChange])
-
           return (
             <Form>
-              <div className="px-2 max-h-[600px] overflow-y-auto">
+              <FormItem
+                label="Tên công việc"
+                asterisk
+                invalid={touched.name && Boolean(errors.name)}
+                errorMessage={errors.name}
+              >
+                <Input
+                  name="name"
+                  value={values.name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Nhập tên công việc..."
+                />
+              </FormItem>
+
+              <div className="gap-4 grid grid-cols-2">
                 <FormItem
-                  label="Tên công việc"
-                  invalid={touched.name && Boolean(errors.name)}
-                  errorMessage={errors.name}
+                  label="Loại công việc"
+                  asterisk
+                  invalid={touched.type && Boolean(errors.type)}
+                  errorMessage={errors.type}
                 >
-                  <Input
-                    name="name"
-                    value={values.name}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    placeholder="Nhập tên công việc..."
+                  <Select
+                    name="type"
+                    value={typeOptions.find((opt) => opt.value === values.type)}
+                    onChange={(option: any) => setFieldValue('type', option?.value)}
+                    options={typeOptions}
+                    placeholder="Chọn loại công việc"
                   />
                 </FormItem>
-                <div className="gap-4 grid grid-cols-2">
-                  <FormItem
-                    label="Loại công việc"
-                    invalid={touched.type && Boolean(errors.type)}
-                    errorMessage={errors.type}
-                  >
-                    <Select
-                      name="type"
-                      value={typeOptions.find((opt) => opt.value === values.type)}
-                      onChange={(option: any) => setFieldValue('type', option?.value)}
-                      options={typeOptions}
-                      placeholder="Chọn loại công việc"
-                    />
-                  </FormItem>
-                  <FormItem
-                    label="Độ ưu tiên"
-                    invalid={touched.priority && Boolean(errors.priority)}
-                    errorMessage={errors.priority}
-                  >
-                    <Select
-                      name="priority"
-                      value={priorityOptions.find((opt) => opt.value === values.priority)}
-                      onChange={(option: any) => setFieldValue('priority', option?.value)}
-                      options={priorityOptions}
-                      placeholder="Chọn độ ưu tiên"
-                    />
-                  </FormItem>
-                </div>
-
-                <div className="gap-4 grid grid-cols-2">
-                  <FormItem
-                    label="Tần suất"
-                    invalid={touched.frequency && Boolean(errors.frequency)}
-                    errorMessage={errors.frequency}
-                  >
-                    <Select
-                      name="frequency"
-                      value={frequencyOptions.find((opt) => opt.value === values.frequency)}
-                      onChange={(option: any) => setFieldValue('frequency', option?.value)}
-                      options={frequencyOptions}
-                      placeholder="Chọn tần suất"
-                    />
-                  </FormItem>
-                  <FormItem
-                    label="Deadline"
-                    invalid={touched.deadline && Boolean(errors.deadline)}
-                    errorMessage={errors.deadline as string}
-                  >
-                    <DatePicker
-                      value={values.deadline}
-                      onChange={(date) => setFieldValue('deadline', date)}
-                      placeholder="dd/MM/yyyy"
-                      inputFormat="DD/MM/YYYY"
-                    />
-                  </FormItem>
-                </div>
-
                 <FormItem
-                  label="Người được giao việc"
-                  invalid={touched.assignedUserIds && Boolean(errors.assignedUserIds)}
-                  errorMessage={errors.assignedUserIds as string}
+                  label="Độ ưu tiên"
+                  asterisk
+                  invalid={touched.priority && Boolean(errors.priority)}
+                  errorMessage={errors.priority}
                 >
-                  <UserSelect
-                    value={selectedUsers}
-                    onChange={(users) => {
-                      setSelectedUsers(users)
-                      setFieldValue(
-                        'assignedUserIds',
-                        users.map((user: UserOption) => user.value),
-                      )
-                    }}
-                    isMulti={true}
-                    placeholder="Chọn người được giao việc..."
-                  />
-                </FormItem>
-
-                {(values.type === TaskType.SET_CAMPAIGN || values.type === TaskType.LAUNCH_CAMPAIGN) && (
-                  <div className="space-y-4 bg-gray-50 mb-3 px-4 pt-4 rounded-lg">
-                    <h5>Thông tin chiến dịch</h5>
-
-                    <div className="gap-4 grid grid-cols-2">
-                      <FormItem label="Số lượng chiến dịch">
-                        <Input
-                          type="number"
-                          name="numberOfCampaigns"
-                          value={values.numberOfCampaigns || ''}
-                          onChange={handleChange}
-                          placeholder="Nhập số lượng..."
-                        />
-                      </FormItem>
-
-                      <FormItem label="Chiến dịch dự phòng">
-                        <Input
-                          type="number"
-                          name="numberOfBackupCampaigns"
-                          value={values.numberOfBackupCampaigns || ''}
-                          onChange={handleChange}
-                          placeholder="Nhập số lượng..."
-                        />
-                      </FormItem>
-                    </div>
-
-                    <div className="gap-4 grid grid-cols-2">
-                      <FormItem label="Ngân sách hàng ngày">
-                        <Input
-                          type="number"
-                          name="dailyBudget"
-                          value={values.dailyBudget || ''}
-                          onChange={handleChange}
-                          placeholder="Nhập ngân sách..."
-                        />
-                      </FormItem>
-
-                      <FormItem label="Số lượng tài khoản">
-                        <Input
-                          type="number"
-                          name="numberOfAccounts"
-                          value={values.numberOfAccounts || ''}
-                          onChange={handleChange}
-                          placeholder="Nhập số lượng..."
-                        />
-                      </FormItem>
-                    </div>
-                  </div>
-                )}
-
-                <FormItem label="Ghi chú">
-                  <Textarea
-                    name="note"
-                    value={values.note}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    placeholder="Nhập ghi chú..."
-                    rows={3}
+                  <Select
+                    name="priority"
+                    value={priorityOptions.find((opt) => opt.value === values.priority)}
+                    onChange={(option: any) => setFieldValue('priority', option?.value)}
+                    options={priorityOptions}
+                    placeholder="Chọn độ ưu tiên"
                   />
                 </FormItem>
               </div>
+
+              <div className="gap-4 grid grid-cols-2">
+                <FormItem
+                  label="Tần suất"
+                  asterisk
+                  invalid={touched.frequency && Boolean(errors.frequency)}
+                  errorMessage={errors.frequency}
+                >
+                  <Select
+                    name="frequency"
+                    value={frequencyOptions.find((opt) => opt.value === values.frequency)}
+                    onChange={(option: any) => setFieldValue('frequency', option?.value)}
+                    options={frequencyOptions}
+                    placeholder="Chọn tần suất"
+                  />
+                </FormItem>
+                <FormItem
+                  label="Deadline"
+                  asterisk
+                  invalid={touched.deadline && Boolean(errors.deadline)}
+                  errorMessage={errors.deadline as string}
+                >
+                  <DatePicker
+                    value={values.deadline}
+                    onChange={(date) => setFieldValue('deadline', date)}
+                    placeholder="dd/MM/yyyy"
+                    inputFormat="DD/MM/YYYY"
+                    minDate={new Date()}
+                  />
+                </FormItem>
+              </div>
+
+              <FormItem
+                label="Dự án"
+                asterisk
+                invalid={touched.projectId && Boolean(errors.projectId)}
+                errorMessage={errors.projectId as string}
+              >
+                <Select
+                  componentAs={AsyncSelect}
+                  placeholder="Chọn dự án..."
+                  value={selectedProject}
+                  onChange={(option: any) => {
+                    setSelectedProject(option)
+                    setFieldValue('projectId', option?.value)
+                  }}
+                  loadOptions={fetchProjectOptions}
+                  noOptionsMessage={({ inputValue }) =>
+                    inputValue.length < 2 ? 'Nhập tên dự án để tìm kiếm' : 'Không tìm thấy dự án hợp lệ'
+                  }
+                  defaultOptions={false}
+                  cacheOptions
+                />
+              </FormItem>
+
+              <FormItem
+                label="Người được giao việc"
+                asterisk
+                invalid={touched.assignedUserIds && Boolean(errors.assignedUserIds)}
+                errorMessage={errors.assignedUserIds as string}
+              >
+                <UserSelect
+                  value={selectedUsers}
+                  onChange={(users) => {
+                    setSelectedUsers(users)
+                    setFieldValue(
+                      'assignedUserIds',
+                      users.map((user: UserOption) => user.value),
+                    )
+                  }}
+                  isMulti={true}
+                  placeholder="Chọn người được giao việc..."
+                />
+              </FormItem>
+
+              {(values.type === TaskType.SET_CAMPAIGN || values.type === TaskType.LAUNCH_CAMPAIGN) && (
+                <div className="space-y-4 bg-gray-50 mb-3 px-4 pt-4 rounded-lg">
+                  <h5>Thông tin chiến dịch</h5>
+
+                  <div className="gap-4 grid grid-cols-2">
+                    <FormItem label="Số lượng chiến dịch">
+                      <Input
+                        type="number"
+                        name="numberOfCampaigns"
+                        value={values.numberOfCampaigns || ''}
+                        onChange={handleChange}
+                        placeholder="Nhập số lượng..."
+                      />
+                    </FormItem>
+
+                    <FormItem label="Chiến dịch dự phòng">
+                      <Input
+                        type="number"
+                        name="numberOfBackupCampaigns"
+                        value={values.numberOfBackupCampaigns || ''}
+                        onChange={handleChange}
+                        placeholder="Nhập số lượng..."
+                      />
+                    </FormItem>
+                  </div>
+
+                  <div className="gap-4 grid grid-cols-2">
+                    <FormItem label="Ngân sách hàng ngày">
+                      <Input
+                        type="number"
+                        name="dailyBudget"
+                        value={values.dailyBudget || ''}
+                        onChange={handleChange}
+                        placeholder="Nhập ngân sách..."
+                      />
+                    </FormItem>
+
+                    <FormItem label="Số lượng tài khoản">
+                      <Input
+                        type="number"
+                        name="numberOfAccounts"
+                        value={values.numberOfAccounts || ''}
+                        onChange={handleChange}
+                        placeholder="Nhập số lượng..."
+                      />
+                    </FormItem>
+                  </div>
+                </div>
+              )}
+
+              <FormItem label="Ghi chú">
+                <Textarea
+                  name="note"
+                  value={values.note}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Nhập ghi chú..."
+                  rows={3}
+                />
+              </FormItem>
 
               <div className="flex justify-end gap-3 mt-6 pt-4 border-t">
                 <Button variant="plain" onClick={onCancel} size="sm">

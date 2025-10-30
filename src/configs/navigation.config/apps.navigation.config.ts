@@ -14,7 +14,7 @@ const appsNavigationConfig: NavigationTree[] = [
     authority: [],
     subMenu: [
       {
-        key: 'apps.dashboard',
+        key: 'dashboard',
         path: urlConfig.dashboard,
         title: 'Dashboard',
         translateKey: '',
@@ -24,11 +24,11 @@ const appsNavigationConfig: NavigationTree[] = [
         subMenu: [],
       },
       {
-        key: 'apps.tasks',
+        key: 'tasks',
         path: '',
         title: 'Quản lý công việc',
         translateKey: '',
-        icon: 'project',
+        icon: 'task',
         type: NAV_ITEM_TYPE_COLLAPSE,
         authority: [Role.ADMIN, Role.USER],
         subMenu: [
@@ -55,7 +55,48 @@ const appsNavigationConfig: NavigationTree[] = [
         ],
       },
       {
-        key: 'apps.customers',
+        key: 'projects',
+        path: '',
+        title: 'Quản lý dự án',
+        translateKey: '',
+        icon: 'project',
+        type: NAV_ITEM_TYPE_COLLAPSE,
+        authority: [Role.ADMIN, Role.USER],
+        subMenu: [
+          {
+            key: 'projects.list',
+            path: urlConfig.projects,
+            title: 'Dự án',
+            translateKey: '',
+            icon: '',
+            type: NAV_ITEM_TYPE_ITEM,
+            authority: [Role.ADMIN],
+            subMenu: [],
+          },
+          {
+            key: 'adsGroups',
+            path: urlConfig.adsGroups,
+            title: 'Nhóm tài khoản Ads',
+            translateKey: '',
+            icon: '',
+            type: NAV_ITEM_TYPE_ITEM,
+            authority: [Role.ADMIN],
+            subMenu: [],
+          },
+          {
+            key: 'adsAccounts',
+            path: urlConfig.adsAccounts,
+            title: 'Tài khoản Ads',
+            translateKey: '',
+            icon: '',
+            type: NAV_ITEM_TYPE_ITEM,
+            authority: [Role.ADMIN],
+            subMenu: [],
+          },
+        ],
+      },
+      {
+        key: 'customers',
         path: '',
         title: 'Quản lý khách hàng',
         translateKey: '',
@@ -66,17 +107,7 @@ const appsNavigationConfig: NavigationTree[] = [
           {
             key: 'customers.list',
             path: urlConfig.customerList,
-            title: 'Danh sách khách hàng',
-            translateKey: '',
-            icon: '',
-            type: NAV_ITEM_TYPE_ITEM,
-            authority: [Role.ADMIN, Role.USER],
-            subMenu: [],
-          },
-          {
-            key: 'customers.update',
-            path: urlConfig.customerUpdate,
-            title: 'Cập nhật khách hàng',
+            title: 'Khách hàng',
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
@@ -86,7 +117,7 @@ const appsNavigationConfig: NavigationTree[] = [
         ],
       },
       {
-        key: 'apps.finances',
+        key: 'finances',
         path: '',
         title: 'Quản lý tài chính',
         translateKey: '',
@@ -95,7 +126,7 @@ const appsNavigationConfig: NavigationTree[] = [
         authority: [Role.ADMIN, Role.USER],
         subMenu: [
           {
-            key: 'finances.sales',
+            key: 'sales',
             path: urlConfig.financeSales,
             title: 'Doanh số dự án',
             translateKey: '',
@@ -105,7 +136,7 @@ const appsNavigationConfig: NavigationTree[] = [
             subMenu: [],
           },
           {
-            key: 'finances.reports',
+            key: 'reports',
             path: urlConfig.financeReport,
             title: 'Thống kê',
             translateKey: '',
@@ -117,7 +148,7 @@ const appsNavigationConfig: NavigationTree[] = [
         ],
       },
       {
-        key: 'apps.systems',
+        key: 'systems',
         path: '',
         title: 'Quản trị hệ thống',
         translateKey: '',
@@ -126,8 +157,8 @@ const appsNavigationConfig: NavigationTree[] = [
         authority: [Role.ADMIN],
         subMenu: [
           {
-            key: 'systems.users',
-            path: urlConfig.systemUsers,
+            key: 'users',
+            path: urlConfig.users,
             title: 'Tài khoản',
             translateKey: '',
             icon: '',
@@ -136,28 +167,8 @@ const appsNavigationConfig: NavigationTree[] = [
             subMenu: [],
           },
           {
-            key: 'systems.adsGroups',
-            path: urlConfig.systemAdsGroups,
-            title: 'Nhóm tài khoản Ads',
-            translateKey: '',
-            icon: '',
-            type: NAV_ITEM_TYPE_ITEM,
-            authority: [Role.ADMIN],
-            subMenu: [],
-          },
-          {
-            key: 'systems.projects',
-            path: urlConfig.systemProjects,
-            title: 'Dự án',
-            translateKey: '',
-            icon: '',
-            type: NAV_ITEM_TYPE_ITEM,
-            authority: [Role.ADMIN],
-            subMenu: [],
-          },
-          {
-            key: 'system.logs',
-            path: urlConfig.systemLogs,
+            key: 'logs',
+            path: urlConfig.logs,
             title: 'Thông báo',
             translateKey: '',
             icon: '',
@@ -166,8 +177,8 @@ const appsNavigationConfig: NavigationTree[] = [
             subMenu: [],
           },
           {
-            key: 'system.setting',
-            path: urlConfig.systemSetting,
+            key: 'setting',
+            path: urlConfig.setting,
             title: 'Cấu hình hệ thống',
             translateKey: '',
             icon: '',
@@ -178,7 +189,7 @@ const appsNavigationConfig: NavigationTree[] = [
         ],
       },
       {
-        key: 'apps.staff',
+        key: 'staff',
         path: '',
         title: 'Quản lý nhân sự',
         translateKey: '',
@@ -187,7 +198,7 @@ const appsNavigationConfig: NavigationTree[] = [
         authority: [Role.ADMIN, Role.USER],
         subMenu: [
           {
-            key: 'staff.rankings',
+            key: 'rankings',
             path: urlConfig.staffRanking,
             title: 'Bảng xếp hạng',
             translateKey: '',

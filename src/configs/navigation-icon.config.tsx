@@ -24,6 +24,7 @@ import {
   HiOutlineVariable,
   HiOutlineCode,
   HiOutlineCog,
+  HiOutlineClipboardCheck,
 } from 'react-icons/hi'
 
 export type NavigationIcons = Record<string, JSX.Element>
@@ -57,6 +58,7 @@ const navigationIcon: NavigationIcons = {
   utilsDoc: <HiOutlineVariable />,
   changeLog: <HiOutlineCode />,
   settings: <HiOutlineCog />,
+  task: <HiOutlineClipboardCheck />,
 }
 
 export default navigationIcon

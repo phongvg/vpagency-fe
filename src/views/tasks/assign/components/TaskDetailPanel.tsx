@@ -26,6 +26,7 @@ import { getStatusColor } from '@/constants/task.constant'
 import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
 import UpdateProgressModal from '@/views/tasks/assign/components/UpdateProgressModal'
 import { useState } from 'react'
+import { ProjectTypeLabels } from '@/enums/project.enum'
 
 interface TaskDetailPanelProps {
   inSplitView?: boolean
@@ -43,9 +44,7 @@ export default function TaskDetailPanel({ inSplitView = false }: TaskDetailPanel
     cancelText: 'Hủy',
   })
 
-  if (!selectedTask) {
-    return null
-  }
+  if (!selectedTask) return null
 
   const handleEdit = () => {
     openDialog('EDIT', selectedTask.id)
@@ -120,11 +119,14 @@ export default function TaskDetailPanel({ inSplitView = false }: TaskDetailPanel
           )}
         </Accordion>
 
-        <Accordion defaultActiveKey={['1', '2']} accordion={false}>
-          <Accordion.Item itemKey="1" title="Mọi người">
+        <Accordion defaultActiveKey={['1', '2', '3']} accordion={false}>
+          <Accordion.Item itemKey="1" title="Thông tin dự án">
+            <TaskProjectSection task={selectedTask} />
+          </Accordion.Item>
+          <Accordion.Item itemKey="2" title="Mọi người">
             <TaskPeopleSection task={selectedTask} />
           </Accordion.Item>
-          <Accordion.Item itemKey="2" title="Thời gian">
+          <Accordion.Item itemKey="3" title="Thời gian">
             <TaskDatesSection task={selectedTask} />
           </Accordion.Item>
         </Accordion>
@@ -209,6 +211,21 @@ function TaskDetailSection({ task }: TaskPanelProps) {
       <li className="flex justify-between items-center">
         <span>Deadline:</span>
         <span>{format(new Date(task.deadline), 'dd/MM/yyyy', { locale: vi })}</span>
+      </li>
+    </ul>
+  )
+}
+
+function TaskProjectSection({ task }: TaskPanelProps) {
+  return (
+    <ul className="space-y-2">
+      <li className="flex justify-between items-center">
+        <span>Dự án:</span>
+        <span>{task.project?.name || 'N/A'}</span>
+      </li>
+      <li className="flex justify-between items-center">
+        <span>Loại dự án:</span>
+        <span>{ProjectTypeLabels[task.project?.type] || 'N/A'}</span>
       </li>
     </ul>
   )

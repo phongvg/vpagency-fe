@@ -1,4 +1,5 @@
 import { CommonFilterRequest } from '@/@types/common'
+import { Project } from '@/@types/project'
 import { User } from '@/@types/user'
 import { TaskFrequency, TaskPriority, TaskStatus, TaskType } from '@/enums/task.enum'
 
@@ -12,6 +13,8 @@ export type Task = {
   progress: number
   note: string | null
   deadline: Date
+  projectId: string
+  project: Project
   numberOfCampaigns: number | null
   numberOfBackupCampaigns: number
   dailyBudget: number

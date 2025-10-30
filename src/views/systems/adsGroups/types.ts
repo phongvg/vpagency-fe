@@ -8,10 +8,12 @@ export type CreateAdsGroupRequest = {
   name: string
   description?: string
   managerId?: string
+  projectId?: string
 }
 
 export type UpdateAdsGroupRequest = {
   name?: string
   description?: string
   managerId?: string
+  projectId?: string
 }

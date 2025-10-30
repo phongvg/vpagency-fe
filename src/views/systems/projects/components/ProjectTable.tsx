@@ -116,14 +116,6 @@ export default function ProjectTable() {
         },
       },
       {
-        header: 'Tài khoản ads',
-        accessorKey: '_count.adsAccounts',
-        cell: (props) => {
-          const row = props.row.original
-          return <span>{row._count?.adsAccounts || 0}</span>
-        },
-      },
-      {
         header: 'Trạng thái',
         accessorKey: 'status',
         cell: (props) => {

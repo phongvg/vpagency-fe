@@ -68,6 +68,7 @@ export default function BoardHeader({ activeView, onViewChange }: BoardHeaderPro
                 onChange={handleUserChange}
                 placeholder="Lọc theo người được giao việc"
                 className="min-w-[300px]"
+                size="sm"
               />
             </div>
           </div>
