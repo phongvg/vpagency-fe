@@ -131,6 +131,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
 
               <FormItem
                 label="Trạng thái"
+                asterisk
                 invalid={errors.status && touched.status}
                 errorMessage={errors.status as string}
               >
@@ -240,7 +241,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
 
             <div className="mb-7">
               <div className="gap-4 grid grid-cols-2">
-                <FormItem label="Từ khóa độc quyền" className="mb-0" asterisk>
+                <FormItem label="Từ khóa độc quyền" className="mb-0">
                   <Field
                     name="exclusiveKeywords"
                     placeholder="Nhập từ khóa độc quyền..."
@@ -256,7 +257,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                   />
                 </FormItem>
 
-                <FormItem label="Từ khóa bị hạn chế" className="mb-0" asterisk>
+                <FormItem label="Từ khóa bị hạn chế" className="mb-0">
                   <Field
                     name="rejectedKeywords"
                     placeholder="Nhập từ khóa bị hạn chế..."
@@ -272,7 +273,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                   />
                 </FormItem>
               </div>
-              <p className="text-red-500 text-sm">Vui lòng nhập các giá trị, ngăn cách nhau bằng dấu phẩy.</p>
+              <p className="text-red-500 text-xs">Vui lòng nhập các giá trị, ngăn cách nhau bằng dấu phẩy.</p>
             </div>
 
             <div className="gap-4 grid grid-cols-3">
@@ -348,7 +349,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
 
             <div className="mb-7">
               <div className="gap-4 grid grid-cols-2">
-                <FormItem label="Quốc gia" className="mb-0" asterisk>
+                <FormItem label="Quốc gia" className="mb-0">
                   <Field
                     name="targetCountries"
                     placeholder="Nhập quốc gia..."
@@ -364,7 +365,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                   />
                 </FormItem>
 
-                <FormItem label="Quốc gia bị hạn chế" className="mb-0" asterisk>
+                <FormItem label="Quốc gia bị hạn chế" className="mb-0">
                   <Field
                     name="rejectedCountries"
                     placeholder="Nhập quốc gia bị hạn chế..."
@@ -380,12 +381,12 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                   />
                 </FormItem>
               </div>
-              <p className="text-red-500 text-sm">Vui lòng nhập các giá trị, ngăn cách nhau bằng dấu phẩy.</p>
+              <p className="text-red-500 text-xs">Vui lòng nhập các giá trị, ngăn cách nhau bằng dấu phẩy.</p>
             </div>
 
             <div className="mb-7">
               <div className="gap-4 grid grid-cols-3">
-                <FormItem label="Thiết bị" className="mb-0" asterisk>
+                <FormItem label="Thiết bị" className="mb-0">
                   <Field
                     name="devices"
                     placeholder="Nhập thiết bị..."
@@ -401,7 +402,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                   />
                 </FormItem>
 
-                <FormItem label="Độ tuổi" className="mb-0" asterisk>
+                <FormItem label="Độ tuổi" className="mb-0">
                   <Field
                     name="ageRanges"
                     placeholder="Nhập độ tuổi..."
@@ -417,7 +418,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                   />
                 </FormItem>
 
-                <FormItem label="Giới tính" className="mb-0" asterisk>
+                <FormItem label="Giới tính" className="mb-0">
                   <Field
                     name="genders"
                     placeholder="Nhập giới tính..."
@@ -433,7 +434,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                   />
                 </FormItem>
               </div>
-              <p className="text-red-500 text-sm">Vui lòng nhập các giá trị, ngăn cách nhau bằng dấu phẩy.</p>
+              <p className="text-red-500 text-xs">Vui lòng nhập các giá trị, ngăn cách nhau bằng dấu phẩy.</p>
             </div>
 
             <div className="flex justify-end gap-2 mt-6">
