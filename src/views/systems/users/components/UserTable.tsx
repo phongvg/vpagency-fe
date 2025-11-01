@@ -123,7 +123,7 @@ export default function UserTable() {
         },
       },
     ],
-    [],
+    [filter, setDrawerOpen, setResetPasswordDrawerOpen, setSelectedUser, userMutation],
   )
 
   const onPaginationChange = (page: number) => {
@@ -142,7 +142,7 @@ export default function UserTable() {
 
       <DataTable
         columns={columns}
-        data={getUsersResponse?.data ?? []}
+        data={getUsersResponse?.items ?? []}
         skeletonAvatarColumns={[1]}
         skeletonAvatarProps={{ width: 38, height: 38 }}
         loading={isLoading}

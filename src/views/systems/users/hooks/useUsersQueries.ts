@@ -1,15 +1,9 @@
-import {
-  apiGetUserList,
-  apiResetPasswordUser,
-  apiUpdateStatusUser,
-  apiUpdateUser,
-} from '@/services/UserService'
+import { ApiAxiosError } from '@/@types/apiError'
+import { apiGetUserList, apiResetPasswordUser, apiUpdateStatusUser, apiUpdateUser } from '@/services/UserService'
 import { GET_USER_LIST } from '@/utils/queryKey'
+import { toastError, toastSuccess } from '@/utils/toast'
 import { useUserStore } from '@/views/systems/users/store/useUserStore'
-import {
-  ResetPasswordUserRequest,
-  UpdateUserRequest,
-} from '@/views/systems/users/types'
+import { ResetPasswordUserRequest, UpdateUserRequest } from '@/views/systems/users/types'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 export const useGetUsersQuery = () => {
@@ -29,8 +23,12 @@ export const useUpdateStatusUserMutation = () => {
 
   return useMutation({
     mutationFn: (userId: string) => apiUpdateStatusUser(userId),
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: [GET_USER_LIST] })
+      toastSuccess(response.data.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
     },
   })
 }
@@ -39,27 +37,26 @@ export const useUpdateUserMutation = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({
-      userId,
-      payload,
-    }: {
-      userId: string
-      payload: UpdateUserRequest
-    }) => apiUpdateUser(userId, payload),
-    onSuccess: () => {
+    mutationFn: ({ userId, payload }: { userId: string; payload: UpdateUserRequest }) => apiUpdateUser(userId, payload),
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: [GET_USER_LIST] })
+      toastSuccess(response.data.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
     },
   })
 }
 
 export const useResetPasswordUserMutation = () => {
   return useMutation({
-    mutationFn: ({
-      userId,
-      payload,
-    }: {
-      userId: string
-      payload: ResetPasswordUserRequest
-    }) => apiResetPasswordUser(userId, payload),
+    mutationFn: ({ userId, payload }: { userId: string; payload: ResetPasswordUserRequest }) =>
+      apiResetPasswordUser(userId, payload),
+    onSuccess: (response) => {
+      toastSuccess(response.data.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
+    },
   })
 }

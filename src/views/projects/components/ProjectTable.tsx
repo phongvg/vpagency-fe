@@ -157,7 +157,7 @@ export default function ProjectTable() {
         },
       },
     ],
-    [filter, deleteProjectMutation.isPending],
+    [filter, deleteProjectMutation],
   )
 
   const onPaginationChange = (page: number) => {
@@ -174,7 +174,7 @@ export default function ProjectTable() {
     <>
       <DataTable
         columns={columns}
-        data={getProjectsResponse?.data || []}
+        data={getProjectsResponse?.items || []}
         loading={isLoading}
         pagingData={{
           total: metaTableData?.total as number,

@@ -1,4 +1,4 @@
-import { CommonFilterRequest, SortOrder } from '@/@types/common'
+import { CommonFilterRequest } from '@/@types/common'
 import { Project } from '@/@types/project'
 import { ProjectStatus, ProjectType } from '@/enums/project.enum'
 import { create } from 'zustand'
@@ -29,8 +29,6 @@ export const initialProjectState = {
     search: '',
     page: 1,
     limit: 10,
-    sortBy: 'createdAt',
-    sortOrder: 'desc' as SortOrder,
   },
   projects: [],
   selectedProject: null,

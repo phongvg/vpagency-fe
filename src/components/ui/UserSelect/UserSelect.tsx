@@ -33,8 +33,8 @@ export default function UserSelect({
     try {
       const response = await apiGetUserList({ search: inputValue, page: 1, limit: 10 })
 
-      if (response.data?.data?.data) {
-        return response.data.data.data.map((user: User) => ({
+      if (response.data?.data?.items) {
+        return response.data.data.items.map((user: User) => ({
           value: user.id,
           label: `${user.firstName || ''} ${user.lastName || ''} (${user.username})`.trim(),
           user,

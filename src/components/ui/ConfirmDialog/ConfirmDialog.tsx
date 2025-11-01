@@ -63,7 +63,7 @@ export default function ConfirmDialog({
           <HiOutlineExclamationCircle className={`h-6 w-6 ${typeStyles.iconColor}`} />
         </div>
 
-        <h3 className="mb-2 font-medium text-gray-900 text-lg">{title}</h3>
+        <h3 className="mb-2 font-bold text-gray-900 text-lg">{title}</h3>
 
         <p className="mb-6 text-gray-500 text-sm">{message}</p>
 

@@ -1,13 +1,6 @@
 import { AdsGroup } from '@/@types/adsGroup'
 import { User } from '@/@types/user'
-
-export enum AdsAccountStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  SUSPENDED = 'SUSPENDED',
-  APPEALED = 'APPEALED',
-  DELETED = 'DELETED',
-}
+import { AdsAccountStatus } from '@/enums/adsAccount.enum'
 
 export type AdsAccount = {
   id: string

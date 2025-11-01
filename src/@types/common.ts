@@ -29,6 +29,7 @@ export type Meta = {
 export type BaseResponse<T> = {
   success: boolean
   code?: string
+  message: string
   data: T
 }
 
@@ -37,7 +38,7 @@ export type BaseListResponse<T> = {
   code?: string
   message?: string
   data: {
-    data: T[]
+    items: T[]
     meta: Meta
   }
 }

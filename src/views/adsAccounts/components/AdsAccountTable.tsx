@@ -1,14 +1,16 @@
 import { useMemo } from 'react'
 import { useGetAdsAccountsQuery, useDeleteAdsAccountMutation } from '@/views/adsAccounts/hooks/useAdsAccountsQueries'
 import { ColumnDef } from '@tanstack/react-table'
-import { AdsAccount, AdsAccountStatus } from '@/@types/adsAccount'
-import { Avatar, Badge } from '@/components/ui'
+import { AdsAccount } from '@/@types/adsAccount'
+import { Avatar, Badge, ConfirmDialog } from '@/components/ui'
 import { DataTable } from '@/components/shared'
 import { useAdsAccountStore } from '@/views/adsAccounts/store/useAdsAccountStore'
-import dayjs from 'dayjs'
 import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
 import AdsAccountEditDialog from '@/views/adsAccounts/components/AdsAccountEditDialog'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
+import { formatDate } from '@/helpers/formatDate'
+import { AdsAccountStatusColors, AdsAccountStatusLabels } from '@/enums/adsAccount.enum'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 
 const ManagerColumn = ({ row }: { row: AdsAccount }) => {
   if (!row.manager) {
@@ -25,23 +27,16 @@ const ManagerColumn = ({ row }: { row: AdsAccount }) => {
   )
 }
 
-const StatusBadge = ({ status }: { status: AdsAccountStatus }) => {
-  const statusConfig = {
-    [AdsAccountStatus.ACTIVE]: { label: 'Hoạt động', color: 'bg-emerald-500' },
-    [AdsAccountStatus.INACTIVE]: { label: 'Không hoạt động', color: 'bg-gray-500' },
-    [AdsAccountStatus.SUSPENDED]: { label: 'Bị đình chỉ', color: 'bg-red-500' },
-    [AdsAccountStatus.APPEALED]: { label: 'Đã kháng cáo', color: 'bg-blue-500' },
-    [AdsAccountStatus.DELETED]: { label: 'Đã xóa', color: 'bg-red-700' },
-  }
-
-  const config = statusConfig[status]
-  return <Badge className={config.color} content={config.label} />
-}
-
 export default function AdsAccountTable() {
   const { filter, setFilter, setDialogOpen, setSelectedAdsAccount } = useAdsAccountStore()
   const { data: getAdsAccountsResponse, isLoading } = useGetAdsAccountsQuery()
   const deleteAdsAccountMutation = useDeleteAdsAccountMutation()
+  const { showConfirm, confirmProps } = useConfirmDialog({
+    title: 'Xác nhận xóa tài khoản',
+    type: 'danger',
+    confirmText: 'Xóa',
+    cancelText: 'Hủy',
+  })
 
   const metaTableData = useMemo(() => getAdsAccountsResponse?.meta, [getAdsAccountsResponse])
 
@@ -51,7 +46,11 @@ export default function AdsAccountTable() {
   }
 
   const handleDelete = async (id: string) => {
-    if (confirm('Bạn có chắc chắn muốn xóa tài khoản quảng cáo này?')) {
+    const confirmed = await showConfirm({
+      message: `Bạn có chắc chắn muốn xóa tài khoản quảng cáo này? Hành động này không thể hoàn tác.`,
+    })
+
+    if (confirmed) {
       await deleteAdsAccountMutation.mutateAsync(id)
     }
   }
@@ -79,7 +78,14 @@ export default function AdsAccountTable() {
         accessorKey: 'status',
         cell: (props) => {
           const row = props.row.original
-          return <StatusBadge status={row.status} />
+          return (
+            <div className="flex items-center gap-2">
+              <Badge className={`bg-${AdsAccountStatusColors[row.status]}`} />
+              <span className={`capitalize font-semibold text-${AdsAccountStatusColors[row.status]}`}>
+                {AdsAccountStatusLabels[row.status]}
+              </span>
+            </div>
+          )
         },
       },
       {
@@ -103,7 +109,7 @@ export default function AdsAccountTable() {
         accessorKey: 'createdAt',
         cell: (props) => {
           const row = props.row.original
-          return <span>{dayjs(row.createdAt).format('DD/MM/YYYY HH:mm')}</span>
+          return <span>{formatDate(row.createdAt)}</span>
         },
       },
       {
@@ -141,7 +147,7 @@ export default function AdsAccountTable() {
     <>
       <DataTable
         columns={columns}
-        data={getAdsAccountsResponse?.data ?? []}
+        data={getAdsAccountsResponse?.items ?? []}
         skeletonAvatarColumns={[4]}
         skeletonAvatarProps={{ width: 32, height: 32 }}
         loading={isLoading}
@@ -155,6 +161,7 @@ export default function AdsAccountTable() {
       />
 
       <AdsAccountEditDialog />
+      <ConfirmDialog {...confirmProps} loading={deleteAdsAccountMutation.isPending} />
     </>
   )
 }

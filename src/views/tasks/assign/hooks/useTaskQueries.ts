@@ -19,7 +19,7 @@ export const useGetTasksWithFilters = (enabled: boolean = false) => {
     queryKey: [GET_TASK_LIST, filters, activeView],
     queryFn: async () => {
       const response = await apiGetTasks(filters)
-      return response.data.data.data
+      return response.data.data.items
     },
     enabled,
   })

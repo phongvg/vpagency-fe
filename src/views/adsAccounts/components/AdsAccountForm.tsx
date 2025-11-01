@@ -8,12 +8,11 @@ import {
   useCreateAdsAccountMutation,
   useUpdateAdsAccountMutation,
 } from '@/views/adsAccounts/hooks/useAdsAccountsQueries'
-import type { CreateAdsAccountRequest } from '@/views/adsAccounts/types'
-import { AdsAccountStatus } from '@/@types/adsAccount'
 import AsyncSelect from 'react-select/async'
 import { apiGetAdsGroupList } from '@/services/AdsGroupService'
 import { toastError, toastSuccess } from '@/utils/toast'
 import { HiOutlinePlus, HiOutlineTrash } from 'react-icons/hi'
+import { AdsAccountStatus } from '@/enums/adsAccount.enum'
 
 const accountValidationSchema = Yup.object().shape({
   uuid: Yup.string().required('Vui lòng nhập UUID'),
@@ -22,6 +21,7 @@ const accountValidationSchema = Yup.object().shape({
   profileGenLogin: Yup.string(),
   recoverPassword: Yup.string(),
   twoFactorCode: Yup.string(),
+  totalSpent: Yup.number(),
 })
 
 const validationSchema = Yup.object().shape({
@@ -84,6 +84,7 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
             profileGenLogin: selectedAdsAccount?.profileGenLogin || '',
             recoverPassword: selectedAdsAccount?.recoverPassword || '',
             twoFactorCode: selectedAdsAccount?.twoFactorCode || '',
+            totalSpent: selectedAdsAccount?.totalSpent || 0,
           },
         ],
         managerId: selectedAdsAccount?.managerId || undefined,
@@ -98,6 +99,7 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
             profileGenLogin: '',
             recoverPassword: '',
             twoFactorCode: '',
+            totalSpent: 0,
           },
         ],
         managerId: undefined,
@@ -107,13 +109,10 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
   const fetchAdsGroupOptions = async (inputValue: string) => {
     try {
       const response = await apiGetAdsGroupList({ search: inputValue, page: 1, limit: 10 })
-      if (response.data?.data?.data) {
-        return response.data.data.data.map((group) => ({
-          value: group.id,
-          label: group.name,
-        }))
-      }
-      return []
+      return response.data.data.items.map((group) => ({
+        value: group.id,
+        label: group.name,
+      }))
     } catch {
       return []
     }
@@ -342,6 +341,25 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                             autoComplete="off"
                             name={`accounts.${index}.twoFactorCode`}
                             placeholder="Nhập mã xác thực 2 yếu tố"
+                            component={Input}
+                          />
+                        </FormItem>
+                      </div>
+
+                      <div className="gap-4 grid grid-cols-2">
+                        <FormItem
+                          label="Tổng chi tiêu"
+                          invalid={
+                            touched.accounts?.[index]?.totalSpent &&
+                            Boolean((errors.accounts as any)?.[index]?.totalSpent)
+                          }
+                          errorMessage={(errors.accounts as any)?.[index]?.totalSpent}
+                        >
+                          <Field
+                            type="number"
+                            autoComplete="off"
+                            name={`accounts.${index}.totalSpent`}
+                            placeholder="Nhập tổng chi tiêu"
                             component={Input}
                           />
                         </FormItem>

@@ -2,12 +2,12 @@ import { useMemo } from 'react'
 import { useGetAdsGroupsQuery, useDeleteAdsGroupMutation } from '@/views/adsGroups/hooks/useAdsGroupsQueries'
 import { ColumnDef } from '@tanstack/react-table'
 import { AdsGroup } from '@/@types/adsGroup'
-import { Avatar, Button } from '@/components/ui'
+import { Avatar } from '@/components/ui'
 import { DataTable } from '@/components/shared'
 import { useAdsGroupStore } from '@/views/adsGroups/store/useAdsGroupStore'
-import dayjs from 'dayjs'
 import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
 import AdsGroupEditDialog from '@/views/adsGroups/components/AdsGroupEditDialog'
+import { formatDate } from '@/helpers/formatDate'
 
 const ManagerColumn = ({ row }: { row: AdsGroup }) => {
   if (!row.manager) {
@@ -55,18 +55,6 @@ export default function AdsGroupTable() {
       {
         header: 'Tên nhóm',
         accessorKey: 'name',
-        cell: (props) => {
-          const row = props.row.original
-          return <span>{row.name}</span>
-        },
-      },
-      {
-        header: 'Mô tả',
-        accessorKey: 'description',
-        cell: (props) => {
-          const row = props.row.original
-          return <span className="max-w-[200px] truncate">{row.description || '-'}</span>
-        },
       },
       {
         header: 'Người quản lý',
@@ -81,7 +69,7 @@ export default function AdsGroupTable() {
         accessorKey: 'createdAt',
         cell: (props) => {
           const row = props.row.original
-          return <div className="flex items-center">{dayjs(row.createdAt).format('DD/MM/YYYY HH:mm')}</div>
+          return <span>{formatDate(row.createdAt)}</span>
         },
       },
       {
@@ -89,7 +77,7 @@ export default function AdsGroupTable() {
         accessorKey: 'updatedAt',
         cell: (props) => {
           const row = props.row.original
-          return <div className="flex items-center">{dayjs(row.updatedAt).format('DD/MM/YYYY HH:mm')}</div>
+          return <span>{formatDate(row.updatedAt)}</span>
         },
       },
       {
@@ -110,7 +98,7 @@ export default function AdsGroupTable() {
         },
       },
     ],
-    [filter.page, filter.limit, deleteAdsGroupMutation.isPending],
+    [filter, deleteAdsGroupMutation],
   )
 
   const onPaginationChange = (page: number) => {
@@ -127,7 +115,7 @@ export default function AdsGroupTable() {
     <>
       <DataTable
         columns={columns}
-        data={getAdsGroupsResponse?.data ?? []}
+        data={getAdsGroupsResponse?.items ?? []}
         skeletonAvatarColumns={[3]}
         skeletonAvatarProps={{ width: 32, height: 32 }}
         loading={isLoading}

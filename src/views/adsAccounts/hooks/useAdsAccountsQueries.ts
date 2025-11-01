@@ -1,3 +1,4 @@
+import { ApiAxiosError } from '@/@types/apiError'
 import {
   apiCreateAdsAccount,
   apiDeleteAdsAccount,
@@ -5,6 +6,7 @@ import {
   apiUpdateAdsAccount,
 } from '@/services/AdsAccountService'
 import { GET_ADS_ACCOUNT_LIST } from '@/utils/queryKey'
+import { toastError } from '@/utils/toast'
 import { useAdsAccountStore } from '@/views/adsAccounts/store/useAdsAccountStore'
 import { CreateAdsAccountRequest, UpdateAdsAccountRequest } from '@/views/adsAccounts/types'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -29,6 +31,9 @@ export const useCreateAdsAccountMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [GET_ADS_ACCOUNT_LIST] })
     },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
+    },
   })
 }
 
@@ -40,6 +45,9 @@ export const useUpdateAdsAccountMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [GET_ADS_ACCOUNT_LIST] })
     },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
+    },
   })
 }
 
@@ -50,6 +58,9 @@ export const useDeleteAdsAccountMutation = () => {
     mutationFn: (id: string) => apiDeleteAdsAccount(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [GET_ADS_ACCOUNT_LIST] })
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
     },
   })
 }
