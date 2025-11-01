@@ -1,11 +1,7 @@
 import { BaseListResponse, BaseResponse } from '@/@types/common'
 import ApiService from './ApiService'
 import { AdsGroup } from '@/@types/adsGroup'
-import {
-  AdsGroupListFilterRequest,
-  CreateAdsGroupRequest,
-  UpdateAdsGroupRequest,
-} from '@/views/systems/adsGroups/types'
+import { AdsGroupListFilterRequest, CreateAdsGroupRequest, UpdateAdsGroupRequest } from '@/views/adsGroups/types'
 
 export async function apiGetAdsGroupList(params: AdsGroupListFilterRequest) {
   return ApiService.fetchData<BaseListResponse<AdsGroup>>({

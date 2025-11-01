@@ -1,7 +1,7 @@
 import { BaseListResponse, BaseResponse } from '@/@types/common'
 import { Project } from '@/@types/project'
 import ApiService from './ApiService'
-import { CreateProjectRequest, ProjectListFilterRequest, UpdateProjectRequest } from '@/views/systems/projects/types'
+import { CreateProjectRequest, ProjectListFilterRequest, UpdateProjectRequest } from '@/views/projects/types'
 
 export async function apiGetProjectList(params: ProjectListFilterRequest) {
   return ApiService.fetchData<BaseListResponse<Project>>({

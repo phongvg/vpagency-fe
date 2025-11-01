@@ -1,11 +1,4 @@
-import {
-  forwardRef,
-  useMemo,
-  useRef,
-  useEffect,
-  useState,
-  useImperativeHandle,
-} from 'react'
+import { forwardRef, useMemo, useRef, useEffect, useState, useImperativeHandle } from 'react'
 import classNames from 'classnames'
 import Table from '@/components/ui/Table'
 import Pagination from '@/components/ui/Pagination'
@@ -108,13 +101,7 @@ const EmptyState = ({
 }
 
 const IndeterminateCheckbox = (props: IndeterminateCheckboxProps) => {
-  const {
-    indeterminate,
-    onChange,
-    onCheckBoxChange,
-    onIndeterminateCheckBoxChange,
-    ...rest
-  } = props
+  const { indeterminate, onChange, onCheckBoxChange, onIndeterminateCheckBoxChange, ...rest } = props
 
   const ref = useRef<HTMLInputElement>(null)
 
@@ -131,14 +118,7 @@ const IndeterminateCheckbox = (props: IndeterminateCheckboxProps) => {
     onIndeterminateCheckBoxChange?.(e)
   }
 
-  return (
-    <Checkbox
-      ref={ref}
-      className="mb-0"
-      onChange={(_, e) => handleChange(e)}
-      {...rest}
-    />
-  )
+  return <Checkbox ref={ref} className="mb-0" onChange={(_, e) => handleChange(e)} {...rest} />
 }
 
 export type DataTableResetHandle = {
@@ -146,10 +126,7 @@ export type DataTableResetHandle = {
   resetSelected: () => void
 }
 
-function _DataTable<T>(
-  props: DataTableProps<T>,
-  ref: ForwardedRef<DataTableResetHandle>,
-) {
+function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableResetHandle>) {
   const {
     skeletonAvatarColumns,
     columns: columnsProp = [],
@@ -192,10 +169,7 @@ function _DataTable<T>(
     }
   }
 
-  const handleIndeterminateCheckBoxChange = (
-    checked: boolean,
-    rows: Row<T>[],
-  ) => {
+  const handleIndeterminateCheckBoxChange = (checked: boolean, rows: Row<T>[]) => {
     if (!loading) {
       onIndeterminateCheckBoxChange?.(checked, rows)
     }
@@ -215,8 +189,7 @@ function _DataTable<T>(
 
   useEffect(() => {
     if (Array.isArray(sorting)) {
-      const sortOrder =
-        sorting.length > 0 ? (sorting[0].desc ? 'desc' : 'asc') : ''
+      const sortOrder = sorting.length > 0 ? (sorting[0].desc ? 'desc' : 'asc') : ''
       const id = sorting.length > 0 ? sorting[0].id : ''
       onSort?.({ order: sortOrder, key: id })
     }
@@ -236,10 +209,7 @@ function _DataTable<T>(
               indeterminate={table.getIsSomeRowsSelected()}
               onChange={table.getToggleAllRowsSelectedHandler()}
               onIndeterminateCheckBoxChange={(e) => {
-                handleIndeterminateCheckBoxChange(
-                  e.target.checked,
-                  table.getRowModel().rows,
-                )
+                handleIndeterminateCheckBoxChange(e.target.checked, table.getRowModel().rows)
               }}
             />
           ),
@@ -249,9 +219,7 @@ function _DataTable<T>(
               disabled={!row.getCanSelect()}
               indeterminate={row.getIsSomeSelected()}
               onChange={row.getToggleSelectedHandler()}
-              onCheckBoxChange={(e) =>
-                handleCheckBoxChange(e.target.checked, row.original)
-              }
+              onCheckBoxChange={(e) => handleCheckBoxChange(e.target.checked, row.original)}
             />
           ),
         },
@@ -303,12 +271,7 @@ function _DataTable<T>(
                 return (
                   <Th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
-                      <>
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                      </>
+                      <>{flexRender(header.column.columnDef.header, header.getContext())}</>
                     )}
                   </Th>
                 )
@@ -325,11 +288,7 @@ function _DataTable<T>(
             avatarProps={skeletonAvatarProps}
           />
         ) : data.length === 0 ? (
-          <EmptyState
-            title={emptyTitle}
-            description={emptyDescription}
-            colSpan={(finalColumns as Array<T>).length}
-          >
+          <EmptyState title={emptyTitle} description={emptyDescription} colSpan={(finalColumns as Array<T>).length}>
             {emptyContent}
           </EmptyState>
         ) : (
@@ -341,14 +300,7 @@ function _DataTable<T>(
                 return (
                   <Tr key={row.id}>
                     {row.getVisibleCells().map((cell) => {
-                      return (
-                        <Td key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </Td>
-                      )
+                      return <Td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Td>
                     })}
                   </Tr>
                 )
@@ -357,22 +309,15 @@ function _DataTable<T>(
         )}
       </Table>
       {/* Only show pagination if there's data or loading */}
-      {(data.length > 0 || loading) && (
+      {(data.length > 0 || loading) && (onPaginationChange || onSelectChange) && (
         <div className="flex justify-between items-center mt-4">
-          <Pagination
-            pageSize={pageSize}
-            currentPage={pageIndex}
-            total={total}
-            onChange={handlePaginationChange}
-          />
+          <Pagination pageSize={pageSize} currentPage={pageIndex} total={total} onChange={handlePaginationChange} />
           <div style={{ minWidth: 130 }}>
             <Select
               size="sm"
               menuPlacement="top"
               isSearchable={false}
-              value={pageSizeOption.filter(
-                (option) => option.value === pageSize,
-              )}
+              value={pageSizeOption.filter((option) => option.value === pageSize)}
               options={pageSizeOption}
               onChange={(option) => handleSelectChange(option?.value)}
             />

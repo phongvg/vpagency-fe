@@ -52,13 +52,13 @@ const appsRoute: Routes = [
   {
     key: 'adsAccounts',
     path: urlConfig.adsAccounts,
-    component: lazy(() => import('@/views/systems/adsAccounts')),
-    authority: [Role.ADMIN],
+    component: lazy(() => import('@/views/adsAccounts')),
+    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY],
   },
   {
     key: 'adsGroups',
     path: urlConfig.adsGroups,
-    component: lazy(() => import('@/views/systems/adsGroups')),
+    component: lazy(() => import('@/views/adsGroups')),
     authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY],
     meta: {
       header: 'Nhóm tài khoản Ads',
@@ -67,10 +67,19 @@ const appsRoute: Routes = [
   {
     key: 'projects',
     path: urlConfig.projects,
-    component: lazy(() => import('@/views/systems/projects')),
+    component: lazy(() => import('@/views/projects')),
     authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY],
     meta: {
       header: 'Dự án',
+    },
+  },
+  {
+    key: 'projectDetail',
+    path: urlConfig.projectDetail,
+    component: lazy(() => import('@/views/projects/pages/projectDetail')),
+    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY],
+    meta: {
+      header: 'Chi tiết Dự án',
     },
   },
 ]

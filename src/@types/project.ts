@@ -1,11 +1,12 @@
-import { ProjectType } from '@/enums/project.enum'
+import { ProjectStatus, ProjectType } from '@/enums/project.enum'
 import { User } from './user'
+import { AdsGroup } from '@/@types/adsGroup'
 
 export interface Project {
   id: string
   name: string
   type: ProjectType
-  status: string
+  status: ProjectStatus
   ownerId: string
   owner: User
   totalBudget: number
@@ -28,6 +29,7 @@ export interface Project {
   title: string | null
   note: string | null
   deadline: string | Date | null
+  adsGroups: AdsGroup[]
   description: string | null
   createdAt: string | Date | null
   updatedAt: string | Date | null

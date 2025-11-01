@@ -5,7 +5,7 @@ import {
   AdsAccountListFilterRequest,
   CreateAdsAccountRequest,
   UpdateAdsAccountRequest,
-} from '@/views/systems/adsAccounts/types'
+} from '@/views/adsAccounts/types'
 
 export async function apiGetAdsAccountList(params: AdsAccountListFilterRequest) {
   return ApiService.fetchData<BaseListResponse<AdsAccount>>({
