@@ -30,10 +30,6 @@ export default function UserSelect({
   onChange,
 }: UserSelectProps) {
   const loadOptions = async (inputValue: string): Promise<UserOption[]> => {
-    if (!inputValue || inputValue.length === 0) {
-      return []
-    }
-
     try {
       const response = await apiGetUserList({ search: inputValue, page: 1, limit: 10 })
 
@@ -45,7 +41,7 @@ export default function UserSelect({
         }))
       }
       return []
-    } catch (error) {
+    } catch {
       return []
     }
   }
@@ -86,7 +82,7 @@ export default function UserSelect({
         Option: CustomOption,
       }}
       size={size}
-      defaultOptions={false}
+      defaultOptions
       cacheOptions
     />
   )
