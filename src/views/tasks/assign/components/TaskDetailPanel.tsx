@@ -66,13 +66,8 @@ export default function TaskDetailPanel({ inSplitView = false }: TaskDetailPanel
   }
 
   const handleUpdateProgress = async (progress: number) => {
-    try {
-      await updateProgressMutation.mutateAsync({ taskId: selectedTask.id, progress })
-      toastSuccess('Cập nhật tiến độ thành công')
-      setIsProgressModalOpen(false)
-    } catch (error: any) {
-      toastError(error?.response?.data?.message || 'Cập nhật tiến độ thất bại')
-    }
+    await updateProgressMutation.mutateAsync({ taskId: selectedTask.id, progress })
+    setIsProgressModalOpen(false)
   }
 
   return (
