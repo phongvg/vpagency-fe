@@ -1,18 +1,17 @@
 import { useMemo } from 'react'
-import { useGetAdsAccountsQuery, useDeleteAdsAccountMutation } from '@/views/adsAccounts/hooks/useAdsAccountsQueries'
 import { ColumnDef } from '@tanstack/react-table'
 import { AdsAccount } from '@/@types/adsAccount'
-import { Avatar, Badge, ConfirmDialog } from '@/components/ui'
+import { Avatar, Badge } from '@/components/ui'
 import { DataTable } from '@/components/shared'
-import { useAdsAccountStore } from '@/views/adsAccounts/store/useAdsAccountStore'
-import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
-import AdsAccountEditDialog from '@/views/adsAccounts/components/AdsAccountEditDialog'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 import { formatDate } from '@/helpers/formatDate'
 import { AdsAccountStatusColors, AdsAccountStatusLabels } from '@/enums/adsAccount.enum'
-import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { Link } from 'react-router-dom'
 import { urlConfig } from '@/configs/urls.config'
+
+type Props = {
+  data: AdsAccount[]
+}
 
 const ManagerColumn = ({ row }: { row: AdsAccount }) => {
   if (!row.manager) {
@@ -29,34 +28,7 @@ const ManagerColumn = ({ row }: { row: AdsAccount }) => {
   )
 }
 
-export default function AdsAccountTable() {
-  const { filter, setFilter, setDialogOpen, setSelectedAdsAccount } = useAdsAccountStore()
-  const { data: getAdsAccountsResponse, isLoading } = useGetAdsAccountsQuery()
-  const deleteAdsAccountMutation = useDeleteAdsAccountMutation()
-  const { showConfirm, confirmProps } = useConfirmDialog({
-    title: 'Xác nhận xóa tài khoản',
-    type: 'danger',
-    confirmText: 'Xóa',
-    cancelText: 'Hủy',
-  })
-
-  const metaTableData = useMemo(() => getAdsAccountsResponse?.meta, [getAdsAccountsResponse])
-
-  const handleEdit = (row: AdsAccount) => {
-    setSelectedAdsAccount(row)
-    setDialogOpen(true)
-  }
-
-  const handleDelete = async (id: string) => {
-    const confirmed = await showConfirm({
-      message: `Bạn có chắc chắn muốn xóa tài khoản quảng cáo này? Hành động này không thể hoàn tác.`,
-    })
-
-    if (confirmed) {
-      await deleteAdsAccountMutation.mutateAsync(id)
-    }
-  }
-
+export default function AdsAccountTable({ data }: Props) {
   const columns: ColumnDef<AdsAccount>[] = useMemo(
     () => [
       {
@@ -64,7 +36,7 @@ export default function AdsAccountTable() {
         accessorKey: 'index',
         cell: (props) => {
           const row = props.row.index
-          return <span>{(filter.page - 1) * filter.limit + row + 1}</span>
+          return <span>{row + 1}</span>
         },
       },
       {
@@ -122,56 +94,20 @@ export default function AdsAccountTable() {
           return <span>{formatDate(row.createdAt)}</span>
         },
       },
-      {
-        header: '',
-        accessorKey: 'action',
-        cell: (props) => {
-          const row = props.row.original
-          return (
-            <div className="flex items-center gap-4">
-              <button type="button" onClick={() => handleEdit(row)}>
-                <HiOutlinePencilAlt size={24} />
-              </button>
-              <button type="button" onClick={() => handleDelete(row.id)}>
-                <HiOutlineTrash size={24} />
-              </button>
-            </div>
-          )
-        },
-      },
     ],
-    [filter.page, filter.limit, deleteAdsAccountMutation.isPending],
+    [],
   )
 
-  const onPaginationChange = (page: number) => {
-    const newFilter = { ...filter, page }
-    setFilter(newFilter)
-  }
-
-  const onSelectChange = (value: number) => {
-    const newFilter = { ...filter, limit: value, page: 1 }
-    setFilter(newFilter)
-  }
-
   return (
-    <>
+    <div className="mt-8">
+      <h4 className="mb-4 font-semibold text-lg">Danh sách tài khoản Ads</h4>
       <DataTable
         columns={columns}
-        data={getAdsAccountsResponse?.items ?? []}
+        data={data ?? []}
         skeletonAvatarColumns={[4]}
         skeletonAvatarProps={{ width: 32, height: 32 }}
-        loading={isLoading}
-        pagingData={{
-          total: metaTableData?.total as number,
-          pageIndex: metaTableData?.page as number,
-          pageSize: metaTableData?.limit as number,
-        }}
-        onPaginationChange={onPaginationChange}
-        onSelectChange={onSelectChange}
+        loading={false}
       />
-
-      <AdsAccountEditDialog />
-      <ConfirmDialog {...confirmProps} loading={deleteAdsAccountMutation.isPending} />
-    </>
+    </div>
   )
 }

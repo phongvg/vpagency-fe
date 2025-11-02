@@ -2,12 +2,15 @@ import { useMemo } from 'react'
 import { useGetAdsGroupsQuery, useDeleteAdsGroupMutation } from '@/views/adsGroups/hooks/useAdsGroupsQueries'
 import { ColumnDef } from '@tanstack/react-table'
 import { AdsGroup } from '@/@types/adsGroup'
-import { Avatar } from '@/components/ui'
+import { Avatar, ConfirmDialog } from '@/components/ui'
 import { DataTable } from '@/components/shared'
 import { useAdsGroupStore } from '@/views/adsGroups/store/useAdsGroupStore'
 import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
 import AdsGroupEditDialog from '@/views/adsGroups/components/AdsGroupEditDialog'
 import { formatDate } from '@/helpers/formatDate'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
+import { Link } from 'react-router-dom'
+import { urlConfig } from '@/configs/urls.config'
 
 const ManagerColumn = ({ row }: { row: AdsGroup }) => {
   if (!row.manager) {
@@ -28,6 +31,12 @@ export default function AdsGroupTable() {
   const { filter, setFilter, setDialogOpen, setSelectedAdsGroup } = useAdsGroupStore()
   const { data: getAdsGroupsResponse, isLoading } = useGetAdsGroupsQuery()
   const deleteAdsGroupMutation = useDeleteAdsGroupMutation()
+  const { showConfirm, confirmProps } = useConfirmDialog({
+    title: 'Xác nhận xóa nhóm',
+    type: 'danger',
+    confirmText: 'Xóa',
+    cancelText: 'Hủy',
+  })
 
   const metaTableData = useMemo(() => getAdsGroupsResponse?.meta, [getAdsGroupsResponse])
 
@@ -37,7 +46,11 @@ export default function AdsGroupTable() {
   }
 
   const handleDelete = async (id: string) => {
-    if (confirm('Bạn có chắc chắn muốn xóa nhóm quảng cáo này?')) {
+    const confirmed = await showConfirm({
+      message: `Bạn có chắc chắn muốn xóa nhóm tài khoản này? Hành động này không thể hoàn tác.`,
+    })
+
+    if (confirmed) {
       await deleteAdsGroupMutation.mutateAsync(id)
     }
   }
@@ -55,6 +68,14 @@ export default function AdsGroupTable() {
       {
         header: 'Tên nhóm',
         accessorKey: 'name',
+        cell: (props) => {
+          const row = props.row.original
+          return (
+            <Link to={urlConfig.adsGroupDetail.replace(':id', row.id)} className="hover:text-indigo-600">
+              {row.name}
+            </Link>
+          )
+        },
       },
       {
         header: 'Người quản lý',
@@ -129,6 +150,7 @@ export default function AdsGroupTable() {
       />
 
       <AdsGroupEditDialog />
+      <ConfirmDialog {...confirmProps} loading={deleteAdsGroupMutation.isPending} />
     </>
   )
 }

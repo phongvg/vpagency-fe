@@ -2,7 +2,6 @@ import { Accordion, Badge, Button, ConfirmDialog } from '@/components/ui'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { useDeleteTask, useUpdateTaskProgress } from '@/views/tasks/assign/hooks/useTaskQueries'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
-import { toastError, toastSuccess } from '@/utils/toast'
 import { Task } from '@/@types/task'
 import {
   HiChevronDoubleUp,
@@ -20,14 +19,13 @@ import {
   TaskType,
   TaskTypeLabels,
 } from '@/enums/task.enum'
-import { format } from 'date-fns'
-import { vi } from 'date-fns/locale'
 import { getStatusColor } from '@/constants/task.constant'
 import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
 import UpdateProgressModal from '@/views/tasks/assign/components/UpdateProgressModal'
 import { useState } from 'react'
 import { ProjectTypeLabels } from '@/enums/project.enum'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
+import { formatDate } from '@/helpers/formatDate'
 
 interface TaskDetailPanelProps {
   inSplitView?: boolean
@@ -189,7 +187,7 @@ function TaskDetailSection({ task }: TaskPanelProps) {
       </li>
       <li className="flex justify-between items-center">
         <span>Deadline:</span>
-        <span>{format(new Date(task.deadline), 'dd/MM/yyyy', { locale: vi })}</span>
+        <span>{formatDate(task.deadline, 'DD/MM/YYYY')}</span>
       </li>
     </ul>
   )
@@ -226,11 +224,11 @@ function TaskDatesSection({ task }: TaskPanelProps) {
     <ul className="space-y-2">
       <li className="flex justify-between items-center">
         <span>Ngày tạo:</span>
-        <span>{format(new Date(task.createdAt), 'dd/MM/yyyy - HH:mm', { locale: vi })}</span>
+        <span>{formatDate(task.createdAt)}</span>
       </li>
       <li className="flex justify-between items-center">
         <span>Ngày cập nhật:</span>
-        <span>{format(new Date(task.updatedAt), 'dd/MM/yyyy - HH:mm', { locale: vi })}</span>
+        <span>{formatDate(task.updatedAt)}</span>
       </li>
     </ul>
   )

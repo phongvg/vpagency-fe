@@ -1,5 +1,7 @@
+import { ApiAxiosError } from '@/@types/apiError'
 import { apiCreateAdsGroup, apiDeleteAdsGroup, apiGetAdsGroupList, apiUpdateAdsGroup } from '@/services/AdsGroupService'
 import { GET_ADS_GROUP_LIST } from '@/utils/queryKey'
+import { toastError, toastSuccess } from '@/utils/toast'
 import { useAdsGroupStore } from '@/views/adsGroups/store/useAdsGroupStore'
 import { CreateAdsGroupRequest, UpdateAdsGroupRequest } from '@/views/adsGroups/types'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -21,8 +23,12 @@ export const useCreateAdsGroupMutation = () => {
 
   return useMutation({
     mutationFn: (payload: CreateAdsGroupRequest) => apiCreateAdsGroup(payload),
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: [GET_ADS_GROUP_LIST] })
+      toastSuccess(response.data.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
     },
   })
 }
@@ -32,8 +38,12 @@ export const useUpdateAdsGroupMutation = () => {
 
   return useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: UpdateAdsGroupRequest }) => apiUpdateAdsGroup(id, payload),
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: [GET_ADS_GROUP_LIST] })
+      toastSuccess(response.data.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
     },
   })
 }
@@ -43,8 +53,12 @@ export const useDeleteAdsGroupMutation = () => {
 
   return useMutation({
     mutationFn: (id: string) => apiDeleteAdsGroup(id),
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: [GET_ADS_GROUP_LIST] })
+      toastSuccess(response.data.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
     },
   })
 }

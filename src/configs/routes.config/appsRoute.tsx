@@ -53,22 +53,43 @@ const appsRoute: Routes = [
     key: 'adsAccounts',
     path: urlConfig.adsAccounts,
     component: lazy(() => import('@/views/adsAccounts')),
-    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY],
+    authority: [],
+    meta: {
+      header: 'Tài khoản Ads',
+    },
+  },
+  {
+    key: 'adsAccountDetail',
+    path: urlConfig.adsAccountDetail,
+    component: lazy(() => import('@/views/adsAccounts/pages/adsAccountDetail')),
+    authority: [],
+    meta: {
+      header: 'Thông tin tài khoản Ads',
+    },
   },
   {
     key: 'adsGroups',
     path: urlConfig.adsGroups,
     component: lazy(() => import('@/views/adsGroups')),
-    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY],
+    authority: [Role.ADMIN],
     meta: {
       header: 'Nhóm tài khoản Ads',
+    },
+  },
+  {
+    key: 'adsGroupDetail',
+    path: urlConfig.adsGroupDetail,
+    component: lazy(() => import('@/views/adsGroups/pages/adsGroupDetail')),
+    authority: [Role.ADMIN],
+    meta: {
+      header: 'Thông tin nhóm tài khoản Ads',
     },
   },
   {
     key: 'projects',
     path: urlConfig.projects,
     component: lazy(() => import('@/views/projects')),
-    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY],
+    authority: [],
     meta: {
       header: 'Dự án',
     },
@@ -77,13 +98,9 @@ const appsRoute: Routes = [
     key: 'projectDetail',
     path: urlConfig.projectDetail,
     component: lazy(() => import('@/views/projects/pages/projectDetail')),
-    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY],
+    authority: [],
     meta: {
-      header: (() => {
-        const pathParts = window.location.pathname.split('/')
-        const id = pathParts[pathParts.length - 1]
-        return `Dự án #${id}`
-      })(),
+      header: 'Thông tin Dự án',
     },
   },
 ]

@@ -1,9 +1,10 @@
 import { CommonFilterRequest } from '@/@types/common'
-import { AdsAccountStatus } from '@/@types/adsAccount'
+import { AdsAccountStatus } from '@/enums/adsAccount.enum'
 
 export type AdsAccountListFilterRequest = CommonFilterRequest & {
   managerId?: string
   projectId?: string
+  adsGroupId?: string
   status?: AdsAccountStatus
 }
 

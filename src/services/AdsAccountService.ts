@@ -15,22 +15,6 @@ export async function apiGetAdsAccountList(params: AdsAccountListFilterRequest) 
   })
 }
 
-export async function apiGetAdsAccountsByManager(managerId: string, params?: AdsAccountListFilterRequest) {
-  return ApiService.fetchData<BaseListResponse<AdsAccount>>({
-    url: `/ads-accounts/manager/${managerId}`,
-    method: 'get',
-    params,
-  })
-}
-
-export async function apiGetAdsAccountsByProject(projectId: string, params?: AdsAccountListFilterRequest) {
-  return ApiService.fetchData<BaseListResponse<AdsAccount>>({
-    url: `/ads-accounts/project/${projectId}`,
-    method: 'get',
-    params,
-  })
-}
-
 export async function apiGetAdsAccountById(id: string) {
   return ApiService.fetchData<BaseResponse<AdsAccount>>({
     url: `/ads-accounts/${id}`,

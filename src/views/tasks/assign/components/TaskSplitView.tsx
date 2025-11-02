@@ -13,7 +13,7 @@ export default function TaskSplitView() {
   const navigate = useNavigate()
   const { selectedTask, setSelectedTask } = useBoardStore()
   const { data: taskList } = useGetTasksWithFilters(true)
-  const { data: taskDetail, isLoading: isLoadingTask } = useGetTaskDetail(id, true)
+  const { data: taskDetail, isFetching: isLoadingTask } = useGetTaskDetail(id, true)
 
   useEffect(() => {
     if (taskDetail) {

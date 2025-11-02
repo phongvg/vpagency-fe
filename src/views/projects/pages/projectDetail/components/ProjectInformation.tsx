@@ -16,73 +16,75 @@ export default function ProjectInformation({ data }: Props) {
 
   return (
     <>
-      <Breadcrumb items={items} showHome={false} />
-      <div className="gap-4 grid grid-cols-2 mt-4">
-        <Card>
-          <div className="flex flex-col xl:justify-between mx-auto 2xl:min-w-[360px] h-full">
-            <h4 className="font-bold">{data.name}</h4>
-            <div className="gap-x-4 gap-y-7 grid grid-cols-1 xl:grid-cols-2 mt-8">
-              <ProjectInfoField title="Loại dự án" value={ProjectTypeLabels[data.type]} />
-              <ProjectInfoField title="Tiêu đề" value={data.title} />
-              <ProjectInfoField title="Trạng thái" value={ProjectStatusLabels[data.status]} />
-              <ProjectInfoField title="CPC" value={data.cpc} />
-              <ProjectInfoField title="Ngày bắt đầu" value={formatDate(data.startedAt, 'DD/MM/YYYY')} />
-              <ProjectInfoField title="Deadline" value={formatDate(data.deadline, 'DD/MM/YYYY')} />
-              <ProjectInfoField title="Ngày tạo dự án" value={formatDate(data.createdAt, 'DD/MM/YYYY HH:mm')} />
-              <ProjectInfoField title="Ngày cập nhật" value={formatDate(data.updatedAt, 'DD/MM/YYYY HH:mm')} />
-              <ProjectInfoField title="Tổng ngân sách" value={formatVietnameseMoney(data.totalBudget)} />
-              <ProjectInfoField title="Ngân sách còn lại" value={formatVietnameseMoney(data.spentBudget)} />
-              <ProjectInfoField title="Nội dung" value={data.content} />
-              <ProjectInfoField title="Ghi chú" value={data.note} />
-              <ProjectInfoField title="Mô tả" value={data.description} />
-            </div>
-          </div>
-        </Card>
+      <div className="space-y-4">
+        <Breadcrumb items={items} showHome={false} />
 
-        <Card>
-          <div className="flex flex-col xl:justify-between mx-auto 2xl:min-w-[360px] h-full">
-            <div className="flex xl:flex-col items-center gap-4">
-              <Avatar size={120} shape="circle" src={data.owner.avatar || ''} />
-            </div>
-            <div className="gap-x-4 gap-y-7 grid grid-cols-1 xl:grid-cols-2 mt-8">
-              <ProjectInfoField
-                title="Tên người phụ trách"
-                value={`${data.owner?.firstName || ''} ${data.owner?.lastName || ''}`}
-              />
-              <ProjectInfoField title="Tên đăng nhập" value={data.owner?.username} />
-              <ProjectInfoField title="Email" value={data.owner?.email} />
-            </div>
-          </div>
-        </Card>
+        <h3 className="font-bold">{data.name + ` (#${data.id})`}</h3>
 
-        <Card>
-          <div className="flex flex-col xl:justify-between mx-auto 2xl:min-w-[360px] h-full">
-            <div className="gap-x-4 gap-y-7 grid grid-cols-1">
-              <ProjectInfoField title="Tình trạng domain" value={data.domainStatus} />
-              <ProjectInfoLinkField title="Domain gốc" value={data.originalDomain} />
-              <ProjectInfoLinkField title="Ladipage" value={data.originalLadipage} />
-              <ProjectInfoLinkField title="URL cuối cùng" value={data.finalURL} />
-              <ProjectInfoLinkField title="URL theo dõi" value={data.trackingURL} />
+        <div className="gap-4 grid grid-cols-2">
+          <Card>
+            <div className="flex flex-col xl:justify-between mx-auto 2xl:min-w-[360px] h-full">
+              <div className="gap-x-4 gap-y-7 grid grid-cols-1 xl:grid-cols-2">
+                <ProjectInfoField title="Loại dự án" value={ProjectTypeLabels[data.type]} />
+                <ProjectInfoField title="Tiêu đề" value={data.title} />
+                <ProjectInfoField title="Trạng thái" value={ProjectStatusLabels[data.status]} />
+                <ProjectInfoField title="CPC" value={data.cpc} />
+                <ProjectInfoField title="Ngày bắt đầu" value={formatDate(data.startedAt, 'DD/MM/YYYY')} />
+                <ProjectInfoField title="Deadline" value={formatDate(data.deadline, 'DD/MM/YYYY')} />
+                <ProjectInfoField title="Ngày tạo dự án" value={formatDate(data.createdAt, 'DD/MM/YYYY HH:mm')} />
+                <ProjectInfoField title="Ngày cập nhật" value={formatDate(data.updatedAt, 'DD/MM/YYYY HH:mm')} />
+                <ProjectInfoField title="Tổng ngân sách" value={formatVietnameseMoney(data.totalBudget)} />
+                <ProjectInfoField title="Ngân sách còn lại" value={formatVietnameseMoney(data.spentBudget)} />
+                <ProjectInfoField title="Nội dung" value={data.content} />
+                <ProjectInfoField title="Ghi chú" value={data.note} />
+                <ProjectInfoField title="Mô tả" value={data.description} />
+              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
 
-        <Card>
-          <div className="flex flex-col xl:justify-between mx-auto 2xl:min-w-[360px] h-full">
-            <div className="gap-x-4 gap-y-7 grid grid-cols-1">
-              <ProjectInfoListField title="Từ khóa độc quyền" value={data.exclusiveKeywords} />
-              <ProjectInfoListField title="Từ khóa bị hạn chế" value={data.rejectedKeywords} />
-              <ProjectInfoListField title="Quốc gia" value={data.targetCountries} />
-              <ProjectInfoListField title="Quốc gia bị hạn chế" value={data.rejectedCountries} />
-              <ProjectInfoListField title="Thiết bị" value={data.devices} />
-              <ProjectInfoListField title="Độ tuổi" value={data.ageRanges} />
-              <ProjectInfoListField title="Giới tính" value={data.genders} />
+          <Card>
+            <div className="flex flex-col xl:justify-between mx-auto 2xl:min-w-[360px] h-full">
+              <div className="flex xl:flex-col items-center gap-4">
+                <Avatar size={120} shape="circle" src={data.owner.avatar || ''} />
+              </div>
+              <div className="gap-x-4 gap-y-7 grid grid-cols-1 xl:grid-cols-2 mt-8">
+                <ProjectInfoField
+                  title="Tên người phụ trách"
+                  value={`${data.owner?.firstName || ''} ${data.owner?.lastName || ''}`}
+                />
+                <ProjectInfoField title="Tên đăng nhập" value={data.owner?.username} />
+                <ProjectInfoField title="Email" value={data.owner?.email} />
+              </div>
             </div>
-          </div>
-        </Card>
-      </div>
+          </Card>
 
-      <div className="mt-4">
+          <Card>
+            <div className="flex flex-col xl:justify-between mx-auto 2xl:min-w-[360px] h-full">
+              <div className="gap-x-4 gap-y-7 grid grid-cols-1">
+                <ProjectInfoField title="Tình trạng domain" value={data.domainStatus} />
+                <ProjectInfoLinkField title="Domain gốc" value={data.originalDomain} />
+                <ProjectInfoLinkField title="Ladipage" value={data.originalLadipage} />
+                <ProjectInfoLinkField title="URL cuối cùng" value={data.finalURL} />
+                <ProjectInfoLinkField title="URL theo dõi" value={data.trackingURL} />
+              </div>
+            </div>
+          </Card>
+
+          <Card>
+            <div className="flex flex-col xl:justify-between mx-auto 2xl:min-w-[360px] h-full">
+              <div className="gap-x-4 gap-y-7 grid grid-cols-1">
+                <ProjectInfoListField title="Từ khóa độc quyền" value={data.exclusiveKeywords} />
+                <ProjectInfoListField title="Từ khóa bị hạn chế" value={data.rejectedKeywords} />
+                <ProjectInfoListField title="Quốc gia" value={data.targetCountries} />
+                <ProjectInfoListField title="Quốc gia bị hạn chế" value={data.rejectedCountries} />
+                <ProjectInfoListField title="Thiết bị" value={data.devices} />
+                <ProjectInfoListField title="Độ tuổi" value={data.ageRanges} />
+                <ProjectInfoListField title="Giới tính" value={data.genders} />
+              </div>
+            </div>
+          </Card>
+        </div>
+
         <AdsGroupTable data={data.adsGroups} />
       </div>
     </>

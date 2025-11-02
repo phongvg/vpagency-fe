@@ -61,37 +61,28 @@ export default function AdsGroupForm({ onClose }: AdsGroupFormProps) {
   }
 
   const fetchProjectOptions = async (inputValue: string) => {
-    if (!inputValue || inputValue.length < 2) return []
-
     try {
       const response = await apiGetProjectList({ search: inputValue, page: 1, limit: 10 })
-      return response.data.data.data.map((project) => ({
+      return response.data.data.items.map((project) => ({
         value: project.id,
         label: project.name,
       }))
-    } catch (error) {
-      console.error('Error fetching project options:', error)
+    } catch {
       return []
     }
   }
 
   const handleSubmit = async (values: CreateAdsGroupRequest) => {
-    try {
-      if (isEdit) {
-        await updateMutation.mutateAsync({
-          id: selectedAdsGroup.id,
-          payload: values,
-        })
-      } else {
-        await createMutation.mutateAsync(values)
-      }
-      onClose()
-    } catch (error: any) {
-      const message =
-        error?.response?.data?.message ||
-        (isEdit ? 'Cập nhật nhóm tài khoản ads thất bại' : 'Tạo nhóm tài khoản ads thất bại')
-      toastError(message)
+    if (isEdit) {
+      await updateMutation.mutateAsync({
+        id: selectedAdsGroup.id,
+        payload: values,
+      })
+    } else {
+      await createMutation.mutateAsync(values)
     }
+
+    onClose()
   }
 
   return (
@@ -154,10 +145,7 @@ export default function AdsGroupForm({ onClose }: AdsGroupFormProps) {
                   setFieldValue('projectId', option?.value)
                 }}
                 loadOptions={fetchProjectOptions}
-                noOptionsMessage={({ inputValue }) =>
-                  inputValue.length < 2 ? 'Nhập tên dự án để tìm kiếm' : 'Không tìm thấy dự án hợp lệ'
-                }
-                defaultOptions={false}
+                defaultOptions
                 cacheOptions
               />
             </FormItem>
