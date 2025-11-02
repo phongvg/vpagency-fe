@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Dialog, Input } from '@/components/ui'
 import { HiOutlineCheckCircle } from 'react-icons/hi'
 
@@ -19,8 +19,13 @@ export default function UpdateProgressModal({
   onConfirm,
   isLoading = false,
 }: UpdateProgressModalProps) {
-  const [progress, setProgress] = useState(currentProgress)
+  const [progress, setProgress] = useState(0)
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    setProgress(currentProgress)
+    setError('')
+  }, [currentProgress, isOpen])
 
   const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value

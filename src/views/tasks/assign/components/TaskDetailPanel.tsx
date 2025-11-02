@@ -27,6 +27,7 @@ import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
 import UpdateProgressModal from '@/views/tasks/assign/components/UpdateProgressModal'
 import { useState } from 'react'
 import { ProjectTypeLabels } from '@/enums/project.enum'
+import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 
 interface TaskDetailPanelProps {
   inSplitView?: boolean
@@ -82,34 +83,20 @@ export default function TaskDetailPanel({ inSplitView = false }: TaskDetailPanel
         onUpdateProgress={() => setIsProgressModalOpen(true)}
         onDelete={handleDelete}
       />
+
       <div className="gap-28 grid grid-cols-2">
         <Accordion defaultActiveKey={['1', '2', '3']} accordion={false}>
           <Accordion.Item itemKey="1" title="Thông tin chung">
             <TaskDetailSection task={selectedTask} />
           </Accordion.Item>
+
           <Accordion.Item itemKey="2" title="Ghi chú">
             <div>{selectedTask.note}</div>
           </Accordion.Item>
+
           {[TaskType.LAUNCH_CAMPAIGN, TaskType.SET_CAMPAIGN].includes(selectedTask.type) && (
             <Accordion.Item itemKey="3" title="Thông tin chiến dịch">
-              <ul className="space-y-2">
-                <li className="flex justify-between items-center">
-                  <span>Số chiến dịch:</span>
-                  <span>{selectedTask.numberOfCampaigns || 'N/A'}</span>
-                </li>
-                <li className="flex justify-between items-center">
-                  <span>Chiến dịch dự phòng:</span>
-                  <span>{selectedTask.numberOfBackupCampaigns || 'N/A'}</span>
-                </li>
-                <li className="flex justify-between items-center">
-                  <span>Ngân sách hàng ngày:</span>
-                  <span>{selectedTask.dailyBudget.toLocaleString('vi-VN') || 'N/A'} VNĐ</span>
-                </li>
-                <li className="flex justify-between items-center">
-                  <span>Số tài khoản:</span>
-                  <span>{selectedTask.numberOfAccounts || 'N/A'}</span>
-                </li>
-              </ul>
+              <TaskCampaignSection task={selectedTask} />
             </Accordion.Item>
           )}
         </Accordion>
@@ -118,9 +105,11 @@ export default function TaskDetailPanel({ inSplitView = false }: TaskDetailPanel
           <Accordion.Item itemKey="1" title="Thông tin dự án">
             <TaskProjectSection task={selectedTask} />
           </Accordion.Item>
+
           <Accordion.Item itemKey="2" title="Mọi người">
             <TaskPeopleSection task={selectedTask} />
           </Accordion.Item>
+
           <Accordion.Item itemKey="3" title="Thời gian">
             <TaskDatesSection task={selectedTask} />
           </Accordion.Item>
@@ -247,6 +236,29 @@ function TaskDatesSection({ task }: TaskPanelProps) {
       <li className="flex justify-between items-center">
         <span>Ngày cập nhật:</span>
         <span>{format(new Date(task.updatedAt), 'dd/MM/yyyy - HH:mm', { locale: vi })}</span>
+      </li>
+    </ul>
+  )
+}
+
+function TaskCampaignSection({ task }: TaskPanelProps) {
+  return (
+    <ul className="space-y-2">
+      <li className="flex justify-between items-center">
+        <span>Số chiến dịch:</span>
+        <span>{task.numberOfCampaigns || 'N/A'}</span>
+      </li>
+      <li className="flex justify-between items-center">
+        <span>Chiến dịch dự phòng:</span>
+        <span>{task.numberOfBackupCampaigns || 'N/A'}</span>
+      </li>
+      <li className="flex justify-between items-center">
+        <span>Ngân sách hàng ngày:</span>
+        <span>{formatVietnameseMoney(task.dailyBudget) || 'N/A'}</span>
+      </li>
+      <li className="flex justify-between items-center">
+        <span>Số tài khoản:</span>
+        <span>{task.numberOfAccounts || 'N/A'}</span>
       </li>
     </ul>
   )
