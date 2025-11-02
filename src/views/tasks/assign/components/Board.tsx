@@ -131,16 +131,10 @@ export default function Board() {
       return
     }
 
-    try {
-      await updateTaskStatus.mutateAsync({
-        taskId: activeId,
-        status: overContainer,
-      })
-
-      toastSuccess('Cập nhật trạng thái thành công')
-    } catch (error) {
-      toastError('Cập nhật trạng thái thất bại')
-    }
+    await updateTaskStatus.mutateAsync({
+      taskId: activeId,
+      status: overContainer,
+    })
 
     setOriginalContainer(null)
   }

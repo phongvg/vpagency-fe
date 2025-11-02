@@ -1,12 +1,14 @@
 import { ConfirmDialog } from '@/components/ui'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
-import { useDeleteTask } from '@/views/tasks/assign/hooks/useTaskQueries'
+import { useDeleteTask, useGetTaskDetail } from '@/views/tasks/assign/hooks/useTaskQueries'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import { toastError, toastSuccess } from '@/utils/toast'
 import TaskDetailView from './TaskDetailView'
+import { Loading } from '@/components/shared'
 
 export default function TaskDetailContent() {
-  const { selectedTask, setDialogView, closeDialog } = useBoardStore()
+  const { taskId, setDialogView, closeDialog } = useBoardStore()
+  const { data: taskDetail, isLoading } = useGetTaskDetail(taskId)
   const deleteTask = useDeleteTask()
   const { showConfirm, confirmProps } = useConfirmDialog({
     title: 'Xác nhận xóa công việc',
@@ -15,7 +17,11 @@ export default function TaskDetailContent() {
     cancelText: 'Hủy',
   })
 
-  if (!selectedTask) {
+  if (isLoading) {
+    return <Loading loading={true} />
+  }
+
+  if (!taskDetail) {
     return null
   }
 
@@ -25,23 +31,18 @@ export default function TaskDetailContent() {
 
   const handleDeleteClick = async () => {
     const confirmed = await showConfirm({
-      message: `Bạn có chắc chắn muốn xóa công việc "${selectedTask?.name}"? Hành động này không thể hoàn tác.`,
+      message: `Bạn có chắc chắn muốn xóa công việc "${taskDetail?.name}"? Hành động này không thể hoàn tác.`,
     })
 
     if (confirmed) {
-      try {
-        await deleteTask.mutateAsync(selectedTask.id)
-        toastSuccess('Xóa công việc thành công')
-        closeDialog()
-      } catch (error) {
-        toastError('Xóa công việc thất bại')
-      }
+      await deleteTask.mutateAsync(taskDetail.id)
+      closeDialog()
     }
   }
 
   return (
     <>
-      <TaskDetailView task={selectedTask} onEdit={handleEdit} onDelete={handleDeleteClick} />
+      <TaskDetailView task={taskDetail} onEdit={handleEdit} onDelete={handleDeleteClick} />
       <ConfirmDialog {...confirmProps} loading={deleteTask.isPending} />
     </>
   )

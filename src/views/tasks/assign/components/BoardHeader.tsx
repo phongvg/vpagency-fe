@@ -14,31 +14,11 @@ interface BoardHeaderProps {
 }
 
 export default function BoardHeader({ activeView, onViewChange }: BoardHeaderProps) {
-  const [assignedUsers, setAssignedUsers] = useState<UserOption | null>(null)
-  const { filters, isFiltered, openDialog, setSelectedTask, setFilters, clearFilters } = useBoardStore()
-
-  const handleUserChange = (option: UserOption | null) => {
-    setAssignedUsers(option)
-  }
-
-  const handleFiltersChange = (newFilters: TasksFilterRequest) => {
-    setFilters({
-      ...newFilters,
-      assignedUserId: assignedUsers ? assignedUsers.value : undefined,
-    })
-  }
+  const { openDialog, setSelectedTask } = useBoardStore()
 
   const handleCreateTask = () => {
     setSelectedTask(null)
     openDialog('CREATE')
-  }
-
-  const resetAssignedUserFilter = () => {
-    setAssignedUsers(null)
-    setFilters({
-      ...filters,
-      assignedUserId: undefined,
-    })
   }
 
   return (
@@ -50,30 +30,7 @@ export default function BoardHeader({ activeView, onViewChange }: BoardHeaderPro
         </Button>
       </div>
 
-      {activeView === TaskViewType.SPLIT && (
-        <>
-          <div className="flex items-center gap-4">
-            <TaskFilters
-              filters={filters}
-              onFiltersChange={handleFiltersChange}
-              onClearFilters={clearFilters}
-              isFiltered={isFiltered}
-              onResetAssignedUserFilter={resetAssignedUserFilter}
-            />
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="w-80">
-              <UserSelect
-                value={assignedUsers}
-                onChange={handleUserChange}
-                placeholder="Lọc theo người được giao việc"
-                className="min-w-[300px]"
-                size="sm"
-              />
-            </div>
-          </div>
-        </>
-      )}
+      {activeView === TaskViewType.SPLIT && <TaskFilters />}
     </div>
   )
 }

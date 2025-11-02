@@ -12,23 +12,16 @@ export default function TaskFormContent() {
   const loading = createTask.isPending || updateTask.isPending
 
   const handleSubmit = async (values: any) => {
-    try {
-      if (isEdit && selectedTask) {
-        await updateTask.mutateAsync({
-          taskId: selectedTask.id,
-          data: values,
-        })
-        toastSuccess('Cập nhật công việc thành công')
-      } else {
-        await createTask.mutateAsync(values)
-        toastSuccess('Tạo công việc thành công')
-      }
-      closeDialog()
-    } catch (error: any) {
-      const message =
-        error?.response?.data?.message || (isEdit ? 'Cập nhật công việc thất bại' : 'Tạo công việc thất bại')
-      toastError(message)
+    if (isEdit && selectedTask) {
+      await updateTask.mutateAsync({
+        taskId: selectedTask.id,
+        data: values,
+      })
+    } else {
+      await createTask.mutateAsync(values)
     }
+
+    closeDialog()
   }
 
   const handleCancel = async () => {

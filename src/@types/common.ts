@@ -52,3 +52,8 @@ export type CommonFilterRequest = {
   sortBy?: string
   sortOrder?: SortOrder
 }
+
+export type SelectOption = {
+  value: string
+  label: string
+}

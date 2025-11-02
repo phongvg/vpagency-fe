@@ -14,7 +14,6 @@ type BoardState = {
   selectedTask: Task | null
   activeView: TaskViewType
   filters: TasksFilterRequest
-  isFiltered: boolean
 
   setBoard: (board: Columns | ((prev: Columns) => Columns)) => void
   clearBoard: () => void
@@ -39,7 +38,6 @@ const initialBoardState: Partial<BoardState> = {
   taskId: null,
   selectedTask: null,
   activeView: TaskViewType.SPLIT,
-  isFiltered: false,
   filters: {
     page: 1,
     limit: 10,
@@ -49,6 +47,7 @@ const initialBoardState: Partial<BoardState> = {
     priority: undefined,
     assignedUserId: undefined,
     creatorId: undefined,
+    projectId: undefined,
     fromDate: undefined,
     toDate: undefined,
   },
@@ -68,11 +67,10 @@ export const useBoardStore = create<BoardState>()(
     setDialogView: (view) => set(() => ({ dialogView: view })),
     setSelectedTask: (task) => set(() => ({ selectedTask: task })),
     setActiveView: (view) => set(() => ({ activeView: view })),
-    setFilters: (filters) => set(() => ({ filters, isFiltered: true })),
+    setFilters: (filters) => set(() => ({ filters })),
     clearFilters: () =>
       set(() => ({
         filters: initialBoardState.filters,
-        isFiltered: false,
       })),
   })),
 )

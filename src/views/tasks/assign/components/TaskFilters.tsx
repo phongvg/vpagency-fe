@@ -1,4 +1,4 @@
-import { Button, Input, Select } from '@/components/ui'
+import { Button, DatePicker, Input, Select, UserSelect } from '@/components/ui'
 import {
   TaskPriority,
   TaskPriorityLabels,
@@ -8,16 +8,16 @@ import {
   TaskTypeLabels,
 } from '@/enums/task.enum'
 import { HiOutlineSearch } from 'react-icons/hi'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { TasksFilterRequest } from '@/@types/task'
-
-interface TaskFiltersProps {
-  filters: TasksFilterRequest
-  isFiltered?: boolean
-  onFiltersChange: (filters: TasksFilterRequest) => void
-  onClearFilters: () => void
-  onResetAssignedUserFilter: () => void
-}
+import { UserOption } from '@/components/ui/UserSelect/UserSelect'
+import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
+import { useDebounce } from '@/hooks/useDebounce'
+import AsyncSelect from 'react-select/async'
+import { SelectOption } from '@/@types/common'
+import { apiGetProjectList } from '@/services/ProjectService'
+import 'dayjs/locale/vi'
+import { formatDate } from '@/helpers/formatDate'
 
 const statusOptions = [
   { value: '', label: 'Tất cả trạng thái' },
@@ -43,110 +43,181 @@ const priorityOptions = [
   })),
 ]
 
-export default function TaskFilters({
-  filters,
-  isFiltered = false,
-  onFiltersChange,
-  onClearFilters,
-  onResetAssignedUserFilter,
-}: TaskFiltersProps) {
-  const [localFilters, setLocalFilters] = useState<TasksFilterRequest>(filters)
-  const [selectKey, setSelectKey] = useState(0)
+export default function TaskFilters() {
+  const { filters, setFilters, clearFilters } = useBoardStore()
+
+  const [assignedUsers, setAssignedUsers] = useState<UserOption | null>(null)
+  const [creators, setCreators] = useState<UserOption | null>(null)
+  const [selectedProject, setSelectedProject] = useState<SelectOption | null>(null)
+  const [searchValue, setSearchValue] = useState(filters.search || '')
+
+  const debouncedSearchValue = useDebounce(searchValue, 500)
 
   useEffect(() => {
-    setLocalFilters(filters)
-    setSelectKey((prev) => prev + 1)
+    setFilters({
+      ...filters,
+      search: debouncedSearchValue,
+    })
+  }, [debouncedSearchValue])
+
+  const isFiltered = useMemo(() => {
+    return (
+      !!filters.search ||
+      !!filters.status ||
+      !!filters.type ||
+      !!filters.priority ||
+      !!filters.assignedUserId ||
+      !!filters.creatorId ||
+      !!filters.projectId ||
+      !!filters.fromDate ||
+      !!filters.toDate
+    )
   }, [filters])
 
-  const handleFilterChange = (key: keyof TasksFilterRequest, value: any) => {
-    const newFilters = {
-      ...localFilters,
-      [key]: value,
-    }
-    setLocalFilters(newFilters)
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value)
   }
 
-  const handleSearch = () => {
-    onFiltersChange(localFilters)
+  const handleFilterChange = (key: keyof TasksFilterRequest, value: string) => {
+    setFilters({
+      ...filters,
+      [key]: value,
+    })
+  }
+
+  const onDateChange = (key: 'fromDate' | 'toDate', date: Date | null) => {
+    setFilters({
+      ...filters,
+      [key]: date ? formatDate(date, 'YYYY-MM-DD') : undefined,
+    })
+  }
+
+  const handleAssignedUserChange = (option: UserOption | null) => {
+    setAssignedUsers(option)
+    setFilters({
+      ...filters,
+      assignedUserId: option ? option.value : undefined,
+    })
+  }
+
+  const handleCreatorChange = (option: UserOption | null) => {
+    setCreators(option)
+    setFilters({
+      ...filters,
+      creatorId: option ? option.value : undefined,
+    })
+  }
+
+  const handleProjectChange = (option: SelectOption | null) => {
+    setSelectedProject(option)
+    setFilters({
+      ...filters,
+      projectId: option ? option.value : undefined,
+    })
+  }
+
+  const fetchProjectOptions = async (inputValue: string) => {
+    try {
+      const response = await apiGetProjectList({ search: inputValue, page: 1, limit: 10 })
+      return response.data.data.items.map((project) => ({
+        value: project.id,
+        label: project.name,
+      }))
+    } catch {
+      return []
+    }
   }
 
   const handleClearFilters = () => {
-    const emptyFilters: TasksFilterRequest = {
-      page: 1,
-      limit: 10,
-      search: '',
-      status: undefined,
-      type: undefined,
-      priority: undefined,
-      assignedUserId: undefined,
-    }
-    setLocalFilters(emptyFilters)
-    onResetAssignedUserFilter()
-    onClearFilters()
+    clearFilters()
+    setAssignedUsers(null)
+    setCreators(null)
+    setSelectedProject(null)
+    setSearchValue('')
   }
 
   return (
-    <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-4">
-        <div className="flex items-center gap-2">
-          <div className="min-w-[250px]">
-            <Input
-              prefix={<HiOutlineSearch className="w-4 h-4 text-gray-400" />}
-              placeholder="Tìm kiếm theo tên công việc..."
-              value={localFilters.search}
-              onChange={(e) => handleFilterChange('search', e.target.value)}
-              size="sm"
-            />
-          </div>
-        </div>
+    <>
+      <div className="gap-4 grid grid-cols-6">
+        <Input
+          prefix={<HiOutlineSearch className="w-4 h-4 text-gray-400" />}
+          placeholder="Tìm kiếm theo tên..."
+          value={searchValue}
+          onChange={handleSearchChange}
+          size="sm"
+        />
 
-        <div className="min-w-[160px]">
-          <Select
-            key={`status-${selectKey}`}
-            value={statusOptions.find((opt) => opt.value === (localFilters.status || ''))}
-            onChange={(option: any) => handleFilterChange('status', option?.value || '')}
-            options={statusOptions}
-            placeholder="Trạng thái"
-            className="min-w-[160px]"
-            size="sm"
-          />
-        </div>
+        <Select
+          value={statusOptions.find((opt) => opt.value === (filters.status || ''))}
+          onChange={(option: any) => handleFilterChange('status', option?.value || '')}
+          options={statusOptions}
+          placeholder="Trạng thái"
+          size="sm"
+        />
 
-        <div className="min-w-[160px]">
-          <Select
-            key={`type-${selectKey}`}
-            value={typeOptions.find((opt) => opt.value === (localFilters.type || ''))}
-            onChange={(option: any) => handleFilterChange('type', option?.value || '')}
-            options={typeOptions}
-            placeholder="Loại công việc"
-            className="min-w-[160px]"
-            size="sm"
-          />
-        </div>
+        <Select
+          value={typeOptions.find((opt) => opt.value === (filters.type || ''))}
+          onChange={(option: any) => handleFilterChange('type', option?.value || '')}
+          options={typeOptions}
+          placeholder="Loại công việc"
+          size="sm"
+        />
 
-        <div className="min-w-[140px]">
-          <Select
-            key={`priority-${selectKey}`}
-            value={priorityOptions.find((opt) => opt.value === (localFilters.priority || ''))}
-            onChange={(option: any) => handleFilterChange('priority', option?.value || '')}
-            options={priorityOptions}
-            placeholder="Độ ưu tiên"
-            className="min-w-[140px]"
-            size="sm"
-          />
-        </div>
+        <Select
+          value={priorityOptions.find((opt) => opt.value === (filters.priority || ''))}
+          onChange={(option: any) => handleFilterChange('priority', option?.value || '')}
+          options={priorityOptions}
+          placeholder="Độ ưu tiên"
+          size="sm"
+        />
 
-        <div className="flex items-center gap-3">
-          <Button size="sm" variant="solid" onClick={handleSearch} icon={<HiOutlineSearch />}>
-            Tìm kiếm
-          </Button>
-          {isFiltered && (
+        <UserSelect
+          value={assignedUsers}
+          onChange={handleAssignedUserChange}
+          placeholder="Người được giao việc"
+          size="sm"
+        />
+
+        <UserSelect value={creators} onChange={handleCreatorChange} placeholder="Người tạo" size="sm" />
+      </div>
+
+      <div className="gap-4 grid grid-cols-6">
+        <Select
+          componentAs={AsyncSelect}
+          placeholder="Dự án"
+          value={selectedProject}
+          onChange={handleProjectChange}
+          loadOptions={fetchProjectOptions}
+          defaultOptions
+          cacheOptions
+          size="sm"
+        />
+
+        <DatePicker
+          locale="vi"
+          size="sm"
+          placeholder="Từ ngày"
+          value={filters.fromDate ? new Date(filters.fromDate) : null}
+          onChange={(date) => onDateChange('fromDate', date)}
+        />
+
+        <DatePicker
+          locale="vi"
+          size="sm"
+          placeholder="Đến ngày"
+          value={filters.toDate ? new Date(filters.toDate) : null}
+          onChange={(date) => onDateChange('toDate', date)}
+          minDate={filters.fromDate ? new Date(filters.fromDate) : undefined}
+        />
+
+        {isFiltered && (
+          <div className="flex items-center gap-4">
             <Button size="sm" variant="twoTone" onClick={handleClearFilters}>
               Xóa bộ lọc
             </Button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
-    </div>
+    </>
   )
 }

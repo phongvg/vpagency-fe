@@ -38,6 +38,7 @@ export type TasksFilterRequest = CommonFilterRequest & {
   priority?: TaskPriority
   assignedUserId?: string
   creatorId?: string
+  projectId?: string
   fromDate?: string
   toDate?: string
 }

@@ -56,15 +56,10 @@ export default function TaskDetailPanel({ inSplitView = false }: TaskDetailPanel
     })
 
     if (confirmed) {
-      try {
-        await deleteTask.mutateAsync(selectedTask.id)
-        toastSuccess('Xóa công việc thành công')
+      await deleteTask.mutateAsync(selectedTask.id)
 
-        if (inSplitView) {
-          setSelectedTask(null)
-        }
-      } catch (error) {
-        toastError('Xóa công việc thất bại')
+      if (inSplitView) {
+        setSelectedTask(null)
       }
     }
   }

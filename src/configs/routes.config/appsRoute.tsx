@@ -79,7 +79,11 @@ const appsRoute: Routes = [
     component: lazy(() => import('@/views/projects/pages/projectDetail')),
     authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY],
     meta: {
-      header: 'Chi tiết Dự án',
+      header: (() => {
+        const pathParts = window.location.pathname.split('/')
+        const id = pathParts[pathParts.length - 1]
+        return `Dự án #${id}`
+      })(),
     },
   },
 ]

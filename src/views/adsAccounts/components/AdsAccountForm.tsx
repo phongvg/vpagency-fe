@@ -13,6 +13,7 @@ import { apiGetAdsGroupList } from '@/services/AdsGroupService'
 import { toastError, toastSuccess } from '@/utils/toast'
 import { HiOutlinePlus, HiOutlineTrash } from 'react-icons/hi'
 import { AdsAccountStatus } from '@/enums/adsAccount.enum'
+import { SelectOption } from '@/@types/common'
 
 const accountValidationSchema = Yup.object().shape({
   uuid: Yup.string().required('Vui lòng nhập UUID'),
@@ -47,7 +48,7 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
   const createMutation = useCreateAdsAccountMutation()
   const updateMutation = useUpdateAdsAccountMutation()
   const [selectedManager, setSelectedManager] = useState<UserOption | null>(null)
-  const [selectedAdsGroup, setSelectedAdsGroup] = useState<{ value: string; label: string } | null>(null)
+  const [selectedAdsGroup, setSelectedAdsGroup] = useState<SelectOption | null>(null)
 
   const isEdit = !!selectedAdsAccount
 
@@ -192,11 +193,6 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                     setFieldValue('adsGroupId', option?.value)
                   }}
                   loadOptions={fetchAdsGroupOptions}
-                  noOptionsMessage={({ inputValue }) =>
-                    inputValue.length < 2
-                      ? 'Nhập tên nhóm tài khoản ads để tìm kiếm'
-                      : 'Không tìm thấy nhóm tài khoản ads hợp lệ'
-                  }
                   defaultOptions
                   cacheOptions
                 />

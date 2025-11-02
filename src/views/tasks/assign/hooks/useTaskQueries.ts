@@ -11,12 +11,14 @@ import {
 import { GET_TASK_DETAIL, GET_TASK_LIST, GET_TASKS_GROUPED_BY_STATUS } from '@/utils/queryKey'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
+import { ApiAxiosError } from '@/@types/apiError'
+import { toastError, toastSuccess } from '@/utils/toast'
 
 export const useGetTasksWithFilters = (enabled: boolean = false) => {
   const { filters, activeView } = useBoardStore()
 
   return useQuery({
-    queryKey: [GET_TASK_LIST, filters, activeView],
+    queryKey: [GET_TASK_LIST, activeView, filters],
     queryFn: async () => {
       const response = await apiGetTasks(filters)
       return response.data.data.items
@@ -41,7 +43,13 @@ export const useUpdateTaskStatus = () => {
   return useMutation({
     mutationFn: async ({ taskId, status }: { taskId: string; status: string }) => {
       const response = await apiUpdateTaskStatus(taskId, status)
-      return response.data.data
+      return response.data
+    },
+    onSuccess: (response) => {
+      toastSuccess(response.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
     },
   })
 }
@@ -66,9 +74,13 @@ export const useCreateTask = () => {
       const response = await apiCreateTask(data)
       return response.data
     },
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: [GET_TASK_LIST] })
       queryClient.invalidateQueries({ queryKey: [GET_TASKS_GROUPED_BY_STATUS] })
+      toastSuccess(response.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
     },
   })
 }
@@ -81,10 +93,14 @@ export const useUpdateTask = () => {
       const response = await apiUpdateTask(taskId, data)
       return response.data
     },
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: [GET_TASK_LIST] })
       queryClient.invalidateQueries({ queryKey: [GET_TASKS_GROUPED_BY_STATUS] })
       queryClient.invalidateQueries({ queryKey: [GET_TASK_DETAIL] })
+      toastSuccess(response.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
     },
   })
 }
@@ -97,10 +113,14 @@ export const useDeleteTask = () => {
       const response = await apiDeleteTask(taskId)
       return response.data
     },
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: [GET_TASK_LIST] })
       queryClient.invalidateQueries({ queryKey: [GET_TASKS_GROUPED_BY_STATUS] })
       queryClient.invalidateQueries({ queryKey: [GET_TASK_DETAIL] })
+      toastSuccess(response.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
     },
   })
 }
@@ -113,10 +133,14 @@ export const useUpdateTaskProgress = () => {
       const response = await apiUpdateTaskProgress(taskId, progress)
       return response.data
     },
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: [GET_TASK_LIST] })
       queryClient.invalidateQueries({ queryKey: [GET_TASKS_GROUPED_BY_STATUS] })
       queryClient.invalidateQueries({ queryKey: [GET_TASK_DETAIL] })
+      toastSuccess(response.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
     },
   })
 }

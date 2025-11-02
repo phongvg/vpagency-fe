@@ -1,5 +1,7 @@
 import { Project } from '@/@types/project'
+import { Breadcrumb, BreadcrumbItem } from '@/components/shared'
 import { Avatar, Card } from '@/components/ui'
+import { urlConfig } from '@/configs/urls.config'
 import { ProjectStatusLabels, ProjectTypeLabels } from '@/enums/project.enum'
 import { formatDate } from '@/helpers/formatDate'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
@@ -10,9 +12,12 @@ type Props = {
 }
 
 export default function ProjectInformation({ data }: Props) {
+  const items: BreadcrumbItem[] = [{ label: 'Danh sách dự án', path: urlConfig.projects }, { label: data.name }]
+
   return (
     <>
-      <div className="gap-4 grid grid-cols-2">
+      <Breadcrumb items={items} showHome={false} />
+      <div className="gap-4 grid grid-cols-2 mt-4">
         <Card>
           <div className="flex flex-col xl:justify-between mx-auto 2xl:min-w-[360px] h-full">
             <h4 className="font-bold">{data.name}</h4>
@@ -88,7 +93,7 @@ function ProjectInfoField({ title, value }: { title: string; value: string | num
   return (
     <div>
       <span>{title}</span>
-      <p className="font-semibold text-gray-700">{value || 'N/A'}</p>
+      <p className="font-semibold text-gray-700">{value || `<${title}>`}</p>
     </div>
   )
 }
@@ -104,7 +109,7 @@ function ProjectInfoLinkField({ title, value }: { title: string; value: string }
         rel="noreferrer"
         aria-disabled={!value}
       >
-        {value || 'N/A'}
+        {value || `<${title}>`}
       </a>
     </div>
   )
@@ -114,7 +119,7 @@ function ProjectInfoListField({ title, value }: { title: string; value: string[]
   return (
     <div>
       <span>{title}</span>
-      <p className="font-semibold text-gray-700">{value?.join(', ') || 'N/A'}</p>
+      <p className="font-semibold text-gray-700">{value?.join(', ') || `<${title}>`}</p>
     </div>
   )
 }
