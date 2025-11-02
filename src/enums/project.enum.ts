@@ -23,3 +23,21 @@ export const ProjectStatusLabels: Record<ProjectStatus, string> = {
   [ProjectStatus.DONE]: 'Hoàn thành',
   [ProjectStatus.ON_HOLD]: 'Tạm hoãn',
 }
+
+export const ProjectStatusOptions = Object.values(ProjectStatus).map((status) => ({
+  label: ProjectStatusLabels[status],
+  value: status,
+}))
+
+export const ProjectTypeOptions = Object.values(ProjectType).map((type) => ({
+  label: ProjectTypeLabels[type],
+  value: type,
+}))
+
+export const ProjectStatusColors: Record<ProjectStatus, string> = {
+  [ProjectStatus.RUNNING]: 'emerald-500',
+  [ProjectStatus.STOPPED]: 'red-500',
+  [ProjectStatus.WAITING]: 'yellow-500',
+  [ProjectStatus.DONE]: 'blue-500',
+  [ProjectStatus.ON_HOLD]: 'gray-500',
+}

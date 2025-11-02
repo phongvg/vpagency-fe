@@ -5,6 +5,7 @@ import { urlConfig } from '@/configs/urls.config'
 import { AdsAccountStatusLabels } from '@/enums/adsAccount.enum'
 import { formatDate } from '@/helpers/formatDate'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
+import DailyMetricsSection from '@/views/adsAccounts/pages/adsAccountDetail/components/DailyMetricsSection'
 
 type Props = {
   data: AdsAccount
@@ -75,6 +76,8 @@ export default function AdsAccountInformation({ data }: Props) {
             </Card>
           )}
         </div>
+
+        <DailyMetricsSection adsAccountId={data.id} />
       </div>
     </>
   )

@@ -15,13 +15,10 @@ export default function AdsGroupTableTools() {
     <div className="flex justify-between items-center mb-4">
       <div className="flex items-center space-x-2">
         <AdsGroupSearch />
-        <Button size="sm" onClick={clearFilter}>
-          <HiOutlineRefresh />
-        </Button>
+        <Button size="sm" icon={<HiOutlineRefresh />} onClick={clearFilter} />
       </div>
-      <Button size="sm" variant="solid" className="flex items-center" onClick={handleAddNew}>
-        <HiOutlinePlus />
-        <span className="ml-2">Thêm mới</span>
+      <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={handleAddNew}>
+        Thêm mới
       </Button>
     </div>
   )

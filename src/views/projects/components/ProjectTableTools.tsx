@@ -15,12 +15,10 @@ export default function ProjectTableTools() {
     <div className="flex justify-between items-center mb-4">
       <div className="flex items-center space-x-2">
         <ProjectSearch />
-        <Button size="sm" onClick={clearFilter}>
-          <HiOutlineRefresh />
-        </Button>
+        <Button size="sm" icon={<HiOutlineRefresh />} onClick={clearFilter} />
       </div>
       <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={handleCreate}>
-        Thêm dự án
+        Thêm mới
       </Button>
     </div>
   )

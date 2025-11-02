@@ -6,6 +6,7 @@ import { ProjectStatusLabels, ProjectTypeLabels } from '@/enums/project.enum'
 import { formatDate } from '@/helpers/formatDate'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 import AdsGroupTable from '@/views/projects/pages/projectDetail/components/AdsGroupTable'
+import ProjectDailyReportsSection from '@/views/projects/pages/projectDetail/components/ProjectDailyReportsSection'
 
 type Props = {
   data: Project
@@ -86,6 +87,9 @@ export default function ProjectInformation({ data }: Props) {
         </div>
 
         <AdsGroupTable data={data.adsGroups} />
+
+        {/* Project Daily Reports Section */}
+        <ProjectDailyReportsSection projectId={data.id} />
       </div>
     </>
   )

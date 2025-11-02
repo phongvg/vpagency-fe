@@ -14,6 +14,7 @@ import { toastError, toastSuccess } from '@/utils/toast'
 import { HiOutlinePlus, HiOutlineTrash } from 'react-icons/hi'
 import { AdsAccountStatus } from '@/enums/adsAccount.enum'
 import { SelectOption } from '@/@types/common'
+import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
 
 const accountValidationSchema = Yup.object().shape({
   uuid: Yup.string().required('Vui lòng nhập UUID'),
@@ -344,20 +345,18 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
 
                       <div className="gap-4 grid grid-cols-2">
                         <FormItem
-                          label="Tổng chi tiêu"
+                          label="Tổng chi tiêu (VND)"
                           invalid={
                             touched.accounts?.[index]?.totalSpent &&
                             Boolean((errors.accounts as any)?.[index]?.totalSpent)
                           }
                           errorMessage={(errors.accounts as any)?.[index]?.totalSpent}
                         >
-                          <Field
-                            type="number"
-                            autoComplete="off"
-                            name={`accounts.${index}.totalSpent`}
-                            placeholder="Nhập tổng chi tiêu"
-                            component={Input}
-                          />
+                          <Field name={`accounts.${index}.totalSpent`}>
+                            {({ field, form }: any) => (
+                              <FormCurrencyInput form={form} field={field} placeholder="Nhập tổng chi tiêu" />
+                            )}
+                          </Field>
                         </FormItem>
                       </div>
                     </div>

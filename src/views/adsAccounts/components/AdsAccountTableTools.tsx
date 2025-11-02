@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui'
 import AdsAccountSearch from '@/views/adsAccounts/components/AdsAccountSearch'
 import { useAdsAccountStore } from '@/views/adsAccounts/store/useAdsAccountStore'
-import { HiOutlinePlus, HiOutlineRefresh } from 'react-icons/hi'
+import { HiOutlineDownload, HiOutlinePlus, HiOutlineRefresh } from 'react-icons/hi'
 
 export default function AdsAccountTableTools() {
   const { clearFilter, setDialogOpen, setSelectedAdsAccount } = useAdsAccountStore()
@@ -15,14 +15,18 @@ export default function AdsAccountTableTools() {
     <div className="flex justify-between items-center mb-4">
       <div className="flex items-center space-x-2">
         <AdsAccountSearch />
-        <Button size="sm" onClick={clearFilter}>
-          <HiOutlineRefresh />
+        <Button size="sm" icon={<HiOutlineRefresh />} onClick={clearFilter} />
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Button size="sm" icon={<HiOutlineDownload />}>
+          Nhập dữ liệu
+        </Button>
+
+        <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={handleAddNew}>
+          Thêm mới
         </Button>
       </div>
-      <Button size="sm" variant="solid" className="flex items-center" onClick={handleAddNew}>
-        <HiOutlinePlus />
-        <span className="ml-2">Thêm mới</span>
-      </Button>
     </div>
   )
 }

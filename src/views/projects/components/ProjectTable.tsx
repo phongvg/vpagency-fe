@@ -7,20 +7,12 @@ import { DataTable } from '@/components/shared'
 import { useProjectStore } from '@/views/projects/store/useProjectStore'
 import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
 import ProjectEditDialog from '@/views/projects/components/ProjectEditDialog'
-import { ProjectStatusLabels, ProjectTypeLabels } from '@/enums/project.enum'
+import { ProjectStatusColors, ProjectStatusLabels, ProjectTypeLabels } from '@/enums/project.enum'
 import { toastSuccess, toastError } from '@/utils/toast'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { ConfirmDialog } from '@/components/ui'
 import { Link } from 'react-router-dom'
 import { urlConfig } from '@/configs/urls.config'
-
-const statusColor: Record<string, string> = {
-  RUNNING: 'emerald-500',
-  STOPPED: 'red-500',
-  WAITING: 'yellow-500',
-  DONE: 'blue-500',
-  ON_HOLD: 'gray-500',
-}
 
 const OwnerColumn = ({ row }: { row: Project }) => {
   const ownerName = row.owner
@@ -131,8 +123,8 @@ export default function ProjectTable() {
           const row = props.row.original
           return (
             <div className="flex items-center gap-2">
-              <Badge className={`bg-${statusColor[row.status]}`} />
-              <span className={`capitalize font-semibold text-${statusColor[row.status]}`}>
+              <Badge className={`bg-${ProjectStatusColors[row.status]}`} />
+              <span className={`capitalize font-semibold text-${ProjectStatusColors[row.status]}`}>
                 {ProjectStatusLabels[row.status]}
               </span>
             </div>

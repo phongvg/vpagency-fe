@@ -10,9 +10,7 @@ export default function UserTableTools() {
     <div className="flex justify-between items-center mb-4">
       <div className="flex items-center space-x-2">
         <UserSearch />
-        <Button size="sm" onClick={clearFilter}>
-          <HiOutlineRefresh />
-        </Button>
+        <Button size="sm" icon={<HiOutlineRefresh />} onClick={clearFilter} />
       </div>
     </div>
   )

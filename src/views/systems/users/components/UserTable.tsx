@@ -11,18 +11,7 @@ import { HiOutlineKey, HiOutlinePencilAlt } from 'react-icons/hi'
 import UserEditDialog from '@/views/systems/users/components/UserEditDialog'
 import RoleTabs from '@/views/systems/users/components/RoleTabs'
 import UserResetPasswordDialog from '@/views/systems/users/components/UserResetPasswordDialog'
-
-const statusColor: Record<StatusEnum, string> = {
-  [StatusEnum.OnBoarding]: 'bg-blue-500',
-  [StatusEnum.Active]: 'bg-emerald-500',
-  [StatusEnum.Inactive]: 'bg-red-500',
-}
-
-const statusLabel: Record<StatusEnum, string> = {
-  [StatusEnum.OnBoarding]: 'Đã gia nhập',
-  [StatusEnum.Active]: 'Đã kích hoạt',
-  [StatusEnum.Inactive]: 'Chưa kích hoạt',
-}
+import { UserStatusColors, UserStatusLabels } from '@/enums/user.enum'
 
 const NameColumn = ({ row }: { row: User }) => {
   return (
@@ -73,7 +62,14 @@ export default function UserTable() {
         accessorKey: 'status',
         cell: (props) => {
           const row = props.row.original
-          return <Badge className={statusColor[row.status]} content={statusLabel[row.status]} />
+          return (
+            <div className="flex items-center gap-2">
+              <Badge className={`bg-${UserStatusColors[row.status]}`} />
+              <span className={`capitalize font-semibold text-${UserStatusColors[row.status]}`}>
+                {UserStatusLabels[row.status]}
+              </span>
+            </div>
+          )
         },
       },
       {
