@@ -108,17 +108,12 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
   }, [task])
 
   const fetchProjectOptions = async (inputValue: string) => {
-    if (!inputValue || inputValue.length < 2) return []
-
     try {
       const response = await apiGetProjectList({ search: inputValue, page: 1, limit: 10 })
-      if (response.data?.data?.data) {
-        return response.data.data.data.map((project) => ({
-          value: project.id,
-          label: project.name,
-        }))
-      }
-      return []
+      return response.data.data.items.map((project) => ({
+        value: project.id,
+        label: project.name,
+      }))
     } catch (error) {
       return []
     }
@@ -246,10 +241,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                     setFieldValue('projectId', option?.value)
                   }}
                   loadOptions={fetchProjectOptions}
-                  noOptionsMessage={({ inputValue }) =>
-                    inputValue.length < 2 ? 'Nhập tên dự án để tìm kiếm' : 'Không tìm thấy dự án hợp lệ'
-                  }
-                  defaultOptions={false}
+                  defaultOptions
                   cacheOptions
                 />
               </FormItem>
