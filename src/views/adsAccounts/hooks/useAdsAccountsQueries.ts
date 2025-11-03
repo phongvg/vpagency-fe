@@ -6,7 +6,7 @@ import {
   apiUpdateAdsAccount,
 } from '@/services/AdsAccountService'
 import { GET_ADS_ACCOUNT_LIST } from '@/utils/queryKey'
-import { toastError } from '@/utils/toast'
+import { toastError, toastSuccess } from '@/utils/toast'
 import { useAdsAccountStore } from '@/views/adsAccounts/store/useAdsAccountStore'
 import { CreateAdsAccountRequest, UpdateAdsAccountRequest } from '@/views/adsAccounts/types'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -42,8 +42,9 @@ export const useUpdateAdsAccountMutation = () => {
 
   return useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: UpdateAdsAccountRequest }) => apiUpdateAdsAccount(id, payload),
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: [GET_ADS_ACCOUNT_LIST] })
+      toastSuccess(response.data.message)
     },
     onError: (error: ApiAxiosError) => {
       toastError(error.response?.data?.message)

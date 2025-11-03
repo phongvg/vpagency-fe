@@ -10,7 +10,7 @@ export default function AdsAccountEditDialog() {
   }
 
   return (
-    <Dialog isOpen={dialogOpen} width={900} onClose={onDialogClose} onRequestClose={onDialogClose}>
+    <Dialog isOpen={dialogOpen} width={1200} onClose={onDialogClose} onRequestClose={onDialogClose}>
       <h5 className="mb-4">{selectedAdsAccount ? 'Cập nhật tài khoản quảng cáo' : 'Thêm tài khoản quảng cáo'}</h5>
       <AdsAccountForm onClose={onDialogClose} />
     </Dialog>

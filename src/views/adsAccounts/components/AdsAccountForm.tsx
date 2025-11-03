@@ -46,12 +46,13 @@ type AdsAccountFormProps = {
 
 export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
   const { selectedAdsAccount } = useAdsAccountStore()
+  const isEdit = !!selectedAdsAccount
+
   const createMutation = useCreateAdsAccountMutation()
   const updateMutation = useUpdateAdsAccountMutation()
+
   const [selectedManager, setSelectedManager] = useState<UserOption | null>(null)
   const [selectedAdsGroup, setSelectedAdsGroup] = useState<SelectOption | null>(null)
-
-  const isEdit = !!selectedAdsAccount
 
   useEffect(() => {
     if (selectedAdsAccount?.manager) {
@@ -121,52 +122,46 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
   }
 
   const handleSubmit = async (values: any) => {
-    try {
-      if (isEdit) {
-        const accountData = {
-          ...values.accounts[0],
-          managerId: values.managerId,
-          adsGroupId: values.adsGroupId,
-        }
-        await updateMutation.mutateAsync({
-          id: selectedAdsAccount.id,
-          payload: accountData,
-        })
-        toastSuccess('Cập nhật tài khoản ads thành công')
-      } else {
-        let successCount = 0
-        let failCount = 0
+    if (isEdit) {
+      const accountData = {
+        ...values.accounts[0],
+        managerId: values.managerId,
+        adsGroupId: values.adsGroupId,
+      }
+      await updateMutation.mutateAsync({
+        id: selectedAdsAccount.id,
+        payload: accountData,
+      })
+    } else {
+      let successCount = 0
+      let failCount = 0
 
-        for (const account of values.accounts) {
-          try {
-            const accountData = {
-              ...account,
-              managerId: values.managerId,
-              adsGroupId: values.adsGroupId,
-            }
-            await createMutation.mutateAsync(accountData)
-            successCount++
-          } catch {
-            failCount++
+      for (const account of values.accounts) {
+        try {
+          const accountData = {
+            ...account,
+            managerId: values.managerId,
+            adsGroupId: values.adsGroupId,
           }
-        }
-
-        if (successCount > 0) {
-          toastSuccess(
-            `Tạo thành công ${successCount} tài khoản${failCount > 0 ? `, ${failCount} tài khoản thất bại` : ''}`,
-          )
-        }
-
-        if (failCount > 0 && successCount === 0) {
-          toastError('Tạo tài khoản Ads thất bại')
+          await createMutation.mutateAsync(accountData)
+          successCount++
+        } catch {
+          failCount++
         }
       }
-      onClose()
-    } catch (error: any) {
-      const message =
-        error?.response?.data?.message || (isEdit ? 'Cập nhật tài khoản Ads thất bại' : 'Tạo tài khoản Ads thất bại')
-      toastError(message)
+
+      if (successCount > 0) {
+        toastSuccess(
+          `Tạo thành công ${successCount} tài khoản${failCount > 0 ? `, ${failCount} tài khoản thất bại` : ''}`,
+        )
+      }
+
+      if (failCount > 0 && successCount === 0) {
+        toastError('Tạo tài khoản Ads thất bại')
+      }
     }
+
+    onClose()
   }
 
   return (
@@ -235,9 +230,10 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                         )}
                       </div>
 
-                      <div className="gap-4 grid grid-cols-2">
+                      <div className="gap-4 grid grid-cols-4">
                         <FormItem
                           label="UUID"
+                          className="col-span-2"
                           asterisk
                           invalid={touched.accounts?.[index]?.uuid && Boolean((errors.accounts as any)?.[index]?.uuid)}
                           errorMessage={(errors.accounts as any)?.[index]?.uuid}
@@ -270,9 +266,7 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                             )}
                           </Field>
                         </FormItem>
-                      </div>
 
-                      <div className="gap-4 grid grid-cols-2">
                         <FormItem
                           label="Gmail"
                           invalid={
@@ -305,9 +299,7 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                             component={Input}
                           />
                         </FormItem>
-                      </div>
 
-                      <div className="gap-4 grid grid-cols-2">
                         <FormItem
                           label="Mật khẩu khôi phục"
                           invalid={
@@ -341,9 +333,7 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                             component={Input}
                           />
                         </FormItem>
-                      </div>
 
-                      <div className="gap-4 grid grid-cols-2">
                         <FormItem
                           label="Tổng chi tiêu (VND)"
                           invalid={

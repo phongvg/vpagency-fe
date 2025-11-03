@@ -10,6 +10,8 @@ import { UserOption } from '@/components/ui/UserSelect/UserSelect'
 import { useProjectStore } from '@/views/projects/store/useProjectStore'
 import { useCreateProjectMutation, useUpdateProjectMutation } from '@/views/projects/hooks/useProjectsQueries'
 import { toastError, toastSuccess } from '@/utils/toast'
+import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
+import TagInput from '@/components/shared/TagInput'
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Tên dự án là bắt buộc'),
@@ -86,22 +88,15 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
       ownerId: selectedOwner?.value,
     }
 
-    try {
-      if (isEdit) {
-        await updateMutation.mutateAsync({
-          projectId: selectedProject.id,
-          payload: submitValues as UpdateProjectRequest,
-        })
-        toastSuccess('Cập nhật dự án thành công')
-      } else {
-        await createMutation.mutateAsync(submitValues as CreateProjectRequest)
-        toastSuccess('Tạo dự án thành công')
-      }
-      onClose()
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || (isEdit ? 'Cập nhật dự án thất bại' : 'Tạo dự án thất bại')
-      toastError(errorMessage)
+    if (isEdit) {
+      await updateMutation.mutateAsync({
+        projectId: selectedProject.id,
+        payload: submitValues as UpdateProjectRequest,
+      })
+    } else {
+      await createMutation.mutateAsync(submitValues as CreateProjectRequest)
     }
+    onClose()
   }
 
   return (
@@ -161,39 +156,25 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
 
             <div className="gap-4 grid grid-cols-3">
               <FormItem label="Tổng ngân sách">
-                <Field
-                  type="number"
-                  name="totalBudget"
-                  placeholder="0"
-                  component={Input}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setFieldValue('totalBudget', parseFloat(e.target.value) || 0)
-                  }
-                />
+                <Field name="totalBudget">
+                  {({ field, form }: any) => (
+                    <FormCurrencyInput form={form} field={field} placeholder="Nhập tổng ngân sách" />
+                  )}
+                </Field>
               </FormItem>
 
               <FormItem label="Đã chi tiêu">
-                <Field
-                  type="number"
-                  name="spentBudget"
-                  placeholder="0"
-                  component={Input}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setFieldValue('spentBudget', parseFloat(e.target.value) || 0)
-                  }
-                />
+                <Field name="spentBudget">
+                  {({ field, form }: any) => (
+                    <FormCurrencyInput form={form} field={field} placeholder="Nhập số tiền đã chi tiêu" />
+                  )}
+                </Field>
               </FormItem>
 
               <FormItem label="CPC">
-                <Field
-                  type="number"
-                  name="cpc"
-                  placeholder="0"
-                  component={Input}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setFieldValue('cpc', parseFloat(e.target.value) || 0)
-                  }
-                />
+                <Field name="cpc">
+                  {({ field, form }: any) => <FormCurrencyInput form={form} field={field} placeholder="Nhập CPC" />}
+                </Field>
               </FormItem>
             </div>
 
@@ -239,41 +220,22 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
               />
             </FormItem>
 
-            <div className="mb-7">
-              <div className="gap-4 grid grid-cols-2">
-                <FormItem label="Từ khóa độc quyền" className="mb-0">
-                  <Field
-                    name="exclusiveKeywords"
-                    placeholder="Nhập từ khóa độc quyền..."
-                    component={Textarea}
-                    rows={3}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                      const keywords = e.target.value
-                        .split(',')
-                        .map((k) => k.trim())
-                        .filter(Boolean)
-                      setFieldValue('exclusiveKeywords', keywords)
-                    }}
-                  />
-                </FormItem>
+            <div className="gap-4 grid grid-cols-2">
+              <FormItem label="Từ khóa độc quyền">
+                <TagInput
+                  value={values.exclusiveKeywords || []}
+                  onChange={(tags) => setFieldValue('exclusiveKeywords', tags)}
+                  placeholder="Nhập từ khóa..."
+                />
+              </FormItem>
 
-                <FormItem label="Từ khóa bị hạn chế" className="mb-0">
-                  <Field
-                    name="rejectedKeywords"
-                    placeholder="Nhập từ khóa bị hạn chế..."
-                    component={Textarea}
-                    rows={3}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                      const keywords = e.target.value
-                        .split(',')
-                        .map((k) => k.trim())
-                        .filter(Boolean)
-                      setFieldValue('rejectedKeywords', keywords)
-                    }}
-                  />
-                </FormItem>
-              </div>
-              <p className="text-red-500 text-xs">Vui lòng nhập các giá trị, ngăn cách nhau bằng dấu phẩy.</p>
+              <FormItem label="Từ khóa bị hạn chế">
+                <TagInput
+                  value={values.rejectedKeywords || []}
+                  onChange={(tags) => setFieldValue('rejectedKeywords', tags)}
+                  placeholder="Nhập từ khóa..."
+                />
+              </FormItem>
             </div>
 
             <div className="gap-4 grid grid-cols-3">
@@ -347,94 +309,48 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
               </FormItem>
             </div>
 
-            <div className="mb-7">
-              <div className="gap-4 grid grid-cols-2">
-                <FormItem label="Quốc gia" className="mb-0">
-                  <Field
-                    name="targetCountries"
-                    placeholder="Nhập quốc gia..."
-                    component={Textarea}
-                    rows={3}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                      const countries = e.target.value
-                        .split(',')
-                        .map((c) => c.trim())
-                        .filter(Boolean)
-                      setFieldValue('targetCountries', countries)
-                    }}
-                  />
-                </FormItem>
+            <div className="gap-4 grid grid-cols-2">
+              <FormItem label="Quốc gia">
+                <TagInput
+                  value={values.targetCountries || []}
+                  onChange={(tags) => setFieldValue('targetCountries', tags)}
+                  placeholder="Nhập quốc gia..."
+                />
+              </FormItem>
 
-                <FormItem label="Quốc gia bị hạn chế" className="mb-0">
-                  <Field
-                    name="rejectedCountries"
-                    placeholder="Nhập quốc gia bị hạn chế..."
-                    component={Textarea}
-                    rows={3}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                      const countries = e.target.value
-                        .split(',')
-                        .map((c) => c.trim())
-                        .filter(Boolean)
-                      setFieldValue('rejectedCountries', countries)
-                    }}
-                  />
-                </FormItem>
-              </div>
-              <p className="text-red-500 text-xs">Vui lòng nhập các giá trị, ngăn cách nhau bằng dấu phẩy.</p>
+              <FormItem label="Quốc gia bị hạn chế">
+                <TagInput
+                  value={values.rejectedCountries || []}
+                  onChange={(tags) => setFieldValue('rejectedCountries', tags)}
+                  placeholder="Nhập quốc gia..."
+                />
+              </FormItem>
             </div>
 
-            <div className="mb-7">
-              <div className="gap-4 grid grid-cols-3">
-                <FormItem label="Thiết bị" className="mb-0">
-                  <Field
-                    name="devices"
-                    placeholder="Nhập thiết bị..."
-                    component={Textarea}
-                    rows={3}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                      const devices = e.target.value
-                        .split(',')
-                        .map((d) => d.trim())
-                        .filter(Boolean)
-                      setFieldValue('devices', devices)
-                    }}
-                  />
-                </FormItem>
+            <div className="gap-4 grid grid-cols-3">
+              <FormItem label="Thiết bị">
+                <TagInput
+                  value={values.devices || []}
+                  onChange={(tags) => setFieldValue('devices', tags)}
+                  placeholder="Nhập thiết bị..."
+                />
+              </FormItem>
 
-                <FormItem label="Độ tuổi" className="mb-0">
-                  <Field
-                    name="ageRanges"
-                    placeholder="Nhập độ tuổi..."
-                    component={Textarea}
-                    rows={3}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                      const ageRanges = e.target.value
-                        .split(',')
-                        .map((a) => a.trim())
-                        .filter(Boolean)
-                      setFieldValue('ageRanges', ageRanges)
-                    }}
-                  />
-                </FormItem>
+              <FormItem label="Độ tuổi">
+                <TagInput
+                  value={values.ageRanges || []}
+                  onChange={(tags) => setFieldValue('ageRanges', tags)}
+                  placeholder="Nhập độ tuổi..."
+                />
+              </FormItem>
 
-                <FormItem label="Giới tính" className="mb-0">
-                  <Field
-                    name="genders"
-                    placeholder="Nhập giới tính..."
-                    component={Textarea}
-                    rows={3}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                      const genders = e.target.value
-                        .split(',')
-                        .map((g) => g.trim())
-                        .filter(Boolean)
-                      setFieldValue('genders', genders)
-                    }}
-                  />
-                </FormItem>
-              </div>
-              <p className="text-red-500 text-xs">Vui lòng nhập các giá trị, ngăn cách nhau bằng dấu phẩy.</p>
+              <FormItem label="Giới tính">
+                <TagInput
+                  value={values.genders || []}
+                  onChange={(tags) => setFieldValue('genders', tags)}
+                  placeholder="Nhập giới tính..."
+                />
+              </FormItem>
             </div>
 
             <div className="flex justify-end gap-2 mt-6">
