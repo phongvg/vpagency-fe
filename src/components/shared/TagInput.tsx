@@ -21,7 +21,6 @@ export default function TagInput({ value = [], onChange, placeholder, disabled =
         setInputValue('')
       }
     } else if (e.key === 'Backspace' && !inputValue && value.length > 0) {
-      // Remove last tag if input is empty and backspace is pressed
       onChange(value.slice(0, -1))
     }
   }
