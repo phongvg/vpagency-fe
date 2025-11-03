@@ -14,7 +14,6 @@ import { toastError, toastSuccess } from '@/utils/toast'
 import { HiOutlinePlus, HiOutlineTrash } from 'react-icons/hi'
 import { AdsAccountStatus } from '@/enums/adsAccount.enum'
 import { SelectOption } from '@/@types/common'
-import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
 
 const accountValidationSchema = Yup.object().shape({
   uuid: Yup.string().required('Vui lòng nhập UUID'),
@@ -23,7 +22,6 @@ const accountValidationSchema = Yup.object().shape({
   profileGenLogin: Yup.string(),
   recoverPassword: Yup.string(),
   twoFactorCode: Yup.string(),
-  totalSpent: Yup.number(),
 })
 
 const validationSchema = Yup.object().shape({
@@ -83,30 +81,28 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
           {
             uuid: selectedAdsAccount?.uuid || '',
             status: selectedAdsAccount?.status || AdsAccountStatus.ACTIVE,
-            gmail: selectedAdsAccount?.gmail || '',
-            profileGenLogin: selectedAdsAccount?.profileGenLogin || '',
             recoverPassword: selectedAdsAccount?.recoverPassword || '',
             twoFactorCode: selectedAdsAccount?.twoFactorCode || '',
-            totalSpent: selectedAdsAccount?.totalSpent || 0,
           },
         ],
         managerId: selectedAdsAccount?.managerId || undefined,
         adsGroupId: selectedAdsAccount?.adsGroupId || undefined,
+        gmail: selectedAdsAccount?.gmail || '',
+        profileGenLogin: selectedAdsAccount?.profileGenLogin || '',
       }
     : {
         accounts: [
           {
             uuid: '',
             status: AdsAccountStatus.ACTIVE,
-            gmail: '',
-            profileGenLogin: '',
             recoverPassword: '',
             twoFactorCode: '',
-            totalSpent: 0,
           },
         ],
         managerId: undefined,
         adsGroupId: undefined,
+        gmail: '',
+        profileGenLogin: '',
       }
 
   const fetchAdsGroupOptions = async (inputValue: string) => {
@@ -127,6 +123,8 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
         ...values.accounts[0],
         managerId: values.managerId,
         adsGroupId: values.adsGroupId,
+        gmail: values.gmail,
+        profileGenLogin: values.profileGenLogin,
       }
       await updateMutation.mutateAsync({
         id: selectedAdsAccount.id,
@@ -142,6 +140,8 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
             ...account,
             managerId: values.managerId,
             adsGroupId: values.adsGroupId,
+            gmail: values.gmail,
+            profileGenLogin: values.profileGenLogin,
           }
           await createMutation.mutateAsync(accountData)
           successCount++
@@ -174,7 +174,7 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
       {({ errors, touched, isSubmitting, setFieldValue, values }) => (
         <Form>
           <FormContainer>
-            <div className="gap-4 grid grid-cols-2 bg-gray-50 mb-4 p-4 rounded-lg">
+            <div className="gap-x-4 grid grid-cols-2 bg-gray-50 mb-4 p-4 rounded-lg">
               <FormItem
                 label="Nhóm tài khoản ads"
                 invalid={touched.adsGroupId && Boolean(errors.adsGroupId)}
@@ -193,6 +193,7 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                   cacheOptions
                 />
               </FormItem>
+
               <FormItem
                 label="Người quản lý"
                 invalid={typeof errors.managerId === 'string' && touched.managerId}
@@ -206,6 +207,28 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                   }}
                   placeholder="Chọn người quản lý..."
                   isClearable={true}
+                />
+              </FormItem>
+
+              <FormItem
+                label="Gmail"
+                invalid={touched.gmail && Boolean(errors.gmail)}
+                errorMessage={errors.gmail as string}
+              >
+                <Field type="email" autoComplete="off" name="gmail" placeholder="Nhập Gmail" component={Input} />
+              </FormItem>
+
+              <FormItem
+                label="Profile Gen Login"
+                invalid={touched.profileGenLogin && Boolean(errors.profileGenLogin)}
+                errorMessage={errors.profileGenLogin as string}
+              >
+                <Field
+                  type="text"
+                  autoComplete="off"
+                  name="profileGenLogin"
+                  placeholder="Nhập Profile Gen Login"
+                  component={Input}
                 />
               </FormItem>
             </div>
@@ -233,7 +256,6 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                       <div className="gap-4 grid grid-cols-4">
                         <FormItem
                           label="UUID"
-                          className="col-span-2"
                           asterisk
                           invalid={touched.accounts?.[index]?.uuid && Boolean((errors.accounts as any)?.[index]?.uuid)}
                           errorMessage={(errors.accounts as any)?.[index]?.uuid}
@@ -265,39 +287,6 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                               />
                             )}
                           </Field>
-                        </FormItem>
-
-                        <FormItem
-                          label="Gmail"
-                          invalid={
-                            touched.accounts?.[index]?.gmail && Boolean((errors.accounts as any)?.[index]?.gmail)
-                          }
-                          errorMessage={(errors.accounts as any)?.[index]?.gmail}
-                        >
-                          <Field
-                            type="email"
-                            autoComplete="off"
-                            name={`accounts.${index}.gmail`}
-                            placeholder="Nhập Gmail"
-                            component={Input}
-                          />
-                        </FormItem>
-
-                        <FormItem
-                          label="Profile Gen Login"
-                          invalid={
-                            touched.accounts?.[index]?.profileGenLogin &&
-                            Boolean((errors.accounts as any)?.[index]?.profileGenLogin)
-                          }
-                          errorMessage={(errors.accounts as any)?.[index]?.profileGenLogin}
-                        >
-                          <Field
-                            type="text"
-                            autoComplete="off"
-                            name={`accounts.${index}.profileGenLogin`}
-                            placeholder="Nhập Profile Gen Login"
-                            component={Input}
-                          />
                         </FormItem>
 
                         <FormItem
@@ -333,21 +322,6 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                             component={Input}
                           />
                         </FormItem>
-
-                        <FormItem
-                          label="Tổng chi tiêu (VND)"
-                          invalid={
-                            touched.accounts?.[index]?.totalSpent &&
-                            Boolean((errors.accounts as any)?.[index]?.totalSpent)
-                          }
-                          errorMessage={(errors.accounts as any)?.[index]?.totalSpent}
-                        >
-                          <Field name={`accounts.${index}.totalSpent`}>
-                            {({ field, form }: any) => (
-                              <FormCurrencyInput form={form} field={field} placeholder="Nhập tổng chi tiêu" />
-                            )}
-                          </Field>
-                        </FormItem>
                       </div>
                     </div>
                   ))}
@@ -361,8 +335,6 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                         push({
                           uuid: '',
                           status: AdsAccountStatus.ACTIVE,
-                          gmail: '',
-                          profileGenLogin: '',
                           recoverPassword: '',
                           twoFactorCode: '',
                         })

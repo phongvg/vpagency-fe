@@ -9,9 +9,10 @@ import { User } from '@/@types/user'
 import { UserOption } from '@/components/ui/UserSelect/UserSelect'
 import { useProjectStore } from '@/views/projects/store/useProjectStore'
 import { useCreateProjectMutation, useUpdateProjectMutation } from '@/views/projects/hooks/useProjectsQueries'
-import { toastError, toastSuccess } from '@/utils/toast'
 import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
 import TagInput from '@/components/shared/TagInput'
+import NumberInput from '@/components/shared/NumberInput'
+import { SelectOption } from '@/@types/common'
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Tên dự án là bắt buộc'),
@@ -22,53 +23,40 @@ type ProjectFormProps = {
   onClose: () => void
 }
 
+const gendersOptions: SelectOption[] = [
+  { value: 'male', label: 'Nam' },
+  { value: 'female', label: 'Nữ' },
+]
+
+const typeOptions = Object.values(ProjectType).map((type) => ({
+  value: type,
+  label: ProjectTypeLabels[type],
+}))
+
+const statusOptions = Object.values(ProjectStatus).map((status) => ({
+  value: status,
+  label: ProjectStatusLabels[status],
+}))
+
 export default function ProjectForm({ onClose }: ProjectFormProps) {
   const { selectedProject } = useProjectStore()
-  const createMutation = useCreateProjectMutation()
-  const updateMutation = useUpdateProjectMutation()
-  const [selectedOwner, setSelectedOwner] = useState<UserOption | null>(null)
-
   const isEdit = !!selectedProject
 
-  useEffect(() => {
-    if (selectedProject?.owner) {
-      setSelectedOwner({
-        value: selectedProject.owner.id,
-        label: `${selectedProject.owner.firstName || ''} ${selectedProject.owner.lastName || ''} (${
-          selectedProject.owner.username
-        })`.trim(),
-        user: selectedProject.owner as User,
-      })
-    } else {
-      setSelectedOwner(null)
-    }
-  }, [selectedProject])
-
-  const typeOptions = Object.values(ProjectType).map((type) => ({
-    value: type,
-    label: ProjectTypeLabels[type],
-  }))
-
-  const statusOptions = Object.values(ProjectStatus).map((status) => ({
-    value: status,
-    label: ProjectStatusLabels[status],
-  }))
+  const createMutation = useCreateProjectMutation()
+  const updateMutation = useUpdateProjectMutation()
 
   const initialValues: CreateProjectRequest | UpdateProjectRequest = {
     name: selectedProject?.name || '',
     type: (selectedProject?.type as ProjectType) || ProjectType.SET_CAMPAIGN,
     status: (selectedProject?.status as ProjectStatus) || ProjectStatus.RUNNING,
-    ownerId: selectedProject?.ownerId,
     totalBudget: selectedProject?.totalBudget || 0,
-    spentBudget: selectedProject?.spentBudget || 0,
-    cpc: selectedProject?.cpc || 0,
     exclusiveKeywords: selectedProject?.exclusiveKeywords || [],
     rejectedKeywords: selectedProject?.rejectedKeywords || [],
     targetCountries: selectedProject?.targetCountries || [],
     rejectedCountries: selectedProject?.rejectedCountries || [],
     devices: selectedProject?.devices || [],
-    ageRanges: selectedProject?.ageRanges || [],
-    genders: selectedProject?.genders || [],
+    age: selectedProject?.age || null,
+    gender: selectedProject?.gender || '',
     title: selectedProject?.title || '',
     description: selectedProject?.description || '',
     note: selectedProject?.note || '',
@@ -83,19 +71,15 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
   }
 
   const handleSubmit = async (values: CreateProjectRequest | UpdateProjectRequest) => {
-    const submitValues = {
-      ...values,
-      ownerId: selectedOwner?.value,
-    }
-
     if (isEdit) {
       await updateMutation.mutateAsync({
         projectId: selectedProject.id,
-        payload: submitValues as UpdateProjectRequest,
+        payload: values as UpdateProjectRequest,
       })
     } else {
-      await createMutation.mutateAsync(submitValues as CreateProjectRequest)
+      await createMutation.mutateAsync(values as CreateProjectRequest)
     }
+
     onClose()
   }
 
@@ -140,21 +124,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
               </FormItem>
             </div>
 
-            <FormItem label="Người phụ trách">
-              <UserSelect
-                value={selectedOwner ? [selectedOwner] : []}
-                onChange={(users) => {
-                  const user = users[0] || null
-                  setSelectedOwner(user)
-                  setFieldValue('ownerId', user?.value)
-                }}
-                isMulti={false}
-                placeholder="Chọn người phụ trách (mặc định là người tạo)"
-                isClearable
-              />
-            </FormItem>
-
-            <div className="gap-4 grid grid-cols-3">
+            <div className="gap-4 grid grid-cols-2">
               <FormItem label="Tổng ngân sách">
                 <Field name="totalBudget">
                   {({ field, form }: any) => (
@@ -163,30 +133,16 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                 </Field>
               </FormItem>
 
-              <FormItem label="Đã chi tiêu">
-                <Field name="spentBudget">
-                  {({ field, form }: any) => (
-                    <FormCurrencyInput form={form} field={field} placeholder="Nhập số tiền đã chi tiêu" />
-                  )}
-                </Field>
-              </FormItem>
-
-              <FormItem label="CPC">
-                <Field name="cpc">
-                  {({ field, form }: any) => <FormCurrencyInput form={form} field={field} placeholder="Nhập CPC" />}
-                </Field>
+              <FormItem label="Tiêu đề">
+                <Field
+                  type="text"
+                  name="title"
+                  placeholder="Nhập tiêu đề..."
+                  component={Input}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('title', e.target.value)}
+                />
               </FormItem>
             </div>
-
-            <FormItem label="Tiêu đề">
-              <Field
-                type="text"
-                name="title"
-                placeholder="Nhập tiêu đề..."
-                component={Input}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('title', e.target.value)}
-              />
-            </FormItem>
 
             <div className="gap-4 grid grid-cols-2">
               <FormItem label="Mô tả">
@@ -219,24 +175,6 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFieldValue('content', e.target.value)}
               />
             </FormItem>
-
-            <div className="gap-4 grid grid-cols-2">
-              <FormItem label="Từ khóa độc quyền">
-                <TagInput
-                  value={values.exclusiveKeywords || []}
-                  onChange={(tags) => setFieldValue('exclusiveKeywords', tags)}
-                  placeholder="Nhập từ khóa..."
-                />
-              </FormItem>
-
-              <FormItem label="Từ khóa bị hạn chế">
-                <TagInput
-                  value={values.rejectedKeywords || []}
-                  onChange={(tags) => setFieldValue('rejectedKeywords', tags)}
-                  placeholder="Nhập từ khóa..."
-                />
-              </FormItem>
-            </div>
 
             <div className="gap-4 grid grid-cols-3">
               <FormItem label="Ngày bắt đầu">
@@ -309,7 +247,23 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
               </FormItem>
             </div>
 
-            <div className="gap-4 grid grid-cols-2">
+            <div className="gap-x-4 grid grid-cols-2">
+              <FormItem label="Từ khóa độc quyền">
+                <TagInput
+                  value={values.exclusiveKeywords || []}
+                  onChange={(tags) => setFieldValue('exclusiveKeywords', tags)}
+                  placeholder="Nhập từ khóa..."
+                />
+              </FormItem>
+
+              <FormItem label="Từ khóa bị hạn chế">
+                <TagInput
+                  value={values.rejectedKeywords || []}
+                  onChange={(tags) => setFieldValue('rejectedKeywords', tags)}
+                  placeholder="Nhập từ khóa..."
+                />
+              </FormItem>
+
               <FormItem label="Quốc gia">
                 <TagInput
                   value={values.targetCountries || []}
@@ -325,9 +279,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                   placeholder="Nhập quốc gia..."
                 />
               </FormItem>
-            </div>
 
-            <div className="gap-4 grid grid-cols-3">
               <FormItem label="Thiết bị">
                 <TagInput
                   value={values.devices || []}
@@ -335,20 +287,25 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                   placeholder="Nhập thiết bị..."
                 />
               </FormItem>
+            </div>
 
+            <div className="gap-4 grid grid-cols-2">
               <FormItem label="Độ tuổi">
-                <TagInput
-                  value={values.ageRanges || []}
-                  onChange={(tags) => setFieldValue('ageRanges', tags)}
-                  placeholder="Nhập độ tuổi..."
+                <NumberInput
+                  value={values.age}
+                  onChange={(value) => setFieldValue('age', value)}
+                  min={1}
+                  max={100}
+                  placeholder="Nhập độ tuổi"
                 />
               </FormItem>
 
               <FormItem label="Giới tính">
-                <TagInput
-                  value={values.genders || []}
-                  onChange={(tags) => setFieldValue('genders', tags)}
-                  placeholder="Nhập giới tính..."
+                <Select
+                  options={gendersOptions}
+                  value={gendersOptions.find((opt) => opt.value === values.gender)}
+                  onChange={(option: SelectOption | null) => setFieldValue('gender', option?.value)}
+                  placeholder="Chọn giới tính..."
                 />
               </FormItem>
             </div>

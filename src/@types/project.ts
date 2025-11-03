@@ -23,8 +23,8 @@ export interface Project {
   rejectedCountries: string[]
   startedAt: string | Date | null
   devices: string[]
-  ageRanges: string[]
-  genders: string[]
+  age: number | null
+  gender: string
   content: string | null
   title: string | null
   note: string | null

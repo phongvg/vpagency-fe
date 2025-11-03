@@ -26,8 +26,8 @@ export type CreateProjectRequest = {
   rejectedCountries?: string[]
   startedAt?: Date | null
   devices?: string[]
-  ageRanges?: string[]
-  genders?: string[]
+  age?: number | null
+  gender?: string
   content?: string
   title?: string
   note?: string
