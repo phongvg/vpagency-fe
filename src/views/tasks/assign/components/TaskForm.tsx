@@ -3,6 +3,7 @@ import { User } from '@/@types/user'
 import { Button, DatePicker, FormItem, Input, Select, Textarea, UserSelect } from '@/components/ui'
 import { UserOption } from '@/components/ui/UserSelect/UserSelect'
 import { TaskFrequency, TaskPriority, TaskType, TaskTypeLabels, TaskPriorityLabels } from '@/enums/task.enum'
+import { setDeadlineTo1800 } from '@/helpers/date'
 import { apiGetProjectList } from '@/services/ProjectService'
 import { Form, Formik, FormikProps } from 'formik'
 import { useEffect, useRef, useState } from 'react'
@@ -22,6 +23,7 @@ interface TaskFormData {
   numberOfBackupCampaigns?: number
   dailyBudget?: number
   numberOfAccounts?: number
+  numberOfResultCampaigns?: number
 }
 
 interface TaskFormProps {
@@ -39,7 +41,7 @@ const validationSchema = Yup.object().shape({
   priority: Yup.string().required('Độ ưu tiên là bắt buộc'),
   projectId: Yup.string().required('Dự án là bắt buộc'),
   deadline: Yup.date().required('Deadline là bắt buộc'),
-  assignedUserIds: Yup.array().min(1, 'Phải chọn ít nhất một người được giao việc'),
+  assignedUserIds: Yup.array().min(1, 'Phải chọn ít nhất một người nhận việc'),
 })
 
 const typeOptions = Object.values(TaskType).map((type) => ({
@@ -67,7 +69,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
     type: task?.type || null,
     frequency: task?.frequency || null,
     priority: task?.priority || null,
-    deadline: task ? new Date(task.deadline) : null,
+    deadline: task?.deadline || null,
     assignedUserIds: task?.assignedUsers?.map((u) => u.id) || [],
     projectId: task?.project?.id || null,
     note: task?.note || '',
@@ -75,6 +77,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
     numberOfBackupCampaigns: task?.numberOfBackupCampaigns || undefined,
     dailyBudget: task?.dailyBudget || undefined,
     numberOfAccounts: task?.numberOfAccounts || undefined,
+    numberOfResultCampaigns: task?.numberOfResultCampaigns || undefined,
   }
 
   useEffect(() => {
@@ -138,121 +141,120 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
         }}
       >
         {({ values, errors, touched, setFieldValue, handleChange, handleBlur }) => {
-          useEffect(() => {
-            if (selectedUsers.length > 0) {
-              setFieldValue(
-                'assignedUserIds',
-                selectedUsers.map((user) => user.value),
-              )
-            }
-          }, [selectedUsers, setFieldValue])
-
           return (
             <Form>
               <FormItem
-                label="Tên công việc"
                 asterisk
-                invalid={touched.name && Boolean(errors.name)}
                 errorMessage={errors.name}
+                invalid={touched.name && Boolean(errors.name)}
+                label="Tên công việc"
               >
                 <Input
                   name="name"
+                  placeholder="Nhập tên công việc..."
                   value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  placeholder="Nhập tên công việc..."
                 />
               </FormItem>
 
               <div className="gap-4 grid grid-cols-2">
                 <FormItem
-                  label="Loại công việc"
                   asterisk
-                  invalid={touched.type && Boolean(errors.type)}
                   errorMessage={errors.type}
+                  invalid={touched.type && Boolean(errors.type)}
+                  label="Loại công việc"
                 >
                   <Select
                     name="type"
-                    value={typeOptions.find((opt) => opt.value === values.type)}
-                    onChange={(option: any) => setFieldValue('type', option?.value)}
                     options={typeOptions}
                     placeholder="Chọn loại công việc"
+                    value={typeOptions.find((opt) => opt.value === values.type)}
+                    onChange={(option: { value: TaskType; label: string } | null) =>
+                      setFieldValue('type', option?.value || null)
+                    }
                   />
                 </FormItem>
                 <FormItem
-                  label="Độ ưu tiên"
                   asterisk
-                  invalid={touched.priority && Boolean(errors.priority)}
                   errorMessage={errors.priority}
+                  invalid={touched.priority && Boolean(errors.priority)}
+                  label="Độ ưu tiên"
                 >
                   <Select
                     name="priority"
-                    value={priorityOptions.find((opt) => opt.value === values.priority)}
-                    onChange={(option: any) => setFieldValue('priority', option?.value)}
                     options={priorityOptions}
                     placeholder="Chọn độ ưu tiên"
+                    value={priorityOptions.find((opt) => opt.value === values.priority)}
+                    onChange={(option: { value: TaskPriority; label: string } | null) =>
+                      setFieldValue('priority', option?.value || null)
+                    }
                   />
                 </FormItem>
               </div>
 
               <div className="gap-4 grid grid-cols-2">
                 <FormItem
-                  label="Tần suất"
                   asterisk
-                  invalid={touched.frequency && Boolean(errors.frequency)}
                   errorMessage={errors.frequency}
+                  invalid={touched.frequency && Boolean(errors.frequency)}
+                  label="Tần suất"
                 >
                   <Select
                     name="frequency"
-                    value={frequencyOptions.find((opt) => opt.value === values.frequency)}
-                    onChange={(option: any) => setFieldValue('frequency', option?.value)}
                     options={frequencyOptions}
                     placeholder="Chọn tần suất"
+                    value={frequencyOptions.find((opt) => opt.value === values.frequency)}
+                    onChange={(option: { value: TaskFrequency; label: string } | null) =>
+                      setFieldValue('frequency', option?.value || null)
+                    }
                   />
                 </FormItem>
                 <FormItem
-                  label="Deadline"
                   asterisk
-                  invalid={touched.deadline && Boolean(errors.deadline)}
                   errorMessage={errors.deadline as string}
+                  invalid={touched.deadline && Boolean(errors.deadline)}
+                  label="Deadline"
                 >
                   <DatePicker
-                    value={values.deadline}
-                    onChange={(date) => setFieldValue('deadline', date)}
-                    placeholder="dd/MM/yyyy"
                     inputFormat="DD/MM/YYYY"
                     minDate={new Date()}
+                    placeholder="dd/MM/yyyy"
+                    value={values.deadline}
+                    onChange={(date) => setFieldValue('deadline', setDeadlineTo1800(date))}
                   />
                 </FormItem>
               </div>
 
               <FormItem
-                label="Dự án"
                 asterisk
-                invalid={touched.projectId && Boolean(errors.projectId)}
                 errorMessage={errors.projectId as string}
+                invalid={touched.projectId && Boolean(errors.projectId)}
+                label="Dự án"
               >
                 <Select
+                  cacheOptions
+                  defaultOptions
                   componentAs={AsyncSelect}
+                  loadOptions={fetchProjectOptions}
                   placeholder="Chọn dự án..."
                   value={selectedProject}
-                  onChange={(option: any) => {
+                  onChange={(option: { value: string; label: string } | null) => {
                     setSelectedProject(option)
-                    setFieldValue('projectId', option?.value)
+                    setFieldValue('projectId', option?.value || null)
                   }}
-                  loadOptions={fetchProjectOptions}
-                  defaultOptions
-                  cacheOptions
                 />
               </FormItem>
 
               <FormItem
-                label="Người được giao việc"
                 asterisk
-                invalid={touched.assignedUserIds && Boolean(errors.assignedUserIds)}
                 errorMessage={errors.assignedUserIds as string}
+                invalid={touched.assignedUserIds && Boolean(errors.assignedUserIds)}
+                label="Người nhận việc"
               >
                 <UserSelect
+                  isMulti={true}
+                  placeholder="Chọn người nhận việc..."
                   value={selectedUsers}
                   onChange={(users) => {
                     setSelectedUsers(users)
@@ -261,55 +263,58 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                       users.map((user: UserOption) => user.value),
                     )
                   }}
-                  isMulti={true}
-                  placeholder="Chọn người được giao việc..."
                 />
               </FormItem>
 
-              {(values.type === TaskType.SET_CAMPAIGN || values.type === TaskType.LAUNCH_CAMPAIGN) && (
+              {values.type === TaskType.SET_CAMPAIGN && (
                 <div className="space-y-4 bg-gray-50 mb-3 px-4 pt-4 rounded-lg">
-                  <h5>Thông tin chiến dịch</h5>
+                  <h5>Thông tin chi tiết</h5>
 
                   <div className="gap-4 grid grid-cols-2">
-                    <FormItem label="Số lượng chiến dịch">
+                    <FormItem label="Số lượng campaign lên">
                       <Input
-                        type="number"
                         name="numberOfCampaigns"
+                        placeholder="Nhập số lượng..."
+                        type="number"
                         value={values.numberOfCampaigns || ''}
                         onChange={handleChange}
-                        placeholder="Nhập số lượng..."
                       />
                     </FormItem>
 
-                    <FormItem label="Chiến dịch dự phòng">
+                    <FormItem label="Số lượng kết quả campaign">
                       <Input
-                        type="number"
-                        name="numberOfBackupCampaigns"
-                        value={values.numberOfBackupCampaigns || ''}
-                        onChange={handleChange}
+                        name="numberOfResultCampaigns"
                         placeholder="Nhập số lượng..."
+                        type="number"
+                        value={values.numberOfResultCampaigns || ''}
+                        onChange={handleChange}
                       />
                     </FormItem>
                   </div>
+                </div>
+              )}
+              {values.type === TaskType.LAUNCH_CAMPAIGN && (
+                <div className="space-y-4 bg-gray-50 mb-3 px-4 pt-4 rounded-lg">
+                  <h5>Thông tin chi tiết</h5>
 
                   <div className="gap-4 grid grid-cols-2">
                     <FormItem label="Ngân sách hàng ngày">
                       <Input
-                        type="number"
                         name="dailyBudget"
+                        placeholder="Nhập ngân sách..."
+                        type="number"
                         value={values.dailyBudget || ''}
                         onChange={handleChange}
-                        placeholder="Nhập ngân sách..."
                       />
                     </FormItem>
 
-                    <FormItem label="Số lượng tài khoản">
+                    <FormItem label="Số lượng tài khoản dự phòng">
                       <Input
+                        name="numberOfBackupCampaigns"
+                        placeholder="Nhập số lượng tài khoản dự phòng..."
                         type="number"
-                        name="numberOfAccounts"
-                        value={values.numberOfAccounts || ''}
+                        value={values.numberOfBackupCampaigns || ''}
                         onChange={handleChange}
-                        placeholder="Nhập số lượng..."
                       />
                     </FormItem>
                   </div>
@@ -319,19 +324,19 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
               <FormItem label="Ghi chú">
                 <Textarea
                   name="note"
+                  placeholder="Nhập ghi chú..."
+                  rows={3}
                   value={values.note}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  placeholder="Nhập ghi chú..."
-                  rows={3}
                 />
               </FormItem>
 
               <div className="flex justify-end gap-3 mt-6 pt-4 border-t">
-                <Button variant="plain" onClick={onCancel} size="sm">
+                <Button size="sm" variant="plain" onClick={onCancel}>
                   Hủy
                 </Button>
-                <Button variant="solid" type="submit" loading={loading} size="sm">
+                <Button loading={loading} size="sm" type="submit" variant="solid">
                   {isEdit ? 'Cập nhật' : 'Tạo mới'}
                 </Button>
               </div>

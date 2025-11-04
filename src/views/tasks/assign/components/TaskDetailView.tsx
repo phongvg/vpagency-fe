@@ -79,7 +79,7 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-3">
           <HiUsers className="w-4 h-4 text-gray-500" />
-          <h3 className="font-medium text-gray-700 text-sm">Người được giao việc</h3>
+          <h3 className="font-medium text-gray-700 text-sm">Người nhận việc</h3>
         </div>
         <div className="space-y-2 max-h-60 overflow-y-auto">
           {task.assignedUsers.map((user) => {
@@ -99,32 +99,39 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
         </div>
       </div>
 
-      {(task.type === TaskType.SET_CAMPAIGN || task.type === TaskType.LAUNCH_CAMPAIGN) && (
+      {task.type === TaskType.SET_CAMPAIGN && (
         <div className="bg-blue-50 mb-6 p-4 border border-blue-100 rounded-lg">
-          <h5 className="mb-3">Thông tin chiến dịch</h5>
+          <h5 className="mb-3">Thông tin chi tiết</h5>
           <div className="gap-4 grid grid-cols-2 text-sm">
             {task.numberOfCampaigns && (
               <div>
-                <span>Số chiến dịch:</span>
+                <span>Số lượng campaign lên:</span>
                 <span className="ml-1 font-medium text-blue-700">{task.numberOfCampaigns}</span>
+              </div>
+            )}
+            {task.numberOfResultCampaigns && (
+              <div>
+                <span>Số lượng kết quả campaign:</span>
+                <span className="ml-1 font-medium text-blue-700">{task.numberOfResultCampaigns}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      {task.type === TaskType.LAUNCH_CAMPAIGN && (
+        <div className="bg-blue-50 mb-6 p-4 border border-blue-100 rounded-lg">
+          <h5 className="mb-3">Thông tin chi tiết</h5>
+          <div className="gap-4 grid grid-cols-2 text-sm">
+            {task.dailyBudget && (
+              <div>
+                <span>Ngân sách hàng ngày:</span>
+                <span className="ml-1 font-medium text-blue-700">{task.dailyBudget}</span>
               </div>
             )}
             {task.numberOfBackupCampaigns && (
               <div>
-                <span>Chiến dịch dự phòng:</span>
+                <span>Số lượng tài khoản dự phòng:</span>
                 <span className="ml-1 font-medium text-blue-700">{task.numberOfBackupCampaigns}</span>
-              </div>
-            )}
-            {task.dailyBudget && (
-              <div>
-                <span>Ngân sách hàng ngày:</span>
-                <span className="ml-1 font-medium text-blue-700">{task.dailyBudget.toLocaleString('vi-VN')} VNĐ</span>
-              </div>
-            )}
-            {task.numberOfAccounts && (
-              <div>
-                <span>Số tài khoản:</span>
-                <span className="ml-1 font-medium text-blue-700">{task.numberOfAccounts}</span>
               </div>
             )}
           </div>

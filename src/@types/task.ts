@@ -23,6 +23,7 @@ export type Task = {
   creatorId: string
   createdAt: Date
   updatedAt: Date
+  numberOfResultCampaigns: number | null
 }
 
 export type TasksGroupedByStatus = {

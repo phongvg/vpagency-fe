@@ -171,12 +171,7 @@ export default function TaskFilters() {
           size="sm"
         />
 
-        <UserSelect
-          value={assignedUsers}
-          onChange={handleAssignedUserChange}
-          placeholder="Người được giao việc"
-          size="sm"
-        />
+        <UserSelect value={assignedUsers} onChange={handleAssignedUserChange} placeholder="Người nhận việc" size="sm" />
 
         <UserSelect value={creators} onChange={handleCreatorChange} placeholder="Người tạo" size="sm" />
       </div>

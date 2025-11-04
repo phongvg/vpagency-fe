@@ -237,22 +237,30 @@ function TaskDatesSection({ task }: TaskPanelProps) {
 function TaskCampaignSection({ task }: TaskPanelProps) {
   return (
     <ul className="space-y-2">
-      <li className="flex justify-between items-center">
-        <span>Số chiến dịch:</span>
-        <span>{task.numberOfCampaigns || 'N/A'}</span>
-      </li>
-      <li className="flex justify-between items-center">
-        <span>Chiến dịch dự phòng:</span>
-        <span>{task.numberOfBackupCampaigns || 'N/A'}</span>
-      </li>
-      <li className="flex justify-between items-center">
-        <span>Ngân sách hàng ngày:</span>
-        <span>{formatVietnameseMoney(task.dailyBudget) || 'N/A'}</span>
-      </li>
-      <li className="flex justify-between items-center">
-        <span>Số tài khoản:</span>
-        <span>{task.numberOfAccounts || 'N/A'}</span>
-      </li>
+      {task.numberOfCampaigns && (
+        <li className="flex justify-between items-center">
+          <span>Số lượng campaign lên:</span>
+          <span>{task.numberOfCampaigns || 'N/A'}</span>
+        </li>
+      )}
+      {task.numberOfResultCampaigns && (
+        <li className="flex justify-between items-center">
+          <span>Số lượng kết quả campaign:</span>
+          <span>{task.numberOfResultCampaigns || 'N/A'}</span>
+        </li>
+      )}
+      {task.dailyBudget && (
+        <li className="flex justify-between items-center">
+          <span>Ngân sách hàng ngày:</span>
+          <span>{formatVietnameseMoney(task.dailyBudget) || 'N/A'}</span>
+        </li>
+      )}
+      {task.numberOfBackupCampaigns && (
+        <li className="flex justify-between items-center">
+          <span>Số lượng tài khoản dự phòng:</span>
+          <span>{task.numberOfBackupCampaigns || 'N/A'}</span>
+        </li>
+      )}
     </ul>
   )
 }
