@@ -10,7 +10,7 @@ export type AppConfig = {
 
 const appConfig: AppConfig = {
   apiPrefix: import.meta.env.VITE_API_BASE_URL,
-  authenticatedEntryPath: urlConfig.dashboard,
+  authenticatedEntryPath: urlConfig.taskAssign,
   unAuthenticatedEntryPath: urlConfig.login,
   locale: 'en',
   enableMock: false,

@@ -11,6 +11,7 @@ import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 import { formatDate } from '@/helpers/formatDate'
 import DailyMetricForm from '@/views/adsAccounts/pages/adsAccountDetail/components/DailyMetricForm'
 import { GET_ADS_GROUP_BY_TASK_ID } from '@/utils/queryKey'
+import { useGetAdsGroupByTaskId } from '@/views/tasks/assign/hooks/useTaskQueries'
 
 const ManagerColumn = ({ row }: { row: AdsAccount }) => {
   if (!row.manager) {
@@ -51,11 +52,7 @@ export default function UpdateProgressModal({
   const [selectedAdsAccountId, setSelectedAdsAccountId] = useState<string | null>(null)
   const [isDailyMetricDialogOpen, setIsDailyMetricDialogOpen] = useState(false)
 
-  const { data: adsGroupData, isLoading: isLoadingAdsGroup } = useQuery({
-    queryKey: [GET_ADS_GROUP_BY_TASK_ID, taskId],
-    queryFn: () => apiGetAdsGroupByTaskId(taskId),
-    enabled: isOpen && !!taskId,
-  })
+  const { data: adsGroupData, isLoading: isLoadingAdsGroup } = useGetAdsGroupByTaskId(taskId, isOpen)
 
   useEffect(() => {
     setProgress(currentProgress)
@@ -127,14 +124,6 @@ export default function UpdateProgressModal({
       {
         header: 'UUID',
         accessorKey: 'uuid',
-        cell: (props) => {
-          const row = props.row.original
-          return <span className="font-mono text-xs">{row.uuid}</span>
-        },
-      },
-      {
-        header: 'Gmail',
-        accessorKey: 'gmail',
       },
       {
         header: 'Trạng thái',
@@ -286,7 +275,11 @@ export default function UpdateProgressModal({
           onRequestClose={handleCloseDailyMetricDialog}
         >
           <h5 className="mb-4">Thêm chỉ số hàng ngày</h5>
-          <DailyMetricForm adsAccountId={selectedAdsAccountId} onClose={handleCloseDailyMetricDialog} />
+          <DailyMetricForm
+            adsAccountId={selectedAdsAccountId}
+            isOpen={isDailyMetricDialogOpen}
+            onClose={handleCloseDailyMetricDialog}
+          />
         </Dialog>
       )}
     </Dialog>

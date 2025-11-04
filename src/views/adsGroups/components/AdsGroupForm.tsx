@@ -14,7 +14,6 @@ const validationSchema = Yup.object().shape({
   name: Yup.string().required('Vui lòng nhập tên nhóm'),
   description: Yup.string(),
   managerId: Yup.string(),
-  projectId: Yup.string(),
 })
 
 type AdsGroupFormProps = {
@@ -26,7 +25,6 @@ export default function AdsGroupForm({ onClose }: AdsGroupFormProps) {
   const createMutation = useCreateAdsGroupMutation()
   const updateMutation = useUpdateAdsGroupMutation()
   const [selectedManager, setSelectedManager] = useState<UserOption | null>(null)
-  const [selectedProject, setSelectedProject] = useState<{ value: string; label: string } | null>(null)
 
   const isEdit = !!selectedAdsGroup
 
@@ -42,34 +40,12 @@ export default function AdsGroupForm({ onClose }: AdsGroupFormProps) {
     } else {
       setSelectedManager(null)
     }
-
-    if (selectedAdsGroup?.project) {
-      setSelectedProject({
-        value: selectedAdsGroup.project.id,
-        label: selectedAdsGroup.project.name || '',
-      })
-    } else {
-      setSelectedProject(null)
-    }
   }, [selectedAdsGroup])
 
   const initialValues: CreateAdsGroupRequest = {
     name: selectedAdsGroup?.name || '',
     description: selectedAdsGroup?.description || '',
     managerId: selectedAdsGroup?.managerId || undefined,
-    projectId: selectedAdsGroup?.projectId || undefined,
-  }
-
-  const fetchProjectOptions = async (inputValue: string) => {
-    try {
-      const response = await apiGetProjectList({ search: inputValue, page: 1, limit: 10 })
-      return response.data.data.items.map((project) => ({
-        value: project.id,
-        label: project.name,
-      }))
-    } catch {
-      return []
-    }
   }
 
   const handleSubmit = async (values: CreateAdsGroupRequest) => {
@@ -128,25 +104,6 @@ export default function AdsGroupForm({ onClose }: AdsGroupFormProps) {
                 }}
                 placeholder="Chọn người quản lý..."
                 isClearable={true}
-              />
-            </FormItem>
-
-            <FormItem
-              label="Dự án"
-              invalid={touched.projectId && Boolean(errors.projectId)}
-              errorMessage={errors.projectId as string}
-            >
-              <Select
-                componentAs={AsyncSelect}
-                placeholder="Chọn dự án..."
-                value={selectedProject}
-                onChange={(option) => {
-                  setSelectedProject(option)
-                  setFieldValue('projectId', option?.value)
-                }}
-                loadOptions={fetchProjectOptions}
-                defaultOptions
-                cacheOptions
               />
             </FormItem>
 

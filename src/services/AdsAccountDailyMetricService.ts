@@ -44,3 +44,10 @@ export async function apiDeleteDailyMetric(id: string) {
     method: 'delete',
   })
 }
+
+export async function apiGetDailyMetricByAdsAccountId(id: string) {
+  return ApiService.fetchData<BaseResponse<AdsAccountDailyMetric>>({
+    url: `/ads-account-daily-metrics/ads-account/${id}`,
+    method: 'get',
+  })
+}

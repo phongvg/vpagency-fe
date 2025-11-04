@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Button, FormContainer, FormItem, Input, Select } from '@/components/ui'
 import UserSelect, { UserOption } from '@/components/ui/UserSelect/UserSelect'
-import { Field, Form, Formik, FieldArray } from 'formik'
+import { Field, Form, Formik, FieldArray, FieldProps, FormikErrors } from 'formik'
 import * as Yup from 'yup'
 import { useAdsAccountStore } from '@/views/adsAccounts/store/useAdsAccountStore'
 import {
@@ -270,26 +270,6 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                         </FormItem>
 
                         <FormItem
-                          label="Trạng thái"
-                          asterisk
-                          invalid={
-                            touched.accounts?.[index]?.status && Boolean((errors.accounts as any)?.[index]?.status)
-                          }
-                          errorMessage={(errors.accounts as any)?.[index]?.status}
-                        >
-                          <Field name={`accounts.${index}.status`}>
-                            {({ field, form }: any) => (
-                              <Select
-                                options={statusOptions}
-                                value={statusOptions.find((option) => option.value === field.value)}
-                                onChange={(option: any) => form.setFieldValue(field.name, option?.value)}
-                                placeholder="Chọn trạng thái..."
-                              />
-                            )}
-                          </Field>
-                        </FormItem>
-
-                        <FormItem
                           label="Mật khẩu khôi phục"
                           invalid={
                             touched.accounts?.[index]?.recoverPassword &&
@@ -321,6 +301,26 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                             placeholder="Nhập mã xác thực 2 yếu tố"
                             component={Input}
                           />
+                        </FormItem>
+
+                        <FormItem
+                          label="Trạng thái"
+                          asterisk
+                          invalid={
+                            touched.accounts?.[index]?.status && Boolean((errors.accounts as any)?.[index]?.status)
+                          }
+                          errorMessage={(errors.accounts as any)?.[index]?.status}
+                        >
+                          <Field name={`accounts.${index}.status`}>
+                            {({ field, form }: FieldProps) => (
+                              <Select
+                                options={statusOptions}
+                                value={statusOptions.find((option) => option.value === field.value)}
+                                onChange={(option: any) => form.setFieldValue(field.name, option?.value)}
+                                placeholder="Chọn trạng thái..."
+                              />
+                            )}
+                          </Field>
                         </FormItem>
                       </div>
                     </div>

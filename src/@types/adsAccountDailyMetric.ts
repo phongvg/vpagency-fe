@@ -11,14 +11,12 @@ export type AdsAccountDailyMetric = {
 
 export type CreateAdsAccountDailyMetricRequest = {
   adsAccountId: string
-  date: string | Date
   clicks: number
   spent: number
   cpc?: number
 }
 
 export type UpdateAdsAccountDailyMetricRequest = {
-  date?: string | Date
   clicks?: number
   spent?: number
   cpc?: number

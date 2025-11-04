@@ -6,6 +6,9 @@ import { urlConfig } from '@/configs/urls.config'
 import { Button } from '@/components/ui'
 import { MESSAGES } from '@/constants/message.constant'
 import useAuth from '@/utils/hooks/useAuth'
+import Cookies from 'js-cookie'
+import { REFRESH_TOKEN_KEY } from '@/constants/app.constant'
+import { localStorageUtils } from '@/utils/storage'
 
 export default function LoginTelegram() {
   const navigate = useNavigate()
@@ -16,11 +19,13 @@ export default function LoginTelegram() {
   const loginTelegramMutation = useLoginTelegramMutation(code ?? '')
 
   useEffect(() => {
+    Cookies.remove(REFRESH_TOKEN_KEY)
+    localStorageUtils.clearStorage()
+
     if (code) {
       loginTelegramMutation.mutate(undefined, {
         onSuccess: (response) => {
-          const { accessToken, refreshToken, isOnboarding, user } =
-            response.data.data
+          const { accessToken, refreshToken, isOnboarding, user } = response.data.data
 
           handleLoginSuccess({
             accessToken,
@@ -39,7 +44,7 @@ export default function LoginTelegram() {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="text-center">
-          <div className="mx-auto border-b-2 border-blue-600 rounded-full w-12 h-12 animate-spin"></div>
+          <div className="mx-auto border-blue-600 border-b-2 rounded-full w-12 h-12 animate-spin"></div>
           <p className="mt-4 text-gray-600">Đang xác thực...</p>
         </div>
       </div>
