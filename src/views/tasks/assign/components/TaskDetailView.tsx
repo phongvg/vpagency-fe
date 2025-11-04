@@ -165,6 +165,7 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
         isOpen={isProgressModalOpen}
         currentProgress={task.progress}
         taskName={task.name}
+        taskId={task.id}
         onClose={() => setIsProgressModalOpen(false)}
         onConfirm={handleUpdateProgress}
         isLoading={updateProgressMutation.isPending}

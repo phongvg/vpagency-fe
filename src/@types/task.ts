@@ -1,3 +1,5 @@
+import { AdsAccount } from '@/@types/adsAccount'
+import { AdsGroup } from '@/@types/adsGroup'
 import { CommonFilterRequest } from '@/@types/common'
 import { Project } from '@/@types/project'
 import { User } from '@/@types/user'
@@ -15,6 +17,8 @@ export type Task = {
   deadline: Date
   projectId: string
   project: Project
+  adsGroupId: string | null
+  adsGroup: AdsGroup | null
   numberOfCampaigns: number | null
   numberOfBackupCampaigns: number
   dailyBudget: number
@@ -42,4 +46,9 @@ export type TasksFilterRequest = CommonFilterRequest & {
   projectId?: string
   fromDate?: string
   toDate?: string
+}
+
+export type AdsGroupByTaskIdResponse = AdsGroup & {
+  manager: User | null
+  adsAccounts: AdsAccount[]
 }

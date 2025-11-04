@@ -1,9 +1,11 @@
+import { SelectOption } from '@/@types/common'
 import { Task } from '@/@types/task'
 import { User } from '@/@types/user'
 import { Button, DatePicker, FormItem, Input, Select, Textarea, UserSelect } from '@/components/ui'
 import { UserOption } from '@/components/ui/UserSelect/UserSelect'
 import { TaskFrequency, TaskPriority, TaskType, TaskTypeLabels, TaskPriorityLabels } from '@/enums/task.enum'
 import { setDeadlineTo1800 } from '@/helpers/date'
+import { apiGetAdsGroupList } from '@/services/AdsGroupService'
 import { apiGetProjectList } from '@/services/ProjectService'
 import { Form, Formik, FormikProps } from 'formik'
 import { useEffect, useRef, useState } from 'react'
@@ -18,6 +20,7 @@ interface TaskFormData {
   deadline: Date | null
   assignedUserIds: string[]
   projectId: string | null
+  adsGroupId: string | null
   note: string
   numberOfCampaigns?: number
   numberOfBackupCampaigns?: number
@@ -60,8 +63,10 @@ const priorityOptions = Object.values(TaskPriority).map((priority) => ({
 }))
 
 export default function TaskForm({ task, isEdit = false, loading = false, onSubmit, onCancel }: TaskFormProps) {
-  const [selectedUsers, setSelectedUsers] = useState<{ value: string; label: string; user: User }[]>([])
-  const [selectedProject, setSelectedProject] = useState<{ value: string; label: string } | null>(null)
+  const [selectedUsers, setSelectedUsers] = useState<UserOption[]>([])
+  const [selectedProject, setSelectedProject] = useState<SelectOption | null>(null)
+  const [selectedAdsGroup, setSelectedAdsGroup] = useState<SelectOption | null>(null)
+
   const formikRef = useRef<FormikProps<TaskFormData>>(null)
 
   const initialValues: TaskFormData = {
@@ -69,9 +74,10 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
     type: task?.type || null,
     frequency: task?.frequency || null,
     priority: task?.priority || null,
-    deadline: task?.deadline || null,
+    deadline: task?.deadline ? new Date(task.deadline) : null,
     assignedUserIds: task?.assignedUsers?.map((u) => u.id) || [],
     projectId: task?.project?.id || null,
+    adsGroupId: task?.adsGroup?.id || null,
     note: task?.note || '',
     numberOfCampaigns: task?.numberOfCampaigns || undefined,
     numberOfBackupCampaigns: task?.numberOfBackupCampaigns || undefined,
@@ -100,6 +106,15 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
     } else {
       setSelectedProject(null)
     }
+
+    if (task?.adsGroup) {
+      setSelectedAdsGroup({
+        value: task.adsGroup.id,
+        label: task.adsGroup.name,
+      })
+    } else {
+      setSelectedAdsGroup(null)
+    }
   }, [task])
 
   useEffect(() => {
@@ -107,6 +122,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
       formikRef.current.resetForm()
       setSelectedUsers([])
       setSelectedProject(null)
+      setSelectedAdsGroup(null)
     }
   }, [task])
 
@@ -116,6 +132,18 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
       return response.data.data.items.map((project) => ({
         value: project.id,
         label: project.name,
+      }))
+    } catch (error) {
+      return []
+    }
+  }
+
+  const fetchAdsGroupOptions = async (inputValue: string) => {
+    try {
+      const response = await apiGetAdsGroupList({ search: inputValue, page: 1, limit: 10 })
+      return response.data.data.items.map((group) => ({
+        value: group.id,
+        label: group.name,
       }))
     } catch (error) {
       return []
@@ -175,6 +203,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                     }
                   />
                 </FormItem>
+
                 <FormItem
                   asterisk
                   errorMessage={errors.priority}
@@ -210,6 +239,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                     }
                   />
                 </FormItem>
+
                 <FormItem
                   asterisk
                   errorMessage={errors.deadline as string}
@@ -226,25 +256,37 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                 </FormItem>
               </div>
 
-              <FormItem
-                asterisk
-                errorMessage={errors.projectId as string}
-                invalid={touched.projectId && Boolean(errors.projectId)}
-                label="Dự án"
-              >
-                <Select
-                  cacheOptions
-                  defaultOptions
-                  componentAs={AsyncSelect}
-                  loadOptions={fetchProjectOptions}
-                  placeholder="Chọn dự án..."
-                  value={selectedProject}
-                  onChange={(option: { value: string; label: string } | null) => {
-                    setSelectedProject(option)
-                    setFieldValue('projectId', option?.value || null)
-                  }}
-                />
-              </FormItem>
+              <div className="gap-4 grid grid-cols-2">
+                <FormItem label="Dự án">
+                  <Select
+                    cacheOptions
+                    defaultOptions
+                    componentAs={AsyncSelect}
+                    loadOptions={fetchProjectOptions}
+                    placeholder="Chọn dự án..."
+                    value={selectedProject}
+                    onChange={(option: { value: string; label: string } | null) => {
+                      setSelectedProject(option)
+                      setFieldValue('projectId', option?.value || null)
+                    }}
+                  />
+                </FormItem>
+
+                <FormItem label="Nhóm tài khoản Ads">
+                  <Select
+                    cacheOptions
+                    defaultOptions
+                    componentAs={AsyncSelect}
+                    loadOptions={fetchAdsGroupOptions}
+                    placeholder="Chọn nhóm tài khoản..."
+                    value={selectedAdsGroup}
+                    onChange={(option: { value: string; label: string } | null) => {
+                      setSelectedAdsGroup(option)
+                      setFieldValue('adsGroupId', option?.value || null)
+                    }}
+                  />
+                </FormItem>
+              </div>
 
               <FormItem
                 asterisk

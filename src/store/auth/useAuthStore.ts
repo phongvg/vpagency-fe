@@ -4,10 +4,7 @@ import { AuthState } from '@/store/auth/types'
 import { ACCESS_TOKEN_KEY } from '@/constants/app.constant'
 import { localStorageUtils } from '@/utils/storage'
 
-const tokenStorage =
-  typeof window !== 'undefined'
-    ? localStorageUtils.getItem(ACCESS_TOKEN_KEY)
-    : null
+const tokenStorage = typeof window !== 'undefined' ? localStorageUtils.getItem(ACCESS_TOKEN_KEY) : null
 
 const initialState = {
   isAuthenticated: !!tokenStorage,
@@ -16,7 +13,7 @@ const initialState = {
 }
 
 export const useAuthStore = create<AuthState>()(
-  devtools((set, get) => ({
+  devtools((set) => ({
     ...initialState,
 
     setSession: (token, user) => {
@@ -36,10 +33,7 @@ export const useAuthStore = create<AuthState>()(
     },
     updateUser: (user) => {
       set({
-        user: {
-          ...get().user,
-          ...user,
-        } as AuthState['user'],
+        user,
       })
     },
     clearSession: () => {

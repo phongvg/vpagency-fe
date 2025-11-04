@@ -47,13 +47,13 @@ const appsRoute: Routes = [
     key: 'taskAssign',
     path: urlConfig.taskAssign,
     component: lazy(() => import('@/views/tasks/assign')),
-    authority: [Role.ADMIN],
+    authority: [Role.ADMIN, Role.USER],
   },
   {
     key: 'adsAccounts',
     path: urlConfig.adsAccounts,
     component: lazy(() => import('@/views/adsAccounts')),
-    authority: [],
+    authority: [Role.ADMIN, Role.USER],
     meta: {
       header: 'Tài khoản Ads',
     },
@@ -62,7 +62,7 @@ const appsRoute: Routes = [
     key: 'adsAccountDetail',
     path: urlConfig.adsAccountDetail,
     component: lazy(() => import('@/views/adsAccounts/pages/adsAccountDetail')),
-    authority: [],
+    authority: [Role.ADMIN, Role.USER],
     meta: {
       header: 'Thông tin tài khoản Ads',
     },
@@ -71,7 +71,7 @@ const appsRoute: Routes = [
     key: 'adsGroups',
     path: urlConfig.adsGroups,
     component: lazy(() => import('@/views/adsGroups')),
-    authority: [Role.ADMIN],
+    authority: [Role.ADMIN, Role.USER],
     meta: {
       header: 'Nhóm tài khoản Ads',
     },

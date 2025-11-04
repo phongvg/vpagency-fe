@@ -10,7 +10,7 @@ import {
   apiGetDailyMetricList,
   apiUpdateDailyMetric,
 } from '@/services/AdsAccountDailyMetricService'
-import { GET_ADS_ACCOUNT_DAILY_METRICS, GET_ADS_ACCOUNT_DETAIL } from '@/utils/queryKey'
+import { GET_ADS_ACCOUNT_DAILY_METRICS, GET_ADS_ACCOUNT_DETAIL, GET_ADS_GROUP_BY_TASK_ID } from '@/utils/queryKey'
 import { toastError, toastSuccess } from '@/utils/toast'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
@@ -33,6 +33,7 @@ export const useCreateDailyMetricMutation = () => {
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: [GET_ADS_ACCOUNT_DAILY_METRICS] })
       queryClient.invalidateQueries({ queryKey: [GET_ADS_ACCOUNT_DETAIL] })
+      queryClient.invalidateQueries({ queryKey: [GET_ADS_GROUP_BY_TASK_ID] })
       toastSuccess(response.data.message)
     },
     onError: (error: ApiAxiosError) => {
@@ -50,6 +51,7 @@ export const useUpdateDailyMetricMutation = () => {
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: [GET_ADS_ACCOUNT_DAILY_METRICS] })
       queryClient.invalidateQueries({ queryKey: [GET_ADS_ACCOUNT_DETAIL] })
+      queryClient.invalidateQueries({ queryKey: [GET_ADS_GROUP_BY_TASK_ID] })
       toastSuccess(response.data.message)
     },
     onError: (error: ApiAxiosError) => {
@@ -66,6 +68,7 @@ export const useDeleteDailyMetricMutation = () => {
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: [GET_ADS_ACCOUNT_DAILY_METRICS] })
       queryClient.invalidateQueries({ queryKey: [GET_ADS_ACCOUNT_DETAIL] })
+      queryClient.invalidateQueries({ queryKey: [GET_ADS_GROUP_BY_TASK_ID] })
       toastSuccess(response.data.message)
     },
     onError: (error: ApiAxiosError) => {

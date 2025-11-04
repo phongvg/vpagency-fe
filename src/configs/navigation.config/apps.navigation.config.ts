@@ -39,7 +39,7 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [Role.ADMIN],
+            authority: [Role.ADMIN, Role.USER],
             subMenu: [],
           },
           {
@@ -70,7 +70,7 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [Role.ADMIN],
+            authority: [Role.ADMIN, Role.USER],
             subMenu: [],
           },
           {
@@ -80,7 +80,7 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [Role.ADMIN],
+            authority: [Role.ADMIN, Role.USER],
             subMenu: [],
           },
           {
@@ -90,7 +90,7 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [Role.ADMIN],
+            authority: [Role.ADMIN, Role.USER],
             subMenu: [],
           },
         ],

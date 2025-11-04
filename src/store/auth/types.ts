@@ -6,6 +6,6 @@ export type AuthState = {
   user: User | null
 
   setSession: (token: string | null, user: User | null) => void
-  updateUser: (user: Partial<User>) => void
+  updateUser: (user: User) => void
   clearSession: () => void
 }

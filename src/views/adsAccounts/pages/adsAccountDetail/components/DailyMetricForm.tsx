@@ -6,8 +6,6 @@ import {
   useCreateDailyMetricMutation,
   useUpdateDailyMetricMutation,
 } from '@/views/adsAccounts/pages/adsAccountDetail/hooks/useDailyMetricQueries'
-import { toastSuccess } from '@/utils/toast'
-import dayjs from 'dayjs'
 import { useMemo } from 'react'
 import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
