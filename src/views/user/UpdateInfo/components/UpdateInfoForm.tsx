@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Alert, Button, FormContainer, FormItem, Input, Upload, Avatar } from '@/components/ui'
+import { Button, FormContainer, FormItem, Input, Upload, Avatar } from '@/components/ui'
 import { Field, Form, Formik } from 'formik'
 import { PasswordInput } from '@/components/shared'
 import { UpdateUserInfoPayload } from '@/@types/user'

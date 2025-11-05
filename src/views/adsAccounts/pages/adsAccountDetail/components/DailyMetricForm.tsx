@@ -1,5 +1,5 @@
 import { Button, FormContainer, FormItem, Input } from '@/components/ui'
-import { Field, Form, Formik } from 'formik'
+import { Field, FieldProps, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { useDailyMetricStore } from '@/views/adsAccounts/pages/adsAccountDetail/store/useDailyMetricStore'
 import {
@@ -84,28 +84,25 @@ export default function DailyMetricForm({ adsAccountId, isOpen, onClose }: Daily
                   errorMessage={errors.clicks as string}
                 >
                   <Field name="clicks">
-                    {({ field }: any) => (
-                      <Input
-                        {...field}
-                        type="number"
+                    {({ field, form }: FieldProps) => (
+                      <FormCurrencyInput
+                        form={form}
+                        field={field}
                         placeholder="Nhập số lượt click"
-                        onChange={(e) => {
-                          const value = e.target.value
-                          setFieldValue('clicks', value ? Number(value) : 0)
-                        }}
+                        inputSuffix="click"
                       />
                     )}
                   </Field>
                 </FormItem>
 
                 <FormItem
-                  label="Chi tiêu (VND)"
+                  label="Số tiền đã tiêu"
                   invalid={touched.spent && Boolean(errors.spent)}
                   errorMessage={errors.spent as string}
                 >
                   <Field name="spent">
-                    {({ field, form }: any) => (
-                      <FormCurrencyInput form={form} field={field} placeholder="Nhập số tiền chi tiêu" />
+                    {({ field, form }: FieldProps) => (
+                      <FormCurrencyInput form={form} field={field} placeholder="Nhập số tiền đã tiêu" />
                     )}
                   </Field>
                 </FormItem>
@@ -116,7 +113,7 @@ export default function DailyMetricForm({ adsAccountId, isOpen, onClose }: Daily
                   Hủy
                 </Button>
                 <Button variant="solid" type="submit" loading={isSubmitting}>
-                  {isEdit ? 'Cập nhật' : 'Thêm mới'}
+                  Lưu
                 </Button>
               </div>
             </FormContainer>

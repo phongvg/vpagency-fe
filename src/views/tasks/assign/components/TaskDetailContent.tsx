@@ -2,7 +2,6 @@ import { ConfirmDialog } from '@/components/ui'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { useDeleteTask, useGetTaskDetail } from '@/views/tasks/assign/hooks/useTaskQueries'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
-import { toastError, toastSuccess } from '@/utils/toast'
 import TaskDetailView from './TaskDetailView'
 import { Loading } from '@/components/shared'
 

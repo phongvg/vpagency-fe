@@ -55,3 +55,10 @@ export const TaskStatusLabels: Record<TaskStatus, string> = {
   [TaskStatus.COMPLETED]: 'Hoàn thành',
   [TaskStatus.CANCELLED]: 'Đã hủy',
 }
+
+export const TaskStatusColors: Record<TaskStatus, string> = {
+  [TaskStatus.PENDING]: 'gray-500',
+  [TaskStatus.IN_PROGRESS]: 'yellow-500',
+  [TaskStatus.COMPLETED]: 'green-500',
+  [TaskStatus.CANCELLED]: 'red-500',
+}

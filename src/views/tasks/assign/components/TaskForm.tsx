@@ -42,7 +42,6 @@ const validationSchema = Yup.object().shape({
   type: Yup.string().required('Loại công việc là bắt buộc'),
   frequency: Yup.string().required('Tần suất là bắt buộc'),
   priority: Yup.string().required('Độ ưu tiên là bắt buộc'),
-  projectId: Yup.string().required('Dự án là bắt buộc'),
   deadline: Yup.date().required('Deadline là bắt buộc'),
   assignedUserIds: Yup.array().min(1, 'Phải chọn ít nhất một người nhận việc'),
 })

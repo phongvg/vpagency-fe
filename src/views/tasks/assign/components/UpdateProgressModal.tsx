@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react'
-import { Button, Dialog, Input, Spinner, Badge, Avatar } from '@/components/ui'
-import { HiOutlineCheckCircle, HiOutlinePlusCircle } from 'react-icons/hi'
+import { Button, Dialog, Input, Spinner, Badge, Avatar, Tooltip } from '@/components/ui'
+import { HiCheckCircle, HiOutlineCheckCircle, HiOutlinePencilAlt, HiOutlinePlusCircle, HiXCircle } from 'react-icons/hi'
 import { AdsAccount } from '@/@types/adsAccount'
 import { AdsAccountStatusLabels, AdsAccountStatusColors } from '@/enums/adsAccount.enum'
 import { DataTable } from '@/components/shared'
@@ -107,6 +107,11 @@ export default function UpdateProgressModal({
     setSelectedAdsAccountId(null)
   }
 
+  const calculateAdsAccountWithDailyMetric = useMemo(
+    () => adsAccounts.filter((account) => account.todayMetric && account.todayMetric.hasMetricToday).length,
+    [adsAccounts],
+  )
+
   const columns: ColumnDef<AdsAccount>[] = useMemo(
     () => [
       {
@@ -120,6 +125,14 @@ export default function UpdateProgressModal({
       {
         header: 'UUID',
         accessorKey: 'uuid',
+      },
+      {
+        header: 'Người quản lý',
+        accessorKey: 'manager',
+        cell: (props) => {
+          const row = props.row.original
+          return <ManagerColumn row={row} />
+        },
       },
       {
         header: 'Trạng thái',
@@ -137,19 +150,39 @@ export default function UpdateProgressModal({
         },
       },
       {
-        header: 'Người quản lý',
-        accessorKey: 'manager',
-        cell: (props) => {
-          const row = props.row.original
-          return <ManagerColumn row={row} />
-        },
-      },
-      {
-        header: 'Tổng chi tiêu',
+        header: 'Số tiền đã tiêu',
         accessorKey: 'totalSpent',
         cell: (props) => {
           const row = props.row.original
           return <span>{formatVietnameseMoney(row.totalSpent)}</span>
+        },
+      },
+      {
+        header: 'CPC',
+        accessorKey: 'todayMetric.cpc',
+        cell: (props) => {
+          const row = props.row.original
+          return <span>{formatVietnameseMoney(row.todayMetric?.cpc)}</span>
+        },
+      },
+      {
+        header: '',
+        accessorKey: 'hasMetricToday',
+        cell: (props) => {
+          const row = props.row.original
+          return (
+            <div>
+              {row.todayMetric?.hasMetricToday ? (
+                <Tooltip title="Đã cập nhật chỉ số hôm nay">
+                  <HiCheckCircle size={20} className="text-green-500" />
+                </Tooltip>
+              ) : (
+                <Tooltip title="Chưa cập nhật chỉ số hôm nay">
+                  <HiXCircle size={20} className="text-red-500" />
+                </Tooltip>
+              )}
+            </div>
+          )
         },
       },
       {
@@ -164,8 +197,8 @@ export default function UpdateProgressModal({
                 onClick={() => handleOpenDailyMetricDialog(row.id)}
                 className="flex items-center gap-2 hover:text-indigo-600 transition-colors"
               >
-                <HiOutlinePlusCircle size={20} />
-                Thêm chỉ số
+                {row.todayMetric?.hasMetricToday ? <HiOutlinePencilAlt size={20} /> : <HiOutlinePlusCircle size={20} />}
+                {row.todayMetric?.hasMetricToday ? 'Cập nhật' : 'Thêm chỉ số'}
               </button>
             </div>
           )
@@ -222,7 +255,12 @@ export default function UpdateProgressModal({
           <div className="mb-6">
             <div className="flex justify-between items-center mb-3">
               <h4 className="font-semibold text-gray-900 text-md">Nhóm quảng cáo: {adsGroup.name}</h4>
-              <span className="text-gray-500 text-sm">{adsAccounts.length} tài khoản</span>
+              <p className="text-sm">
+                Tổng quan:{' '}
+                <span className="font-bold">
+                  {calculateAdsAccountWithDailyMetric}/{adsAccounts.length} tài khoản đã cập nhật hôm nay
+                </span>
+              </p>
             </div>
 
             {isLoadingAdsGroup ? (
@@ -262,7 +300,7 @@ export default function UpdateProgressModal({
           onClose={handleCloseDailyMetricDialog}
           onRequestClose={handleCloseDailyMetricDialog}
         >
-          <h5 className="mb-4">Thêm chỉ số hàng ngày</h5>
+          <h5 className="mb-4">Cập nhật chỉ số hàng ngày</h5>
           <DailyMetricForm
             adsAccountId={selectedAdsAccountId}
             isOpen={isDailyMetricDialogOpen}

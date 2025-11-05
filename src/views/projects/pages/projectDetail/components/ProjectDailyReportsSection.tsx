@@ -26,7 +26,7 @@ export default function ProjectDailyReportsSection({ projectId }: ProjectDailyRe
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <h4 className="font-bold text-lg">📊 Báo cáo hàng ngày</h4>
+        <h4 className="font-bold text-lg">Báo cáo hàng ngày</h4>
       </div>
 
       <ProjectDailyReportStatistics reports={getReportsResponse?.items ?? []} />

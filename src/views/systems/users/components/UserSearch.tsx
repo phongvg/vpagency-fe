@@ -1,8 +1,7 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Input } from '@/components/ui'
 import { HiOutlineSearch } from 'react-icons/hi'
 import { useUserStore } from '@/views/systems/users/store/useUserStore'
-import { debounce } from 'lodash'
 import { useDebounce } from '@/hooks/useDebounce'
 
 export default function UserSearch() {

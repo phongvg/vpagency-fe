@@ -16,7 +16,7 @@ export default function DailyMetricFormDialog({ adsAccountId }: DailyMetricFormD
 
   return (
     <Dialog isOpen={dialogOpen} width={600} onClose={onDialogClose} onRequestClose={onDialogClose}>
-      <h5 className="mb-4">{selectedMetric ? 'Cập nhật chỉ số hàng ngày' : 'Thêm chỉ số hàng ngày'}</h5>
+      <h5 className="mb-4">Cập nhật chỉ số hàng ngày</h5>
       <DailyMetricForm adsAccountId={adsAccountId} onClose={onDialogClose} />
     </Dialog>
   )

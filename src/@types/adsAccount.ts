@@ -18,4 +18,13 @@ export type AdsAccount = {
   totalSpent?: number | null
   createdAt: Date
   updatedAt: Date
+  todayMetric?: TodayMetric | null
+}
+
+export interface TodayMetric {
+  cpc: number
+  clicks: number
+  spent: number
+  updatedAt: Date
+  hasMetricToday: boolean
 }

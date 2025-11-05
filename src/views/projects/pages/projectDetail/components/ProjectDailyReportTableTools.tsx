@@ -1,5 +1,4 @@
-import { Button, DatePicker } from '@/components/ui'
-import { HiOutlinePlus } from 'react-icons/hi'
+import { DatePicker } from '@/components/ui'
 import { useProjectDailyReportStore } from '@/views/projects/pages/projectDetail/store/useProjectDailyReportStore'
 import dayjs from 'dayjs'
 
@@ -50,10 +49,6 @@ export default function ProjectDailyReportTableTools() {
           />
         </div>
       </div>
-
-      <Button variant="solid" size="sm" icon={<HiOutlinePlus />} onClick={handleAddNew}>
-        Thêm báo cáo
-      </Button>
     </div>
   )
 }

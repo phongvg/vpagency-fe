@@ -31,7 +31,7 @@ export default function TaskOverview({ data }: Props) {
   return (
     <Card>
       <div className="flex sm:flex-row flex-col justify-between md:items-center gap-4 mb-6">
-        <h4>Tổng quan</h4>
+        <h4>Tổng quan công việc 7 ngày gần nhất</h4>
       </div>
       {!isEmpty(data) && data && (
         <>
@@ -40,8 +40,9 @@ export default function TaskOverview({ data }: Props) {
               <ChartLegend showBadge={false} label="Công việc" value={data.total} />
             </div>
             <div className="flex gap-x-6">
-              <ChartLegend badgeClass="bg-indigo-600" label={data.series[0].name} value={data.onGoing} />
+              <ChartLegend badgeClass="bg-yellow-500" label={data.series[0].name} value={data.onGoing} />
               <ChartLegend badgeClass="bg-emerald-500" label={data.series[1].name} value={data.finished} />
+              <ChartLegend badgeClass="bg-red-500" label={data.series[2].name} value={data.delayed} />
             </div>
           </div>
           <div>
@@ -50,7 +51,7 @@ export default function TaskOverview({ data }: Props) {
               xAxis={data.range}
               type="bar"
               customOptions={{
-                colors: [COLORS[0], COLORS[2]],
+                colors: [COLORS[0], COLORS[1], COLORS[2]],
                 legend: { show: false },
               }}
             />

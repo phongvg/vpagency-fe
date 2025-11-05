@@ -14,6 +14,7 @@ import { toastError, toastSuccess } from '@/utils/toast'
 import { HiOutlinePlus, HiOutlineTrash } from 'react-icons/hi'
 import { AdsAccountStatus } from '@/enums/adsAccount.enum'
 import { SelectOption } from '@/@types/common'
+import { CreateAdsAccountRequest, UpdateAdsAccountRequest } from '@/views/adsAccounts/types'
 
 const accountValidationSchema = Yup.object().shape({
   uuid: Yup.string().required('Vui lòng nhập UUID'),
@@ -148,16 +149,6 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
         } catch {
           failCount++
         }
-      }
-
-      if (successCount > 0) {
-        toastSuccess(
-          `Tạo thành công ${successCount} tài khoản${failCount > 0 ? `, ${failCount} tài khoản thất bại` : ''}`,
-        )
-      }
-
-      if (failCount > 0 && successCount === 0) {
-        toastError('Tạo tài khoản Ads thất bại')
       }
     }
 

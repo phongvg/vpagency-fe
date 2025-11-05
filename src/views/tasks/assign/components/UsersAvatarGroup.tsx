@@ -15,15 +15,7 @@ interface UsersAvatarGroupProps extends AvatarGroupProps {
 }
 
 const UsersAvatarGroup = (props: UsersAvatarGroupProps) => {
-  const {
-    avatarGroupProps = {},
-    avatarProps = {},
-    imgKey = 'img',
-    nameKey = 'name',
-    onAvatarClick,
-    users = [],
-    ...rest
-  } = props
+  const { avatarGroupProps = {}, avatarProps = {}, onAvatarClick, users = [], ...rest } = props
 
   const defaultAvatarProps = useMemo(() => {
     return {

@@ -7,11 +7,12 @@ import { Suspense } from 'react'
 import { useGetTasksWithFilters, useGetTaskDetail } from '@/views/tasks/assign/hooks/useTaskQueries'
 import { useQueryParam } from '@/hooks/useQueryParam'
 import { useNavigate } from 'react-router-dom'
+import { Pagination } from '@/components/ui'
 
 export default function TaskSplitView() {
   const id = useQueryParam('id')
   const navigate = useNavigate()
-  const { selectedTask, setSelectedTask } = useBoardStore()
+  const { selectedTask, setSelectedTask, filters, setFilters } = useBoardStore()
   const { data: taskList } = useGetTasksWithFilters(true)
   const { data: taskDetail, isFetching: isLoadingTask } = useGetTaskDetail(id, true)
 
@@ -31,13 +32,23 @@ export default function TaskSplitView() {
     navigate(`?id=${task.id}`)
   }
 
+  const handlePageChange = (page: number) => {
+    setFilters({ ...filters, page })
+  }
+
   return (
     <div className="grid grid-cols-3 h-full">
       <div className="flex flex-col col-span-1 border-gray-200 border-r">
         <TaskListPanel
-          tasks={taskList ?? []}
+          tasks={taskList?.items ?? []}
           selectedTaskId={selectedTask?.id ?? null}
           onTaskSelect={handleTaskSelect}
+          pagination={{
+            total: taskList?.meta?.total ?? 0,
+            currentPage: taskList?.meta?.page ?? 1,
+            pageSize: taskList?.meta?.limit ?? 10,
+            onPageChange: handlePageChange,
+          }}
         />
       </div>
 
@@ -73,9 +84,17 @@ interface TaskListPanelProps {
   tasks: Task[]
   selectedTaskId: string | null
   onTaskSelect: (task: Task) => void
+  pagination: {
+    total: number
+    currentPage: number
+    pageSize: number
+    onPageChange: (page: number) => void
+  }
 }
 
-function TaskListPanel({ tasks, selectedTaskId, onTaskSelect }: TaskListPanelProps) {
+function TaskListPanel({ tasks, selectedTaskId, onTaskSelect, pagination }: TaskListPanelProps) {
+  const { total, currentPage, pageSize, onPageChange } = pagination
+
   if (!tasks || tasks.length === 0) {
     return (
       <div className="flex justify-center items-center h-full text-gray-500">
@@ -87,7 +106,7 @@ function TaskListPanel({ tasks, selectedTaskId, onTaskSelect }: TaskListPanelPro
   return (
     <div className="flex flex-col h-full">
       <div className="bg-gray-50 p-4 border-gray-200 border-b">
-        <h5>Danh sách công việc ({tasks.length})</h5>
+        <h5>Danh sách công việc ({total})</h5>
       </div>
 
       <div className="flex-1 overflow-y-auto">
@@ -100,6 +119,12 @@ function TaskListPanel({ tasks, selectedTaskId, onTaskSelect }: TaskListPanelPro
           />
         ))}
       </div>
+
+      {total > pageSize && (
+        <div className="bg-white p-4 border-gray-200 border-t">
+          <Pagination total={total} currentPage={currentPage} pageSize={pageSize} onChange={onPageChange} />
+        </div>
+      )}
     </div>
   )
 }
