@@ -8,6 +8,8 @@ import UpdateProgressModal from './UpdateProgressModal'
 import { useUpdateTaskProgress } from '@/views/tasks/assign/hooks/useTaskQueries'
 import { getPriorityColor, getStatusColor } from '@/constants/task.constant'
 import { formatDate } from '@/helpers/formatDate'
+import { useAuthStore } from '@/store/auth/useAuthStore'
+import { isAdminOrManager } from '@/utils/checkRole'
 
 interface TaskDetailViewProps {
   task: Task
@@ -17,6 +19,8 @@ interface TaskDetailViewProps {
 
 export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailViewProps) {
   const { closeDialog } = useBoardStore()
+  const { user } = useAuthStore()
+
   const [isProgressModalOpen, setIsProgressModalOpen] = useState(false)
   const updateProgressMutation = useUpdateTaskProgress()
 
@@ -151,14 +155,19 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
         <Button size="sm" variant="default" onClick={closeDialog}>
           Đóng
         </Button>
-        <div className="flex gap-2">
-          <Button size="sm" variant="twoTone" onClick={onDelete}>
-            Xóa
-          </Button>
-          <Button size="sm" variant="solid" onClick={onEdit}>
-            Chỉnh sửa
-          </Button>
-        </div>
+
+        {isAdminOrManager(user?.roles) && (
+          <>
+            <div className="flex gap-2">
+              <Button size="sm" variant="twoTone" onClick={onDelete}>
+                Xóa
+              </Button>
+              <Button size="sm" variant="solid" onClick={onEdit}>
+                Chỉnh sửa
+              </Button>
+            </div>
+          </>
+        )}
       </div>
 
       <UpdateProgressModal

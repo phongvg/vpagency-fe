@@ -14,7 +14,7 @@ const appsRoute: Routes = [
     key: 'dashboard',
     path: urlConfig.dashboard,
     component: lazy(() => import('@/views/dashboard')),
-    authority: [Role.ADMIN],
+    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY],
   },
   {
     key: 'users',
@@ -47,13 +47,13 @@ const appsRoute: Routes = [
     key: 'taskAssign',
     path: urlConfig.taskAssign,
     component: lazy(() => import('@/views/tasks/assign')),
-    authority: [Role.ADMIN, Role.USER],
+    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY],
   },
   {
     key: 'adsAccounts',
     path: urlConfig.adsAccounts,
     component: lazy(() => import('@/views/adsAccounts')),
-    authority: [Role.ADMIN, Role.USER],
+    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY],
     meta: {
       header: 'Tài khoản Ads',
     },
@@ -62,7 +62,7 @@ const appsRoute: Routes = [
     key: 'adsAccountDetail',
     path: urlConfig.adsAccountDetail,
     component: lazy(() => import('@/views/adsAccounts/pages/adsAccountDetail')),
-    authority: [Role.ADMIN, Role.USER],
+    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY],
     meta: {
       header: 'Thông tin tài khoản Ads',
     },
@@ -71,7 +71,7 @@ const appsRoute: Routes = [
     key: 'adsGroups',
     path: urlConfig.adsGroups,
     component: lazy(() => import('@/views/adsGroups')),
-    authority: [Role.ADMIN, Role.USER],
+    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY],
     meta: {
       header: 'Nhóm tài khoản Ads',
     },
@@ -80,7 +80,7 @@ const appsRoute: Routes = [
     key: 'adsGroupDetail',
     path: urlConfig.adsGroupDetail,
     component: lazy(() => import('@/views/adsGroups/pages/adsGroupDetail')),
-    authority: [Role.ADMIN],
+    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY],
     meta: {
       header: 'Thông tin nhóm tài khoản Ads',
     },
@@ -89,7 +89,7 @@ const appsRoute: Routes = [
     key: 'projects',
     path: urlConfig.projects,
     component: lazy(() => import('@/views/projects')),
-    authority: [],
+    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY],
     meta: {
       header: 'Dự án',
     },
@@ -98,7 +98,7 @@ const appsRoute: Routes = [
     key: 'projectDetail',
     path: urlConfig.projectDetail,
     component: lazy(() => import('@/views/projects/pages/projectDetail')),
-    authority: [],
+    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY],
     meta: {
       header: 'Thông tin Dự án',
     },

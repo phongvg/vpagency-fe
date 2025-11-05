@@ -52,6 +52,10 @@ BaseService.interceptors.response.use(
       _retry?: boolean
     }
 
+    if (error.response?.status === HttpStatusCode.Forbidden) {
+      window.location.href = urlConfig.accessDenied
+    }
+
     if (error.response?.status === HttpStatusCode.Unauthorized && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {

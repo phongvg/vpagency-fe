@@ -1,16 +1,12 @@
 import { useEffect, useState, useMemo } from 'react'
 import { Button, Dialog, Input, Spinner, Badge, Avatar } from '@/components/ui'
-import { HiOutlineCheckCircle, HiOutlinePencilAlt } from 'react-icons/hi'
-import { useQuery } from '@tanstack/react-query'
-import { apiGetAdsGroupByTaskId } from '@/services/TaskService'
+import { HiOutlineCheckCircle, HiOutlinePlusCircle } from 'react-icons/hi'
 import { AdsAccount } from '@/@types/adsAccount'
 import { AdsAccountStatusLabels, AdsAccountStatusColors } from '@/enums/adsAccount.enum'
 import { DataTable } from '@/components/shared'
 import { ColumnDef } from '@tanstack/react-table'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
-import { formatDate } from '@/helpers/formatDate'
 import DailyMetricForm from '@/views/adsAccounts/pages/adsAccountDetail/components/DailyMetricForm'
-import { GET_ADS_GROUP_BY_TASK_ID } from '@/utils/queryKey'
 import { useGetAdsGroupByTaskId } from '@/views/tasks/assign/hooks/useTaskQueries'
 
 const ManagerColumn = ({ row }: { row: AdsAccount }) => {
@@ -157,14 +153,6 @@ export default function UpdateProgressModal({
         },
       },
       {
-        header: 'Ngày tạo',
-        accessorKey: 'createdAt',
-        cell: (props) => {
-          const row = props.row.original
-          return <span>{formatDate(row.createdAt)}</span>
-        },
-      },
-      {
         header: '',
         accessorKey: 'action',
         cell: (props) => {
@@ -174,10 +162,10 @@ export default function UpdateProgressModal({
               <button
                 type="button"
                 onClick={() => handleOpenDailyMetricDialog(row.id)}
-                className="hover:text-indigo-600 transition-colors"
-                title="Nhập chỉ số hàng ngày"
+                className="flex items-center gap-2 hover:text-indigo-600 transition-colors"
               >
-                <HiOutlinePencilAlt size={20} />
+                <HiOutlinePlusCircle size={20} />
+                Thêm chỉ số
               </button>
             </div>
           )

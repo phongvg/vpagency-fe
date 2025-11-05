@@ -26,6 +26,8 @@ import { useState } from 'react'
 import { ProjectTypeLabels } from '@/enums/project.enum'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 import { formatDate } from '@/helpers/formatDate'
+import { useAuthStore } from '@/store/auth/useAuthStore'
+import { isAdminOrManager } from '@/utils/checkRole'
 
 interface TaskDetailPanelProps {
   inSplitView?: boolean
@@ -135,16 +137,22 @@ interface TaskHeaderPanelProps extends TaskPanelProps {
 }
 
 function TaskHeaderPanel({ task, onEdit, onUpdateProgress, onDelete }: TaskHeaderPanelProps) {
+  const { user } = useAuthStore()
+
   return (
     <header className="mb-10">
       <h1 className="mb-2 font-semibold text-[24px]">{task.name}</h1>
       <div className="flex items-center gap-2">
-        <Button variant="default" size="xs" icon={<HiOutlinePencilAlt />} onClick={onEdit}>
-          Chỉnh sửa
-        </Button>
-        <Button variant="default" size="xs" icon={<HiOutlineTrash />} onClick={onDelete}>
-          Xóa
-        </Button>
+        {isAdminOrManager(user?.roles) && (
+          <>
+            <Button variant="default" size="xs" icon={<HiOutlinePencilAlt />} onClick={onEdit}>
+              Chỉnh sửa
+            </Button>
+            <Button variant="default" size="xs" icon={<HiOutlineTrash />} onClick={onDelete}>
+              Xóa
+            </Button>
+          </>
+        )}
         <Button variant="default" size="xs" onClick={onUpdateProgress}>
           Cập nhật tiến độ
         </Button>

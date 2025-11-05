@@ -52,3 +52,17 @@ export type AdsGroupByTaskIdResponse = AdsGroup & {
   manager: User | null
   adsAccounts: AdsAccount[]
 }
+
+export interface TaskStatisticResponse {
+  onGoing: number
+  finished: number
+  delayed: number
+  total: number
+  series: Series[]
+  range: string[]
+}
+
+export interface Series {
+  name: string
+  data: number[]
+}

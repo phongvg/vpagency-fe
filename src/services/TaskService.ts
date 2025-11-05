@@ -1,5 +1,11 @@
 import { BaseListResponse, BaseResponse } from '@/@types/common'
-import { Task, TasksGroupedByStatus, TasksFilterRequest, AdsGroupByTaskIdResponse } from '@/@types/task'
+import {
+  Task,
+  TasksGroupedByStatus,
+  TasksFilterRequest,
+  AdsGroupByTaskIdResponse,
+  TaskStatisticResponse,
+} from '@/@types/task'
 import ApiService from '@/services/ApiService'
 
 export async function apiGetTasks(params: TasksFilterRequest) {
@@ -66,6 +72,13 @@ export async function apiUpdateTaskProgress(taskId: string, progress: number) {
 export async function apiGetAdsGroupByTaskId(taskId: string) {
   return ApiService.fetchData<BaseResponse<AdsGroupByTaskIdResponse>>({
     url: `/tasks/${taskId}/ads-group`,
+    method: 'get',
+  })
+}
+
+export async function apiGetUserTaskStats() {
+  return ApiService.fetchData<BaseResponse<TaskStatisticResponse>>({
+    url: '/tasks/stats/user',
     method: 'get',
   })
 }
