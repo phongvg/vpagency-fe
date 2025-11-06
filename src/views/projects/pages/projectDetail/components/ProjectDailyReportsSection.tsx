@@ -36,7 +36,7 @@ export default function ProjectDailyReportsSection({ projectId }: ProjectDailyRe
         <ProjectDailyReportTable projectId={projectId} />
       </Card>
 
-      <ProjectDailyReportFormDialog projectId={projectId} />
+      <ProjectDailyReportFormDialog />
     </div>
   )
 }

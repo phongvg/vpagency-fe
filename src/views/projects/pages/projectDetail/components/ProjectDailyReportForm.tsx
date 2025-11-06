@@ -1,5 +1,5 @@
 import { Button, FormContainer, FormItem, Input, DatePicker } from '@/components/ui'
-import { Field, Form, Formik } from 'formik'
+import { Field, FieldProps, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { useProjectDailyReportStore } from '@/views/projects/pages/projectDetail/store/useProjectDailyReportStore'
 import {
@@ -8,15 +8,15 @@ import {
 } from '@/views/projects/pages/projectDetail/hooks/useProjectDailyReportQueries'
 import { toastSuccess } from '@/utils/toast'
 import dayjs from 'dayjs'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
-import UserSelect from '@/components/ui/UserSelect/UserSelect'
+import UserSelect, { UserOption } from '@/components/ui/UserSelect/UserSelect'
 import 'dayjs/locale/vi'
 
 const validationSchema = Yup.object().shape({
   date: Yup.date().required('Vui lòng chọn ngày'),
   totalSpent: Yup.number().min(0, 'Chi tiêu phải >= 0'),
-  totalClicks: Yup.number().min(0, 'Clicks phải >= 0'),
+  totalClicks: Yup.number().min(0, 'Lượt click phải >= 0'),
   totalCpc: Yup.number().min(0, 'CPC phải >= 0'),
   highestCpc: Yup.number().min(0, 'CPC cao nhất phải >= 0'),
   totalRef: Yup.number().min(0, 'REF phải >= 0'),
@@ -26,14 +26,15 @@ const validationSchema = Yup.object().shape({
 })
 
 type ProjectDailyReportFormProps = {
-  projectId: string
   onClose: () => void
 }
 
-export default function ProjectDailyReportForm({ projectId, onClose }: ProjectDailyReportFormProps) {
+export default function ProjectDailyReportForm({ onClose }: ProjectDailyReportFormProps) {
   const { selectedReport } = useProjectDailyReportStore()
-  const createMutation = useCreateProjectDailyReportMutation()
+
   const updateMutation = useUpdateProjectDailyReportMutation()
+
+  const [runnerSelected, setRunnerSelected] = useState<UserOption | null>(null)
 
   const isEdit = !!selectedReport
 
@@ -69,29 +70,23 @@ export default function ProjectDailyReportForm({ projectId, onClose }: ProjectDa
     [isEdit, selectedReport],
   )
 
+  useEffect(() => {
+    if (isEdit && selectedReport && selectedReport.runner) {
+      setRunnerSelected({
+        value: selectedReport.runner.id,
+        label: `${selectedReport.runner.firstName || ''} ${selectedReport.runner.lastName || ''} (${
+          selectedReport.runner.username
+        })`.trim(),
+        user: selectedReport.runner,
+      })
+    }
+  }, [isEdit, selectedReport])
+
   const handleSubmit = async (values: any) => {
-    try {
-      if (isEdit && selectedReport) {
-        await updateMutation.mutateAsync({
-          id: selectedReport.id,
-          payload: {
-            date: dayjs(values.date).format('YYYY-MM-DD'),
-            runnerId: values.runnerId || undefined,
-            linkDeployed: values.linkDeployed || undefined,
-            totalSpent: Number(values.totalSpent),
-            totalClicks: Number(values.totalClicks),
-            totalCpc: Number(values.totalCpc),
-            highestCpc: Number(values.highestCpc),
-            totalRef: Number(values.totalRef),
-            costPerRef: Number(values.costPerRef),
-            totalFtd: Number(values.totalFtd),
-            costPerFtd: Number(values.costPerFtd),
-          },
-        })
-        toastSuccess('Cập nhật báo cáo thành công')
-      } else {
-        await createMutation.mutateAsync({
-          projectId,
+    if (isEdit && selectedReport) {
+      await updateMutation.mutateAsync({
+        id: selectedReport.id,
+        payload: {
           date: dayjs(values.date).format('YYYY-MM-DD'),
           runnerId: values.runnerId || undefined,
           linkDeployed: values.linkDeployed || undefined,
@@ -103,13 +98,11 @@ export default function ProjectDailyReportForm({ projectId, onClose }: ProjectDa
           costPerRef: Number(values.costPerRef),
           totalFtd: Number(values.totalFtd),
           costPerFtd: Number(values.costPerFtd),
-        })
-        toastSuccess('Thêm báo cáo thành công')
-      }
-      onClose()
-    } catch {
-      // Error handled by mutation
+        },
+      })
     }
+
+    onClose()
   }
 
   return (
@@ -130,7 +123,7 @@ export default function ProjectDailyReportForm({ projectId, onClose }: ProjectDa
                   errorMessage={errors.date as string}
                 >
                   <Field name="date">
-                    {({ field }: any) => (
+                    {({ field }: FieldProps) => (
                       <DatePicker
                         {...field}
                         value={field.value}
@@ -144,30 +137,32 @@ export default function ProjectDailyReportForm({ projectId, onClose }: ProjectDa
                 </FormItem>
 
                 <FormItem label="Người chạy">
-                  <Field name="runnerId">
-                    {({ field }: any) => (
-                      <UserSelect
-                        value={field.value}
-                        onChange={(option) => setFieldValue('runnerId', option?.value)}
-                        placeholder="Chọn người chạy"
-                      />
-                    )}
-                  </Field>
+                  <UserSelect
+                    value={runnerSelected}
+                    onChange={(option) => {
+                      setRunnerSelected(option)
+                      setFieldValue('runnerId', option ? option.value : undefined)
+                    }}
+                    placeholder="Chọn người chạy"
+                    isClearable
+                  />
                 </FormItem>
               </div>
 
               <FormItem label="Link đã triển khai">
-                <Field name="linkDeployed">{({ field }: any) => <Input {...field} placeholder="Nhập link" />}</Field>
+                <Field name="linkDeployed">
+                  {({ field }: FieldProps) => <Input {...field} placeholder="Nhập link" />}
+                </Field>
               </FormItem>
 
-              <div className="gap-4 grid grid-cols-3">
+              <div className="gap-4 grid grid-cols-2">
                 <FormItem
                   label="Tổng chi tiêu"
                   invalid={touched.totalSpent && Boolean(errors.totalSpent)}
                   errorMessage={errors.totalSpent as string}
                 >
                   <Field name="totalSpent">
-                    {({ field, form }: any) => <FormCurrencyInput form={form} field={field} placeholder="0" />}
+                    {({ field, form }: FieldProps) => <FormCurrencyInput form={form} field={field} placeholder="0" />}
                   </Field>
                 </FormItem>
 
@@ -177,7 +172,7 @@ export default function ProjectDailyReportForm({ projectId, onClose }: ProjectDa
                   errorMessage={errors.totalClicks as string}
                 >
                   <Field name="totalClicks">
-                    {({ field }: any) => (
+                    {({ field }: FieldProps) => (
                       <Input
                         {...field}
                         type="number"
@@ -194,19 +189,29 @@ export default function ProjectDailyReportForm({ projectId, onClose }: ProjectDa
                   errorMessage={errors.totalCpc as string}
                 >
                   <Field name="totalCpc">
-                    {({ field, form }: any) => <FormCurrencyInput form={form} field={field} placeholder="0" />}
+                    {({ field, form }: FieldProps) => <FormCurrencyInput form={form} field={field} placeholder="0" />}
                   </Field>
                 </FormItem>
-              </div>
 
-              <div className="gap-4 grid grid-cols-2">
                 <FormItem
                   label="CPC cao nhất"
                   invalid={touched.highestCpc && Boolean(errors.highestCpc)}
                   errorMessage={errors.highestCpc as string}
                 >
                   <Field name="highestCpc">
-                    {({ field, form }: any) => <FormCurrencyInput form={form} field={field} placeholder="0" />}
+                    {({ field, form }: FieldProps) => <FormCurrencyInput form={form} field={field} placeholder="0" />}
+                  </Field>
+                </FormItem>
+
+                <FormItem
+                  label="Chi phí/REF"
+                  invalid={touched.costPerRef && Boolean(errors.costPerRef)}
+                  errorMessage={errors.costPerRef as string}
+                >
+                  <Field name="costPerRef">
+                    {({ field, form }: FieldProps) => (
+                      <FormCurrencyInput form={form} field={field} placeholder="Nhập chi phí/REF" inputSuffix="" />
+                    )}
                   </Field>
                 </FormItem>
 
@@ -216,21 +221,21 @@ export default function ProjectDailyReportForm({ projectId, onClose }: ProjectDa
                   errorMessage={errors.totalRef as string}
                 >
                   <Field name="totalRef">
-                    {({ field, form }: any) => (
-                      <FormCurrencyInput form={form} field={field} placeholder="0" inputSuffix="" />
+                    {({ field, form }: FieldProps) => (
+                      <FormCurrencyInput form={form} field={field} placeholder="Nhập tổng REF" inputSuffix="" />
                     )}
                   </Field>
                 </FormItem>
-              </div>
 
-              <div className="gap-4 grid grid-cols-2">
                 <FormItem
-                  label="Chi phí/REF"
-                  invalid={touched.costPerRef && Boolean(errors.costPerRef)}
-                  errorMessage={errors.costPerRef as string}
+                  label="Chi phí/FTD"
+                  invalid={touched.costPerFtd && Boolean(errors.costPerFtd)}
+                  errorMessage={errors.costPerFtd as string}
                 >
-                  <Field name="costPerRef">
-                    {({ field, form }: any) => <FormCurrencyInput form={form} field={field} placeholder="0" />}
+                  <Field name="costPerFtd">
+                    {({ field, form }: FieldProps) => (
+                      <FormCurrencyInput form={form} field={field} placeholder="Nhập chi phí/FTD" inputSuffix="" />
+                    )}
                   </Field>
                 </FormItem>
 
@@ -240,22 +245,12 @@ export default function ProjectDailyReportForm({ projectId, onClose }: ProjectDa
                   errorMessage={errors.totalFtd as string}
                 >
                   <Field name="totalFtd">
-                    {({ field, form }: any) => (
-                      <FormCurrencyInput form={form} field={field} placeholder="0" inputSuffix="" />
+                    {({ field, form }: FieldProps) => (
+                      <FormCurrencyInput form={form} field={field} placeholder="Nhập tổng FTD" inputSuffix="" />
                     )}
                   </Field>
                 </FormItem>
               </div>
-
-              <FormItem
-                label="Chi phí/FTD"
-                invalid={touched.costPerFtd && Boolean(errors.costPerFtd)}
-                errorMessage={errors.costPerFtd as string}
-              >
-                <Field name="costPerFtd">
-                  {({ field, form }: any) => <FormCurrencyInput form={form} field={field} placeholder="0" />}
-                </Field>
-              </FormItem>
 
               <div className="flex justify-end gap-2 mt-6">
                 <Button type="button" onClick={onClose} disabled={isSubmitting}>

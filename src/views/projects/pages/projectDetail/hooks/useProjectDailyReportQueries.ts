@@ -10,8 +10,8 @@ import {
   apiGetProjectDailyReportList,
   apiUpdateProjectDailyReport,
 } from '@/services/ProjectDailyReportService'
-import { GET_PROJECT_DAILY_REPORTS, GET_PROJECT_DETAIL } from '@/utils/queryKey'
-import { toastError } from '@/utils/toast'
+import { GET_PROJECT_DAILY_REPORTS, GET_PROJECT_DETAIL, GET_PROJECT_REPORT_STATISTIC } from '@/utils/queryKey'
+import { toastError, toastSuccess } from '@/utils/toast'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 export const useGetProjectDailyReportsQuery = (filters: ProjectDailyReportListFilterRequest) => {
@@ -46,9 +46,11 @@ export const useUpdateProjectDailyReportMutation = () => {
   return useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: UpdateProjectDailyReportRequest }) =>
       apiUpdateProjectDailyReport(id, payload),
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: [GET_PROJECT_DAILY_REPORTS] })
       queryClient.invalidateQueries({ queryKey: [GET_PROJECT_DETAIL] })
+      queryClient.invalidateQueries({ queryKey: [GET_PROJECT_REPORT_STATISTIC] })
+      toastSuccess(response.data.message)
     },
     onError: (error: ApiAxiosError) => {
       toastError(error.response?.data?.message)

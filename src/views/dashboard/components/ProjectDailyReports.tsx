@@ -8,9 +8,14 @@ import { formatDate } from '@/helpers/formatDate'
 import { Avatar, Card } from '@/components/ui'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 import { DataTable } from '@/components/shared'
+import { HiOutlinePencilAlt } from 'react-icons/hi'
+import { useProjectDailyReportStore } from '@/views/projects/pages/projectDetail/store/useProjectDailyReportStore'
+import { ProjectDailyReport } from '@/@types/projectDailyReport'
+import ProjectDailyReportFormDialog from '@/views/projects/pages/projectDetail/components/ProjectDailyReportFormDialog'
 
 export default function ProjectDailyReports() {
   const { user } = useAuthStore()
+  const { filter, setFilter, setDialogOpen, setSelectedReport } = useProjectDailyReportStore()
 
   const [filters, setFilters] = useState<ProjectReportsFilterRequest>({
     search: '',
@@ -28,6 +33,11 @@ export default function ProjectDailyReports() {
 
   const onSelectChange = (value: number) => {
     setFilters({ ...filters, limit: value, page: 1 })
+  }
+
+  const handleEdit = (row: ProjectDailyReport) => {
+    setSelectedReport(row)
+    setDialogOpen(true)
   }
 
   const columns: ColumnDef<ProjectReports>[] = useMemo(
@@ -142,26 +152,44 @@ export default function ProjectDailyReports() {
           return <span>{row.totalFtd}</span>
         },
       },
+      {
+        header: '',
+        accessorKey: 'action',
+        cell: (props) => {
+          const row = props.row.original
+          return (
+            <div className="flex items-center gap-4">
+              <button type="button" className="hover:text-blue-600" onClick={() => handleEdit(row)}>
+                <HiOutlinePencilAlt size={20} />
+              </button>
+            </div>
+          )
+        },
+      },
     ],
     [filters.page, filters.limit, data],
   )
 
   return (
-    <Card header="Báo cáo tiến độ hàng ngày của dự án">
-      <DataTable
-        columns={columns}
-        data={data?.items ?? []}
-        skeletonAvatarColumns={[2]}
-        skeletonAvatarProps={{ width: 28, height: 28 }}
-        loading={isLoading}
-        pagingData={{
-          total: data?.meta.total as number,
-          pageIndex: data?.meta.page as number,
-          pageSize: data?.meta.limit as number,
-        }}
-        onPaginationChange={onPaginationChange}
-        onSelectChange={onSelectChange}
-      />
-    </Card>
+    <>
+      <Card header="Báo cáo tiến độ hàng ngày của dự án">
+        <DataTable
+          columns={columns}
+          data={data?.items ?? []}
+          skeletonAvatarColumns={[2]}
+          skeletonAvatarProps={{ width: 28, height: 28 }}
+          loading={isLoading}
+          pagingData={{
+            total: data?.meta.total as number,
+            pageIndex: data?.meta.page as number,
+            pageSize: data?.meta.limit as number,
+          }}
+          onPaginationChange={onPaginationChange}
+          onSelectChange={onSelectChange}
+        />
+      </Card>
+
+      <ProjectDailyReportFormDialog />
+    </>
   )
 }

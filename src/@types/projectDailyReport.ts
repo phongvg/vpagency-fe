@@ -1,3 +1,5 @@
+import { User } from '@/@types/user'
+
 export type ProjectDailyReport = {
   id: string
   projectId: string
@@ -14,6 +16,7 @@ export type ProjectDailyReport = {
   costPerFtd: number
   createdAt: Date
   updatedAt: Date
+  runner: User | null
 }
 
 export type CreateProjectDailyReportRequest = {
