@@ -1,18 +1,10 @@
 import { useState } from 'react'
 import { CommonProps } from '@/@types/common'
-import { urlConfig } from '@/configs/urls.config'
 import { LoginFormSchema } from '@/views/auth/Login/types'
-import {
-  Alert,
-  Button,
-  Checkbox,
-  FormContainer,
-  FormItem,
-  Input,
-} from '@/components/ui'
+import { Alert, Button, Checkbox, FormContainer, FormItem, Input } from '@/components/ui'
 import { Field, Form, Formik } from 'formik'
 import { loginValidationSchema } from '@/views/auth/Login/schemas/login.schema'
-import { ActionLink, PasswordInput } from '@/components/shared'
+import { PasswordInput } from '@/components/shared'
 import useQuery from '@/utils/hooks/useQuery'
 import { REDIRECT_URL_KEY } from '@/constants/app.constant'
 import { useLoginMutation } from '@/views/auth/Login/hooks/useLogin'
@@ -31,10 +23,7 @@ export default function LoginForm(props: LoginFormProps) {
 
   const loginMutation = useLoginMutation()
 
-  const handleSubmit = async (
-    values: LoginFormSchema,
-    setSubmitting: (isSubmitting: boolean) => void,
-  ) => {
+  const handleSubmit = async (values: LoginFormSchema, setSubmitting: (isSubmitting: boolean) => void) => {
     const { username, password } = values
     setSubmitting(true)
 
@@ -53,8 +42,7 @@ export default function LoginForm(props: LoginFormProps) {
           })
         },
         onError: (error: any) => {
-          const errorMessage =
-            error?.response?.data?.message || MESSAGES.SOME_ERROR
+          const errorMessage = error?.response?.data?.message || MESSAGES.SOME_ERROR
           setMessage(errorMessage)
         },
       },
@@ -93,25 +81,14 @@ export default function LoginForm(props: LoginFormProps) {
                 invalid={(errors.username && touched.username) as boolean}
                 errorMessage={errors.username}
               >
-                <Field
-                  type="text"
-                  autoComplete="off"
-                  name="username"
-                  placeholder="Tên đăng nhập"
-                  component={Input}
-                />
+                <Field type="text" autoComplete="off" name="username" placeholder="Tên đăng nhập" component={Input} />
               </FormItem>
               <FormItem
                 label="Mật khẩu"
                 invalid={(errors.password && touched.password) as boolean}
                 errorMessage={errors.password}
               >
-                <Field
-                  autoComplete="off"
-                  name="password"
-                  placeholder="Mật khẩu"
-                  component={PasswordInput}
-                />
+                <Field autoComplete="off" name="password" placeholder="Mật khẩu" component={PasswordInput} />
               </FormItem>
               <div className="flex justify-between mb-6">
                 <Field className="mb-0" name="rememberMe" component={Checkbox}>
@@ -119,12 +96,7 @@ export default function LoginForm(props: LoginFormProps) {
                 </Field>
                 {/* <ActionLink to={forgotPasswordUrl}>Quên mật khẩu?</ActionLink> */}
               </div>
-              <Button
-                block
-                loading={isSubmitting}
-                variant="solid"
-                type="submit"
-              >
+              <Button block loading={isSubmitting} variant="solid" type="submit">
                 Đăng nhập
               </Button>
               {/* <div className="mt-4 text-center">

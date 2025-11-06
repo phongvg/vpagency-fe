@@ -76,9 +76,9 @@ export default function NumberInput({
     <div className="flex items-stretch gap-2">
       <button
         type="button"
-        onClick={handleDecrement}
         disabled={disabled || (value !== null && value !== undefined && value <= min)}
         className="flex justify-center items-center bg-white hover:bg-gray-50 disabled:opacity-50 px-3 border border-gray-300 rounded-lg transition-colors disabled:cursor-not-allowed"
+        onClick={handleDecrement}
       >
         <HiMinus className="w-4 h-4 text-gray-600" />
       </button>
@@ -86,18 +86,18 @@ export default function NumberInput({
       <Input
         type="text"
         value={inputValue}
-        onChange={handleInputChange}
-        onBlur={handleBlur}
         placeholder={placeholder}
         disabled={disabled}
         className="flex-1 text-center"
+        onChange={handleInputChange}
+        onBlur={handleBlur}
       />
 
       <button
         type="button"
-        onClick={handleIncrement}
         disabled={disabled || (value !== null && value !== undefined && value >= max)}
         className="flex justify-center items-center bg-white hover:bg-gray-50 disabled:opacity-50 px-3 border border-gray-300 rounded-lg transition-colors disabled:cursor-not-allowed"
+        onClick={handleIncrement}
       >
         <HiPlus className="w-4 h-4 text-gray-600" />
       </button>

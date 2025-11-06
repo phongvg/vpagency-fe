@@ -11,7 +11,6 @@ interface FormCurrencyInputProps {
   thousandSeparator?: string
   decimalSeparator?: string
   decimalScale?: number
-  allowNegative?: boolean
   placeholder?: string
   disabled?: boolean
   className?: string
@@ -26,7 +25,6 @@ const FormCurrencyInput = ({
   thousandSeparator = ',',
   decimalSeparator = '.',
   decimalScale = 0,
-  allowNegative = false,
   ...rest
 }: FormCurrencyInputProps) => {
   const formatCurrency = (value: string) => {
@@ -53,7 +51,6 @@ const FormCurrencyInput = ({
     })
   }
 
-  // Get current value from field
   const currentValue = field.value !== undefined && field.value !== null ? String(field.value) : ''
 
   return (
@@ -63,12 +60,12 @@ const FormCurrencyInput = ({
       value={currentValue}
       format={formatCurrency}
       removeFormatting={removeCurrencyFormatting}
+      inputSuffix={inputSuffix}
+      inputPrefix={inputPrefix}
       onValueChange={(values) => {
         const numericValue = decimalScale > 0 ? values.floatValue : Math.floor(values.floatValue || 0)
         form.setFieldValue(field.name, numericValue || 0)
       }}
-      inputSuffix={inputSuffix}
-      inputPrefix={inputPrefix}
       {...rest}
     />
   )

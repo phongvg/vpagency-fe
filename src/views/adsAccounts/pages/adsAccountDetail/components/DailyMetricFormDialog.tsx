@@ -7,7 +7,7 @@ type DailyMetricFormDialogProps = {
 }
 
 export default function DailyMetricFormDialog({ adsAccountId }: DailyMetricFormDialogProps) {
-  const { dialogOpen, setDialogOpen, selectedMetric, setSelectedMetric } = useDailyMetricStore()
+  const { dialogOpen, setDialogOpen, setSelectedMetric } = useDailyMetricStore()
 
   const onDialogClose = () => {
     setDialogOpen(false)

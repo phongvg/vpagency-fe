@@ -2,11 +2,7 @@ import { Button, FormContainer, FormItem, Input, DatePicker } from '@/components
 import { Field, FieldProps, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { useProjectDailyReportStore } from '@/views/projects/pages/projectDetail/store/useProjectDailyReportStore'
-import {
-  useCreateProjectDailyReportMutation,
-  useUpdateProjectDailyReportMutation,
-} from '@/views/projects/pages/projectDetail/hooks/useProjectDailyReportQueries'
-import { toastSuccess } from '@/utils/toast'
+import { useUpdateProjectDailyReportMutation } from '@/views/projects/pages/projectDetail/hooks/useProjectDailyReportQueries'
 import dayjs from 'dayjs'
 import { useEffect, useMemo, useState } from 'react'
 import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
@@ -107,10 +103,10 @@ export default function ProjectDailyReportForm({ onClose }: ProjectDailyReportFo
 
   return (
     <Formik
+      enableReinitialize
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
-      enableReinitialize
     >
       {({ errors, touched, isSubmitting, setFieldValue }) => {
         return (
@@ -127,10 +123,10 @@ export default function ProjectDailyReportForm({ onClose }: ProjectDailyReportFo
                       <DatePicker
                         {...field}
                         value={field.value}
-                        onChange={(date) => setFieldValue('date', date)}
                         placeholder="Chọn ngày"
                         inputFormat="DD/MM/YYYY"
                         locale="vi"
+                        onChange={(date) => setFieldValue('date', date)}
                       />
                     )}
                   </Field>
@@ -138,13 +134,13 @@ export default function ProjectDailyReportForm({ onClose }: ProjectDailyReportFo
 
                 <FormItem label="Người chạy">
                   <UserSelect
+                    isClearable
                     value={runnerSelected}
+                    placeholder="Chọn người chạy"
                     onChange={(option) => {
                       setRunnerSelected(option)
                       setFieldValue('runnerId', option ? option.value : undefined)
                     }}
-                    placeholder="Chọn người chạy"
-                    isClearable
                   />
                 </FormItem>
               </div>
@@ -253,7 +249,7 @@ export default function ProjectDailyReportForm({ onClose }: ProjectDailyReportFo
               </div>
 
               <div className="flex justify-end gap-2 mt-6">
-                <Button type="button" onClick={onClose} disabled={isSubmitting}>
+                <Button type="button" disabled={isSubmitting} onClick={onClose}>
                   Hủy
                 </Button>
                 <Button variant="solid" type="submit" loading={isSubmitting}>

@@ -104,10 +104,10 @@ export default function DailyMetricTable({ adsAccountId }: DailyMetricTableProps
           const row = props.row.original
           return (
             <div className="flex items-center gap-4">
-              <button type="button" onClick={() => handleEdit(row)} className="hover:text-blue-600">
+              <button type="button" className="hover:text-blue-600" onClick={() => handleEdit(row)}>
                 <HiOutlinePencilAlt size={20} />
               </button>
-              <button type="button" onClick={() => handleDelete(row.id, row.date)} className="hover:text-red-600">
+              <button type="button" className="hover:text-red-600" onClick={() => handleDelete(row.id, row.date)}>
                 <HiOutlineTrash size={20} />
               </button>
             </div>

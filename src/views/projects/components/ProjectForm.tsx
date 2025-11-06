@@ -1,12 +1,8 @@
-import { Project } from '@/@types/project'
-import { Button, DatePicker, FormContainer, FormItem, Input, Select, Textarea, UserSelect } from '@/components/ui'
+import { Button, DatePicker, FormContainer, FormItem, Input, Select, Textarea } from '@/components/ui'
 import { ProjectStatus, ProjectStatusLabels, ProjectType, ProjectTypeLabels } from '@/enums/project.enum'
 import { CreateProjectRequest, UpdateProjectRequest } from '@/views/projects/types'
 import { Field, Form, Formik } from 'formik'
-import { useState, useEffect } from 'react'
 import * as Yup from 'yup'
-import { User } from '@/@types/user'
-import { UserOption } from '@/components/ui/UserSelect/UserSelect'
 import { useProjectStore } from '@/views/projects/store/useProjectStore'
 import { useCreateProjectMutation, useUpdateProjectMutation } from '@/views/projects/hooks/useProjectsQueries'
 import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
@@ -26,6 +22,7 @@ type ProjectFormProps = {
 const gendersOptions: SelectOption[] = [
   { value: 'male', label: 'Nam' },
   { value: 'female', label: 'Nữ' },
+  { value: 'both', label: 'Nam và Nữ' },
 ]
 
 const typeOptions = Object.values(ProjectType).map((type) => ({
@@ -85,41 +82,41 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
 
   return (
     <Formik
+      enableReinitialize
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
-      enableReinitialize
     >
       {({ errors, touched, isSubmitting, setFieldValue, values }) => (
         <Form>
           <FormContainer>
-            <FormItem label="Tên dự án" asterisk invalid={errors.name && touched.name} errorMessage={errors.name}>
+            <FormItem asterisk label="Tên dự án" invalid={errors.name && touched.name} errorMessage={errors.name}>
               <Field type="text" autoComplete="off" name="name" placeholder="Nhập tên dự án..." component={Input} />
             </FormItem>
 
             <div className="gap-4 grid grid-cols-2">
-              <FormItem label="Loại dự án" asterisk invalid={errors.type && touched.type} errorMessage={errors.type}>
+              <FormItem asterisk label="Loại dự án" invalid={errors.type && touched.type} errorMessage={errors.type}>
                 <Select
                   name="type"
                   value={typeOptions.find((opt) => opt.value === values.type)}
-                  onChange={(option: any) => setFieldValue('type', option?.value)}
                   options={typeOptions}
                   placeholder="Chọn loại dự án"
+                  onChange={(option: any) => setFieldValue('type', option?.value)}
                 />
               </FormItem>
 
               <FormItem
-                label="Trạng thái"
                 asterisk
+                label="Trạng thái"
                 invalid={errors.status && touched.status}
                 errorMessage={errors.status as string}
               >
                 <Select
                   name="status"
                   value={statusOptions.find((opt) => opt.value === values.status)}
-                  onChange={(option: any) => setFieldValue('status', option?.value)}
                   options={statusOptions}
                   placeholder="Chọn trạng thái"
+                  onChange={(option: any) => setFieldValue('status', option?.value)}
                 />
               </FormItem>
             </div>
@@ -180,18 +177,18 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
               <FormItem label="Ngày bắt đầu">
                 <DatePicker
                   value={values.startedAt}
-                  onChange={(date) => setFieldValue('startedAt', date)}
                   placeholder="dd/mm/yyyy"
                   inputFormat="DD/MM/YYYY"
+                  onChange={(date) => setFieldValue('startedAt', date)}
                 />
               </FormItem>
 
               <FormItem label="Deadline">
                 <DatePicker
                   value={values.deadline}
-                  onChange={(date) => setFieldValue('deadline', date)}
                   placeholder="dd/mm/yyyy"
                   inputFormat="DD/MM/YYYY"
+                  onChange={(date) => setFieldValue('deadline', date)}
                 />
               </FormItem>
 
@@ -251,40 +248,40 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
               <FormItem label="Từ khóa độc quyền">
                 <TagInput
                   value={values.exclusiveKeywords || []}
-                  onChange={(tags) => setFieldValue('exclusiveKeywords', tags)}
                   placeholder="Nhập từ khóa..."
+                  onChange={(tags) => setFieldValue('exclusiveKeywords', tags)}
                 />
               </FormItem>
 
               <FormItem label="Từ khóa bị hạn chế">
                 <TagInput
                   value={values.rejectedKeywords || []}
-                  onChange={(tags) => setFieldValue('rejectedKeywords', tags)}
                   placeholder="Nhập từ khóa..."
+                  onChange={(tags) => setFieldValue('rejectedKeywords', tags)}
                 />
               </FormItem>
 
               <FormItem label="Quốc gia">
                 <TagInput
                   value={values.targetCountries || []}
-                  onChange={(tags) => setFieldValue('targetCountries', tags)}
                   placeholder="Nhập quốc gia..."
+                  onChange={(tags) => setFieldValue('targetCountries', tags)}
                 />
               </FormItem>
 
               <FormItem label="Quốc gia bị hạn chế">
                 <TagInput
                   value={values.rejectedCountries || []}
-                  onChange={(tags) => setFieldValue('rejectedCountries', tags)}
                   placeholder="Nhập quốc gia..."
+                  onChange={(tags) => setFieldValue('rejectedCountries', tags)}
                 />
               </FormItem>
 
               <FormItem label="Thiết bị">
                 <TagInput
                   value={values.devices || []}
-                  onChange={(tags) => setFieldValue('devices', tags)}
                   placeholder="Nhập thiết bị..."
+                  onChange={(tags) => setFieldValue('devices', tags)}
                 />
               </FormItem>
             </div>
@@ -293,10 +290,10 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
               <FormItem label="Độ tuổi">
                 <NumberInput
                   value={values.age}
-                  onChange={(value) => setFieldValue('age', value)}
                   min={1}
                   max={100}
                   placeholder="Nhập độ tuổi"
+                  onChange={(value) => setFieldValue('age', value)}
                 />
               </FormItem>
 
@@ -304,14 +301,14 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                 <Select
                   options={gendersOptions}
                   value={gendersOptions.find((opt) => opt.value === values.gender)}
-                  onChange={(option: SelectOption | null) => setFieldValue('gender', option?.value)}
                   placeholder="Chọn giới tính..."
+                  onChange={(option: SelectOption | null) => setFieldValue('gender', option?.value)}
                 />
               </FormItem>
             </div>
 
             <div className="flex justify-end gap-2 mt-6">
-              <Button type="button" onClick={onClose} disabled={isSubmitting}>
+              <Button type="button" disabled={isSubmitting} onClick={onClose}>
                 Hủy
               </Button>
               <Button variant="solid" type="submit" loading={isSubmitting}>

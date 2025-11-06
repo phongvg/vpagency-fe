@@ -66,10 +66,11 @@ export default function UserSelect({
 
   return (
     <Select
+      defaultOptions
+      cacheOptions
       componentAs={AsyncSelect}
       className={className}
       value={value}
-      onChange={onChange}
       loadOptions={loadOptions}
       isMulti={isMulti}
       isClearable={isClearable}
@@ -82,8 +83,7 @@ export default function UserSelect({
         Option: CustomOption,
       }}
       size={size}
-      defaultOptions
-      cacheOptions
+      onChange={onChange}
     />
   )
 }

@@ -175,9 +175,9 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
         currentProgress={task.progress}
         taskName={task.name}
         taskId={task.id}
+        isLoading={updateProgressMutation.isPending}
         onClose={() => setIsProgressModalOpen(false)}
         onConfirm={handleUpdateProgress}
-        isLoading={updateProgressMutation.isPending}
       />
     </div>
   )

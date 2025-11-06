@@ -94,8 +94,8 @@ export default function UpdateInfoForm() {
                   key={uploadKey}
                   accept="image/*"
                   multiple={false}
-                  onChange={handleAvatarChange}
                   showList={false}
+                  onChange={handleAvatarChange}
                 >
                   <Button type="button" size="sm" variant="twoTone">
                     Chọn ảnh

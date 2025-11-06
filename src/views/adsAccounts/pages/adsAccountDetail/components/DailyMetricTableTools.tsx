@@ -34,19 +34,19 @@ export default function DailyMetricTableTools() {
         <div className="flex items-center gap-2">
           <DatePicker
             value={filter.fromDate ? new Date(filter.fromDate) : null}
-            onChange={handleFromDateChange}
             placeholder="Từ ngày"
             inputFormat="DD/MM/YYYY"
             className="w-[150px]"
+            onChange={handleFromDateChange}
           />
           <span>-</span>
           <DatePicker
             value={filter.toDate ? new Date(filter.toDate) : null}
-            onChange={handleToDateChange}
             placeholder="Đến ngày"
             inputFormat="DD/MM/YYYY"
             minDate={filter.fromDate ? new Date(filter.fromDate) : undefined}
             className="w-[150px]"
+            onChange={handleToDateChange}
           />
         </div>
       </div>

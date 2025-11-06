@@ -1,5 +1,4 @@
 import { forwardRef, useMemo, useRef, useEffect, useState, useImperativeHandle } from 'react'
-import classNames from 'classnames'
 import Table from '@/components/ui/Table'
 import Pagination from '@/components/ui/Pagination'
 import Select from '@/components/ui/Select'
@@ -56,7 +55,7 @@ interface IndeterminateCheckboxProps extends Omit<CheckboxProps, 'onChange'> {
   onIndeterminateCheckBoxChange?: (event: CheckBoxChangeEvent) => void
 }
 
-const { Tr, Th, Td, THead, TBody, Sorter } = Table
+const { Tr, Th, Td, THead, TBody } = Table
 
 const EmptyState = ({
   title = 'Không có dữ liệu',

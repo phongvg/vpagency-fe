@@ -9,7 +9,7 @@ export interface TabContentProps extends CommonProps {
 }
 
 const TabContent = forwardRef<HTMLDivElement, TabContentProps>((props, ref) => {
-  const { value, children, className, ...rest } = props
+  const { value, children, ...rest } = props
 
   const context = useTabs()
   const isSelected = value === context.value

@@ -15,7 +15,7 @@ import ProjectDailyReportFormDialog from '@/views/projects/pages/projectDetail/c
 
 export default function ProjectDailyReports() {
   const { user } = useAuthStore()
-  const { filter, setFilter, setDialogOpen, setSelectedReport } = useProjectDailyReportStore()
+  const { setDialogOpen, setSelectedReport } = useProjectDailyReportStore()
 
   const [filters, setFilters] = useState<ProjectReportsFilterRequest>({
     search: '',
@@ -64,7 +64,7 @@ export default function ProjectDailyReports() {
         cell: (props) => {
           const row = props.row.original
           return (
-            <a href={row.linkDeployed ?? undefined} target="_blank" className="font-medium">
+            <a href={row.linkDeployed ?? undefined} target="_blank" className="font-medium" rel="noreferrer">
               {row.linkDeployed}
             </a>
           )

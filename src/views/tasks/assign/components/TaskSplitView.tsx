@@ -1,9 +1,9 @@
 import { Task } from '@/@types/task'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import TaskDetailPanel from '@/views/tasks/assign/components/TaskDetailPanel'
-import { useEffect } from 'react'
+import { useEffect , Suspense } from 'react'
 import { Loading } from '@/components/shared'
-import { Suspense } from 'react'
+
 import { useGetTasksWithFilters, useGetTaskDetail } from '@/views/tasks/assign/hooks/useTaskQueries'
 import { useQueryParam } from '@/hooks/useQueryParam'
 import { useNavigate } from 'react-router-dom'
@@ -42,13 +42,13 @@ export default function TaskSplitView() {
         <TaskListPanel
           tasks={taskList?.items ?? []}
           selectedTaskId={selectedTask?.id ?? null}
-          onTaskSelect={handleTaskSelect}
           pagination={{
             total: taskList?.meta?.total ?? 0,
             currentPage: taskList?.meta?.page ?? 1,
             pageSize: taskList?.meta?.limit ?? 10,
             onPageChange: handlePageChange,
           }}
+          onTaskSelect={handleTaskSelect}
         />
       </div>
 

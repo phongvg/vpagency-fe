@@ -42,8 +42,8 @@ export default function TagInput({ value = [], onChange, placeholder, disabled =
               {!disabled && (
                 <button
                   type="button"
-                  onClick={() => handleRemoveTag(tag)}
                   className="top-[1px] relative flex justify-center items-center bg-gray-200 p-0.5 rounded-full transition-colors"
+                  onClick={() => handleRemoveTag(tag)}
                 >
                   <HiX />
                 </button>
@@ -55,11 +55,11 @@ export default function TagInput({ value = [], onChange, placeholder, disabled =
       <Input
         type="text"
         value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        onKeyDown={handleKeyDown}
         placeholder={value.length === 0 ? placeholder : ''}
         disabled={disabled}
         className="shadow-none p-0 border-none focus:ring-0"
+        onChange={(e) => setInputValue(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
     </div>
   )

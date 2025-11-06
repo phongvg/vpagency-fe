@@ -143,49 +143,49 @@ export default function TaskFilters() {
           prefix={<HiOutlineSearch className="w-4 h-4 text-gray-400" />}
           placeholder="Tìm kiếm theo tên..."
           value={searchValue}
-          onChange={handleSearchChange}
           size="sm"
+          onChange={handleSearchChange}
         />
 
         <Select
           value={statusOptions.find((opt) => opt.value === (filters.status || ''))}
-          onChange={(option: any) => handleFilterChange('status', option?.value || '')}
           options={statusOptions}
           placeholder="Trạng thái"
           size="sm"
+          onChange={(option: any) => handleFilterChange('status', option?.value || '')}
         />
 
         <Select
           value={typeOptions.find((opt) => opt.value === (filters.type || ''))}
-          onChange={(option: any) => handleFilterChange('type', option?.value || '')}
           options={typeOptions}
           placeholder="Loại công việc"
           size="sm"
+          onChange={(option: any) => handleFilterChange('type', option?.value || '')}
         />
 
         <Select
           value={priorityOptions.find((opt) => opt.value === (filters.priority || ''))}
-          onChange={(option: any) => handleFilterChange('priority', option?.value || '')}
           options={priorityOptions}
           placeholder="Độ ưu tiên"
           size="sm"
+          onChange={(option: any) => handleFilterChange('priority', option?.value || '')}
         />
 
-        <UserSelect value={assignedUsers} onChange={handleAssignedUserChange} placeholder="Người nhận việc" size="sm" />
+        <UserSelect value={assignedUsers} placeholder="Người nhận việc" size="sm" onChange={handleAssignedUserChange} />
 
-        <UserSelect value={creators} onChange={handleCreatorChange} placeholder="Người tạo" size="sm" />
+        <UserSelect value={creators} placeholder="Người tạo" size="sm" onChange={handleCreatorChange} />
       </div>
 
       <div className="gap-4 grid grid-cols-6">
         <Select
+          defaultOptions
+          cacheOptions
           componentAs={AsyncSelect}
           placeholder="Dự án"
           value={selectedProject}
-          onChange={handleProjectChange}
           loadOptions={fetchProjectOptions}
-          defaultOptions
-          cacheOptions
           size="sm"
+          onChange={handleProjectChange}
         />
 
         <DatePicker
@@ -201,8 +201,8 @@ export default function TaskFilters() {
           size="sm"
           placeholder="Đến ngày"
           value={filters.toDate ? new Date(filters.toDate) : null}
-          onChange={(date) => onDateChange('toDate', date)}
           minDate={filters.fromDate ? new Date(filters.fromDate) : undefined}
+          onChange={(date) => onDateChange('toDate', date)}
         />
 
         {isFiltered && (

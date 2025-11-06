@@ -48,12 +48,12 @@ const UserEditForm = forwardRef<FormikRef, UserEditFormProps>((props, ref) => {
               </div>
               <FormItem label="Tên đăng nhập">
                 <Field
+                  disabled
                   type="text"
                   autoComplete="off"
                   name="username"
                   placeholder="Tên đăng nhập"
                   component={Input}
-                  disabled
                 />
               </FormItem>
               <FormItem

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Button, FormContainer, FormItem, Input, Select } from '@/components/ui'
 import UserSelect, { UserOption } from '@/components/ui/UserSelect/UserSelect'
-import { Field, Form, Formik, FieldArray, FieldProps, FormikErrors } from 'formik'
+import { Field, Form, Formik, FieldArray, FieldProps } from 'formik'
 import * as Yup from 'yup'
 import { useAdsAccountStore } from '@/views/adsAccounts/store/useAdsAccountStore'
 import {
@@ -10,11 +10,9 @@ import {
 } from '@/views/adsAccounts/hooks/useAdsAccountsQueries'
 import AsyncSelect from 'react-select/async'
 import { apiGetAdsGroupList } from '@/services/AdsGroupService'
-import { toastError, toastSuccess } from '@/utils/toast'
 import { HiOutlinePlus, HiOutlineTrash } from 'react-icons/hi'
 import { AdsAccountStatus } from '@/enums/adsAccount.enum'
 import { SelectOption } from '@/@types/common'
-import { CreateAdsAccountRequest, UpdateAdsAccountRequest } from '@/views/adsAccounts/types'
 
 const accountValidationSchema = Yup.object().shape({
   uuid: Yup.string().required('Vui lòng nhập UUID'),
@@ -132,23 +130,16 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
         payload: accountData,
       })
     } else {
-      let successCount = 0
-      let failCount = 0
-
       for (const account of values.accounts) {
-        try {
-          const accountData = {
-            ...account,
-            managerId: values.managerId,
-            adsGroupId: values.adsGroupId,
-            gmail: values.gmail,
-            profileGenLogin: values.profileGenLogin,
-          }
-          await createMutation.mutateAsync(accountData)
-          successCount++
-        } catch {
-          failCount++
+        const accountData = {
+          ...account,
+          managerId: values.managerId,
+          adsGroupId: values.adsGroupId,
+          gmail: values.gmail,
+          profileGenLogin: values.profileGenLogin,
         }
+
+        await createMutation.mutateAsync(accountData)
       }
     }
 
@@ -157,10 +148,10 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
 
   return (
     <Formik
+      enableReinitialize
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
-      enableReinitialize
     >
       {({ errors, touched, isSubmitting, setFieldValue, values }) => (
         <Form>
@@ -172,16 +163,16 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                 errorMessage={errors.adsGroupId as string}
               >
                 <Select
+                  defaultOptions
+                  cacheOptions
                   componentAs={AsyncSelect}
                   placeholder="Chọn nhóm tài khoản ads..."
                   value={selectedAdsGroup}
+                  loadOptions={fetchAdsGroupOptions}
                   onChange={(option) => {
                     setSelectedAdsGroup(option)
                     setFieldValue('adsGroupId', option?.value)
                   }}
-                  loadOptions={fetchAdsGroupOptions}
-                  defaultOptions
-                  cacheOptions
                 />
               </FormItem>
 
@@ -192,12 +183,12 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
               >
                 <UserSelect
                   value={selectedManager}
+                  placeholder="Chọn người quản lý..."
+                  isClearable={true}
                   onChange={(option: UserOption | null) => {
                     setSelectedManager(option)
                     setFieldValue('managerId', option?.value || undefined)
                   }}
-                  placeholder="Chọn người quản lý..."
-                  isClearable={true}
                 />
               </FormItem>
 
@@ -236,8 +227,8 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                             type="button"
                             size="sm"
                             variant="plain"
-                            onClick={() => remove(index)}
                             icon={<HiOutlineTrash />}
+                            onClick={() => remove(index)}
                           >
                             Xóa
                           </Button>
@@ -246,8 +237,8 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
 
                       <div className="gap-4 grid grid-cols-4">
                         <FormItem
-                          label="UUID"
                           asterisk
+                          label="UUID"
                           invalid={touched.accounts?.[index]?.uuid && Boolean((errors.accounts as any)?.[index]?.uuid)}
                           errorMessage={(errors.accounts as any)?.[index]?.uuid}
                         >
@@ -295,8 +286,8 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                         </FormItem>
 
                         <FormItem
-                          label="Trạng thái"
                           asterisk
+                          label="Trạng thái"
                           invalid={
                             touched.accounts?.[index]?.status && Boolean((errors.accounts as any)?.[index]?.status)
                           }
@@ -307,8 +298,8 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                               <Select
                                 options={statusOptions}
                                 value={statusOptions.find((option) => option.value === field.value)}
-                                onChange={(option: any) => form.setFieldValue(field.name, option?.value)}
                                 placeholder="Chọn trạng thái..."
+                                onChange={(option: any) => form.setFieldValue(field.name, option?.value)}
                               />
                             )}
                           </Field>
@@ -322,6 +313,7 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                       type="button"
                       variant="solid"
                       size="sm"
+                      icon={<HiOutlinePlus />}
                       onClick={() =>
                         push({
                           uuid: '',
@@ -330,7 +322,6 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                           twoFactorCode: '',
                         })
                       }
-                      icon={<HiOutlinePlus />}
                     >
                       Thêm tài khoản
                     </Button>

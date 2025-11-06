@@ -1,12 +1,4 @@
-import { TaskPriority, TaskPriorityLabels, TaskStatus } from '@/enums/task.enum'
-import {
-  HiChevronDoubleUp,
-  HiChevronDown,
-  HiMenu,
-  HiMenuAlt4,
-  HiOutlinePencilAlt,
-  HiOutlineTrash,
-} from 'react-icons/hi'
+import { TaskPriority, TaskStatus } from '@/enums/task.enum'
 
 export const getStatusColor = (status: TaskStatus) => {
   switch (status) {

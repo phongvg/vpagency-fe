@@ -1,4 +1,4 @@
-import { Button, FormContainer, FormItem, Input } from '@/components/ui'
+import { Button, FormContainer, FormItem } from '@/components/ui'
 import { Field, FieldProps, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { useDailyMetricStore } from '@/views/adsAccounts/pages/adsAccountDetail/store/useDailyMetricStore'
@@ -68,12 +68,12 @@ export default function DailyMetricForm({ adsAccountId, isOpen, onClose }: Daily
 
   return (
     <Formik
+      enableReinitialize
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
-      enableReinitialize
     >
-      {({ errors, touched, isSubmitting, setFieldValue }) => {
+      {({ errors, touched, isSubmitting }) => {
         return (
           <Form>
             <FormContainer>
@@ -109,7 +109,7 @@ export default function DailyMetricForm({ adsAccountId, isOpen, onClose }: Daily
               </div>
 
               <div className="flex justify-end gap-2 mt-6">
-                <Button type="button" onClick={onClose} disabled={isSubmitting}>
+                <Button type="button" disabled={isSubmitting} onClick={onClose}>
                   Hủy
                 </Button>
                 <Button variant="solid" type="submit" loading={isSubmitting}>

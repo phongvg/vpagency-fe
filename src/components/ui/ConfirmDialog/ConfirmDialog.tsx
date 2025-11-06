@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui'
-import { Dialog } from '@/components/ui'
+import { Button , Dialog } from '@/components/ui'
+
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 
 interface ConfirmDialogProps {
@@ -68,14 +68,14 @@ export default function ConfirmDialog({
         <p className="mb-6 text-gray-500 text-sm">{message}</p>
 
         <div className="flex justify-end items-center gap-3">
-          <Button variant="plain" onClick={onCancel} disabled={loading}>
+          <Button variant="plain" disabled={loading} onClick={onCancel}>
             {cancelText}
           </Button>
           <Button
             variant={typeStyles.confirmVariant}
-            onClick={onConfirm}
             loading={loading}
             className="bg-red-600 hover:bg-red-700"
+            onClick={onConfirm}
           >
             {confirmText}
           </Button>

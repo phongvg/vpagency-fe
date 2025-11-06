@@ -111,8 +111,8 @@ const AccordionItem = ({
           },
           headerClassName,
         )}
-        onClick={handleToggle}
         disabled={disabled}
+        onClick={handleToggle}
       >
         <span className="font-bold text-md">{title}</span>
         <span
@@ -202,12 +202,12 @@ export default function Accordion({
             itemKey={itemKey}
             title={item.title}
             isActive={isActive(itemKey)}
-            onToggle={handleToggle}
             className={item.className}
             headerClassName={item.headerClassName}
             contentClassName={item.contentClassName}
             disabled={item.disabled}
             expandIcon={expandIcon}
+            onToggle={handleToggle}
           >
             {item.children}
           </AccordionItem>

@@ -1,6 +1,5 @@
 import { SelectOption } from '@/@types/common'
 import { Task } from '@/@types/task'
-import { User } from '@/@types/user'
 import { Button, DatePicker, FormItem, Input, Select, Textarea, UserSelect } from '@/components/ui'
 import { UserOption } from '@/components/ui/UserSelect/UserSelect'
 import { TaskFrequency, TaskPriority, TaskType, TaskTypeLabels, TaskPriorityLabels } from '@/enums/task.enum'

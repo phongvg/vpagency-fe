@@ -67,7 +67,7 @@ export const showAlert = async (
 
     const content =
       typeof message === 'string' ? (
-        <Alert type={type} showIcon closable={closable}>
+        <Alert showIcon type={type} closable={closable}>
           {message}
         </Alert>
       ) : (

@@ -118,9 +118,9 @@ export default function TaskDetailPanel({ inSplitView = false }: TaskDetailPanel
         currentProgress={selectedTask.progress}
         taskName={selectedTask.name}
         taskId={selectedTask.id}
+        isLoading={updateProgressMutation.isPending}
         onClose={() => setIsProgressModalOpen(false)}
         onConfirm={handleUpdateProgress}
-        isLoading={updateProgressMutation.isPending}
       />
     </>
   )

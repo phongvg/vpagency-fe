@@ -27,15 +27,7 @@ export interface TooltipProps extends CommonProps {
 }
 
 const Tooltip = (props: TooltipProps) => {
-  const {
-    className,
-    children,
-    isOpen = false,
-    placement = 'top',
-    title,
-    wrapperClass,
-    ...rest
-  } = props
+  const { className, children, isOpen = false, placement = 'top', title, wrapperClass } = props
 
   const [tooltipOpen, setTooltipOpen] = useState<boolean>(isOpen)
 
@@ -63,20 +55,11 @@ const Tooltip = (props: TooltipProps) => {
   const dismiss = useDismiss(context)
   const role = useRole(context, { role: 'tooltip' })
 
-  const { getReferenceProps, getFloatingProps } = useInteractions([
-    hover,
-    focus,
-    dismiss,
-    role,
-  ])
+  const { getReferenceProps, getFloatingProps } = useInteractions([hover, focus, dismiss, role])
 
   return (
     <>
-      <span
-        ref={refs.setReference}
-        {...getReferenceProps()}
-        className={classNames('tooltip-wrapper', wrapperClass)}
-      >
+      <span ref={refs.setReference} {...getReferenceProps()} className={classNames('tooltip-wrapper', wrapperClass)}>
         {children}
       </span>
       <FloatingPortal>
@@ -108,11 +91,7 @@ const Tooltip = (props: TooltipProps) => {
               {...getFloatingProps()}
             >
               <span>{title}</span>
-              <Arrow
-                placement={context.placement}
-                color={tooltipBackground}
-                colorDark={tooltipDarkBackground}
-              />
+              <Arrow placement={context.placement} color={tooltipBackground} colorDark={tooltipDarkBackground} />
             </motion.div>
           </AnimatePresence>
         )}

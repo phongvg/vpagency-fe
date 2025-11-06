@@ -21,8 +21,8 @@ export default function UserRoleManagerField({
   return (
     <UserRoleManager
       selectedRoles={field.value || []}
-      onRoleChange={handleRoleChange}
       disabled={props.disabled}
+      onRoleChange={handleRoleChange}
     />
   )
 }

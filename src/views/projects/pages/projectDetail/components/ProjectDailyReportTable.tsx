@@ -1,17 +1,13 @@
 import { useMemo } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { ProjectDailyReport } from '@/@types/projectDailyReport'
-import { Avatar, ConfirmDialog } from '@/components/ui'
+import { Avatar } from '@/components/ui'
 import { DataTable } from '@/components/shared'
 import { useProjectDailyReportStore } from '@/views/projects/pages/projectDetail/store/useProjectDailyReportStore'
-import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
+import { HiOutlinePencilAlt } from 'react-icons/hi'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 import { formatDate } from '@/helpers/formatDate'
-import { useConfirmDialog } from '@/hooks/useConfirmDialog'
-import {
-  useGetProjectDailyReportsQuery,
-  useDeleteProjectDailyReportMutation,
-} from '@/views/projects/pages/projectDetail/hooks/useProjectDailyReportQueries'
+import { useGetProjectDailyReportsQuery } from '@/views/projects/pages/projectDetail/hooks/useProjectDailyReportQueries'
 
 type ProjectDailyReportTableProps = {
   projectId: string
@@ -23,32 +19,12 @@ export default function ProjectDailyReportTable({ projectId }: ProjectDailyRepor
     ...filter,
     projectId,
   })
-  const deleteMutation = useDeleteProjectDailyReportMutation()
-  const { showConfirm, confirmProps } = useConfirmDialog({
-    title: 'Xác nhận xóa báo cáo',
-    type: 'danger',
-    confirmText: 'Xóa',
-    cancelText: 'Hủy',
-  })
 
   const metaTableData = useMemo(() => getReportsResponse?.meta, [getReportsResponse])
 
   const handleEdit = (row: ProjectDailyReport) => {
     setSelectedReport(row)
     setDialogOpen(true)
-  }
-
-  const handleDelete = async (id: string, date: Date) => {
-    const confirmed = await showConfirm({
-      message: `Bạn có chắc chắn muốn xóa báo cáo ngày ${formatDate(
-        date,
-        'DD/MM/YYYY',
-      )}? Hành động này không thể hoàn tác.`,
-    })
-
-    if (confirmed) {
-      await deleteMutation.mutateAsync(id)
-    }
   }
 
   const columns: ColumnDef<ProjectDailyReport>[] = useMemo(
@@ -134,18 +110,15 @@ export default function ProjectDailyReportTable({ projectId }: ProjectDailyRepor
           const row = props.row.original
           return (
             <div className="flex items-center gap-4">
-              <button type="button" onClick={() => handleEdit(row)} className="hover:text-blue-600">
+              <button type="button" className="hover:text-blue-600" onClick={() => handleEdit(row)}>
                 <HiOutlinePencilAlt size={20} />
-              </button>
-              <button type="button" onClick={() => handleDelete(row.id, row.date)} className="hover:text-red-600">
-                <HiOutlineTrash size={20} />
               </button>
             </div>
           )
         },
       },
     ],
-    [filter.page, filter.limit, deleteMutation.isPending],
+    [filter.page, filter.limit],
   )
 
   const onPaginationChange = (page: number) => {
@@ -172,8 +145,6 @@ export default function ProjectDailyReportTable({ projectId }: ProjectDailyRepor
         onPaginationChange={onPaginationChange}
         onSelectChange={onSelectChange}
       />
-
-      <ConfirmDialog {...confirmProps} loading={deleteMutation.isPending} />
     </>
   )
 }

@@ -1,14 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Button, FormContainer, FormItem, Input, Select } from '@/components/ui'
+import { Button, FormContainer, FormItem, Input } from '@/components/ui'
 import UserSelect, { UserOption } from '@/components/ui/UserSelect/UserSelect'
 import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { useAdsGroupStore } from '@/views/adsGroups/store/useAdsGroupStore'
 import { useCreateAdsGroupMutation, useUpdateAdsGroupMutation } from '@/views/adsGroups/hooks/useAdsGroupsQueries'
 import type { CreateAdsGroupRequest } from '@/views/adsGroups/types'
-import { toastError } from '@/utils/toast'
-import AsyncSelect from 'react-select/async'
-import { apiGetProjectList } from '@/services/ProjectService'
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Vui lòng nhập tên nhóm'),
@@ -63,15 +60,15 @@ export default function AdsGroupForm({ onClose }: AdsGroupFormProps) {
 
   return (
     <Formik
+      enableReinitialize
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
-      enableReinitialize
     >
       {({ errors, touched, isSubmitting, setFieldValue }) => (
         <Form>
           <FormContainer>
-            <FormItem label="Tên nhóm" asterisk invalid={errors.name && touched.name} errorMessage={errors.name}>
+            <FormItem asterisk label="Tên nhóm" invalid={errors.name && touched.name} errorMessage={errors.name}>
               <Field type="text" autoComplete="off" name="name" placeholder="Nhập tên nhóm" component={Input} />
             </FormItem>
 
@@ -81,12 +78,12 @@ export default function AdsGroupForm({ onClose }: AdsGroupFormProps) {
               errorMessage={errors.description}
             >
               <Field
+                textArea
                 type="text"
                 autoComplete="off"
                 name="description"
                 placeholder="Nhập mô tả"
                 component={Input}
-                textArea
                 rows={3}
               />
             </FormItem>
@@ -98,12 +95,12 @@ export default function AdsGroupForm({ onClose }: AdsGroupFormProps) {
             >
               <UserSelect
                 value={selectedManager}
+                placeholder="Chọn người quản lý..."
+                isClearable={true}
                 onChange={(option: UserOption | null) => {
                   setSelectedManager(option)
                   setFieldValue('managerId', option?.value || undefined)
                 }}
-                placeholder="Chọn người quản lý..."
-                isClearable={true}
               />
             </FormItem>
 

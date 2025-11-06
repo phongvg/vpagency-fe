@@ -107,10 +107,9 @@ export default function UpdateProgressModal({
     setSelectedAdsAccountId(null)
   }
 
-  const calculateAdsAccountWithDailyMetric = useMemo(
-    () => adsAccounts.filter((account) => account.todayMetric && account.todayMetric.hasMetricToday).length,
-    [adsAccounts],
-  )
+  const calculateAdsAccountWithDailyMetric = adsAccounts.filter(
+    (account) => account.todayMetric && account.todayMetric.hasMetricToday,
+  ).length
 
   const columns: ColumnDef<AdsAccount>[] = useMemo(
     () => [
@@ -194,8 +193,8 @@ export default function UpdateProgressModal({
             <div className="flex justify-center items-center gap-4">
               <button
                 type="button"
-                onClick={() => handleOpenDailyMetricDialog(row.id)}
                 className="flex items-center gap-2 hover:text-indigo-600 transition-colors"
+                onClick={() => handleOpenDailyMetricDialog(row.id)}
               >
                 {row.todayMetric?.hasMetricToday ? <HiOutlinePencilAlt size={20} /> : <HiOutlinePlusCircle size={20} />}
                 {row.todayMetric?.hasMetricToday ? 'Cập nhật' : 'Thêm chỉ số'}
@@ -209,7 +208,7 @@ export default function UpdateProgressModal({
   )
 
   return (
-    <Dialog isOpen={isOpen} onClose={handleClose} onRequestClose={handleClose} width={1200}>
+    <Dialog isOpen={isOpen} width={1200} onClose={handleClose} onRequestClose={handleClose}>
       <div className="p-2">
         <div className="flex items-center gap-3 mb-4">
           <div className="flex justify-center items-center bg-blue-100 rounded-full w-12 h-12">
@@ -228,9 +227,9 @@ export default function UpdateProgressModal({
             min="0"
             max="100"
             value={progress}
-            onChange={handleProgressChange}
             placeholder="Nhập tiến độ từ 0-100"
             suffix={<span className="text-gray-500">%</span>}
+            onChange={handleProgressChange}
           />
           {error && <p className="mt-1 text-red-500 text-xs">{error}</p>}
 
@@ -284,10 +283,10 @@ export default function UpdateProgressModal({
         )}
 
         <div className="flex justify-end gap-3">
-          <Button variant="default" onClick={handleClose} disabled={isLoading}>
+          <Button variant="default" disabled={isLoading} onClick={handleClose}>
             Hủy
           </Button>
-          <Button variant="solid" onClick={handleConfirm} disabled={error !== '' || isLoading} loading={isLoading}>
+          <Button variant="solid" disabled={error !== '' || isLoading} loading={isLoading} onClick={handleConfirm}>
             Cập nhật
           </Button>
         </div>
