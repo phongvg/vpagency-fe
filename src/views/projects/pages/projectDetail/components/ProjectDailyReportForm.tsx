@@ -15,10 +15,6 @@ const validationSchema = Yup.object().shape({
   totalClicks: Yup.number().min(0, 'Lượt click phải >= 0'),
   totalCpc: Yup.number().min(0, 'CPC phải >= 0'),
   highestCpc: Yup.number().min(0, 'CPC cao nhất phải >= 0'),
-  totalRef: Yup.number().min(0, 'REF phải >= 0'),
-  costPerRef: Yup.number().min(0, 'Chi phí/REF phải >= 0'),
-  totalFtd: Yup.number().min(0, 'FTD phải >= 0'),
-  costPerFtd: Yup.number().min(0, 'Chi phí/FTD phải >= 0'),
 })
 
 type ProjectDailyReportFormProps = {
@@ -45,10 +41,6 @@ export default function ProjectDailyReportForm({ onClose }: ProjectDailyReportFo
             totalClicks: selectedReport.totalClicks,
             totalCpc: selectedReport.totalCpc,
             highestCpc: selectedReport.highestCpc,
-            totalRef: selectedReport.totalRef,
-            costPerRef: selectedReport.costPerRef,
-            totalFtd: selectedReport.totalFtd,
-            costPerFtd: selectedReport.costPerFtd,
           }
         : {
             date: new Date(),
@@ -58,10 +50,6 @@ export default function ProjectDailyReportForm({ onClose }: ProjectDailyReportFo
             totalClicks: 0,
             totalCpc: 0,
             highestCpc: 0,
-            totalRef: 0,
-            costPerRef: 0,
-            totalFtd: 0,
-            costPerFtd: 0,
           },
     [isEdit, selectedReport],
   )
@@ -90,10 +78,6 @@ export default function ProjectDailyReportForm({ onClose }: ProjectDailyReportFo
           totalClicks: Number(values.totalClicks),
           totalCpc: Number(values.totalCpc),
           highestCpc: Number(values.highestCpc),
-          totalRef: Number(values.totalRef),
-          costPerRef: Number(values.costPerRef),
-          totalFtd: Number(values.totalFtd),
-          costPerFtd: Number(values.costPerFtd),
         },
       })
     }
@@ -196,54 +180,6 @@ export default function ProjectDailyReportForm({ onClose }: ProjectDailyReportFo
                 >
                   <Field name="highestCpc">
                     {({ field, form }: FieldProps) => <FormCurrencyInput form={form} field={field} placeholder="0" />}
-                  </Field>
-                </FormItem>
-
-                <FormItem
-                  label="Chi phí/REF"
-                  invalid={touched.costPerRef && Boolean(errors.costPerRef)}
-                  errorMessage={errors.costPerRef as string}
-                >
-                  <Field name="costPerRef">
-                    {({ field, form }: FieldProps) => (
-                      <FormCurrencyInput form={form} field={field} placeholder="Nhập chi phí/REF" inputSuffix="" />
-                    )}
-                  </Field>
-                </FormItem>
-
-                <FormItem
-                  label="Tổng REF"
-                  invalid={touched.totalRef && Boolean(errors.totalRef)}
-                  errorMessage={errors.totalRef as string}
-                >
-                  <Field name="totalRef">
-                    {({ field, form }: FieldProps) => (
-                      <FormCurrencyInput form={form} field={field} placeholder="Nhập tổng REF" inputSuffix="" />
-                    )}
-                  </Field>
-                </FormItem>
-
-                <FormItem
-                  label="Chi phí/FTD"
-                  invalid={touched.costPerFtd && Boolean(errors.costPerFtd)}
-                  errorMessage={errors.costPerFtd as string}
-                >
-                  <Field name="costPerFtd">
-                    {({ field, form }: FieldProps) => (
-                      <FormCurrencyInput form={form} field={field} placeholder="Nhập chi phí/FTD" inputSuffix="" />
-                    )}
-                  </Field>
-                </FormItem>
-
-                <FormItem
-                  label="Tổng FTD"
-                  invalid={touched.totalFtd && Boolean(errors.totalFtd)}
-                  errorMessage={errors.totalFtd as string}
-                >
-                  <Field name="totalFtd">
-                    {({ field, form }: FieldProps) => (
-                      <FormCurrencyInput form={form} field={field} placeholder="Nhập tổng FTD" inputSuffix="" />
-                    )}
                   </Field>
                 </FormItem>
               </div>

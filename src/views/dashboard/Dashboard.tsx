@@ -1,6 +1,6 @@
 import { Loading } from '@/components/shared'
 import { useAuthStore } from '@/store/auth/useAuthStore'
-import { isAdmin, isMember } from '@/utils/checkRole'
+import { isAccounting, isAdmin, isMember } from '@/utils/checkRole'
 import DashboardHeader from '@/views/dashboard/components/DashboardHeader'
 import FinanceStats from '@/views/dashboard/components/FinanceStats'
 import MyTasks from '@/views/dashboard/components/MyTasks'
@@ -17,9 +17,13 @@ import {
 export default function Dashboard() {
   const { user } = useAuthStore()
 
-  const { data: userStats, isLoading: isLoadingUserStats } = useUserStatisticQuery(isAdmin(user?.roles))
+  const { data: userStats, isLoading: isLoadingUserStats } = useUserStatisticQuery(
+    isAdmin(user?.roles) || isAccounting(user?.roles),
+  )
+  const { data: financeStats, isLoading: isLoadingFinanceStats } = useFinanceStatsQuery(
+    isAdmin(user?.roles) || isAccounting(user?.roles),
+  )
   const { data: taskStats, isLoading: isLoadingTaskStats } = useTaskStatisticQuery(isMember(user?.roles))
-  const { data: financeStats, isLoading: isLoadingFinanceStats } = useFinanceStatsQuery(isAdmin(user?.roles))
 
   const renderDashboardContent = () => {
     if (isAdmin(user?.roles)) {

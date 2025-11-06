@@ -20,7 +20,14 @@ const appsNavigationConfig: NavigationTree[] = [
         translateKey: '',
         icon: 'apps',
         type: NAV_ITEM_TYPE_ITEM,
-        authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY],
+        authority: [
+          Role.ADMIN,
+          Role.MANAGER_AFF,
+          Role.MANAGER_AGENCY,
+          Role.MEMBER_AFF,
+          Role.MEMBER_AGENCY,
+          Role.ACCOUNTING,
+        ],
         subMenu: [],
       },
       {
@@ -61,7 +68,14 @@ const appsNavigationConfig: NavigationTree[] = [
         translateKey: '',
         icon: 'project',
         type: NAV_ITEM_TYPE_COLLAPSE,
-        authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY],
+        authority: [
+          Role.ADMIN,
+          Role.MANAGER_AFF,
+          Role.MANAGER_AGENCY,
+          Role.MEMBER_AFF,
+          Role.MEMBER_AGENCY,
+          Role.ACCOUNTING,
+        ],
         subMenu: [
           {
             key: 'projects.list',
@@ -70,7 +84,7 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY],
+            authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.ACCOUNTING],
             subMenu: [],
           },
           {
