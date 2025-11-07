@@ -6,13 +6,13 @@ const authRoute: Routes = [
   {
     key: 'login',
     path: urlConfig.login,
-    component: lazy(() => import('@/views/auth/Login')),
+    component: lazy(() => import('@/views/auth/login')),
     authority: [],
   },
   {
     key: 'loginTelegram',
     path: urlConfig.loginTelegram,
-    component: lazy(() => import('@/views/auth/LoginTelegram')),
+    component: lazy(() => import('@/views/auth/loginTelegram')),
     authority: [],
   },
 ]
