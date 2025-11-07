@@ -270,7 +270,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                   />
                 </FormItem>
 
-                <FormItem label="Nhóm tài khoản Ads">
+                <FormItem label="Chọn tài khoản Ads">
                   <Select
                     cacheOptions
                     defaultOptions
