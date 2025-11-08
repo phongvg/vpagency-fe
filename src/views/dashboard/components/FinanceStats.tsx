@@ -57,7 +57,7 @@ export default function FinanceStats({ data }: Props) {
 
   return (
     <>
-      <div className="gap-4 grid grid-cols-3">
+      <div className="gap-4 grid grid-cols-1 lg:grid-cols-3">
         <div className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 col-span-2">
           <FinanceStatsCard title="Tổng dự án" value={data?.totalProjects} />
           <FinanceStatsCard title="Dự án đang hoạt động" value={data?.activeProjects} />
