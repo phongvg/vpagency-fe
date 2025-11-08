@@ -1,9 +1,9 @@
 import Header from '@/components/template/Header'
-import UserDropdown from '@/components/template/UserDropdown'
-import Notification from '@/components/template/Notification'
-import SideNavToggle from '@/components/template/SideNavToggle'
 import MobileNav from '@/components/template/MobileNav'
+import Notification from '@/components/template/Notification'
 import SideNav from '@/components/template/SideNav'
+import SideNavToggle from '@/components/template/SideNavToggle'
+import UserDropdown from '@/components/template/UserDropdown'
 import View from '@/views'
 
 const HeaderActionsStart = () => {

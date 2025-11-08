@@ -1,14 +1,16 @@
+import { Loading } from '@/components/shared'
 import { ConfirmDialog } from '@/components/ui'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { useDeleteTask, useGetTaskDetail } from '@/views/tasks/assign/hooks/useTaskQueries'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import TaskDetailView from './TaskDetailView'
-import { Loading } from '@/components/shared'
 
 export default function TaskDetailContent() {
   const { taskId, setDialogView, closeDialog } = useBoardStore()
+
   const { data: taskDetail, isLoading } = useGetTaskDetail(taskId)
   const deleteTask = useDeleteTask()
+
   const { showConfirm, confirmProps } = useConfirmDialog({
     title: 'Xác nhận xóa công việc',
     type: 'danger',
@@ -28,7 +30,7 @@ export default function TaskDetailContent() {
     setDialogView('EDIT')
   }
 
-  const handleDeleteClick = async () => {
+  const handleDelete = async () => {
     const confirmed = await showConfirm({
       message: `Bạn có chắc chắn muốn xóa công việc "${taskDetail?.name}"? Hành động này không thể hoàn tác.`,
     })
@@ -41,7 +43,7 @@ export default function TaskDetailContent() {
 
   return (
     <>
-      <TaskDetailView task={taskDetail} onEdit={handleEdit} onDelete={handleDeleteClick} />
+      <TaskDetailView task={taskDetail} onEdit={handleEdit} onDelete={handleDelete} />
       <ConfirmDialog {...confirmProps} loading={deleteTask.isPending} />
     </>
   )

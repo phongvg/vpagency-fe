@@ -13,7 +13,7 @@ import {
   useSensors,
 } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function Board() {
   const { board, setBoard } = useBoardStore()
@@ -151,7 +151,7 @@ export default function Board() {
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
       <div className="flex flex-col flex-auto mb-2 w-full h-full scrumboard">
-        <div className="gap-6 grid grid-cols-4 mt-4 max-w-full h-full scrumboard-body">
+        <div className="gap-6 grid grid-cols-2 lg:grid-cols-4 mt-4 max-w-full h-full scrumboard-body">
           {Object.entries(board).map(([status, tasks]) => (
             <BoardColumn key={status} title={status} tasks={tasks} />
           ))}

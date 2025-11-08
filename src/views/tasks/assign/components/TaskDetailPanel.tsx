@@ -1,16 +1,7 @@
-import { Accordion, Badge, Button, ConfirmDialog } from '@/components/ui'
-import { useConfirmDialog } from '@/hooks/useConfirmDialog'
-import { useDeleteTask, useUpdateTaskProgress } from '@/views/tasks/assign/hooks/useTaskQueries'
-import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import { Task } from '@/@types/task'
-import {
-  HiChevronDoubleUp,
-  HiChevronDown,
-  HiMenu,
-  HiMenuAlt4,
-  HiOutlinePencilAlt,
-  HiOutlineTrash,
-} from 'react-icons/hi'
+import { Accordion, Badge, Button, ConfirmDialog } from '@/components/ui'
+import { getStatusColor } from '@/constants/task.constant'
+import { ProjectTypeLabels } from '@/enums/project.enum'
 import {
   TaskFrequency,
   TaskPriority,
@@ -19,15 +10,24 @@ import {
   TaskType,
   TaskTypeLabels,
 } from '@/enums/task.enum'
-import { getStatusColor } from '@/constants/task.constant'
-import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
-import UpdateProgressModal from '@/views/tasks/assign/components/UpdateProgressModal'
-import { useState } from 'react'
-import { ProjectTypeLabels } from '@/enums/project.enum'
-import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 import { formatDate } from '@/helpers/formatDate'
+import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { useAuthStore } from '@/store/auth/useAuthStore'
 import { isAdminOrManager } from '@/utils/checkRole'
+import UpdateProgressModal from '@/views/tasks/assign/components/UpdateProgressModal'
+import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
+import { useDeleteTask, useUpdateTaskProgress } from '@/views/tasks/assign/hooks/useTaskQueries'
+import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
+import { useState } from 'react'
+import {
+  HiChevronDoubleUp,
+  HiChevronDown,
+  HiMenu,
+  HiMenuAlt4,
+  HiOutlinePencilAlt,
+  HiOutlineTrash,
+} from 'react-icons/hi'
 
 interface TaskDetailPanelProps {
   inSplitView?: boolean
@@ -79,7 +79,7 @@ export default function TaskDetailPanel({ inSplitView = false }: TaskDetailPanel
         onDelete={handleDelete}
       />
 
-      <div className="gap-28 grid grid-cols-2">
+      <div className="gap-x-28 grid grid-cols-1 lg:grid-cols-2">
         <Accordion defaultActiveKey={['1', '2', '3']} accordion={false}>
           <Accordion.Item itemKey="1" title="Thông tin chung">
             <TaskDetailSection task={selectedTask} />

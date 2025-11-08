@@ -2,7 +2,7 @@ import { SelectOption } from '@/@types/common'
 import { Task } from '@/@types/task'
 import { Button, DatePicker, FormItem, Input, Select, Textarea, UserSelect } from '@/components/ui'
 import { UserOption } from '@/components/ui/UserSelect/UserSelect'
-import { TaskFrequency, TaskPriority, TaskType, TaskTypeLabels, TaskPriorityLabels } from '@/enums/task.enum'
+import { TaskFrequency, TaskPriority, TaskPriorityLabels, TaskType, TaskTypeLabels } from '@/enums/task.enum'
 import { setDeadlineTo1800 } from '@/helpers/date'
 import { apiGetAdsGroupList } from '@/services/AdsGroupService'
 import { apiGetProjectList } from '@/services/ProjectService'
@@ -184,7 +184,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                 />
               </FormItem>
 
-              <div className="gap-4 grid grid-cols-2">
+              <div className="gap-x-4 grid grid-cols-1 lg:grid-cols-2">
                 <FormItem
                   asterisk
                   errorMessage={errors.type}
@@ -218,9 +218,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                     }
                   />
                 </FormItem>
-              </div>
 
-              <div className="gap-4 grid grid-cols-2">
                 <FormItem
                   asterisk
                   errorMessage={errors.frequency}
@@ -252,9 +250,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                     onChange={(date) => setFieldValue('deadline', setDeadlineTo1800(date))}
                   />
                 </FormItem>
-              </div>
 
-              <div className="gap-4 grid grid-cols-2">
                 <FormItem label="Dự án">
                   <Select
                     cacheOptions
@@ -310,7 +306,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                 <div className="space-y-4 bg-gray-50 mb-3 px-4 pt-4 rounded-lg">
                   <h5>Thông tin chi tiết</h5>
 
-                  <div className="gap-4 grid grid-cols-2">
+                  <div className="gap-x-4 grid grid-cols-1 lg:grid-cols-2">
                     <FormItem label="Số lượng campaign lên">
                       <Input
                         name="numberOfCampaigns"
@@ -337,7 +333,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                 <div className="space-y-4 bg-gray-50 mb-3 px-4 pt-4 rounded-lg">
                   <h5>Thông tin chi tiết</h5>
 
-                  <div className="gap-4 grid grid-cols-2">
+                  <div className="gap-x-4 grid grid-cols-1 lg:grid-cols-2">
                     <FormItem label="Ngân sách hàng ngày">
                       <Input
                         name="dailyBudget"

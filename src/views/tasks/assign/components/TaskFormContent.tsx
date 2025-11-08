@@ -28,8 +28,6 @@ export default function TaskFormContent() {
   }
 
   return (
-    <>
-      <TaskForm task={selectedTask} isEdit={isEdit} loading={loading} onSubmit={handleSubmit} onCancel={handleCancel} />
-    </>
+    <TaskForm task={selectedTask} isEdit={isEdit} loading={loading} onSubmit={handleSubmit} onCancel={handleCancel} />
   )
 }

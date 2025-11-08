@@ -1,4 +1,7 @@
+import { SelectOption } from '@/@types/common'
+import { TasksFilterRequest } from '@/@types/task'
 import { Button, DatePicker, Input, Select, UserSelect } from '@/components/ui'
+import { UserOption } from '@/components/ui/UserSelect/UserSelect'
 import {
   TaskPriority,
   TaskPriorityLabels,
@@ -7,17 +10,14 @@ import {
   TaskType,
   TaskTypeLabels,
 } from '@/enums/task.enum'
-import { HiOutlineSearch } from 'react-icons/hi'
-import { useState, useEffect, useMemo } from 'react'
-import { TasksFilterRequest } from '@/@types/task'
-import { UserOption } from '@/components/ui/UserSelect/UserSelect'
-import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
-import { useDebounce } from '@/hooks/useDebounce'
-import AsyncSelect from 'react-select/async'
-import { SelectOption } from '@/@types/common'
-import { apiGetProjectList } from '@/services/ProjectService'
-import 'dayjs/locale/vi'
 import { formatDate } from '@/helpers/formatDate'
+import { useDebounce } from '@/hooks/useDebounce'
+import { apiGetProjectList } from '@/services/ProjectService'
+import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
+import 'dayjs/locale/vi'
+import { useEffect, useMemo, useState } from 'react'
+import { HiOutlineSearch } from 'react-icons/hi'
+import AsyncSelect from 'react-select/async'
 
 const statusOptions = [
   { value: '', label: 'Tất cả trạng thái' },
@@ -138,7 +138,7 @@ export default function TaskFilters() {
 
   return (
     <>
-      <div className="gap-4 grid grid-cols-6">
+      <div className="gap-4 grid grid-cols-2 lg:grid-cols-6">
         <Input
           prefix={<HiOutlineSearch className="w-4 h-4 text-gray-400" />}
           placeholder="Tìm kiếm theo tên..."
@@ -176,7 +176,7 @@ export default function TaskFilters() {
         <UserSelect value={creators} placeholder="Người tạo" size="sm" onChange={handleCreatorChange} />
       </div>
 
-      <div className="gap-4 grid grid-cols-6">
+      <div className="gap-4 grid grid-cols-2 lg:grid-cols-6">
         <Select
           defaultOptions
           cacheOptions

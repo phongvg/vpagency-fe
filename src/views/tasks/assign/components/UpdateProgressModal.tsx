@@ -1,13 +1,13 @@
-import { useEffect, useState, useMemo } from 'react'
-import { Button, Dialog, Input, Spinner, Badge, Avatar, Tooltip } from '@/components/ui'
-import { HiCheckCircle, HiOutlineCheckCircle, HiOutlinePencilAlt, HiOutlinePlusCircle, HiXCircle } from 'react-icons/hi'
 import { AdsAccount } from '@/@types/adsAccount'
-import { AdsAccountStatusLabels, AdsAccountStatusColors } from '@/enums/adsAccount.enum'
 import { DataTable } from '@/components/shared'
-import { ColumnDef } from '@tanstack/react-table'
+import { Avatar, Badge, Button, Dialog, Input, Spinner, Tooltip } from '@/components/ui'
+import { AdsAccountStatusColors, AdsAccountStatusLabels } from '@/enums/adsAccount.enum'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 import DailyMetricForm from '@/views/adsAccounts/pages/adsAccountDetail/components/DailyMetricForm'
 import { useGetAdsGroupByTaskId } from '@/views/tasks/assign/hooks/useTaskQueries'
+import { ColumnDef } from '@tanstack/react-table'
+import { useEffect, useMemo, useState } from 'react'
+import { HiCheckCircle, HiOutlineCheckCircle, HiOutlinePencilAlt, HiOutlinePlusCircle, HiXCircle } from 'react-icons/hi'
 
 const ManagerColumn = ({ row }: { row: AdsAccount }) => {
   if (!row.manager) {
@@ -252,7 +252,7 @@ export default function UpdateProgressModal({
 
         {adsGroup && (
           <div className="mb-6">
-            <div className="flex justify-between items-center mb-3">
+            <div className="flex lg:flex-row flex-col justify-between lg:items-center mb-3">
               <h4 className="font-semibold text-gray-900 text-md">Nhóm quảng cáo: {adsGroup.name}</h4>
               <p className="text-sm">
                 Tổng quan:{' '}

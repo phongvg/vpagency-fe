@@ -1,19 +1,19 @@
+import { ApiAxiosError } from '@/@types/apiError'
 import {
-  apiGetTaskDetail,
-  apiGetTasksGroupedByStatus,
-  apiUpdateTaskStatus,
   apiCreateTask,
-  apiUpdateTask,
   apiDeleteTask,
-  apiGetTasks,
-  apiUpdateTaskProgress,
   apiGetAdsGroupByTaskId,
+  apiGetTaskDetail,
+  apiGetTasks,
+  apiGetTasksGroupedByStatus,
+  apiUpdateTask,
+  apiUpdateTaskProgress,
+  apiUpdateTaskStatus,
 } from '@/services/TaskService'
 import { GET_ADS_GROUP_BY_TASK_ID, GET_TASK_DETAIL, GET_TASK_LIST, GET_TASKS_GROUPED_BY_STATUS } from '@/utils/queryKey'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
-import { ApiAxiosError } from '@/@types/apiError'
 import { toastError, toastSuccess } from '@/utils/toast'
+import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 export const useGetTasksWithFilters = (enabled: boolean = false) => {
   const { filters, activeView } = useBoardStore()
@@ -55,15 +55,14 @@ export const useUpdateTaskStatus = () => {
   })
 }
 
-export const useGetTaskDetail = (taskId: string | null, enabled: boolean = true) => {
+export const useGetTaskDetail = (taskId: string | null) => {
   return useQuery({
     queryKey: [GET_TASK_DETAIL, taskId],
     queryFn: async () => {
-      if (!taskId) return null
-      const response = await apiGetTaskDetail(taskId)
+      const response = await apiGetTaskDetail(taskId!)
       return response.data.data
     },
-    enabled: enabled && !!taskId,
+    enabled: !!taskId,
   })
 }
 
@@ -115,10 +114,10 @@ export const useDeleteTask = () => {
       return response.data
     },
     onSuccess: (response) => {
+      toastSuccess(response.message)
       queryClient.invalidateQueries({ queryKey: [GET_TASK_LIST] })
       queryClient.invalidateQueries({ queryKey: [GET_TASKS_GROUPED_BY_STATUS] })
       queryClient.invalidateQueries({ queryKey: [GET_TASK_DETAIL] })
-      toastSuccess(response.message)
     },
     onError: (error: ApiAxiosError) => {
       toastError(error.response?.data?.message)

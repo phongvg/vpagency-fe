@@ -1,20 +1,20 @@
-import classNames from 'classnames'
+import Logo from '@/components/template/Logo'
+import VerticalMenuContent from '@/components/template/VerticalMenuContent'
 import ScrollBar from '@/components/ui/ScrollBar'
+import navigationConfig from '@/configs/navigation.config'
 import {
-  SIDE_NAV_WIDTH,
-  SIDE_NAV_COLLAPSED_WIDTH,
+  LOGO_X_GUTTER,
   NAV_MODE_DARK,
   NAV_MODE_THEMED,
   NAV_MODE_TRANSPARENT,
+  SIDE_NAV_COLLAPSED_WIDTH,
   SIDE_NAV_CONTENT_GUTTER,
-  LOGO_X_GUTTER,
+  SIDE_NAV_WIDTH,
 } from '@/constants/theme.constant'
-import Logo from '@/components/template/Logo'
-import navigationConfig from '@/configs/navigation.config'
-import VerticalMenuContent from '@/components/template/VerticalMenuContent'
-import useResponsive from '@/utils/hooks/useResponsive'
 import { useAppSelector } from '@/store'
 import { useAuthStore } from '@/store/auth/useAuthStore'
+import useResponsive from '@/utils/hooks/useResponsive'
+import classNames from 'classnames'
 
 const sideNavStyle = {
   width: SIDE_NAV_WIDTH,
@@ -28,18 +28,12 @@ const sideNavCollapseStyle = {
 
 const SideNav = () => {
   const themeColor = useAppSelector((state) => state.theme.themeColor)
-  const primaryColorLevel = useAppSelector(
-    (state) => state.theme.primaryColorLevel,
-  )
+  const primaryColorLevel = useAppSelector((state) => state.theme.primaryColorLevel)
   const navMode = useAppSelector((state) => state.theme.navMode)
   const mode = useAppSelector((state) => state.theme.mode)
   const direction = useAppSelector((state) => state.theme.direction)
-  const currentRouteKey = useAppSelector(
-    (state) => state.base.common.currentRouteKey,
-  )
-  const sideNavCollapse = useAppSelector(
-    (state) => state.theme.layout.sideNavCollapse,
-  )
+  const currentRouteKey = useAppSelector((state) => state.base.common.currentRouteKey)
+  const sideNavCollapse = useAppSelector((state) => state.theme.layout.sideNavCollapse)
   const userAuthority = useAuthStore((state) => state.user?.roles) || []
 
   const { larger } = useResponsive()
@@ -79,19 +73,13 @@ const SideNav = () => {
       {larger.md && (
         <div
           style={sideNavCollapse ? sideNavCollapseStyle : sideNavStyle}
-          className={classNames(
-            'side-nav',
-            sideNavColor(),
-            !sideNavCollapse && 'side-nav-expand',
-          )}
+          className={classNames('side-nav', sideNavColor(), !sideNavCollapse && 'side-nav-expand')}
         >
           <div className="side-nav-header">
             <Logo
               mode={logoMode()}
               type={sideNavCollapse ? 'streamline' : 'full'}
-              className={
-                sideNavCollapse ? SIDE_NAV_CONTENT_GUTTER : LOGO_X_GUTTER
-              }
+              className={sideNavCollapse ? SIDE_NAV_CONTENT_GUTTER : LOGO_X_GUTTER}
             />
           </div>
           {sideNavCollapse ? (
