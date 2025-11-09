@@ -1,12 +1,12 @@
-import Tooltip from '@/components/ui/Tooltip'
-import Menu from '@/components/ui/Menu'
-import AuthorityCheck from '@/components/shared/AuthorityCheck'
-import VerticalMenuIcon from './VerticalMenuIcon'
-import { Link } from 'react-router-dom'
-import { Trans, useTranslation } from 'react-i18next'
 import type { CommonProps } from '@/@types/common'
-import type { Direction } from '@/@types/theme'
 import type { NavigationTree } from '@/@types/navigation'
+import type { Direction } from '@/@types/theme'
+import AuthorityCheck from '@/components/shared/AuthorityCheck'
+import Menu from '@/components/ui/Menu'
+import Tooltip from '@/components/ui/Tooltip'
+import { Trans, useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
+import VerticalMenuIcon from './VerticalMenuIcon'
 
 const { MenuItem } = Menu
 
@@ -25,19 +25,11 @@ interface DefaultItemProps {
 
 interface VerticalMenuItemProps extends CollapsedItemProps, DefaultItemProps {}
 
-const CollapsedItem = ({
-  title,
-  translateKey,
-  children,
-  direction,
-}: CollapsedItemProps) => {
+const CollapsedItem = ({ title, translateKey, children, direction }: CollapsedItemProps) => {
   const { t } = useTranslation()
 
   return (
-    <Tooltip
-      title={t(translateKey) || title}
-      placement={direction === 'rtl' ? 'left' : 'right'}
-    >
+    <Tooltip title={t(translateKey) || title} placement={direction === 'rtl' ? 'left' : 'right'}>
       {children}
     </Tooltip>
   )
@@ -48,10 +40,10 @@ const DefaultItem = (props: DefaultItemProps) => {
 
   return (
     <AuthorityCheck userAuthority={userAuthority} authority={nav.authority}>
-      <MenuItem key={nav.key} eventKey={nav.key} className="mb-2">
+      <MenuItem key={nav.key} eventKey={nav.key}>
         <Link
           to={nav.path}
-          className="flex items-center h-full w-full"
+          className="flex items-center w-full h-full"
           target={nav.isExternalLink ? '_blank' : ''}
           onClick={() =>
             onLinkClick?.({
@@ -83,11 +75,7 @@ const VerticalSingleMenuItem = ({
   return (
     <AuthorityCheck userAuthority={userAuthority} authority={nav.authority}>
       {sideCollapsed ? (
-        <CollapsedItem
-          title={nav.title}
-          translateKey={nav.translateKey}
-          direction={direction}
-        >
+        <CollapsedItem title={nav.title} translateKey={nav.translateKey} direction={direction}>
           <DefaultItem
             nav={nav}
             sideCollapsed={sideCollapsed}
@@ -96,12 +84,7 @@ const VerticalSingleMenuItem = ({
           />
         </CollapsedItem>
       ) : (
-        <DefaultItem
-          nav={nav}
-          sideCollapsed={sideCollapsed}
-          userAuthority={userAuthority}
-          onLinkClick={onLinkClick}
-        />
+        <DefaultItem nav={nav} sideCollapsed={sideCollapsed} userAuthority={userAuthority} onLinkClick={onLinkClick} />
       )}
     </AuthorityCheck>
   )

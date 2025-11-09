@@ -1,7 +1,7 @@
-import { lazy } from 'react'
 import type { Routes } from '@/@types/routes'
 import { urlConfig } from '@/configs/urls.config'
 import { Role } from '@/enums/role.enum'
+import { lazy } from 'react'
 
 const appsRoute: Routes = [
   {
@@ -101,6 +101,15 @@ const appsRoute: Routes = [
     authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY],
     meta: {
       header: 'Thông tin Dự án',
+    },
+  },
+  {
+    key: 'gmailAccounts',
+    path: urlConfig.gmailAccounts,
+    component: lazy(() => import('@/views/gmailAccounts')),
+    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY],
+    meta: {
+      header: 'Tài khoản Gmail',
     },
   },
 ]

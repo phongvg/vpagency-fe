@@ -16,6 +16,8 @@ export const urlConfig = {
   projects: `${APP_PREFIX_PATH}/projects`,
   projectDetail: `${APP_PREFIX_PATH}/projects/detail/:id`,
   logs: `${APP_PREFIX_PATH}/systems/logs`,
+  gmailAccounts: `${APP_PREFIX_PATH}/gmail-accounts`,
+  gmailAccountDetail: `${APP_PREFIX_PATH}/gmail-accounts/detail/:id`,
   setting: `${APP_PREFIX_PATH}/systems/settings`,
   staffRanking: `${APP_PREFIX_PATH}/staffs/rankings`,
   userUpdateInfo: `${APP_PREFIX_PATH}/update-info`,

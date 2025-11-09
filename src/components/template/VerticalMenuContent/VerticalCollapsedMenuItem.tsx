@@ -1,12 +1,12 @@
-import Menu from '@/components/ui/Menu'
-import Dropdown from '@/components/ui/Dropdown'
+import type { CommonProps } from '@/@types/common'
+import type { NavigationTree } from '@/@types/navigation'
+import type { Direction } from '@/@types/theme'
 import AuthorityCheck from '@/components/shared/AuthorityCheck'
+import Dropdown from '@/components/ui/Dropdown'
+import Menu from '@/components/ui/Menu'
+import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import VerticalMenuIcon from './VerticalMenuIcon'
-import { Trans } from 'react-i18next'
-import type { CommonProps } from '@/@types/common'
-import type { Direction } from '@/@types/theme'
-import type { NavigationTree } from '@/@types/navigation'
 
 interface DefaultItemProps extends CommonProps {
   nav: NavigationTree
@@ -39,18 +39,13 @@ const DefaultItem = ({ nav, onLinkClick, userAuthority }: DefaultItemProps) => {
         }
         eventKey={nav.key}
         expanded={false}
-        className="mb-2"
       >
         {nav.subMenu.map((subNav) => (
-          <AuthorityCheck
-            key={subNav.key}
-            userAuthority={userAuthority}
-            authority={subNav.authority}
-          >
+          <AuthorityCheck key={subNav.key} userAuthority={userAuthority} authority={subNav.authority}>
             <MenuItem eventKey={subNav.key}>
               {subNav.path ? (
                 <Link
-                  className="h-full w-full flex items-center"
+                  className="flex items-center w-full h-full"
                   to={subNav.path}
                   target={subNav.isExternalLink ? '_blank' : ''}
                   onClick={() =>
@@ -62,18 +57,12 @@ const DefaultItem = ({ nav, onLinkClick, userAuthority }: DefaultItemProps) => {
                   }
                 >
                   <span>
-                    <Trans
-                      i18nKey={subNav.translateKey}
-                      defaults={subNav.title}
-                    />
+                    <Trans i18nKey={subNav.translateKey} defaults={subNav.title} />
                   </span>
                 </Link>
               ) : (
                 <span>
-                  <Trans
-                    i18nKey={subNav.translateKey}
-                    defaults={subNav.title}
-                  />
+                  <Trans i18nKey={subNav.translateKey} defaults={subNav.title} />
                 </span>
               )}
             </MenuItem>
@@ -84,14 +73,9 @@ const DefaultItem = ({ nav, onLinkClick, userAuthority }: DefaultItemProps) => {
   )
 }
 
-const CollapsedItem = ({
-  nav,
-  onLinkClick,
-  userAuthority,
-  direction,
-}: CollapsedItemProps) => {
+const CollapsedItem = ({ nav, onLinkClick, userAuthority, direction }: CollapsedItemProps) => {
   const menuItem = (
-    <MenuItem key={nav.key} eventKey={nav.key} className="mb-2">
+    <MenuItem key={nav.key} eventKey={nav.key}>
       <VerticalMenuIcon icon={nav.icon} />
     </MenuItem>
   )
@@ -104,15 +88,11 @@ const CollapsedItem = ({
         placement={direction === 'rtl' ? 'middle-end-top' : 'middle-start-top'}
       >
         {nav.subMenu.map((subNav) => (
-          <AuthorityCheck
-            key={subNav.key}
-            userAuthority={userAuthority}
-            authority={subNav.authority}
-          >
+          <AuthorityCheck key={subNav.key} userAuthority={userAuthority} authority={subNav.authority}>
             <Dropdown.Item eventKey={subNav.key}>
               {subNav.path ? (
                 <Link
-                  className="h-full w-full flex items-center"
+                  className="flex items-center w-full h-full"
                   to={subNav.path}
                   target={subNav.isExternalLink ? '_blank' : ''}
                   onClick={() =>
@@ -124,18 +104,12 @@ const CollapsedItem = ({
                   }
                 >
                   <span>
-                    <Trans
-                      i18nKey={subNav.translateKey}
-                      defaults={subNav.title}
-                    />
+                    <Trans i18nKey={subNav.translateKey} defaults={subNav.title} />
                   </span>
                 </Link>
               ) : (
                 <span>
-                  <Trans
-                    i18nKey={subNav.translateKey}
-                    defaults={subNav.title}
-                  />
+                  <Trans i18nKey={subNav.translateKey} defaults={subNav.title} />
                 </span>
               )}
             </Dropdown.Item>
@@ -146,10 +120,7 @@ const CollapsedItem = ({
   )
 }
 
-const VerticalCollapsedMenuItem = ({
-  sideCollapsed,
-  ...rest
-}: VerticalCollapsedMenuItemProps) => {
+const VerticalCollapsedMenuItem = ({ sideCollapsed, ...rest }: VerticalCollapsedMenuItemProps) => {
   return sideCollapsed ? <CollapsedItem {...rest} /> : <DefaultItem {...rest} />
 }
 

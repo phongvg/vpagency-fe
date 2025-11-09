@@ -1,6 +1,6 @@
-import { NAV_ITEM_TYPE_TITLE, NAV_ITEM_TYPE_COLLAPSE, NAV_ITEM_TYPE_ITEM } from '@/constants/navigation.constant'
 import type { NavigationTree } from '@/@types/navigation'
 import { urlConfig } from '@/configs/urls.config'
+import { NAV_ITEM_TYPE_COLLAPSE, NAV_ITEM_TYPE_ITEM, NAV_ITEM_TYPE_TITLE } from '@/constants/navigation.constant'
 import { Role } from '@/enums/role.enum'
 
 const appsNavigationConfig: NavigationTree[] = [
@@ -87,10 +87,28 @@ const appsNavigationConfig: NavigationTree[] = [
             authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.ACCOUNTING],
             subMenu: [],
           },
+        ],
+      },
+      {
+        key: 'ads',
+        path: '',
+        title: 'Quản lý tài khoản quảng cáo',
+        translateKey: '',
+        icon: 'project',
+        type: NAV_ITEM_TYPE_COLLAPSE,
+        authority: [
+          Role.ADMIN,
+          Role.MANAGER_AFF,
+          Role.MANAGER_AGENCY,
+          Role.MEMBER_AFF,
+          Role.MEMBER_AGENCY,
+          Role.ACCOUNTING,
+        ],
+        subMenu: [
           {
             key: 'adsGroups',
             path: urlConfig.adsGroups,
-            title: 'Nhóm tài khoản Ads',
+            title: 'Nhóm tài khoản quảng cáo',
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
@@ -100,7 +118,35 @@ const appsNavigationConfig: NavigationTree[] = [
           {
             key: 'adsAccounts',
             path: urlConfig.adsAccounts,
-            title: 'Tài khoản Ads',
+            title: 'Tài khoản quảng cáo',
+            translateKey: '',
+            icon: '',
+            type: NAV_ITEM_TYPE_ITEM,
+            authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY],
+            subMenu: [],
+          },
+        ],
+      },
+      {
+        key: 'gmails',
+        path: '',
+        title: 'Quản lý gmail',
+        translateKey: '',
+        icon: 'project',
+        type: NAV_ITEM_TYPE_COLLAPSE,
+        authority: [
+          Role.ADMIN,
+          Role.MANAGER_AFF,
+          Role.MANAGER_AGENCY,
+          Role.MEMBER_AFF,
+          Role.MEMBER_AGENCY,
+          Role.ACCOUNTING,
+        ],
+        subMenu: [
+          {
+            key: 'gmailAccounts',
+            path: urlConfig.gmailAccounts,
+            title: 'Tài khoản gmail',
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
