@@ -3,21 +3,26 @@ import { CommonFilterRequest } from '@/@types/common'
 export type GmailAccountFilterRequest = CommonFilterRequest
 
 export type CreateGmailAccountRequest = {
-  email: string
+  name: string
   password: string
-  twofa: string | null
+  recoverMail: string | null
+  recoverMailPassword: string | null
+  code2fa: string | null
   phone: string | null
   proxy: string | null
-  amount: number
-  managerId: string | null
+  proxyPassword: string | null
+  price: number
 }
 
 export type UpdateGmailAccountRequest = {
-  email?: string
+  name?: string
   password?: string
-  twofa?: string | null
+  recoverMail?: string | null
+  recoverMailPassword?: string | null
+  code2fa?: string | null
   phone?: string | null
   proxy?: string | null
-  amount?: number
-  managerId?: string | null
+  proxyPassword?: string | null
+  price?: number
+  assignedUserId?: string | null
 }

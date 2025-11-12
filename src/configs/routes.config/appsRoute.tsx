@@ -130,6 +130,15 @@ const appsRoute: Routes = [
       header: 'Trạng thái dự án',
     },
   },
+  {
+    key: 'uidStatus',
+    path: urlConfig.uidStatus,
+    component: lazy(() => import('@/views/masterData/uidStatus')),
+    authority: [Role.ADMIN],
+    meta: {
+      header: 'Trạng thái UID',
+    },
+  },
 ]
 
 export default appsRoute

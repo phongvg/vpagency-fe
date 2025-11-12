@@ -1,4 +1,4 @@
-export interface ProjectStatus {
+export interface UidStatus {
   id: string
   name: string
   description: string | null

@@ -1,13 +1,13 @@
 import { CommonFilterRequest } from '@/@types/common'
 
-export type ProjectStatusFilterRequest = CommonFilterRequest
+export type UidStatusFilterRequest = CommonFilterRequest
 
-export type CreateProjectStatusRequest = {
+export type CreateUidStatusRequest = {
   name: string
   description?: string | null
 }
 
-export type UpdateProjectStatusRequest = {
+export type UpdateUidStatusRequest = {
   name?: string
   description?: string | null
   active?: boolean

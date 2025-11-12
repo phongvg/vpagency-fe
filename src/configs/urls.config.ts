@@ -25,6 +25,7 @@ export const urlConfig = {
   accessDenied: `${APP_PREFIX_PATH}/access-denied`,
   projectTypes: `${APP_PREFIX_PATH}/master-data/project-types`,
   projectStatus: `${APP_PREFIX_PATH}/master-data/project-status`,
+  uidStatus: `${APP_PREFIX_PATH}/master-data/uid-status`,
 
   login: `${AUTH_PREFIX_PATH}/login`,
   loginTelegram: `${AUTH_PREFIX_PATH}/telegram`,

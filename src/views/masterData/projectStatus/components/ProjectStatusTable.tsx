@@ -1,12 +1,13 @@
 import { ProjectStatus } from '@/@types/projectStatus'
 import { DataTable } from '@/components/shared'
-import { ConfirmDialog } from '@/components/ui'
+import { ConfirmDialog, Switcher } from '@/components/ui'
 import { formatDate } from '@/helpers/formatDate'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import ProjectStatusEditDialog from '@/views/masterData/projectStatus/components/ProjectStatusEditDialog'
 import {
   useDeleteProjectStatusMutation,
   useGetProjectStatusesQuery,
+  useUpdateProjectStatusMutation,
 } from '@/views/masterData/projectStatus/hooks/useProjectStatus'
 import { useProjectStatusStore } from '@/views/masterData/projectStatus/store/useProjectStatusStore'
 import { ColumnDef } from '@tanstack/react-table'
@@ -16,7 +17,10 @@ import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
 export default function ProjectStatusTable() {
   const { filter, setFilter, setDialogOpen, setSelectedProjectStatus } = useProjectStatusStore()
   const { data: getProjectStatusesResponse, isLoading } = useGetProjectStatusesQuery()
+
+  const updateProjectStatusMutation = useUpdateProjectStatusMutation()
   const deleteProjectStatusMutation = useDeleteProjectStatusMutation()
+
   const { showConfirm, confirmProps } = useConfirmDialog({
     title: 'Xác nhận xóa trạng thái dự án',
     type: 'danger',
@@ -29,6 +33,13 @@ export default function ProjectStatusTable() {
   const handleEdit = (row: ProjectStatus) => {
     setSelectedProjectStatus(row)
     setDialogOpen(true)
+  }
+
+  const handleUpdateStatusActive = async (row: ProjectStatus, active: boolean) => {
+    await updateProjectStatusMutation.mutateAsync({
+      id: row.id,
+      payload: { active },
+    })
   }
 
   const handleDelete = async (id: string) => {
@@ -55,25 +66,11 @@ export default function ProjectStatusTable() {
       accessorKey: 'name',
     },
     {
-      header: 'Màu sắc',
-      accessorKey: 'color',
+      header: 'Hoạt động',
+      accessorKey: 'active',
       cell: (props) => {
         const row = props.row.original
-        if (!row.color) return <span>-</span>
-        return (
-          <div className="flex items-center gap-2">
-            <div className="border rounded w-6 h-6" style={{ backgroundColor: row.color }}></div>
-            <span>{row.color}</span>
-          </div>
-        )
-      },
-    },
-    {
-      header: 'Mô tả',
-      accessorKey: 'description',
-      cell: (props) => {
-        const row = props.row.original
-        return <span className="block max-w-md truncate">{row.description || '-'}</span>
+        return <Switcher checked={row.active} onChange={() => handleUpdateStatusActive(row, !row.active)} />
       },
     },
     {

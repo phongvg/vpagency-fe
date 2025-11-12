@@ -1,10 +1,7 @@
 import { Button, FormContainer, FormItem, Input } from '@/components/ui'
-import {
-  useCreateProjectStatusMutation,
-  useUpdateProjectStatusMutation,
-} from '@/views/masterData/projectStatus/hooks/useProjectStatus'
-import { useProjectStatusStore } from '@/views/masterData/projectStatus/store/useProjectStatusStore'
-import type { CreateProjectStatusRequest } from '@/views/masterData/projectStatus/types'
+import { useCreateUidStatusMutation, useUpdateUidStatusMutation } from '@/views/masterData/uidStatus/hooks/useUidStatus'
+import { useUidStatusStore } from '@/views/masterData/uidStatus/store/useUidStatusStore'
+import type { CreateUidStatusRequest } from '@/views/masterData/uidStatus/types'
 import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
@@ -13,27 +10,27 @@ const validationSchema = Yup.object().shape({
   description: Yup.string().nullable(),
 })
 
-type ProjectStatusFormProps = {
+type UidStatusFormProps = {
   onClose: () => void
 }
 
-export default function ProjectStatusForm({ onClose }: ProjectStatusFormProps) {
-  const { selectedProjectStatus } = useProjectStatusStore()
+export default function UidStatusForm({ onClose }: UidStatusFormProps) {
+  const { selectedUidStatus } = useUidStatusStore()
 
-  const createMutation = useCreateProjectStatusMutation()
-  const updateMutation = useUpdateProjectStatusMutation()
+  const createMutation = useCreateUidStatusMutation()
+  const updateMutation = useUpdateUidStatusMutation()
 
-  const isEdit = !!selectedProjectStatus
+  const isEdit = !!selectedUidStatus
 
-  const initialValues: CreateProjectStatusRequest = {
-    name: selectedProjectStatus?.name || '',
-    description: selectedProjectStatus?.description || '',
+  const initialValues: CreateUidStatusRequest = {
+    name: selectedUidStatus?.name || '',
+    description: selectedUidStatus?.description || '',
   }
 
-  const handleSubmit = async (values: CreateProjectStatusRequest) => {
+  const handleSubmit = async (values: CreateUidStatusRequest) => {
     if (isEdit) {
       await updateMutation.mutateAsync({
-        id: selectedProjectStatus.id,
+        id: selectedUidStatus.id,
         payload: values,
       })
     } else {

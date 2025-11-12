@@ -2,7 +2,7 @@ import { GmailAccount } from '@/@types/GmailAccount'
 import { DataTable } from '@/components/shared'
 import { Avatar, ConfirmDialog } from '@/components/ui'
 import { urlConfig } from '@/configs/urls.config'
-import { formatDate } from '@/helpers/formatDate'
+import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import GmailAccountEditDialog from '@/views/GmailAccounts/components/GmailAccountEditDialog'
 import { useDeleteGmailAccountMutation, useGetGmailAccountsQuery } from '@/views/gmailAccounts/hooks/useGmailAccount'
@@ -22,6 +22,21 @@ const ManagerColumn = ({ row }: { row: GmailAccount }) => {
       <Avatar size={32} shape="circle" src={row.manager.avatar ?? ''} />
       <span className="rtl:mr-2 ml-2 max-w-[150px] truncate">
         {row.manager.firstName} {row.manager.lastName}
+      </span>
+    </div>
+  )
+}
+
+const CreatorColumn = ({ row }: { row: GmailAccount }) => {
+  if (!row.creator) {
+    return <span className="text-gray-400">Chưa có</span>
+  }
+
+  return (
+    <div className="flex items-center">
+      <Avatar size={32} shape="circle" src={row.creator.avatar ?? ''} />
+      <span className="rtl:mr-2 ml-2 max-w-[150px] truncate">
+        {row.creator.firstName} {row.creator.lastName}
       </span>
     </div>
   )
@@ -70,14 +85,30 @@ export default function GmailAccountTable() {
     },
     {
       header: 'Email',
-      accessorKey: 'email',
+      accessorKey: 'name',
       cell: (props) => {
         const row = props.row.original
         return (
           <Link to={urlConfig.gmailAccountDetail.replace(':id', row.id)} className="hover:text-indigo-600">
-            {row.email}
+            {row.name}
           </Link>
         )
+      },
+    },
+    {
+      header: 'Mail khôi phục',
+      accessorKey: 'recoverMail',
+    },
+    {
+      header: 'Mã 2FA',
+      accessorKey: 'code2fa',
+    },
+    {
+      header: 'Giá tiền',
+      accessorKey: 'price',
+      cell: (props) => {
+        const row = props.row.original
+        return <span>{formatVietnameseMoney(row.price)}</span>
       },
     },
     {
@@ -89,19 +120,11 @@ export default function GmailAccountTable() {
       },
     },
     {
-      header: 'Ngày tạo',
-      accessorKey: 'createdAt',
+      header: 'Người tạo',
+      accessorKey: 'creator',
       cell: (props) => {
         const row = props.row.original
-        return <span>{formatDate(row.createdAt)}</span>
-      },
-    },
-    {
-      header: 'Ngày cập nhật',
-      accessorKey: 'updatedAt',
-      cell: (props) => {
-        const row = props.row.original
-        return <span>{formatDate(row.updatedAt)}</span>
+        return <CreatorColumn row={row} />
       },
     },
     {

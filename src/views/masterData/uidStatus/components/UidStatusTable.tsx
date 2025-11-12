@@ -1,47 +1,59 @@
-import { ProjectType } from '@/@types/projectType'
+import { UidStatus } from '@/@types/uidStatus'
 import { DataTable } from '@/components/shared'
-import { ConfirmDialog } from '@/components/ui'
+import { ConfirmDialog, Switcher } from '@/components/ui'
 import { formatDate } from '@/helpers/formatDate'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
-import ProjectTypeEditDialog from '@/views/masterData/projectType/components/ProjectTypeEditDialog'
+import UidStatusEditDialog from '@/views/masterData/uidStatus/components/UidStatusEditDialog'
 import {
-  useDeleteProjectTypeMutation,
-  useGetProjectTypesQuery,
-} from '@/views/masterData/projectType/hooks/useProjectType'
-import { useProjectTypeStore } from '@/views/masterData/projectType/store/useProjectTypeStore'
+  useDeleteUidStatusMutation,
+  useGetUidStatusesQuery,
+  useUpdateUidStatusMutation,
+} from '@/views/masterData/uidStatus/hooks/useUidStatus'
+import { useUidStatusStore } from '@/views/masterData/uidStatus/store/useUidStatusStore'
 import { ColumnDef } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
 
-export default function ProjectTypeTable() {
-  const { filter, setFilter, setDialogOpen, setSelectedProjectType } = useProjectTypeStore()
-  const { data: getProjectTypesResponse, isLoading } = useGetProjectTypesQuery()
-  const deleteProjectTypeMutation = useDeleteProjectTypeMutation()
+export default function UidStatusTable() {
+  const { filter, setFilter, setDialogOpen, setSelectedUidStatus } = useUidStatusStore()
+
+  const { data: getUidStatusesResponse, isLoading } = useGetUidStatusesQuery()
+
+  const updateUidStatusMutation = useUpdateUidStatusMutation()
+  const deleteUidStatusMutation = useDeleteUidStatusMutation()
+
   const { showConfirm, confirmProps } = useConfirmDialog({
-    title: 'Xác nhận xóa loại dự án',
+    title: 'Xác nhận xóa trạng thái UID',
     type: 'danger',
     confirmText: 'Xóa',
     cancelText: 'Hủy',
   })
 
-  const metaTableData = useMemo(() => getProjectTypesResponse?.meta, [getProjectTypesResponse])
+  const metaTableData = useMemo(() => getUidStatusesResponse?.meta, [getUidStatusesResponse])
 
-  const handleEdit = (row: ProjectType) => {
-    setSelectedProjectType(row)
+  const handleEdit = (row: UidStatus) => {
+    setSelectedUidStatus(row)
     setDialogOpen(true)
+  }
+
+  const handleUpdateStatusActive = async (row: UidStatus, active: boolean) => {
+    await updateUidStatusMutation.mutateAsync({
+      id: row.id,
+      payload: { active },
+    })
   }
 
   const handleDelete = async (id: string) => {
     const confirmed = await showConfirm({
-      message: `Bạn có chắc chắn muốn xóa loại dự án này? Hành động này không thể hoàn tác.`,
+      message: `Bạn có chắc chắn muốn xóa trạng thái UID này? Hành động này không thể hoàn tác.`,
     })
 
     if (confirmed) {
-      await deleteProjectTypeMutation.mutateAsync(id)
+      await deleteUidStatusMutation.mutateAsync(id)
     }
   }
 
-  const columns: ColumnDef<ProjectType>[] = [
+  const columns: ColumnDef<UidStatus>[] = [
     {
       header: 'STT',
       accessorKey: 'index',
@@ -51,8 +63,16 @@ export default function ProjectTypeTable() {
       },
     },
     {
-      header: 'Tên loại dự án',
+      header: 'Tên trạng thái',
       accessorKey: 'name',
+    },
+    {
+      header: 'Hoạt động',
+      accessorKey: 'active',
+      cell: (props) => {
+        const row = props.row.original
+        return <Switcher checked={row.active} onChange={() => handleUpdateStatusActive(row, !row.active)} />
+      },
     },
     {
       header: 'Ngày tạo',
@@ -103,7 +123,7 @@ export default function ProjectTypeTable() {
     <>
       <DataTable
         columns={columns}
-        data={getProjectTypesResponse?.items ?? []}
+        data={getUidStatusesResponse?.items ?? []}
         loading={isLoading}
         pagingData={{
           total: metaTableData?.total as number,
@@ -113,7 +133,7 @@ export default function ProjectTypeTable() {
         onPaginationChange={onPaginationChange}
         onSelectChange={onSelectChange}
       />
-      <ProjectTypeEditDialog />
+      <UidStatusEditDialog />
       <ConfirmDialog {...confirmProps} />
     </>
   )
