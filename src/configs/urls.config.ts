@@ -23,6 +23,8 @@ export const urlConfig = {
   userUpdateInfo: `${APP_PREFIX_PATH}/update-info`,
   userProfile: `${APP_PREFIX_PATH}/profile`,
   accessDenied: `${APP_PREFIX_PATH}/access-denied`,
+  projectTypes: `${APP_PREFIX_PATH}/master-data/project-types`,
+  projectStatus: `${APP_PREFIX_PATH}/master-data/project-status`,
 
   login: `${AUTH_PREFIX_PATH}/login`,
   loginTelegram: `${AUTH_PREFIX_PATH}/telegram`,

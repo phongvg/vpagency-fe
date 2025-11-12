@@ -112,6 +112,24 @@ const appsRoute: Routes = [
       header: 'Tài khoản Gmail',
     },
   },
+  {
+    key: 'projectTypes',
+    path: urlConfig.projectTypes,
+    component: lazy(() => import('@/views/masterData/projectType')),
+    authority: [Role.ADMIN],
+    meta: {
+      header: 'Loại dự án',
+    },
+  },
+  {
+    key: 'projectStatus',
+    path: urlConfig.projectStatus,
+    component: lazy(() => import('@/views/masterData/projectStatus')),
+    authority: [Role.ADMIN],
+    meta: {
+      header: 'Trạng thái dự án',
+    },
+  },
 ]
 
 export default appsRoute

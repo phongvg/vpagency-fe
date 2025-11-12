@@ -1,8 +1,8 @@
 import { User } from '@/@types/user'
 import { Avatar, Select } from '@/components/ui'
 import { apiGetUserList } from '@/services/UserService'
-import AsyncSelect from 'react-select/async'
 import acronym from '@/utils/acronym'
+import AsyncSelect from 'react-select/async'
 
 export interface UserOption {
   value: string
@@ -46,7 +46,7 @@ export default function UserSelect({
     }
   }
 
-  const CustomOption = ({ innerProps, _, data }: any) => (
+  const CustomOption = ({ innerProps, data }: any) => (
     <div {...innerProps} className="flex items-center gap-2 hover:bg-gray-50 p-2 cursor-pointer">
       <Avatar shape="circle" size={30} src={data.user.avatar} alt={data.user.username}>
         {acronym(`${data.user.firstName} ${data.user.lastName}`)}
