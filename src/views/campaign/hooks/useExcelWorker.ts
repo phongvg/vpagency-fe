@@ -1,4 +1,4 @@
-import { Campaign } from '@/@types/campaign'
+import { Campaign } from '@/views/campaign/types/campaign.type'
 import { useCallback, useRef, useState } from 'react'
 
 interface UseExcelWorkerReturn {

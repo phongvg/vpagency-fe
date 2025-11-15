@@ -3,18 +3,18 @@ import VirtualCampaignTable from '@/views/campaign/components/VirtualCampaignTab
 import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
 
 export default function CampaignPreviewDialog() {
-  const { dialogOpen, campaigns, closeDialog } = useCampaignStore()
+  const { dialogPreviewOpen, campaigns, closePreviewDialog } = useCampaignStore()
 
   const handleSubmit = () => {
     console.log(campaigns)
   }
 
   return (
-    <Dialog isOpen={dialogOpen} width={1400} onClose={closeDialog} onRequestClose={closeDialog}>
+    <Dialog isOpen={dialogPreviewOpen} width={1400} onClose={closePreviewDialog} onRequestClose={closePreviewDialog}>
       <h5 className="mb-4">Đã nhập {campaigns.length} chiến dịch</h5>
       <VirtualCampaignTable campaigns={campaigns} height={800} />
       <div className="flex justify-end gap-2 mt-4">
-        <Button type="button" onClick={closeDialog}>
+        <Button type="button" onClick={closePreviewDialog}>
           Hủy
         </Button>
         <Button variant="solid" type="button" onClick={handleSubmit}>

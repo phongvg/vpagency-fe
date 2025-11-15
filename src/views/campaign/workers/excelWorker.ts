@@ -1,4 +1,4 @@
-import { Campaign } from '@/@types/campaign'
+import { Campaign } from '@/views/campaign/types/campaign.type'
 import { removeDash } from '@/helpers/removeDash'
 import * as XLSX from 'xlsx'
 
@@ -108,7 +108,7 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
 
     mccCustomerListSheet.forEach((row) => {
       const customerId = removeDash(String(row['Customer ID']))
-      const mccId = Number(removeDash(String(row['MCC ID'])))
+      const mccId = removeDash(String(row['MCC ID']))
       mccMap.set(customerId, mccId)
     })
 
@@ -137,7 +137,6 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
       let uidString =
         typeof uidValue === 'string' && uidValue.startsWith('customers/') ? uidValue.split('/')[1] : String(uidValue)
       uidString = removeDash(uidString)
-      const uidKey = Number(uidString)
       const mcc = mccMap.get(uidString) || null
 
       const finalUrlAds = adGroupAdRows.map((row) => row['Final URL'])
@@ -175,7 +174,7 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
       return {
         datePull,
         dateData,
-        uid: uidKey,
+        uid: uidString,
         mcc,
         campaignName: campaignName[index] || null,
         campaignId: id || null,

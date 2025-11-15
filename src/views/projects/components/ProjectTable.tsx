@@ -25,7 +25,7 @@ const OwnerColumn = ({ row }: { row: Project }) => {
 }
 
 export default function ProjectTable() {
-  const { filter, setFilter, setDialogOpen, setSelectedProject } = useProjectStore()
+  const { filter, openDialog, setFilter, setSelectedProject } = useProjectStore()
 
   const { data: getProjectsResponse, isLoading } = useGetProjectsQuery()
   const deleteProjectMutation = useDeleteProjectMutation()
@@ -42,9 +42,9 @@ export default function ProjectTable() {
   const handleEdit = useCallback(
     (project: Project) => {
       setSelectedProject(project)
-      setDialogOpen(true)
+      openDialog()
     },
-    [setDialogOpen, setSelectedProject],
+    [openDialog, setSelectedProject],
   )
 
   const handleDelete = useCallback(

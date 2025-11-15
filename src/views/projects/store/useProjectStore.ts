@@ -1,26 +1,20 @@
 import { CommonFilterRequest } from '@/@types/common'
-import { ProjectStatus, ProjectType } from '@/enums/project.enum'
 import { Project } from '@/views/projects/types/project.type'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
-type ProjectFilter = CommonFilterRequest & {
-  status?: ProjectStatus
-  type?: ProjectType
-  ownerId?: string
-}
-
 type ProjectState = {
-  filter: ProjectFilter
+  filter: CommonFilterRequest
   projects: Project[]
   selectedProject: Project | null
   dialogOpen: boolean
 
-  setFilter: (filter: ProjectFilter) => void
+  setFilter: (filter: CommonFilterRequest) => void
   setSearch: (search: string) => void
   setProjects: (projects: Project[]) => void
   setSelectedProject: (project: Project | null) => void
-  setDialogOpen: (open: boolean) => void
+  openDialog: () => void
+  closeDialog: () => void
   clearFilter: () => void
 }
 
@@ -46,7 +40,8 @@ export const useProjectStore = create<ProjectState>()(
     },
     setProjects: (projects) => set({ projects }),
     setSelectedProject: (project) => set({ selectedProject: project }),
-    setDialogOpen: (open) => set({ dialogOpen: open }),
+    openDialog: () => set({ dialogOpen: true }),
+    closeDialog: () => set({ selectedProject: null, dialogOpen: false }),
     clearFilter: () => set({ filter: initialProjectState.filter }),
   })),
 )

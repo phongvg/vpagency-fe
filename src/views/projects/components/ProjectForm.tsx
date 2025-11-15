@@ -37,18 +37,14 @@ const validationSchema = Yup.object().shape({
   startedAt: Yup.date().nullable(),
 })
 
-type ProjectFormProps = {
-  onClose: () => void
-}
-
 const gendersOptions: SelectOption[] = [
   { value: 'male', label: 'Nam' },
   { value: 'female', label: 'Nữ' },
   { value: 'both', label: 'Nam và Nữ' },
 ]
 
-export default function ProjectForm({ onClose }: ProjectFormProps) {
-  const { selectedProject } = useProjectStore()
+export default function ProjectForm() {
+  const { selectedProject, closeDialog } = useProjectStore()
   const isEdit = !!selectedProject
 
   const createMutation = useCreateProjectMutation()
@@ -109,7 +105,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
       await createMutation.mutateAsync(values)
     }
 
-    onClose()
+    closeDialog()
   }
 
   return (
@@ -327,7 +323,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
             </div>
 
             <div className="flex justify-end gap-2 mt-6">
-              <Button type="button" disabled={isSubmitting} onClick={onClose}>
+              <Button type="button" disabled={isSubmitting} onClick={closeDialog}>
                 Hủy
               </Button>
               <Button variant="solid" type="submit" loading={isSubmitting}>

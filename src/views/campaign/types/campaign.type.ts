@@ -1,10 +1,11 @@
-export interface Campaign {
+export type Campaign = {
+  id?: string
   datePull: string | null
   dateData: string | null
-  uid: number | null
-  mcc: number | null
+  uid: string | null
+  mcc: string | null
   campaignName: string | null
-  campaignId: number | null
+  campaignId: string | null
   finalUrl: string | null
   keyword: string[]
   match: string[]
@@ -25,3 +26,5 @@ export interface Campaign {
   clickCountry: number | null
   costCountry: number | null
 }
+
+export type UpdateCampaignRequest = Partial<Campaign>

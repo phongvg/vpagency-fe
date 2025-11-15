@@ -1,4 +1,4 @@
-import { Campaign } from '@/@types/campaign'
+import { Campaign } from '@/views/campaign/types/campaign.type'
 import { addDash } from '@/helpers/addDash'
 import { Badge, Tooltip } from '@/components/ui'
 import { FixedSizeList } from 'react-window'
@@ -424,7 +424,6 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
             </div>
           </div>
 
-          {/* Virtual List */}
           <FixedSizeList
             height={tableHeight}
             itemCount={campaigns.length}

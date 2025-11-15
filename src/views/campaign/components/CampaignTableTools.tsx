@@ -4,10 +4,10 @@ import CampaignSearch from '@/views/campaign/components/CampaignSearch'
 import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
 import { useExcelWorker } from '@/views/campaign/hooks/useExcelWorker'
 import { useRef, ChangeEvent } from 'react'
-import { HiOutlineDownload, HiOutlineRefresh } from 'react-icons/hi'
+import { HiOutlineDownload, HiOutlinePlus, HiOutlineRefresh } from 'react-icons/hi'
 
 export default function CampaignTableTools() {
-  const { openDialog, setCampaigns } = useCampaignStore()
+  const { openDialog, openPreviewDialog, setCampaigns } = useCampaignStore()
   const { processFile, isProcessing, progress } = useExcelWorker()
 
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -24,7 +24,7 @@ export default function CampaignTableTools() {
       const data = await processFile(file)
 
       setCampaigns(data)
-      openDialog()
+      openPreviewDialog()
       toastSuccess(`Đã nhập ${data.length} chiến dịch thành công`)
     } catch (err) {
       toastError((err as Error).message ?? 'Lỗi nhập dữ liệu')
@@ -40,15 +40,14 @@ export default function CampaignTableTools() {
           <CampaignSearch />
           <Button size="sm" icon={<HiOutlineRefresh />} />
         </div>
-        <Button
-          loading={isProcessing}
-          size="sm"
-          variant="solid"
-          icon={<HiOutlineDownload />}
-          onClick={handleImportClick}
-        >
-          Nhập dữ liệu
-        </Button>
+        <div className="flex gap-2">
+          <Button loading={isProcessing} size="sm" icon={<HiOutlineDownload />} onClick={handleImportClick}>
+            Nhập dữ liệu
+          </Button>
+          <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={() => openDialog()}>
+            Thêm mới
+          </Button>
+        </div>
       </div>
 
       {isProcessing && (
