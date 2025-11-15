@@ -1,9 +1,8 @@
-import { BaseListResponse, BaseResponse } from '@/@types/common'
-import { Project } from '@/@types/project'
-import ApiService from './ApiService'
-import { CreateProjectRequest, ProjectListFilterRequest, UpdateProjectRequest } from '@/views/projects/types'
+import { BaseListResponse, BaseResponse, CommonFilterRequest } from '@/@types/common'
+import ApiService from '@/services/ApiService'
+import { Project, UpdateProjectRequest } from '@/views/projects/types/project.type'
 
-export async function apiGetProjectList(params: ProjectListFilterRequest) {
+export async function apiGetProjectList(params: CommonFilterRequest) {
   return ApiService.fetchData<BaseListResponse<Project>>({
     url: '/projects',
     method: 'get',
@@ -18,7 +17,7 @@ export async function apiGetProjectById(projectId: string) {
   })
 }
 
-export async function apiCreateProject(payload: CreateProjectRequest) {
+export async function apiCreateProject(payload: UpdateProjectRequest) {
   return ApiService.fetchData<BaseResponse<Project>>({
     url: '/projects',
     method: 'post',
@@ -38,13 +37,5 @@ export async function apiDeleteProject(projectId: string) {
   return ApiService.fetchData<BaseResponse<null>>({
     url: `/projects/${projectId}`,
     method: 'delete',
-  })
-}
-
-export async function apiGetProjectsByOwner(ownerId: string, params: ProjectListFilterRequest) {
-  return ApiService.fetchData<BaseListResponse<Project>>({
-    url: `/projects/owner/${ownerId}`,
-    method: 'get',
-    params,
   })
 }

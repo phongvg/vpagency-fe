@@ -77,6 +77,23 @@ const appsNavigationConfig: NavigationTree[] = [
             authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.ACCOUNTING],
             subMenu: [],
           },
+          {
+            key: 'campaigns',
+            path: urlConfig.campains,
+            title: 'Chiến dịch dự án',
+            translateKey: '',
+            icon: '',
+            type: NAV_ITEM_TYPE_ITEM,
+            authority: [
+              Role.ADMIN,
+              Role.MANAGER_AFF,
+              Role.MANAGER_AGENCY,
+              Role.MEMBER_AFF,
+              Role.MEMBER_AGENCY,
+              Role.ACCOUNTING,
+            ],
+            subMenu: [],
+          },
         ],
       },
       {

@@ -1,18 +1,15 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useGetProjectsQuery, useDeleteProjectMutation } from '@/views/projects/hooks/useProjectsQueries'
 import { ColumnDef } from '@tanstack/react-table'
-import { Project } from '@/@types/project'
-import { Avatar, Badge , ConfirmDialog } from '@/components/ui'
+import { Avatar, ConfirmDialog } from '@/components/ui'
 import { DataTable } from '@/components/shared'
 import { useProjectStore } from '@/views/projects/store/useProjectStore'
 import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
-import ProjectEditDialog from '@/views/projects/components/ProjectEditDialog'
-import { ProjectStatusColors, ProjectStatusLabels, ProjectTypeLabels } from '@/enums/project.enum'
-import { toastSuccess, toastError } from '@/utils/toast'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
-
 import { Link } from 'react-router-dom'
 import { urlConfig } from '@/configs/urls.config'
+import { Project } from '@/views/projects/types/project.type'
+import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 
 const OwnerColumn = ({ row }: { row: Project }) => {
   const ownerName = row.owner
@@ -29,8 +26,10 @@ const OwnerColumn = ({ row }: { row: Project }) => {
 
 export default function ProjectTable() {
   const { filter, setFilter, setDialogOpen, setSelectedProject } = useProjectStore()
+
   const { data: getProjectsResponse, isLoading } = useGetProjectsQuery()
   const deleteProjectMutation = useDeleteProjectMutation()
+
   const { showConfirm, confirmProps } = useConfirmDialog({
     title: 'Xác nhận xóa dự án',
     type: 'danger',
@@ -40,27 +39,26 @@ export default function ProjectTable() {
 
   const metaTableData = useMemo(() => getProjectsResponse?.meta, [getProjectsResponse])
 
-  const handleEdit = (project: Project) => {
-    setSelectedProject(project)
-    setDialogOpen(true)
-  }
+  const handleEdit = useCallback(
+    (project: Project) => {
+      setSelectedProject(project)
+      setDialogOpen(true)
+    },
+    [setDialogOpen, setSelectedProject],
+  )
 
-  const handleDelete = async (project: Project) => {
-    const confirmed = await showConfirm({
-      message: `Bạn có chắc chắn muốn xóa dự án "${project.name}"? Hành động này không thể hoàn tác.`,
-    })
+  const handleDelete = useCallback(
+    async (project: Project) => {
+      const confirmed = await showConfirm({
+        message: `Bạn có chắc chắn muốn xóa dự án "${project.name}"? Hành động này không thể hoàn tác.`,
+      })
 
-    if (confirmed) {
-      try {
+      if (confirmed) {
         await deleteProjectMutation.mutateAsync(project.id)
-        toastSuccess('Xóa dự án thành công')
-      } catch (error: any) {
-        const errorMessage =
-          error?.response?.data?.message || 'Xóa dự án thất bại. Vui lòng kiểm tra lại các ràng buộc dữ liệu.'
-        toastError(errorMessage)
       }
-    }
-  }
+    },
+    [deleteProjectMutation, showConfirm],
+  )
 
   const columns: ColumnDef<Project>[] = useMemo(
     () => [
@@ -89,7 +87,7 @@ export default function ProjectTable() {
         accessorKey: 'type',
         cell: (props) => {
           const row = props.row.original
-          return <span>{ProjectTypeLabels[row.type as keyof typeof ProjectTypeLabels] || row.type}</span>
+          return <span>{row.type.name}</span>
         },
       },
       {
@@ -105,7 +103,7 @@ export default function ProjectTable() {
         accessorKey: 'totalBudget',
         cell: (props) => {
           const row = props.row.original
-          return <span>{row.totalBudget ? row.totalBudget.toLocaleString('vi-VN') : '0'} đ</span>
+          return <span>{formatVietnameseMoney(row.totalBudget)}</span>
         },
       },
       {
@@ -113,7 +111,7 @@ export default function ProjectTable() {
         accessorKey: 'spentBudget',
         cell: (props) => {
           const row = props.row.original
-          return <span>{row.spentBudget ? row.spentBudget.toLocaleString('vi-VN') : '0'} đ</span>
+          return <span>{formatVietnameseMoney(row.spentBudget)}</span>
         },
       },
       {
@@ -121,14 +119,7 @@ export default function ProjectTable() {
         accessorKey: 'status',
         cell: (props) => {
           const row = props.row.original
-          return (
-            <div className="flex items-center gap-2">
-              <Badge className={`bg-${ProjectStatusColors[row.status]}`} />
-              <span className={`capitalize font-semibold text-${ProjectStatusColors[row.status]}`}>
-                {ProjectStatusLabels[row.status]}
-              </span>
-            </div>
-          )
+          return <span className="font-bold">{row.status.name}</span>
         },
       },
       {
@@ -149,7 +140,7 @@ export default function ProjectTable() {
         },
       },
     ],
-    [filter, deleteProjectMutation],
+    [filter, handleDelete, handleEdit],
   )
 
   const onPaginationChange = (page: number) => {
@@ -176,7 +167,6 @@ export default function ProjectTable() {
         onPaginationChange={onPaginationChange}
         onSelectChange={onSelectChange}
       />
-      <ProjectEditDialog />
       <ConfirmDialog {...confirmProps} loading={deleteProjectMutation.isPending} />
     </>
   )

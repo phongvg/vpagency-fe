@@ -20,13 +20,11 @@ export default function TaskSplitView() {
     if (taskDetail) {
       setSelectedTask(taskDetail)
     }
-  }, [taskDetail, setSelectedTask])
 
-  useEffect(() => {
     return () => {
       setSelectedTask(null)
     }
-  }, [])
+  }, [taskDetail, setSelectedTask])
 
   const handleTaskSelect = (task: Task) => {
     navigate(`?id=${task.id}`)
@@ -71,8 +69,8 @@ export default function TaskSplitView() {
           {isMobileDetailView && (
             <div className="md:hidden bg-white p-4 border-gray-200 border-b">
               <button
-                onClick={handleBackToList}
                 className="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
+                onClick={handleBackToList}
               >
                 <svg className="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />

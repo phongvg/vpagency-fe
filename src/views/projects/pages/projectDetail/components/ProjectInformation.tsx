@@ -1,12 +1,11 @@
-import { Project } from '@/@types/project'
 import { Breadcrumb, BreadcrumbItem } from '@/components/shared'
 import { Avatar, Card } from '@/components/ui'
 import { urlConfig } from '@/configs/urls.config'
-import { ProjectStatusLabels, ProjectTypeLabels } from '@/enums/project.enum'
 import { formatDate } from '@/helpers/formatDate'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 import AdsGroupTable from '@/views/projects/pages/projectDetail/components/AdsGroupTable'
 import ProjectDailyReportsSection from '@/views/projects/pages/projectDetail/components/ProjectDailyReportsSection'
+import { Project } from '@/views/projects/types/project.type'
 
 type Props = {
   data: Project
@@ -26,9 +25,9 @@ export default function ProjectInformation({ data }: Props) {
           <Card>
             <div className="flex flex-col xl:justify-between mx-auto 2xl:min-w-[360px] h-full">
               <div className="gap-x-4 gap-y-7 grid grid-cols-1 xl:grid-cols-2">
-                <ProjectInfoField title="Loại dự án" value={ProjectTypeLabels[data.type]} />
+                <ProjectInfoField title="Loại dự án" value={data.type.name} />
                 <ProjectInfoField title="Tiêu đề" value={data.title} />
-                <ProjectInfoField title="Trạng thái" value={ProjectStatusLabels[data.status]} />
+                <ProjectInfoField title="Trạng thái" value={data.status.name} />
                 <ProjectInfoField title="CPC" value={data.cpc} />
                 <ProjectInfoField title="Ngày bắt đầu" value={formatDate(data.startedAt, 'DD/MM/YYYY')} />
                 <ProjectInfoField title="Deadline" value={formatDate(data.deadline, 'DD/MM/YYYY')} />
@@ -79,16 +78,14 @@ export default function ProjectInformation({ data }: Props) {
                 <ProjectInfoListField title="Quốc gia" value={data.targetCountries} />
                 <ProjectInfoListField title="Quốc gia bị hạn chế" value={data.rejectedCountries} />
                 <ProjectInfoListField title="Thiết bị" value={data.devices} />
-                <ProjectInfoListField title="Độ tuổi" value={data.ageRanges} />
-                <ProjectInfoListField title="Giới tính" value={data.genders} />
+                <ProjectInfoField title="Độ tuổi" value={data.ageRanges} />
+                <ProjectInfoField title="Giới tính" value={data.genders} />
               </div>
             </div>
           </Card>
         </div>
 
         <AdsGroupTable data={data.adsGroups} />
-
-        {/* Project Daily Reports Section */}
         <ProjectDailyReportsSection projectId={data.id} />
       </div>
     </>

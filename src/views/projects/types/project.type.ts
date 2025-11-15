@@ -1,12 +1,14 @@
-import { ProjectStatus, ProjectType } from '@/enums/project.enum'
-import { User } from './user'
 import { AdsGroup } from '@/@types/adsGroup'
+import { MasterData } from '@/@types/masterData'
+import { User } from '@/@types/user'
 
 export interface Project {
   id: string
   name: string
-  type: ProjectType
-  status: ProjectStatus
+  type: MasterData
+  typeId: string
+  status: MasterData
+  statusId: string
   ownerId: string
   owner: User
   totalBudget: number
@@ -21,16 +23,20 @@ export interface Project {
   trackingURL: string
   targetCountries: string[]
   rejectedCountries: string[]
-  startedAt: string | Date | null
+  startedAt: Date | null
   devices: string[]
   age: number | null
   gender: string
   content: string | null
   title: string | null
   note: string | null
-  deadline: string | Date | null
+  deadline: Date | null
   adsGroups: AdsGroup[]
   description: string | null
+  ageRanges: string
+  genders: string
   createdAt: string | Date | null
   updatedAt: string | Date | null
 }
+
+export type UpdateProjectRequest = Partial<Project>

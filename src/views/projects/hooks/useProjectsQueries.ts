@@ -1,10 +1,15 @@
 import { ApiAxiosError } from '@/@types/apiError'
-import { apiCreateProject, apiDeleteProject, apiGetProjectList, apiUpdateProject } from '@/services/ProjectService'
+import {
+  apiCreateProject,
+  apiDeleteProject,
+  apiGetProjectList,
+  apiUpdateProject,
+} from '@/views/projects/services/ProjectService'
 import { GET_PROJECT_LIST } from '@/utils/queryKey'
 import { toastError, toastSuccess } from '@/utils/toast'
 import { useProjectStore } from '@/views/projects/store/useProjectStore'
-import { CreateProjectRequest, UpdateProjectRequest } from '@/views/projects/types'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { UpdateProjectRequest } from '@/views/projects/types/project.type'
 
 export const useGetProjectsQuery = () => {
   const { filter } = useProjectStore()
@@ -22,7 +27,7 @@ export const useCreateProjectMutation = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (payload: CreateProjectRequest) => apiCreateProject(payload),
+    mutationFn: (payload: UpdateProjectRequest) => apiCreateProject(payload),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: [GET_PROJECT_LIST] })
       toastSuccess(response.data.message)

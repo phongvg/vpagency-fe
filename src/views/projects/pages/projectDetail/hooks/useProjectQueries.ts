@@ -1,4 +1,4 @@
-import { apiGetProjectById } from '@/services/ProjectService'
+import { apiGetProjectById } from '@/views/projects/services/ProjectService'
 import { GET_PROJECT_DETAIL } from '@/utils/queryKey'
 import { useQuery } from '@tanstack/react-query'
 

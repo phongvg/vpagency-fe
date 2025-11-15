@@ -1,7 +1,5 @@
 import { Button, DatePicker, FormContainer, FormItem, Input, Select, Textarea } from '@/components/ui'
-import { ProjectStatus, ProjectStatusLabels, ProjectType, ProjectTypeLabels } from '@/enums/project.enum'
-import { CreateProjectRequest, UpdateProjectRequest } from '@/views/projects/types'
-import { Field, Form, Formik } from 'formik'
+import { Field, FieldProps, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { useProjectStore } from '@/views/projects/store/useProjectStore'
 import { useCreateProjectMutation, useUpdateProjectMutation } from '@/views/projects/hooks/useProjectsQueries'
@@ -9,10 +7,15 @@ import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
 import TagInput from '@/components/shared/TagInput'
 import NumberInput from '@/components/shared/NumberInput'
 import { SelectOption } from '@/@types/common'
+import SelectCustom from '@/components/shared/SelectCustom'
+import { apiGetProjectTypeList } from '@/services/ProjectTypeService'
+import { apiGetProjectStatusList } from '@/services/ProjectStatusService'
+import { UpdateProjectRequest } from '@/views/projects/types/project.type'
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Tên dự án là bắt buộc'),
-  type: Yup.string().required('Loại dự án là bắt buộc'),
+  typeId: Yup.string().required('Loại dự án là bắt buộc'),
+  statusId: Yup.string().required('Trạng thái là bắt buộc'),
 })
 
 type ProjectFormProps = {
@@ -25,16 +28,6 @@ const gendersOptions: SelectOption[] = [
   { value: 'both', label: 'Nam và Nữ' },
 ]
 
-const typeOptions = Object.values(ProjectType).map((type) => ({
-  value: type,
-  label: ProjectTypeLabels[type],
-}))
-
-const statusOptions = Object.values(ProjectStatus).map((status) => ({
-  value: status,
-  label: ProjectStatusLabels[status],
-}))
-
 export default function ProjectForm({ onClose }: ProjectFormProps) {
   const { selectedProject } = useProjectStore()
   const isEdit = !!selectedProject
@@ -42,10 +35,30 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
   const createMutation = useCreateProjectMutation()
   const updateMutation = useUpdateProjectMutation()
 
-  const initialValues: CreateProjectRequest | UpdateProjectRequest = {
+  const fetchProjectTypes = async ({ page, limit, search }: { page: number; limit: number; search?: string }) => {
+    const response = await apiGetProjectTypeList({ page, limit, search: search || '' })
+    const { items, meta } = response.data.data
+    return {
+      data: items,
+      total: meta.total,
+      hasMore: meta.hasNext,
+    }
+  }
+
+  const fetchProjectStatuses = async ({ page, limit, search }: { page: number; limit: number; search?: string }) => {
+    const response = await apiGetProjectStatusList({ page, limit, search: search || '' })
+    const { items, meta } = response.data.data
+    return {
+      data: items,
+      total: meta.total,
+      hasMore: meta.hasNext,
+    }
+  }
+
+  const initialValues: UpdateProjectRequest = {
     name: selectedProject?.name || '',
-    type: (selectedProject?.type as ProjectType) || ProjectType.SET_CAMPAIGN,
-    status: (selectedProject?.status as ProjectStatus) || ProjectStatus.RUNNING,
+    typeId: selectedProject?.typeId || '',
+    statusId: selectedProject?.statusId || '',
     totalBudget: selectedProject?.totalBudget || 0,
     exclusiveKeywords: selectedProject?.exclusiveKeywords || [],
     rejectedKeywords: selectedProject?.rejectedKeywords || [],
@@ -67,14 +80,14 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
     startedAt: selectedProject?.startedAt ? new Date(selectedProject.startedAt) : null,
   }
 
-  const handleSubmit = async (values: CreateProjectRequest | UpdateProjectRequest) => {
+  const handleSubmit = async (values: UpdateProjectRequest) => {
     if (isEdit) {
       await updateMutation.mutateAsync({
         projectId: selectedProject.id,
-        payload: values as UpdateProjectRequest,
+        payload: values,
       })
     } else {
-      await createMutation.mutateAsync(values as CreateProjectRequest)
+      await createMutation.mutateAsync(values)
     }
 
     onClose()
@@ -90,41 +103,40 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
       {({ errors, touched, isSubmitting, setFieldValue, values }) => (
         <Form>
           <FormContainer>
-            <FormItem asterisk label="Tên dự án" invalid={errors.name && touched.name} errorMessage={errors.name}>
-              <Field type="text" autoComplete="off" name="name" placeholder="Nhập tên dự án..." component={Input} />
-            </FormItem>
+            <div className="gap-4 grid grid-cols-3">
+              <FormItem asterisk label="Tên dự án" invalid={errors.name && touched.name} errorMessage={errors.name}>
+                <Field type="text" autoComplete="off" name="name" placeholder="Nhập tên dự án..." component={Input} />
+              </FormItem>
 
-            <div className="gap-4 grid grid-cols-2">
-              <FormItem asterisk label="Loại dự án" invalid={errors.type && touched.type} errorMessage={errors.type}>
-                <Select
-                  name="type"
-                  value={typeOptions.find((opt) => opt.value === values.type)}
-                  options={typeOptions}
-                  placeholder="Chọn loại dự án"
-                  onChange={(option: any) => setFieldValue('type', option?.value)}
-                />
+              <FormItem
+                asterisk
+                label="Loại dự án"
+                invalid={errors.typeId && touched.typeId}
+                errorMessage={errors.typeId}
+              >
+                <Field name="typeId">
+                  {({ field, form }: FieldProps) => (
+                    <SelectCustom field={field} form={form} fetchOptions={fetchProjectTypes} />
+                  )}
+                </Field>
               </FormItem>
 
               <FormItem
                 asterisk
                 label="Trạng thái"
-                invalid={errors.status && touched.status}
-                errorMessage={errors.status as string}
+                invalid={errors.statusId && touched.statusId}
+                errorMessage={errors.statusId as string}
               >
-                <Select
-                  name="status"
-                  value={statusOptions.find((opt) => opt.value === values.status)}
-                  options={statusOptions}
-                  placeholder="Chọn trạng thái"
-                  onChange={(option: any) => setFieldValue('status', option?.value)}
-                />
+                <Field name="statusId">
+                  {({ field, form }: FieldProps) => (
+                    <SelectCustom field={field} form={form} fetchOptions={fetchProjectStatuses} />
+                  )}
+                </Field>
               </FormItem>
-            </div>
 
-            <div className="gap-4 grid grid-cols-2">
               <FormItem label="Tổng ngân sách">
                 <Field name="totalBudget">
-                  {({ field, form }: any) => (
+                  {({ field, form }: FieldProps) => (
                     <FormCurrencyInput form={form} field={field} placeholder="Nhập tổng ngân sách" />
                   )}
                 </Field>
@@ -139,9 +151,16 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('title', e.target.value)}
                 />
               </FormItem>
-            </div>
 
-            <div className="gap-4 grid grid-cols-2">
+              <FormItem label="Deadline">
+                <DatePicker
+                  value={values.deadline}
+                  placeholder="dd/mm/yyyy"
+                  inputFormat="DD/MM/YYYY"
+                  onChange={(date) => setFieldValue('deadline', date)}
+                />
+              </FormItem>
+
               <FormItem label="Mô tả">
                 <Field
                   name="description"
@@ -161,34 +180,23 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFieldValue('note', e.target.value)}
                 />
               </FormItem>
-            </div>
 
-            <FormItem label="Nội dung">
-              <Field
-                name="content"
-                placeholder="Nhập nội dung..."
-                component={Textarea}
-                rows={3}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFieldValue('content', e.target.value)}
-              />
-            </FormItem>
+              <FormItem label="Nội dung">
+                <Field
+                  name="content"
+                  placeholder="Nhập nội dung..."
+                  component={Textarea}
+                  rows={3}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFieldValue('content', e.target.value)}
+                />
+              </FormItem>
 
-            <div className="gap-4 grid grid-cols-3">
               <FormItem label="Ngày bắt đầu">
                 <DatePicker
                   value={values.startedAt}
                   placeholder="dd/mm/yyyy"
                   inputFormat="DD/MM/YYYY"
                   onChange={(date) => setFieldValue('startedAt', date)}
-                />
-              </FormItem>
-
-              <FormItem label="Deadline">
-                <DatePicker
-                  value={values.deadline}
-                  placeholder="dd/mm/yyyy"
-                  inputFormat="DD/MM/YYYY"
-                  onChange={(date) => setFieldValue('deadline', date)}
                 />
               </FormItem>
 
@@ -200,9 +208,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('domainStatus', e.target.value)}
                 />
               </FormItem>
-            </div>
 
-            <div className="gap-4 grid grid-cols-2">
               <FormItem label="Domain gốc">
                 <Field
                   name="originalDomain"
@@ -222,9 +228,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                   }
                 />
               </FormItem>
-            </div>
 
-            <div className="gap-4 grid grid-cols-2">
               <FormItem label="URL cuối cùng">
                 <Field
                   name="finalURL"
@@ -242,9 +246,7 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('trackingURL', e.target.value)}
                 />
               </FormItem>
-            </div>
 
-            <div className="gap-x-4 grid grid-cols-2">
               <FormItem label="Từ khóa độc quyền">
                 <TagInput
                   value={values.exclusiveKeywords || []}
@@ -258,6 +260,14 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                   value={values.rejectedKeywords || []}
                   placeholder="Nhập từ khóa..."
                   onChange={(tags) => setFieldValue('rejectedKeywords', tags)}
+                />
+              </FormItem>
+
+              <FormItem label="Thiết bị">
+                <TagInput
+                  value={values.devices || []}
+                  placeholder="Nhập thiết bị..."
+                  onChange={(tags) => setFieldValue('devices', tags)}
                 />
               </FormItem>
 
@@ -277,16 +287,15 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                 />
               </FormItem>
 
-              <FormItem label="Thiết bị">
-                <TagInput
-                  value={values.devices || []}
-                  placeholder="Nhập thiết bị..."
-                  onChange={(tags) => setFieldValue('devices', tags)}
+              <FormItem label="Giới tính">
+                <Select
+                  options={gendersOptions}
+                  value={gendersOptions.find((opt) => opt.value === values.gender)}
+                  placeholder="Chọn giới tính..."
+                  onChange={(option: SelectOption | null) => setFieldValue('gender', option?.value)}
                 />
               </FormItem>
-            </div>
 
-            <div className="gap-4 grid grid-cols-2">
               <FormItem label="Độ tuổi">
                 <NumberInput
                   value={values.age}
@@ -294,15 +303,6 @@ export default function ProjectForm({ onClose }: ProjectFormProps) {
                   max={100}
                   placeholder="Nhập độ tuổi"
                   onChange={(value) => setFieldValue('age', value)}
-                />
-              </FormItem>
-
-              <FormItem label="Giới tính">
-                <Select
-                  options={gendersOptions}
-                  value={gendersOptions.find((opt) => opt.value === values.gender)}
-                  placeholder="Chọn giới tính..."
-                  onChange={(option: SelectOption | null) => setFieldValue('gender', option?.value)}
                 />
               </FormItem>
             </div>

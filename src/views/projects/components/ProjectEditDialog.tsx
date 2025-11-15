@@ -11,7 +11,7 @@ export default function ProjectEditDialog() {
   }
 
   return (
-    <Dialog isOpen={dialogOpen} width={1000} onClose={onDialogClose} onRequestClose={onDialogClose}>
+    <Dialog isOpen={dialogOpen} width={1200} onClose={onDialogClose} onRequestClose={onDialogClose}>
       <h5 className="mb-4">{selectedProject ? 'Cập nhật dự án' : 'Thêm dự án mới'}</h5>
       <ProjectForm onClose={onDialogClose} />
     </Dialog>

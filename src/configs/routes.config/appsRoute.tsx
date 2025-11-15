@@ -139,6 +139,15 @@ const appsRoute: Routes = [
       header: 'Trạng thái UID',
     },
   },
+  {
+    key: 'campaigns',
+    path: urlConfig.campains,
+    component: lazy(() => import('@/views/campaign')),
+    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY],
+    meta: {
+      header: 'Chiến dịch dự án',
+    },
+  },
 ]
 
 export default appsRoute

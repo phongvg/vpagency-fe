@@ -53,25 +53,32 @@ export default function ProjectStatusForm({ onClose }: ProjectStatusFormProps) {
       {({ errors, touched, isSubmitting }) => (
         <Form>
           <FormContainer>
-            <FormItem asterisk label="Tên trạng thái" invalid={errors.name && touched.name} errorMessage={errors.name}>
-              <Field type="text" autoComplete="off" name="name" placeholder="Nhập tên trạng thái" component={Input} />
-            </FormItem>
+            <div className="gap-4 grid">
+              <FormItem
+                asterisk
+                label="Tên trạng thái"
+                invalid={errors.name && touched.name}
+                errorMessage={errors.name}
+              >
+                <Field type="text" autoComplete="off" name="name" placeholder="Nhập tên trạng thái" component={Input} />
+              </FormItem>
 
-            <FormItem
-              label="Mô tả"
-              invalid={errors.description && touched.description}
-              errorMessage={errors.description}
-            >
-              <Field
-                textArea
-                type="text"
-                autoComplete="off"
-                name="description"
-                placeholder="Nhập mô tả"
-                component={Input}
-                rows={4}
-              />
-            </FormItem>
+              <FormItem
+                label="Mô tả"
+                invalid={errors.description && touched.description}
+                errorMessage={errors.description}
+              >
+                <Field
+                  textArea
+                  type="text"
+                  autoComplete="off"
+                  name="description"
+                  placeholder="Nhập mô tả"
+                  component={Input}
+                  rows={4}
+                />
+              </FormItem>
+            </div>
 
             <div className="flex justify-end gap-2 mt-4">
               <Button type="button" onClick={onClose}>

@@ -1,5 +1,5 @@
 .form-item {
-  @apply relative mb-7;
+  @apply relative;
 
   &.horizontal {
     @apply flex flex-auto;

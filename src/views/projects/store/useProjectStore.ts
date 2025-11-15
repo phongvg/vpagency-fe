@@ -1,6 +1,6 @@
 import { CommonFilterRequest } from '@/@types/common'
-import { Project } from '@/@types/project'
 import { ProjectStatus, ProjectType } from '@/enums/project.enum'
+import { Project } from '@/views/projects/types/project.type'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 

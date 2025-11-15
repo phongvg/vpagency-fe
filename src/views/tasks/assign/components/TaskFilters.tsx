@@ -12,7 +12,7 @@ import {
 } from '@/enums/task.enum'
 import { formatDate } from '@/helpers/formatDate'
 import { useDebounce } from '@/hooks/useDebounce'
-import { apiGetProjectList } from '@/services/ProjectService'
+import { apiGetProjectList } from '@/views/projects/services/ProjectService'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import 'dayjs/locale/vi'
 import { useEffect, useMemo, useState } from 'react'
