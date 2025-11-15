@@ -13,7 +13,7 @@ import NumberInput from '@/components/shared/NumberInput'
 import { SelectOption } from '@/@types/common'
 import SelectCustom from '@/components/shared/SelectCustom'
 import { apiGetProjectTypeList } from '@/services/ProjectTypeService'
-import { apiGetProjectStatusList } from '@/services/ProjectStatusService'
+import { apiGetProjectStatusList } from '@/views/masterData/projectStatus/services/ProjectStatusService'
 import { UpdateProjectRequest } from '@/views/projects/types/project.type'
 
 const validationSchema = Yup.object().shape({

@@ -1,10 +1,11 @@
 import { Button, FormContainer, FormItem, Input } from '@/components/ui'
 import {
   useCreateProjectStatusMutation,
+  useGetProjectStatusDetailQuery,
   useUpdateProjectStatusMutation,
 } from '@/views/masterData/projectStatus/hooks/useProjectStatus'
 import { useProjectStatusStore } from '@/views/masterData/projectStatus/store/useProjectStatusStore'
-import type { CreateProjectStatusRequest } from '@/views/masterData/projectStatus/types'
+import type { CreateProjectStatusRequest } from '@/views/masterData/projectStatus/types/projectStatus.type'
 import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
@@ -13,34 +14,30 @@ const validationSchema = Yup.object().shape({
   description: Yup.string().nullable(),
 })
 
-type ProjectStatusFormProps = {
-  onClose: () => void
-}
+export default function ProjectStatusForm() {
+  const { projectStatusId, dialogOpen, closeDialog } = useProjectStatusStore()
+  const isEdit = !!projectStatusId
 
-export default function ProjectStatusForm({ onClose }: ProjectStatusFormProps) {
-  const { selectedProjectStatus } = useProjectStatusStore()
-
+  const { data: projectStatus } = useGetProjectStatusDetailQuery(projectStatusId!, dialogOpen)
   const createMutation = useCreateProjectStatusMutation()
   const updateMutation = useUpdateProjectStatusMutation()
 
-  const isEdit = !!selectedProjectStatus
-
   const initialValues: CreateProjectStatusRequest = {
-    name: selectedProjectStatus?.name || '',
-    description: selectedProjectStatus?.description || '',
+    name: projectStatus?.name || '',
+    description: projectStatus?.description || '',
   }
 
   const handleSubmit = async (values: CreateProjectStatusRequest) => {
     if (isEdit) {
       await updateMutation.mutateAsync({
-        id: selectedProjectStatus.id,
+        id: projectStatusId!,
         payload: values,
       })
     } else {
       await createMutation.mutateAsync(values)
     }
 
-    onClose()
+    closeDialog()
   }
 
   return (
@@ -81,7 +78,7 @@ export default function ProjectStatusForm({ onClose }: ProjectStatusFormProps) {
             </div>
 
             <div className="flex justify-end gap-2 mt-4">
-              <Button type="button" onClick={onClose}>
+              <Button type="button" onClick={closeDialog}>
                 Hủy
               </Button>
               <Button variant="solid" type="submit" loading={isSubmitting} disabled={isSubmitting}>

@@ -3,16 +3,12 @@ import ProjectStatusForm from '@/views/masterData/projectStatus/components/Proje
 import { useProjectStatusStore } from '@/views/masterData/projectStatus/store/useProjectStatusStore'
 
 export default function ProjectStatusEditDialog() {
-  const { dialogOpen, setDialogOpen, selectedProjectStatus } = useProjectStatusStore()
-
-  const onDialogClose = () => {
-    setDialogOpen(false)
-  }
+  const { dialogOpen, projectStatusId, closeDialog } = useProjectStatusStore()
 
   return (
-    <Dialog isOpen={dialogOpen} onClose={onDialogClose} onRequestClose={onDialogClose}>
-      <h5 className="mb-4">{selectedProjectStatus ? 'Cập nhật trạng thái dự án' : 'Thêm trạng thái dự án'}</h5>
-      <ProjectStatusForm onClose={onDialogClose} />
+    <Dialog isOpen={dialogOpen} onClose={closeDialog} onRequestClose={closeDialog}>
+      <h5 className="mb-4">{projectStatusId ? 'Cập nhật trạng thái dự án' : 'Thêm trạng thái dự án'}</h5>
+      <ProjectStatusForm />
     </Dialog>
   )
 }

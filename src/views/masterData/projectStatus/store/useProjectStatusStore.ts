@@ -1,21 +1,17 @@
 import { CommonFilterRequest, SortOrder } from '@/@types/common'
-import { ProjectStatus } from '@/@types/projectStatus'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
 type ProjectStatusState = {
   filter: CommonFilterRequest
-  projectStatuses: ProjectStatus[]
-  selectedProjectStatus: ProjectStatus | null
+  projectStatusId: string | null
   dialogOpen: boolean
-  deleteDialogOpen: boolean
 
   setFilter: (filter: CommonFilterRequest) => void
   setSearch: (search: string) => void
-  setProjectStatuses: (projectStatuses: ProjectStatus[]) => void
-  setSelectedProjectStatus: (projectStatus: ProjectStatus | null) => void
-  setDialogOpen: (open: boolean) => void
-  setDeleteDialogOpen: (open: boolean) => void
+  setProjectStatusId: (projectStatusId: string | null) => void
+  openDialog: (projectStatusId?: string | null) => void
+  closeDialog: () => void
   clearFilter: () => void
 }
 
@@ -27,10 +23,8 @@ export const initialProjectStatusState = {
     sortBy: 'createdAt',
     sortOrder: 'desc' as SortOrder,
   },
-  projectStatuses: [],
-  selectedProjectStatus: null,
+  projectStatusId: null,
   dialogOpen: false,
-  deleteDialogOpen: false,
 }
 
 export const useProjectStatusStore = create<ProjectStatusState>()(
@@ -42,10 +36,17 @@ export const useProjectStatusStore = create<ProjectStatusState>()(
       const currentFilter = get().filter
       set({ filter: { ...currentFilter, search, page: 1 } })
     },
-    setProjectStatuses: (projectStatuses) => set({ projectStatuses }),
-    setSelectedProjectStatus: (projectStatus) => set({ selectedProjectStatus: projectStatus }),
-    setDialogOpen: (open) => set({ dialogOpen: open }),
-    setDeleteDialogOpen: (open) => set({ deleteDialogOpen: open }),
+    setProjectStatusId: (projectStatusId) => set({ projectStatusId }),
+    openDialog: (projectStatusId) =>
+      set({
+        projectStatusId: projectStatusId || null,
+        dialogOpen: true,
+      }),
+    closeDialog: () =>
+      set({
+        projectStatusId: null,
+        dialogOpen: false,
+      }),
     clearFilter: () => set({ filter: initialProjectStatusState.filter }),
   })),
 )

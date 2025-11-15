@@ -1,13 +1,8 @@
 import { BaseListResponse, BaseResponse } from '@/@types/common'
-import { ProjectStatus } from '@/@types/projectStatus'
-import {
-  CreateProjectStatusRequest,
-  ProjectStatusFilterRequest,
-  UpdateProjectStatusRequest,
-} from '@/views/masterData/projectStatus/types'
-import ApiService from './ApiService'
+import { ProjectStatus, UpdateProjectStatusRequest } from '@/views/masterData/projectStatus/types/projectStatus.type'
+import ApiService from '@/services/ApiService'
 
-export async function apiGetProjectStatusList(params: ProjectStatusFilterRequest) {
+export async function apiGetProjectStatusList(params: any) {
   return ApiService.fetchData<BaseListResponse<ProjectStatus>>({
     url: '/project-statuses',
     method: 'get',
@@ -22,7 +17,7 @@ export async function apiGetProjectStatusById(id: string) {
   })
 }
 
-export async function apiCreateProjectStatus(payload: CreateProjectStatusRequest) {
+export async function apiCreateProjectStatus(payload: UpdateProjectStatusRequest) {
   return ApiService.fetchData<BaseResponse<ProjectStatus>>({
     url: '/project-statuses',
     method: 'post',

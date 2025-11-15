@@ -4,12 +4,7 @@ import { useProjectStatusStore } from '@/views/masterData/projectStatus/store/us
 import { HiOutlinePlus, HiOutlineRefresh } from 'react-icons/hi'
 
 export default function ProjectStatusTableTools() {
-  const { clearFilter, setDialogOpen, setSelectedProjectStatus } = useProjectStatusStore()
-
-  const handleAddNew = () => {
-    setSelectedProjectStatus(null)
-    setDialogOpen(true)
-  }
+  const { clearFilter, openDialog } = useProjectStatusStore()
 
   return (
     <div className="flex justify-between items-center mb-4">
@@ -17,7 +12,7 @@ export default function ProjectStatusTableTools() {
         <ProjectStatusSearch />
         <Button size="sm" icon={<HiOutlineRefresh />} onClick={clearFilter} />
       </div>
-      <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={handleAddNew}>
+      <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={() => openDialog()}>
         Thêm mới
       </Button>
     </div>

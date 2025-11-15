@@ -1,4 +1,4 @@
-import { ProjectStatus } from '@/@types/projectStatus'
+import { ProjectStatus } from '@/views/masterData/projectStatus/types/projectStatus.type'
 import { DataTable } from '@/components/shared'
 import { ConfirmDialog, Switcher } from '@/components/ui'
 import { formatDate } from '@/helpers/formatDate'
@@ -15,7 +15,7 @@ import { useMemo } from 'react'
 import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
 
 export default function ProjectStatusTable() {
-  const { filter, setFilter, setDialogOpen, setSelectedProjectStatus } = useProjectStatusStore()
+  const { filter, setFilter, openDialog } = useProjectStatusStore()
   const { data: getProjectStatusesResponse, isLoading } = useGetProjectStatusesQuery()
 
   const updateProjectStatusMutation = useUpdateProjectStatusMutation()
@@ -31,8 +31,7 @@ export default function ProjectStatusTable() {
   const metaTableData = useMemo(() => getProjectStatusesResponse?.meta, [getProjectStatusesResponse])
 
   const handleEdit = (row: ProjectStatus) => {
-    setSelectedProjectStatus(row)
-    setDialogOpen(true)
+    openDialog(row.id)
   }
 
   const handleUpdateStatusActive = async (row: ProjectStatus, active: boolean) => {

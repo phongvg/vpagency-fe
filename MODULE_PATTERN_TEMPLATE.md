@@ -4,9 +4,188 @@
 
 Đây là template pattern chuẩn cho việc xây dựng module CRUD trong dự án React với TypeScript, sử dụng React Query để quản lý data fetching và Zustand để quản lý UI state.
 
+## Cấu trúc thư mục
+
+```
+views/
+  modules/                      # Tên module (số nhiều, ví dụ: projectStatus, campaigns, projects)
+    ├── components/             # Các React components
+    │   ├── ModuleTable.tsx     # Bảng danh sách
+    │   ├── ModuleTableTools.tsx # Toolbar (search, create button)
+    │   ├── ModuleForm.tsx      # Form tạo/sửa
+    │   └── ModuleEditDialog.tsx # Dialog wrapper cho form
+    ├── hooks/                  # Custom hooks
+    │   └── useModule.ts        # React Query hooks (useGetModulesQuery, mutations, etc.)
+    ├── services/               # API services
+    │   └── ModuleService.ts    # API calls (apiGetModuleList, apiGetModuleById, etc.)
+    ├── store/                  # Zustand stores
+    │   └── useModuleStore.ts   # UI state management (filter, moduleId, dialogOpen)
+    ├── types/                  # TypeScript types folder
+    │   └── module.type.ts      # TẤT CẢ types: Entity, Request, Response, Filter
+    └── index.tsx               # Main page component
+```
+
+**Lưu ý về cấu trúc types:**
+
+- **`types/module.type.ts`**: Chứa types của module:
+  - Entity type (ví dụ: `Campaign`, `Project`, `ProjectStatus`)
+  - Update request type: `UpdateModuleRequest = Partial<Module>`
+- **KHÔNG** tạo file `types.ts` riêng ngoài folder types
+- Entity type có `id?: string` (optional vì khi create chưa có ID)
+- Update request dùng `Partial<Entity>` để tất cả field đều optional
+
 ## Kiến trúc
 
-### 1. **Zustand Store** - Quản lý UI State
+### 1. **Types Definition** - Định nghĩa kiểu dữ liệu
+
+**File:** `types/module.type.ts` (TẤT CẢ types trong một file)
+
+**Nhiệm vụ:**
+
+- Định nghĩa type cho entity chính
+- Type cho update request (sử dụng `Partial<Entity>`)
+- Tất cả types của module nằm trong một file duy nhất
+
+**Pattern:**
+
+```typescript
+// Entity type - Các field của entity
+export type Module = {
+  id?: string // ID optional vì khi create chưa có
+  name: string
+  description: string | null // Các field nullable dùng | null
+  active: boolean
+  createdAt: string | Date
+  updatedAt: string | Date
+
+  // Relations (nếu có)
+  owner?: {
+    id: string
+    username: string
+    avatar: string | null
+  }
+
+  // Array fields
+  tags: string[]
+  metadata: Record<string, any> // Cho object động
+}
+
+// Update request - Sử dụng Partial<Module>
+export type UpdateModuleRequest = Partial<Module>
+```
+
+**Quy tắc đặt tên:**
+
+- Entity type: `Module` (số ít, PascalCase)
+- Request type: `UpdateModuleRequest = Partial<Module>`
+- ID field: `id?: string` (optional vì khi create chưa có ID)
+- Tất cả types nằm trong `types/module.type.ts`
+- Import: `import { Module, UpdateModuleRequest } from '../types/module.type'`
+
+### 2. **API Service** - Gọi API
+
+**File:** `services/ModuleService.ts`
+
+**Nhiệm vụ:**
+
+- Tạo các function gọi API
+- Sử dụng ApiService utility
+- Return typed response với BaseResponse/BaseListResponse
+
+**Pattern:**
+
+```typescript
+import { Module, UpdateModuleRequest } from '../types/module.type'
+import { BaseListResponse, BaseResponse } from '@/@types/common'
+import ApiService from '@/services/ApiService'
+
+// GET List - Với pagination và filter
+export async function apiGetModuleList(params: any) {
+  return ApiService.fetchData<BaseListResponse<Module>>({
+    url: '/modules',
+    method: 'get',
+    params,
+  })
+}
+
+// GET Detail - Lấy một item theo ID
+export async function apiGetModuleById(id: string) {
+  return ApiService.fetchData<BaseResponse<Module>>({
+    url: `/modules/${id}`,
+    method: 'get',
+  })
+}
+
+// POST Create - Tạo mới
+export async function apiCreateModule(payload: UpdateModuleRequest) {
+  return ApiService.fetchData<BaseResponse<Module>>({
+    url: '/modules',
+    method: 'post',
+    data: payload,
+  })
+}
+
+// PUT Update - Cập nhật
+export async function apiUpdateModule(moduleId: string, payload: UpdateModuleRequest) {
+  return ApiService.fetchData<BaseResponse<Module>>({
+    url: `/modules/${moduleId}`,
+    method: 'put',
+    data: payload,
+  })
+}
+
+// DELETE - Xóa
+export async function apiDeleteModule(moduleId: string) {
+  return ApiService.fetchData<BaseResponse<null>>({
+    url: `/modules/${moduleId}`,
+    method: 'delete',
+  })
+}
+```
+
+**Response types từ `@/@types/common`:**
+
+```typescript
+// Base response cho single item
+type BaseResponse<T> = {
+  data: T
+  message: string
+  statusCode: number
+}
+
+// Base response cho list với pagination
+type BaseListResponse<T> = {
+  items: T[]
+  meta: {
+    total: number
+    page: number
+    limit: number
+    hasNext: boolean
+    hasPrev: boolean
+  }
+  message: string
+  statusCode: number
+}
+
+// Common filter cho list API
+type CommonFilterRequest = {
+  search?: string
+  page?: number
+  limit?: number
+  sortBy?: string
+  sortOrder?: 'asc' | 'desc'
+}
+```
+
+**Quy tắc đặt tên function:**
+
+- `apiGet{Entity}List` - Lấy danh sách
+- `apiGet{Entity}ById` - Lấy chi tiết
+- `apiCreate{Entity}` - Tạo mới
+- `apiUpdate{Entity}` - Cập nhật
+- `apiDelete{Entity}` - Xóa
+
+### 3. **Zustand Store** - Quản lý UI State
 
 **File:** `store/useModuleStore.ts`
 
@@ -71,7 +250,13 @@ export const useModuleStore = create<ModuleState>()(
 )
 ```
 
-### 2. **React Query Hooks** - Data Fetching
+**Lưu ý quan trọng về Store:**
+
+- Store KHÔNG lưu danh sách modules (`modules: Module[]`) - data này do React Query quản lý
+- Store CHỈ lưu UI state: filter, moduleId, dialogOpen
+- Khi cần access data, sử dụng `useGetModulesQuery()` để lấy từ React Query cache
+
+### 4. **React Query Hooks** - Data Fetching
 
 **File:** `hooks/useModule.ts`
 
@@ -173,7 +358,7 @@ export const useDeleteModuleMutation = () => {
 }
 ```
 
-### 3. **Form Component** - Create/Edit Form
+### 5. **Form Component** - Create/Edit Form
 
 **File:** `components/ModuleForm.tsx`
 
@@ -275,7 +460,7 @@ export default function ModuleForm() {
 }
 ```
 
-### 4. **Table Component** - Danh sách & Actions
+### 6. **Table Component** - Danh sách & Actions
 
 **File:** `components/ModuleTable.tsx`
 
@@ -416,7 +601,7 @@ export default function ModuleTable() {
 }
 ```
 
-### 5. **Table Tools** - Toolbar với nút Create
+### 7. **Table Tools** - Toolbar với nút Create
 
 **File:** `components/ModuleTableTools.tsx`
 
@@ -557,17 +742,76 @@ export default function ModuleTableTools() {
 
 ## Checklist khi tạo module mới
 
-- [ ] Tạo Store với `moduleId: string | null`
-- [ ] Method `openDialog(moduleId?: string | null)` nhận ID tùy chọn
-- [ ] Method `closeDialog()` clear moduleId
-- [ ] Query hook `useGetModulesQuery()` với filter từ store
-- [ ] Query hook `useGetModuleDetailQuery(id, enabled)` với enabled flag
-- [ ] Mutation hooks: create, update, delete với invalidateQueries
-- [ ] Form sử dụng `enableReinitialize`
-- [ ] Form fetch data qua `useGetModuleDetailQuery(moduleId!, dialogOpen)`
-- [ ] Form submit qua mutation hooks
-- [ ] Table gọi `openDialog(module.id)` khi edit
-- [ ] TableTools gọi `openDialog()` không tham số khi tạo mới
+### Types & Service Layer
+
+- [ ] **types/module.type.ts**
+
+  - [ ] Định nghĩa Entity type `Module` với `id?: string` (optional)
+  - [ ] Các field nullable dùng `| null`, không dùng `| undefined`
+  - [ ] Định nghĩa relations nếu có (owner, category, etc.)
+  - [ ] Có `createdAt`, `updatedAt` cho mọi entity
+  - [ ] Định nghĩa `UpdateModuleRequest = Partial<Module>`
+
+- [ ] **services/ModuleService.ts**
+  - [ ] Import types từ `../types/module.type` (Module, UpdateModuleRequest)
+  - [ ] Function `apiGetModuleList(params: any)` - return `BaseListResponse<Module>`
+  - [ ] Function `apiGetModuleById(id: string)` - return `BaseResponse<Module>`
+  - [ ] Function `apiCreateModule(payload: UpdateModuleRequest)` - return `BaseResponse<Module>`
+  - [ ] Function `apiUpdateModule(moduleId: string, payload: UpdateModuleRequest)` - return `BaseResponse<Module>`
+  - [ ] Function `apiDeleteModule(moduleId: string)` - return `BaseResponse<null>`
+
+### State Management
+
+- [ ] **store/useModuleStore.ts**
+  - [ ] State: `moduleId: string | null` (KHÔNG phải `selectedModule: Module | null`)
+  - [ ] State: `dialogOpen: boolean`
+  - [ ] State: `filter: CommonFilterRequest`
+  - [ ] Method `openDialog(moduleId?: string | null)` nhận ID tùy chọn
+  - [ ] Method `closeDialog()` clear moduleId và đóng dialog
+  - [ ] Method `setFilter(filter: CommonFilterRequest)`
+  - [ ] Method `setSearch(search: string)` tự động reset page = 1
+  - [ ] Method `clearFilter()` reset về initial state
+
+### Data Fetching
+
+- [ ] **hooks/useModule.ts**
+  - [ ] Query hook `useGetModulesQuery()` với filter từ store
+  - [ ] Query hook `useGetModuleDetailQuery(id: string, enabled = false)` với enabled flag
+  - [ ] Mutation hook `useCreateModuleMutation()` với invalidateQueries
+  - [ ] Mutation hook `useUpdateModuleMutation()` với invalidateQueries
+  - [ ] Mutation hook `useDeleteModuleMutation()` với invalidateQueries
+  - [ ] Tất cả mutation có `toastSuccess` và `toastError`
+
+### UI Components
+
+- [ ] **components/ModuleForm.tsx**
+
+  - [ ] Sử dụng `const { moduleId, dialogOpen, closeDialog } = useModuleStore()`
+  - [ ] Fetch data: `const { data: module } = useGetModuleDetailQuery(moduleId!, dialogOpen)`
+  - [ ] Formik với `enableReinitialize={true}`
+  - [ ] initialValues map từ `module?.field || defaultValue`
+  - [ ] handleSubmit gọi mutation với `moduleId!` khi update
+  - [ ] Validation schema với Yup
+
+- [ ] **components/ModuleTable.tsx**
+
+  - [ ] Lấy `filter`, `openDialog`, `setFilter` từ store
+  - [ ] Fetch data: `useGetModulesQuery()`
+  - [ ] handleEdit: `openDialog(module.id)` - TRUYỀN ID, không phải object
+  - [ ] handleDelete với confirm dialog
+  - [ ] Columns với STT tính theo pagination
+  - [ ] Pagination handlers: `onPaginationChange`, `onSelectChange`
+
+- [ ] **components/ModuleTableTools.tsx**
+  - [ ] Button "Tạo mới" gọi `openDialog()` KHÔNG có tham số
+  - [ ] Search input với debounce (nếu cần)
+  - [ ] Filter controls (nếu cần)
+
+### Query Keys
+
+- [ ] Thêm constants vào `utils/queryKey.ts`:
+  - [ ] `export const GET_MODULE_LIST = 'getModuleList'`
+  - [ ] `export const GET_MODULE_DETAIL = 'getModuleDetail'`
 
 ## Ví dụ thực tế
 

@@ -2,13 +2,14 @@ import { ApiAxiosError } from '@/@types/apiError'
 import {
   apiCreateProjectStatus,
   apiDeleteProjectStatus,
+  apiGetProjectStatusById,
   apiGetProjectStatusList,
   apiUpdateProjectStatus,
-} from '@/services/ProjectStatusService'
-import { GET_PROJECT_STATUS_LIST } from '@/utils/queryKey'
+} from '@/views/masterData/projectStatus/services/ProjectStatusService'
+import { GET_PROJECT_STATUS_LIST, GET_PROJECT_STATUS_DETAIL } from '@/utils/queryKey'
 import { toastError, toastSuccess } from '@/utils/toast'
 import { useProjectStatusStore } from '@/views/masterData/projectStatus/store/useProjectStatusStore'
-import { CreateProjectStatusRequest, UpdateProjectStatusRequest } from '@/views/masterData/projectStatus/types'
+import { UpdateProjectStatusRequest } from '@/views/masterData/projectStatus/types/projectStatus.type'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 export const useGetProjectStatusesQuery = () => {
@@ -23,11 +24,22 @@ export const useGetProjectStatusesQuery = () => {
   })
 }
 
+export const useGetProjectStatusDetailQuery = (id: string, enabled = false) => {
+  return useQuery({
+    queryKey: [GET_PROJECT_STATUS_DETAIL, id],
+    queryFn: async () => {
+      const response = await apiGetProjectStatusById(id)
+      return response.data.data
+    },
+    enabled: enabled && !!id,
+  })
+}
+
 export const useCreateProjectStatusMutation = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (payload: CreateProjectStatusRequest) => apiCreateProjectStatus(payload),
+    mutationFn: (payload: UpdateProjectStatusRequest) => apiCreateProjectStatus(payload),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: [GET_PROJECT_STATUS_LIST] })
       toastSuccess(response.data.message)
