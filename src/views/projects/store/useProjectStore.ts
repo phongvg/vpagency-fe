@@ -6,14 +6,14 @@ import { devtools } from 'zustand/middleware'
 type ProjectState = {
   filter: CommonFilterRequest
   projects: Project[]
-  selectedProject: Project | null
+  projectId: string | null
   dialogOpen: boolean
 
   setFilter: (filter: CommonFilterRequest) => void
   setSearch: (search: string) => void
   setProjects: (projects: Project[]) => void
-  setSelectedProject: (project: Project | null) => void
-  openDialog: () => void
+  setProjectId: (projectId: string | null) => void
+  openDialog: (projectId?: string | null) => void
   closeDialog: () => void
   clearFilter: () => void
 }
@@ -25,7 +25,7 @@ export const initialProjectState = {
     limit: 10,
   },
   projects: [],
-  selectedProject: null,
+  projectId: null,
   dialogOpen: false,
 }
 
@@ -39,9 +39,9 @@ export const useProjectStore = create<ProjectState>()(
       set({ filter: { ...currentFilter, search, page: 1 } })
     },
     setProjects: (projects) => set({ projects }),
-    setSelectedProject: (project) => set({ selectedProject: project }),
-    openDialog: () => set({ dialogOpen: true }),
-    closeDialog: () => set({ selectedProject: null, dialogOpen: false }),
+    setProjectId: (projectId) => set({ projectId }),
+    openDialog: (projectId) => set({ projectId: projectId || null, dialogOpen: true }),
+    closeDialog: () => set({ projectId: null, dialogOpen: false }),
     clearFilter: () => set({ filter: initialProjectState.filter }),
   })),
 )

@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { useGetProjectsQuery, useDeleteProjectMutation } from '@/views/projects/hooks/useProjectsQueries'
+import { useGetProjectsQuery, useDeleteProjectMutation } from '@/views/projects/hooks/useProject'
 import { ColumnDef } from '@tanstack/react-table'
 import { Avatar, ConfirmDialog } from '@/components/ui'
 import { DataTable } from '@/components/shared'
@@ -25,7 +25,7 @@ const OwnerColumn = ({ row }: { row: Project }) => {
 }
 
 export default function ProjectTable() {
-  const { filter, openDialog, setFilter, setSelectedProject } = useProjectStore()
+  const { filter, openDialog, setFilter } = useProjectStore()
 
   const { data: getProjectsResponse, isLoading } = useGetProjectsQuery()
   const deleteProjectMutation = useDeleteProjectMutation()
@@ -41,10 +41,9 @@ export default function ProjectTable() {
 
   const handleEdit = useCallback(
     (project: Project) => {
-      setSelectedProject(project)
-      openDialog()
+      openDialog(project.id)
     },
-    [openDialog, setSelectedProject],
+    [openDialog],
   )
 
   const handleDelete = useCallback(

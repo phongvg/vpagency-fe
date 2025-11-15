@@ -2,7 +2,11 @@ import { Button, DatePicker, FormContainer, FormItem, Input, Select, Textarea } 
 import { Field, FieldProps, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { useProjectStore } from '@/views/projects/store/useProjectStore'
-import { useCreateProjectMutation, useUpdateProjectMutation } from '@/views/projects/hooks/useProjectsQueries'
+import {
+  useCreateProjectMutation,
+  useGetProjectDetailQuery,
+  useUpdateProjectMutation,
+} from '@/views/projects/hooks/useProject'
 import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
 import TagInput from '@/components/shared/TagInput'
 import NumberInput from '@/components/shared/NumberInput'
@@ -44,9 +48,10 @@ const gendersOptions: SelectOption[] = [
 ]
 
 export default function ProjectForm() {
-  const { selectedProject, closeDialog } = useProjectStore()
-  const isEdit = !!selectedProject
+  const { projectId, dialogOpen, closeDialog } = useProjectStore()
+  const isEdit = !!projectId
 
+  const { data: project } = useGetProjectDetailQuery(projectId!, dialogOpen)
   const createMutation = useCreateProjectMutation()
   const updateMutation = useUpdateProjectMutation()
 
@@ -71,34 +76,34 @@ export default function ProjectForm() {
   }
 
   const initialValues: UpdateProjectRequest = {
-    name: selectedProject?.name || '',
-    typeId: selectedProject?.typeId || '',
-    statusId: selectedProject?.statusId || '',
-    totalBudget: selectedProject?.totalBudget || 0,
-    exclusiveKeywords: selectedProject?.exclusiveKeywords || [],
-    rejectedKeywords: selectedProject?.rejectedKeywords || [],
-    targetCountries: selectedProject?.targetCountries || [],
-    rejectedCountries: selectedProject?.rejectedCountries || [],
-    devices: selectedProject?.devices || [],
-    age: selectedProject?.age || null,
-    gender: selectedProject?.gender || '',
-    title: selectedProject?.title || '',
-    description: selectedProject?.description || '',
-    note: selectedProject?.note || '',
-    content: selectedProject?.content || '',
-    domainStatus: selectedProject?.domainStatus || '',
-    originalDomain: selectedProject?.originalDomain || '',
-    originalLadipage: selectedProject?.originalLadipage || '',
-    finalURL: selectedProject?.finalURL || '',
-    trackingURL: selectedProject?.trackingURL || '',
-    deadline: selectedProject?.deadline ? new Date(selectedProject.deadline) : null,
-    startedAt: selectedProject?.startedAt ? new Date(selectedProject.startedAt) : null,
+    name: project?.name || '',
+    typeId: project?.typeId || '',
+    statusId: project?.statusId || '',
+    totalBudget: project?.totalBudget || 0,
+    exclusiveKeywords: project?.exclusiveKeywords || [],
+    rejectedKeywords: project?.rejectedKeywords || [],
+    targetCountries: project?.targetCountries || [],
+    rejectedCountries: project?.rejectedCountries || [],
+    devices: project?.devices || [],
+    age: project?.age || null,
+    gender: project?.gender || '',
+    title: project?.title || '',
+    description: project?.description || '',
+    note: project?.note || '',
+    content: project?.content || '',
+    domainStatus: project?.domainStatus || '',
+    originalDomain: project?.originalDomain || '',
+    originalLadipage: project?.originalLadipage || '',
+    finalURL: project?.finalURL || '',
+    trackingURL: project?.trackingURL || '',
+    deadline: project?.deadline ? new Date(project.deadline) : null,
+    startedAt: project?.startedAt ? new Date(project.startedAt) : null,
   }
 
   const handleSubmit = async (values: UpdateProjectRequest) => {
     if (isEdit) {
       await updateMutation.mutateAsync({
-        projectId: selectedProject.id,
+        projectId: projectId!,
         payload: values,
       })
     } else {

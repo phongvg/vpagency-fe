@@ -12,7 +12,7 @@ export default function ProjectTableTools() {
         <ProjectSearch />
         <Button size="sm" icon={<HiOutlineRefresh />} onClick={clearFilter} />
       </div>
-      <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={openDialog}>
+      <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={() => openDialog()}>
         Thêm mới
       </Button>
     </div>

@@ -2,10 +2,11 @@ import { ApiAxiosError } from '@/@types/apiError'
 import {
   apiCreateProject,
   apiDeleteProject,
+  apiGetProjectById,
   apiGetProjectList,
   apiUpdateProject,
 } from '@/views/projects/services/ProjectService'
-import { GET_PROJECT_LIST } from '@/utils/queryKey'
+import { GET_PROJECT_DETAIL, GET_PROJECT_LIST } from '@/utils/queryKey'
 import { toastError, toastSuccess } from '@/utils/toast'
 import { useProjectStore } from '@/views/projects/store/useProjectStore'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -20,6 +21,17 @@ export const useGetProjectsQuery = () => {
       const response = await apiGetProjectList(filter)
       return response.data.data
     },
+  })
+}
+
+export const useGetProjectDetailQuery = (id: string, enabled = false) => {
+  return useQuery({
+    queryKey: [GET_PROJECT_DETAIL, id],
+    queryFn: async () => {
+      const response = await apiGetProjectById(id)
+      return response.data.data
+    },
+    enabled: enabled && !!id,
   })
 }
 
