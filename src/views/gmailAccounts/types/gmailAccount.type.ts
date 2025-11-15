@@ -1,6 +1,6 @@
 import { User } from '@/@types/user'
 
-export type GmailAccount = {
+export interface GmailAccount {
   id: string
   name: string
   password: string
@@ -16,3 +16,5 @@ export type GmailAccount = {
   createdAt: Date
   updatedAt: Date
 }
+
+export type UpdateGmailAccountRequest = Partial<GmailAccount>

@@ -4,11 +4,11 @@ import {
   apiDeleteGmailAccount,
   apiGetGmailAccountList,
   apiUpdateGmailAccount,
-} from '@/services/GmailAccountService'
+} from '@/views/gmailAccounts/services/GmailAccountService'
 import { GET_GMAIL_ACCOUNT_LIST } from '@/utils/queryKey'
 import { toastError, toastSuccess } from '@/utils/toast'
 import { useGmailAccountStore } from '@/views/gmailAccounts/store/useGmailAccountStore'
-import { CreateGmailAccountRequest, UpdateGmailAccountRequest } from '@/views/gmailAccounts/types'
+import { UpdateGmailAccountRequest } from '@/views/gmailAccounts/types'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 export const useGetGmailAccountsQuery = () => {
@@ -27,7 +27,7 @@ export const useCreateGmailAccountMutation = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (payload: CreateGmailAccountRequest) => apiCreateGmailAccount(payload),
+    mutationFn: (payload: UpdateGmailAccountRequest) => apiCreateGmailAccount(payload),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: [GET_GMAIL_ACCOUNT_LIST] })
       toastSuccess(response.data.message)

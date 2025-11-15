@@ -1,13 +1,8 @@
-import { BaseListResponse, BaseResponse } from '@/@types/common'
-import { GmailAccount } from '@/@types/gmailAccount'
-import {
-  CreateGmailAccountRequest,
-  GmailAccountFilterRequest,
-  UpdateGmailAccountRequest,
-} from '@/views/gmailAccounts/types'
-import ApiService from './ApiService'
+import { BaseListResponse, BaseResponse, CommonFilterRequest } from '@/@types/common'
+import ApiService from '@/services/ApiService'
+import { GmailAccount, UpdateGmailAccountRequest } from '@/views/gmailAccounts/types'
 
-export async function apiGetGmailAccountList(params: GmailAccountFilterRequest) {
+export async function apiGetGmailAccountList(params: CommonFilterRequest) {
   return ApiService.fetchData<BaseListResponse<GmailAccount>>({
     url: '/gmails',
     method: 'get',
@@ -22,7 +17,7 @@ export async function apiGetGmailAccountById(id: string) {
   })
 }
 
-export async function apiCreateGmailAccount(payload: CreateGmailAccountRequest) {
+export async function apiCreateGmailAccount(payload: UpdateGmailAccountRequest) {
   return ApiService.fetchData<BaseResponse<GmailAccount>>({
     url: '/gmails',
     method: 'post',

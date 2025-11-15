@@ -1,5 +1,5 @@
 import { Dialog } from '@/components/ui'
-import GmailAccountForm from '@/views/GmailAccounts/components/GmailAccountForm'
+import GmailAccountForm from '@/views/gmailAccounts/components/GmailAccountForm'
 import { useGmailAccountStore } from '@/views/gmailAccounts/store/useGmailAccountStore'
 
 export default function GmailAccountEditDialog() {

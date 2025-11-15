@@ -1,5 +1,5 @@
 import { CommonFilterRequest, SortOrder } from '@/@types/common'
-import { GmailAccount } from '@/@types/gmailAccount'
+import { GmailAccount } from '@/views/gmailAccounts/types'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 

@@ -5,19 +5,19 @@ import {
   useUpdateGmailAccountMutation,
 } from '@/views/gmailAccounts/hooks/useGmailAccount'
 import { useGmailAccountStore } from '@/views/gmailAccounts/store/useGmailAccountStore'
-import type { CreateGmailAccountRequest } from '@/views/gmailAccounts/types'
+import { UpdateGmailAccountRequest } from '@/views/gmailAccounts/types'
 import { Field, FieldProps, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().email('Email không hợp lệ').required('Vui lòng nhập email'),
-  password: Yup.string().nullable(),
-  recoverMail: Yup.string().email('Email không hợp lệ').nullable(),
-  recoverMailPassword: Yup.string().nullable(),
-  code2fa: Yup.string().nullable(),
-  phone: Yup.string().nullable(),
-  proxy: Yup.string().nullable(),
-  proxyPassword: Yup.string().nullable(),
+  password: Yup.string(),
+  recoverMail: Yup.string().email('Email không hợp lệ'),
+  recoverMailPassword: Yup.string(),
+  code2fa: Yup.string(),
+  phone: Yup.string(),
+  proxy: Yup.string(),
+  proxyPassword: Yup.string(),
   price: Yup.number().min(0, 'Số tiền lớn hơn hoặc bằng 0'),
 })
 
@@ -33,7 +33,7 @@ export default function GmailAccountForm({ onClose }: GmailAccountFormProps) {
 
   const isEdit = !!selectedGmailAccount
 
-  const initialValues: CreateGmailAccountRequest = {
+  const initialValues: UpdateGmailAccountRequest = {
     name: selectedGmailAccount?.name || '',
     password: selectedGmailAccount?.password || '',
     recoverMail: selectedGmailAccount?.recoverMail || '',
@@ -45,7 +45,7 @@ export default function GmailAccountForm({ onClose }: GmailAccountFormProps) {
     price: selectedGmailAccount?.price || 0,
   }
 
-  const handleSubmit = async (values: CreateGmailAccountRequest) => {
+  const handleSubmit = async (values: UpdateGmailAccountRequest) => {
     if (isEdit) {
       await updateMutation.mutateAsync({
         id: selectedGmailAccount.id,
@@ -68,13 +68,9 @@ export default function GmailAccountForm({ onClose }: GmailAccountFormProps) {
       {({ errors, touched, isSubmitting }) => (
         <Form>
           <FormContainer>
-            <div className="gap-x-4 grid grid-cols-2">
+            <div className="gap-4 grid grid-cols-2">
               <FormItem asterisk label="Email" invalid={errors.name && touched.name} errorMessage={errors.name}>
                 <Field type="text" autoComplete="off" name="name" placeholder="Nhập email" component={Input} />
-              </FormItem>
-
-              <FormItem label="Mật khẩu" invalid={errors.password && touched.password} errorMessage={errors.password}>
-                <Field type="text" autoComplete="off" name="password" placeholder="Nhập mật khẩu" component={Input} />
               </FormItem>
 
               <FormItem
@@ -91,6 +87,10 @@ export default function GmailAccountForm({ onClose }: GmailAccountFormProps) {
                 />
               </FormItem>
 
+              <FormItem label="Mật khẩu" invalid={errors.password && touched.password} errorMessage={errors.password}>
+                <Field type="text" autoComplete="off" name="password" placeholder="Nhập mật khẩu" component={Input} />
+              </FormItem>
+
               <FormItem
                 label="Mật khẩu email khôi phục"
                 invalid={errors.recoverMailPassword && touched.recoverMailPassword}
@@ -100,7 +100,7 @@ export default function GmailAccountForm({ onClose }: GmailAccountFormProps) {
                   type="text"
                   autoComplete="off"
                   name="recoverMailPassword"
-                  placeholder="Nhập mật khẩu email khôi phục"
+                  placeholder="Nhập mật khẩu"
                   component={Input}
                 />
               </FormItem>
