@@ -68,41 +68,43 @@ export default function AdsGroupForm({ onClose }: AdsGroupFormProps) {
       {({ errors, touched, isSubmitting, setFieldValue }) => (
         <Form>
           <FormContainer>
-            <FormItem asterisk label="Tên nhóm" invalid={errors.name && touched.name} errorMessage={errors.name}>
-              <Field type="text" autoComplete="off" name="name" placeholder="Nhập tên nhóm" component={Input} />
-            </FormItem>
+            <div className="gap-4 grid">
+              <FormItem asterisk label="Tên nhóm" invalid={errors.name && touched.name} errorMessage={errors.name}>
+                <Field type="text" autoComplete="off" name="name" placeholder="Nhập tên nhóm" component={Input} />
+              </FormItem>
 
-            <FormItem
-              label="Mô tả"
-              invalid={errors.description && touched.description}
-              errorMessage={errors.description}
-            >
-              <Field
-                textArea
-                type="text"
-                autoComplete="off"
-                name="description"
-                placeholder="Nhập mô tả"
-                component={Input}
-                rows={3}
-              />
-            </FormItem>
+              <FormItem
+                label="Mô tả"
+                invalid={errors.description && touched.description}
+                errorMessage={errors.description}
+              >
+                <Field
+                  textArea
+                  type="text"
+                  autoComplete="off"
+                  name="description"
+                  placeholder="Nhập mô tả"
+                  component={Input}
+                  rows={3}
+                />
+              </FormItem>
 
-            <FormItem
-              label="Người quản lý"
-              invalid={errors.managerId && touched.managerId}
-              errorMessage={errors.managerId}
-            >
-              <UserSelect
-                value={selectedManager}
-                placeholder="Chọn người quản lý..."
-                isClearable={true}
-                onChange={(option: UserOption | null) => {
-                  setSelectedManager(option)
-                  setFieldValue('managerId', option?.value || undefined)
-                }}
-              />
-            </FormItem>
+              <FormItem
+                label="Người quản lý"
+                invalid={errors.managerId && touched.managerId}
+                errorMessage={errors.managerId}
+              >
+                <UserSelect
+                  value={selectedManager}
+                  placeholder="Chọn người quản lý..."
+                  isClearable={true}
+                  onChange={(option: UserOption | null) => {
+                    setSelectedManager(option)
+                    setFieldValue('managerId', option?.value || undefined)
+                  }}
+                />
+              </FormItem>
+            </div>
 
             <div className="flex justify-end gap-2 mt-4">
               <Button type="button" onClick={onClose}>

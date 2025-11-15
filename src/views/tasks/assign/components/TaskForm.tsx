@@ -1,12 +1,13 @@
 import { SelectOption } from '@/@types/common'
 import { Task } from '@/@types/task'
+import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
 import { Button, DatePicker, FormItem, Input, Select, Textarea, UserSelect } from '@/components/ui'
 import { UserOption } from '@/components/ui/UserSelect/UserSelect'
 import { TaskFrequency, TaskPriority, TaskPriorityLabels, TaskType, TaskTypeLabels } from '@/enums/task.enum'
 import { setDeadlineTo1800 } from '@/helpers/date'
 import { apiGetAdsGroupList } from '@/services/AdsGroupService'
 import { apiGetProjectList } from '@/views/projects/services/ProjectService'
-import { Form, Formik, FormikProps } from 'formik'
+import { Field, FieldProps, Form, Formik, FormikProps } from 'formik'
 import { useEffect, useRef, useState } from 'react'
 import AsyncSelect from 'react-select/async'
 import * as Yup from 'yup'
@@ -169,22 +170,23 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
         {({ values, errors, touched, setFieldValue, handleChange, handleBlur }) => {
           return (
             <Form>
-              <FormItem
-                asterisk
-                errorMessage={errors.name}
-                invalid={touched.name && Boolean(errors.name)}
-                label="Tên công việc"
-              >
-                <Input
-                  name="name"
-                  placeholder="Nhập tên công việc..."
-                  value={values.name}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-              </FormItem>
+              <div className="gap-4 grid grid-cols-1 lg:grid-cols-2">
+                <FormItem
+                  asterisk
+                  errorMessage={errors.name}
+                  invalid={touched.name && Boolean(errors.name)}
+                  label="Tên công việc"
+                  className="col-span-2"
+                >
+                  <Input
+                    name="name"
+                    placeholder="Nhập tên công việc..."
+                    value={values.name}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </FormItem>
 
-              <div className="gap-x-4 grid grid-cols-1 lg:grid-cols-2">
                 <FormItem
                   asterisk
                   errorMessage={errors.type}
@@ -280,93 +282,93 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                     }}
                   />
                 </FormItem>
+
+                <FormItem
+                  asterisk
+                  errorMessage={errors.assignedUserIds as string}
+                  invalid={touched.assignedUserIds && Boolean(errors.assignedUserIds)}
+                  label="Người nhận việc"
+                  className="col-span-2"
+                >
+                  <UserSelect
+                    isMulti={true}
+                    placeholder="Chọn người nhận việc..."
+                    value={selectedUsers}
+                    onChange={(users) => {
+                      setSelectedUsers(users)
+                      setFieldValue(
+                        'assignedUserIds',
+                        users.map((user: UserOption) => user.value),
+                      )
+                    }}
+                  />
+                </FormItem>
+
+                <FormItem label="Ghi chú" className="col-span-2">
+                  <Textarea
+                    name="note"
+                    placeholder="Nhập ghi chú..."
+                    rows={3}
+                    value={values.note}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </FormItem>
+
+                {values.type === TaskType.SET_CAMPAIGN && (
+                  <div className="space-y-4 col-span-2 bg-gray-50 mb-3 px-4 py-4 rounded-lg">
+                    <h5>Thông tin chi tiết</h5>
+
+                    <div className="gap-x-4 grid grid-cols-1 lg:grid-cols-2">
+                      <FormItem label="Số lượng campaign lên">
+                        <Input
+                          name="numberOfCampaigns"
+                          placeholder="Nhập số lượng..."
+                          type="number"
+                          value={values.numberOfCampaigns || ''}
+                          onChange={handleChange}
+                        />
+                      </FormItem>
+
+                      <FormItem label="Số lượng kết quả campaign">
+                        <Input
+                          name="numberOfResultCampaigns"
+                          placeholder="Nhập số lượng..."
+                          type="number"
+                          value={values.numberOfResultCampaigns || ''}
+                          onChange={handleChange}
+                        />
+                      </FormItem>
+                    </div>
+                  </div>
+                )}
+
+                {values.type === TaskType.LAUNCH_CAMPAIGN && (
+                  <div className="space-y-4 col-span-2 bg-gray-50 mb-3 px-4 py-4 rounded-lg">
+                    <h5>Thông tin chi tiết</h5>
+
+                    <div className="gap-x-4 grid grid-cols-1 lg:grid-cols-2">
+                      <FormItem label="Ngân sách hàng ngày">
+                        <Field name="dailyBudget">
+                          {({ field, form }: FieldProps) => (
+                            <FormCurrencyInput form={form} field={field} placeholder="Nhập ngân sách hàng ngày..." />
+                          )}
+                        </Field>
+                      </FormItem>
+
+                      <FormItem label="Số lượng tài khoản dự phòng">
+                        <Input
+                          name="numberOfBackupCampaigns"
+                          placeholder="Nhập số lượng tài khoản dự phòng..."
+                          type="number"
+                          value={values.numberOfBackupCampaigns || ''}
+                          onChange={handleChange}
+                        />
+                      </FormItem>
+                    </div>
+                  </div>
+                )}
               </div>
-
-              <FormItem
-                asterisk
-                errorMessage={errors.assignedUserIds as string}
-                invalid={touched.assignedUserIds && Boolean(errors.assignedUserIds)}
-                label="Người nhận việc"
-              >
-                <UserSelect
-                  isMulti={true}
-                  placeholder="Chọn người nhận việc..."
-                  value={selectedUsers}
-                  onChange={(users) => {
-                    setSelectedUsers(users)
-                    setFieldValue(
-                      'assignedUserIds',
-                      users.map((user: UserOption) => user.value),
-                    )
-                  }}
-                />
-              </FormItem>
-
-              {values.type === TaskType.SET_CAMPAIGN && (
-                <div className="space-y-4 bg-gray-50 mb-3 px-4 pt-4 rounded-lg">
-                  <h5>Thông tin chi tiết</h5>
-
-                  <div className="gap-x-4 grid grid-cols-1 lg:grid-cols-2">
-                    <FormItem label="Số lượng campaign lên">
-                      <Input
-                        name="numberOfCampaigns"
-                        placeholder="Nhập số lượng..."
-                        type="number"
-                        value={values.numberOfCampaigns || ''}
-                        onChange={handleChange}
-                      />
-                    </FormItem>
-
-                    <FormItem label="Số lượng kết quả campaign">
-                      <Input
-                        name="numberOfResultCampaigns"
-                        placeholder="Nhập số lượng..."
-                        type="number"
-                        value={values.numberOfResultCampaigns || ''}
-                        onChange={handleChange}
-                      />
-                    </FormItem>
-                  </div>
-                </div>
-              )}
-              {values.type === TaskType.LAUNCH_CAMPAIGN && (
-                <div className="space-y-4 bg-gray-50 mb-3 px-4 pt-4 rounded-lg">
-                  <h5>Thông tin chi tiết</h5>
-
-                  <div className="gap-x-4 grid grid-cols-1 lg:grid-cols-2">
-                    <FormItem label="Ngân sách hàng ngày">
-                      <Input
-                        name="dailyBudget"
-                        placeholder="Nhập ngân sách..."
-                        type="number"
-                        value={values.dailyBudget || ''}
-                        onChange={handleChange}
-                      />
-                    </FormItem>
-
-                    <FormItem label="Số lượng tài khoản dự phòng">
-                      <Input
-                        name="numberOfBackupCampaigns"
-                        placeholder="Nhập số lượng tài khoản dự phòng..."
-                        type="number"
-                        value={values.numberOfBackupCampaigns || ''}
-                        onChange={handleChange}
-                      />
-                    </FormItem>
-                  </div>
-                </div>
-              )}
-
-              <FormItem label="Ghi chú">
-                <Textarea
-                  name="note"
-                  placeholder="Nhập ghi chú..."
-                  rows={3}
-                  value={values.note}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-              </FormItem>
 
               <div className="flex justify-end gap-3 mt-6 pt-4 border-t">
                 <Button size="sm" variant="plain" onClick={onCancel}>

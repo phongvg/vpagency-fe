@@ -156,7 +156,7 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
       {({ errors, touched, isSubmitting, setFieldValue, values }) => (
         <Form>
           <FormContainer>
-            <div className="gap-x-4 grid grid-cols-2 bg-gray-50 mb-4 p-4 rounded-lg">
+            <div className="gap-4 grid grid-cols-2 bg-gray-50 mb-4 p-4 rounded-lg">
               <FormItem
                 label="Nhóm tài khoản ads"
                 invalid={touched.adsGroupId && Boolean(errors.adsGroupId)}
