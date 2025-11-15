@@ -26,6 +26,8 @@ export default function CampaignTableTools() {
     try {
       const data = await convertExcelData(file)
 
+      console.table(data)
+
       setCampaigns(data)
       openDialog()
     } catch (err) {

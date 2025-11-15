@@ -1,4 +1,5 @@
 import { Campaign } from '@/@types/campaign'
+import { removeDash } from '@/helpers/removeDash'
 import * as XLSX from 'xlsx'
 
 interface SheetData {
@@ -77,6 +78,7 @@ export const convertExcelData = async (file: File): Promise<Campaign[]> => {
   const adGroupAdSheet = await handleGetSheetDataByName(file, 'AdGroupAd')
   const searchTermYesterdaySheet = await handleGetSheetDataByName(file, 'Search_Term_Yesterday')
   const geographicViewYesterdaySheet = await handleGetSheetDataByName(file, 'Geographic_View_Yesterday')
+  const mccCustomerListSheet = await handleGetSheetDataByName(file, 'MCC_Customer_List')
 
   const datePull = excelDateToJSDate(campaignPfmYesterdaySheet[campaignPfmYesterdaySheet.length - 1]['Date Pulled'])
   const dateData = excelDateToJSDate(campaignPfmYesterdaySheet[campaignPfmYesterdaySheet.length - 1]['Data Date'])
@@ -95,6 +97,9 @@ export const convertExcelData = async (file: File): Promise<Campaign[]> => {
     const geographicViewYesterdayRows = geographicViewYesterdaySheet.filter((row) => row['Campaign ID'] === id)
 
     const uid = campaignRows.map((row) => row['Customer ID'])
+    const mcc = mccCustomerListSheet
+      .filter((row) => removeDash(row['Customer ID']) == uid[uid.length - 1])
+      .map((row) => Number(removeDash(row['MCC ID'])))
     const finalUrlAds = adGroupAdRows.map((row) => row['Final URL'])
     const finalUrlKey = adGroupCriterionRows.map((row) => row['Final URL'])
     const keyword = [...new Set(adGroupCriterionRows.map((row) => row['Keyword Text']))]
@@ -134,6 +139,7 @@ export const convertExcelData = async (file: File): Promise<Campaign[]> => {
         typeof uid[uid.length - 1] === 'string' && uid[uid.length - 1].startsWith('customers/')
           ? Number(uid[uid.length - 1].split('/')[1])
           : uid[uid.length - 1],
+      mcc: mcc[mcc.length - 1] || null,
       campaignName: campaignName[index] || null,
       campaignId: id || null,
       finalUrl: finalUrlKey[finalUrlKey.length - 1]

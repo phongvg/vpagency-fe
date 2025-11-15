@@ -307,7 +307,7 @@ function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableRese
           </TBody>
         )}
       </Table>
-      {/* Only show pagination if there's data or loading */}
+
       {(data.length > 0 || loading) && (onPaginationChange || onSelectChange) && (
         <div className="flex justify-between items-center mt-4">
           <Pagination pageSize={pageSize} currentPage={pageIndex} total={total} onChange={handlePaginationChange} />

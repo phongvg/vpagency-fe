@@ -2,6 +2,7 @@ export interface Campaign {
   datePull: string | null
   dateData: string | null
   uid: number | null
+  mcc: number | null
   campaignName: string | null
   campaignId: number | null
   finalUrl: string | null
