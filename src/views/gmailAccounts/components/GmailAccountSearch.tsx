@@ -16,6 +16,7 @@ export default function GmailAccountSearch() {
       ...filter,
       search: debouncedSearchValue,
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearchValue])
 
   useEffect(() => {

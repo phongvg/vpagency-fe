@@ -3,7 +3,7 @@ import ProjectDailyReportStatistics from '@/views/projects/pages/projectDetail/c
 import ProjectDailyReportTableTools from '@/views/projects/pages/projectDetail/components/ProjectDailyReportTableTools'
 import ProjectDailyReportTable from '@/views/projects/pages/projectDetail/components/ProjectDailyReportTable'
 import ProjectDailyReportFormDialog from '@/views/projects/pages/projectDetail/components/ProjectDailyReportFormDialog'
-import { useGetProjectDailyReportsQuery } from '@/views/projects/pages/projectDetail/hooks/useProjectDailyReportQueries'
+import { useGetProjectDailyReportsQuery } from '@/views/projects/pages/projectDetail/hooks/useProjectDailyReport'
 import { useProjectDailyReportStore } from '@/views/projects/pages/projectDetail/store/useProjectDailyReportStore'
 import { useEffect } from 'react'
 

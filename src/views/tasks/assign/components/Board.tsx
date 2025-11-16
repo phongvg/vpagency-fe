@@ -1,7 +1,7 @@
 import { Task } from '@/@types/task'
 import { TaskStatus } from '@/enums/task.enum'
 import BoardColumn from '@/views/tasks/assign/components/BoardColumn'
-import { useGetTasksGroupedByStatus, useUpdateTaskStatus } from '@/views/tasks/assign/hooks/useTaskQueries'
+import { useGetTasksGroupedByStatus, useUpdateTaskStatus } from '@/views/tasks/assign/hooks/useTask'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import {
   DndContext,

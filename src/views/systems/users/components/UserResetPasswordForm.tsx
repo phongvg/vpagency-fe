@@ -11,39 +11,35 @@ interface UserResetPasswordFormProps {
 
 export type FormikRef = FormikProps<ResetPasswordUserRequest>
 
-const UserResetPasswordForm = forwardRef<FormikRef, UserResetPasswordFormProps>(
-  (props, ref) => {
-    const { onFormSubmit } = props
+const UserResetPasswordForm = forwardRef<FormikRef, UserResetPasswordFormProps>((props, ref) => {
+  const { onFormSubmit } = props
 
-    return (
-      <Formik<ResetPasswordUserRequest>
-        innerRef={ref}
-        initialValues={{
-          newPassword: '',
-          confirmPassword: '',
-        }}
-        validationSchema={resetPasswordValidationSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          onFormSubmit?.(values)
-          setSubmitting(false)
-        }}
-      >
-        {({ touched, errors }) => (
-          <div className="p-6">
-            <Form>
-              <FormContainer>
+  return (
+    <Formik<ResetPasswordUserRequest>
+      innerRef={ref}
+      initialValues={{
+        newPassword: '',
+        confirmPassword: '',
+      }}
+      validationSchema={resetPasswordValidationSchema}
+      onSubmit={(values, { setSubmitting }) => {
+        onFormSubmit?.(values)
+        setSubmitting(false)
+      }}
+    >
+      {({ touched, errors }) => (
+        <div className="p-6">
+          <Form>
+            <FormContainer>
+              <div className="gap-4 grid">
                 <FormItem
                   label="Mật khẩu mới"
                   invalid={errors.newPassword && touched.newPassword}
                   errorMessage={errors.newPassword}
                 >
-                  <Field
-                    autoComplete="off"
-                    name="newPassword"
-                    placeholder="Mật khẩu mới"
-                    component={PasswordInput}
-                  />
+                  <Field autoComplete="off" name="newPassword" placeholder="Mật khẩu mới" component={PasswordInput} />
                 </FormItem>
+
                 <FormItem
                   label="Xác nhận mật khẩu"
                   invalid={errors.confirmPassword && touched.confirmPassword}
@@ -56,14 +52,14 @@ const UserResetPasswordForm = forwardRef<FormikRef, UserResetPasswordFormProps>(
                     component={PasswordInput}
                   />
                 </FormItem>
-              </FormContainer>
-            </Form>
-          </div>
-        )}
-      </Formik>
-    )
-  },
-)
+              </div>
+            </FormContainer>
+          </Form>
+        </div>
+      )}
+    </Formik>
+  )
+})
 
 UserResetPasswordForm.displayName = 'UserResetPasswordForm'
 

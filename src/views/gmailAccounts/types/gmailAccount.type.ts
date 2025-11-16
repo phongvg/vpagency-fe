@@ -1,6 +1,6 @@
 import { User } from '@/@types/user'
 
-export interface GmailAccount {
+export type GmailAccount = {
   id: string
   name: string
   password: string

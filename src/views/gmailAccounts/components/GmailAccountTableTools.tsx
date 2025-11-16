@@ -4,11 +4,10 @@ import { useGmailAccountStore } from '@/views/gmailAccounts/store/useGmailAccoun
 import { HiOutlinePlus, HiOutlineRefresh } from 'react-icons/hi'
 
 export default function GmailAccountTableTools() {
-  const { clearFilter, setDialogOpen, setSelectedGmailAccount } = useGmailAccountStore()
+  const { clearFilter, openDialog } = useGmailAccountStore()
 
   const handleAddNew = () => {
-    setSelectedGmailAccount(null)
-    setDialogOpen(true)
+    openDialog()
   }
 
   return (

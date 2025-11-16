@@ -1,11 +1,12 @@
 import { Breadcrumb, BreadcrumbItem } from '@/components/shared'
-import { Avatar, Card } from '@/components/ui'
+import { Avatar, Button, Card } from '@/components/ui'
 import { urlConfig } from '@/configs/urls.config'
 import { formatDate } from '@/helpers/formatDate'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 import AdsGroupTable from '@/views/projects/pages/projectDetail/components/AdsGroupTable'
 import ProjectDailyReportsSection from '@/views/projects/pages/projectDetail/components/ProjectDailyReportsSection'
 import { Project } from '@/views/projects/types/project.type'
+import { HiOutlineDocumentText } from 'react-icons/hi'
 
 type Props = {
   data: Project
@@ -19,7 +20,13 @@ export default function ProjectInformation({ data }: Props) {
       <div className="space-y-4">
         <Breadcrumb items={items} showHome={false} />
 
-        <h3 className="font-bold">{data.name + ` (#${data.id})`}</h3>
+        <div className="flex justify-between items-center">
+          <h3 className="font-bold">{data.name + ` (#${data.id})`}</h3>
+
+          <Button variant="twoTone" icon={<HiOutlineDocumentText />}>
+            Lịch sử thay đổi
+          </Button>
+        </div>
 
         <div className="gap-4 grid grid-cols-2">
           <Card>

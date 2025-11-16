@@ -1,6 +1,6 @@
 import { BaseListResponse, BaseResponse, CommonFilterRequest } from '@/@types/common'
 import ApiService from '@/services/ApiService'
-import { GmailAccount, UpdateGmailAccountRequest } from '@/views/gmailAccounts/types'
+import { GmailAccount, UpdateGmailAccountRequest } from '@/views/gmailAccounts/types/gmailAccount.type'
 
 export async function apiGetGmailAccountList(params: CommonFilterRequest) {
   return ApiService.fetchData<BaseListResponse<GmailAccount>>({
@@ -37,5 +37,12 @@ export async function apiDeleteGmailAccount(id: string) {
   return ApiService.fetchData<BaseResponse<null>>({
     url: `/gmails/${id}`,
     method: 'delete',
+  })
+}
+
+export async function apiAssignGmailAccountToSelf(id: string) {
+  return ApiService.fetchData<BaseResponse<GmailAccount>>({
+    url: `/gmails/${id}/assign`,
+    method: 'post',
   })
 }

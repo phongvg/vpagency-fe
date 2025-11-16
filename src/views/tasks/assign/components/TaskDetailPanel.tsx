@@ -17,7 +17,7 @@ import { useAuthStore } from '@/store/auth/useAuthStore'
 import { isAdminOrManager } from '@/utils/checkRole'
 import UpdateProgressModal from '@/views/tasks/assign/components/UpdateProgressModal'
 import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
-import { useDeleteTask, useUpdateTaskProgress } from '@/views/tasks/assign/hooks/useTaskQueries'
+import { useDeleteTask, useUpdateTaskProgress } from '@/views/tasks/assign/hooks/useTask'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import { useState } from 'react'
 import {

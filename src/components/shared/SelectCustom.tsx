@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Select, { SelectProps } from '@/components/ui/Select'
+import CreatableSelect from 'react-select/creatable'
 import { components, GroupBase, MenuListProps } from 'react-select'
+import { FieldInputProps, FormikProps } from 'formik'
 
 export interface OptionType {
   label: string
@@ -16,25 +18,29 @@ export interface ApiResponse<T = any> {
   hasMore?: boolean
 }
 
+export interface SelectParams {
+  page: number
+  limit: number
+  search?: string
+}
+
 export interface SelectCustomProps<IsMulti extends boolean = false>
   extends Omit<
     SelectProps<OptionType, IsMulti, GroupBase<OptionType>>,
     'options' | 'isLoading' | 'onMenuOpen' | 'onMenuClose'
   > {
   options?: OptionType[]
-
-  fetchOptions?: (params: { page: number; limit: number; search?: string }) => Promise<ApiResponse>
   limit?: number
-
-  transformResponse?: (data: any) => OptionType[]
-
   isMulti?: IsMulti
-
-  onValueChange?: (value: IsMulti extends true ? OptionType[] : OptionType | null) => void
   debounceTime?: number
-
-  field?: any
-  form?: any
+  field?: FieldInputProps<any>
+  form?: FormikProps<any>
+  isCreatable?: boolean
+  fetchOptions?: (params: SelectParams) => Promise<ApiResponse>
+  onValueChange?: (value: IsMulti extends true ? OptionType[] : OptionType | null) => void
+  transformResponse?: (data: any) => OptionType[]
+  onCreateOption?: (inputValue: string) => void | Promise<void>
+  formatCreateLabel?: (inputValue: string) => string
 }
 
 const CustomMenuList = <IsMulti extends boolean = false>(
@@ -89,6 +95,9 @@ export default function SelectCustom<IsMulti extends boolean = false>({
   components: customComponents,
   field,
   form,
+  isCreatable = false,
+  onCreateOption,
+  formatCreateLabel,
   ...restProps
 }: SelectCustomProps<IsMulti>) {
   const [options, setOptions] = useState<OptionType[]>(staticOptions || [])
@@ -214,8 +223,43 @@ export default function SelectCustom<IsMulti extends boolean = false>({
       if (onValueChange) {
         onValueChange(newValue)
       }
+
+      if (actionMeta.action === 'clear' && fetchOptions) {
+        setSearchValue('')
+        loadOptions(1, '', false)
+      }
     },
-    [onChange, onValueChange, field, form],
+    [onChange, onValueChange, field, form, fetchOptions, loadOptions],
+  )
+
+  const handleCreateOption = useCallback(
+    async (inputValue: string) => {
+      const newOption: OptionType = {
+        label: inputValue,
+        value: inputValue,
+      }
+
+      setOptions((prev) => [...prev, newOption])
+
+      const extractedValue = newOption.value
+
+      if (field && form) {
+        form.setFieldValue(field.name, extractedValue)
+      }
+
+      if (onChange) {
+        onChange(extractedValue, { action: 'create-option', option: newOption } as any)
+      }
+
+      if (onValueChange) {
+        onValueChange(newOption as any)
+      }
+
+      if (onCreateOption) {
+        await onCreateOption(inputValue)
+      }
+    },
+    [field, form, onChange, onValueChange, onCreateOption],
   )
 
   useEffect(() => {
@@ -234,7 +278,6 @@ export default function SelectCustom<IsMulti extends boolean = false>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchOptions])
 
-  // Cleanup debounce timer
   useEffect(() => {
     return () => {
       if (debounceTimerRef.current) {
@@ -243,27 +286,21 @@ export default function SelectCustom<IsMulti extends boolean = false>({
     }
   }, [])
 
-  // Map value to option format if it's a primitive value
   const selectedValue = (() => {
-    // Use field.value if field is provided (Formik integration)
     const currentValue = field ? field.value : value
 
     if (!currentValue) return null
 
-    // If value is already in option format
     if (typeof currentValue === 'object' && 'value' in currentValue) {
       return currentValue
     }
 
-    // Try to find in options
     const foundOption = options.find((opt) => opt.value === currentValue)
 
-    // If found, return it
     if (foundOption) {
       return foundOption
     }
 
-    // If not found but value exists (options may not be loaded yet), create temporary option
     if (currentValue) {
       return { label: String(currentValue), value: currentValue }
     }
@@ -273,8 +310,10 @@ export default function SelectCustom<IsMulti extends boolean = false>({
 
   return (
     <Select<OptionType, IsMulti, GroupBase<OptionType>>
-      {...restProps}
       cacheOptions
+      {...restProps}
+      isClearable
+      componentAs={isCreatable ? CreatableSelect : undefined}
       isMulti={isMulti}
       options={options}
       value={selectedValue}
@@ -289,11 +328,13 @@ export default function SelectCustom<IsMulti extends boolean = false>({
       placeholder={restProps.placeholder || 'Chọn...'}
       noOptionsMessage={({ inputValue }) => (inputValue ? `Không tìm thấy "${inputValue}"` : 'Không có dữ liệu')}
       loadingMessage={() => 'Đang tải...'}
+      formatCreateLabel={formatCreateLabel || ((inputValue) => `Tạo mới "${inputValue}"`)}
       onChange={handleChange}
+      onCreateOption={isCreatable ? handleCreateOption : undefined}
       onMenuOpen={handleMenuOpen}
       onMenuClose={handleMenuClose}
       onInputChange={handleInputChange}
-      onBlur={field ? () => form.setFieldTouched(field.name, true) : undefined}
+      onBlur={field ? () => form?.setFieldTouched(field.name, true) : undefined}
     />
   )
 }

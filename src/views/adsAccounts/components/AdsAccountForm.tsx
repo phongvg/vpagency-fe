@@ -8,11 +8,10 @@ import {
   useCreateAdsAccountMutation,
   useUpdateAdsAccountMutation,
 } from '@/views/adsAccounts/hooks/useAdsAccountsQueries'
-import AsyncSelect from 'react-select/async'
 import { apiGetAdsGroupList } from '@/services/AdsGroupService'
 import { HiOutlinePlus, HiOutlineTrash } from 'react-icons/hi'
 import { AdsAccountStatus } from '@/enums/adsAccount.enum'
-import { SelectOption } from '@/@types/common'
+import SelectCustom, { SelectParams } from '@/components/shared/SelectCustom'
 
 const accountValidationSchema = Yup.object().shape({
   uuid: Yup.string().required('Vui lòng nhập UUID'),
@@ -49,7 +48,6 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
   const updateMutation = useUpdateAdsAccountMutation()
 
   const [selectedManager, setSelectedManager] = useState<UserOption | null>(null)
-  const [selectedAdsGroup, setSelectedAdsGroup] = useState<SelectOption | null>(null)
 
   useEffect(() => {
     if (selectedAdsAccount?.manager) {
@@ -62,15 +60,6 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
       })
     } else {
       setSelectedManager(null)
-    }
-
-    if (selectedAdsAccount?.adsGroupId) {
-      setSelectedAdsGroup({
-        value: selectedAdsAccount.adsGroupId,
-        label: selectedAdsAccount.adsGroup?.name || '',
-      })
-    } else {
-      setSelectedAdsGroup(null)
     }
   }, [selectedAdsAccount])
 
@@ -104,15 +93,17 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
         profileGenLogin: '',
       }
 
-  const fetchAdsGroupOptions = async (inputValue: string) => {
+  const fetchAdsGroupOptions = async ({ page, limit, search }: SelectParams) => {
     try {
-      const response = await apiGetAdsGroupList({ search: inputValue, page: 1, limit: 10 })
-      return response.data.data.items.map((group) => ({
-        value: group.id,
-        label: group.name,
-      }))
+      const response = await apiGetAdsGroupList({ search: search || '', page, limit })
+      const { items, meta } = response.data.data
+      return {
+        data: items,
+        total: meta.total,
+        hasMore: meta.hasNext,
+      }
     } catch {
-      return []
+      return { data: [], total: 0, hasMore: false }
     }
   }
 
@@ -162,7 +153,7 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                 invalid={touched.adsGroupId && Boolean(errors.adsGroupId)}
                 errorMessage={errors.adsGroupId as string}
               >
-                <Select
+                {/* <Select
                   defaultOptions
                   cacheOptions
                   componentAs={AsyncSelect}
@@ -173,7 +164,18 @@ export default function AdsAccountForm({ onClose }: AdsAccountFormProps) {
                     setSelectedAdsGroup(option)
                     setFieldValue('adsGroupId', option?.value)
                   }}
-                />
+                /> */}
+                <Field name="adsGroupId">
+                  {({ field, form }: FieldProps) => (
+                    <SelectCustom
+                      isCreatable
+                      field={field}
+                      form={form}
+                      fetchOptions={fetchAdsGroupOptions}
+                      placeholder="Chọn nhóm tài khoản ads..."
+                    />
+                  )}
+                </Field>
               </FormItem>
 
               <FormItem

@@ -4,7 +4,7 @@ import { Avatar, Badge, Button, Dialog, Input, Spinner, Tooltip } from '@/compon
 import { AdsAccountStatusColors, AdsAccountStatusLabels } from '@/enums/adsAccount.enum'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 import DailyMetricForm from '@/views/adsAccounts/pages/adsAccountDetail/components/DailyMetricForm'
-import { useGetAdsGroupByTaskId } from '@/views/tasks/assign/hooks/useTaskQueries'
+import { useGetAdsGroupByTaskId } from '@/views/tasks/assign/hooks/useTask'
 import { ColumnDef } from '@tanstack/react-table'
 import { useEffect, useMemo, useState } from 'react'
 import { HiCheckCircle, HiOutlineCheckCircle, HiOutlinePencilAlt, HiOutlinePlusCircle, HiXCircle } from 'react-icons/hi'

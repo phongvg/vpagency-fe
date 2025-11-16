@@ -1,7 +1,7 @@
 import { Loading } from '@/components/shared'
 import { ConfirmDialog } from '@/components/ui'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
-import { useDeleteTask, useGetTaskDetail } from '@/views/tasks/assign/hooks/useTaskQueries'
+import { useDeleteTask, useGetTaskDetail } from '@/views/tasks/assign/hooks/useTask'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import TaskDetailView from './TaskDetailView'
 

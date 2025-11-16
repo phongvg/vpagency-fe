@@ -1,7 +1,6 @@
 import { CommonFilterRequest } from '@/@types/common'
 import { Project } from '@/views/projects/types/project.type'
 import { create } from 'zustand'
-import { devtools } from 'zustand/middleware'
 
 type ProjectState = {
   filter: CommonFilterRequest
@@ -29,19 +28,17 @@ export const initialProjectState = {
   dialogOpen: false,
 }
 
-export const useProjectStore = create<ProjectState>()(
-  devtools((set, get) => ({
-    ...initialProjectState,
+export const useProjectStore = create<ProjectState>((set, get) => ({
+  ...initialProjectState,
 
-    setFilter: (filter) => set({ filter }),
-    setSearch: (search) => {
-      const currentFilter = get().filter
-      set({ filter: { ...currentFilter, search, page: 1 } })
-    },
-    setProjects: (projects) => set({ projects }),
-    setProjectId: (projectId) => set({ projectId }),
-    openDialog: (projectId) => set({ projectId: projectId || null, dialogOpen: true }),
-    closeDialog: () => set({ projectId: null, dialogOpen: false }),
-    clearFilter: () => set({ filter: initialProjectState.filter }),
-  })),
-)
+  setFilter: (filter) => set({ filter }),
+  setSearch: (search) => {
+    const currentFilter = get().filter
+    set({ filter: { ...currentFilter, search, page: 1 } })
+  },
+  setProjects: (projects) => set({ projects }),
+  setProjectId: (projectId) => set({ projectId }),
+  openDialog: (projectId) => set({ projectId: projectId || null, dialogOpen: true }),
+  closeDialog: () => set({ projectId: null, dialogOpen: false }),
+  clearFilter: () => set({ filter: initialProjectState.filter }),
+}))

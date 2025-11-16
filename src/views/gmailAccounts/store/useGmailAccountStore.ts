@@ -1,21 +1,17 @@
 import { CommonFilterRequest, SortOrder } from '@/@types/common'
-import { GmailAccount } from '@/views/gmailAccounts/types'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
 type GmailAccountState = {
   filter: CommonFilterRequest
-  gmailAccounts: GmailAccount[]
-  selectedGmailAccount: GmailAccount | null
+  gmailAccountId: string | null
   dialogOpen: boolean
-  deleteDialogOpen: boolean
 
   setFilter: (filter: CommonFilterRequest) => void
   setSearch: (search: string) => void
-  setGmailAccounts: (GmailAccounts: GmailAccount[]) => void
-  setSelectedGmailAccount: (GmailAccount: GmailAccount | null) => void
-  setDialogOpen: (open: boolean) => void
-  setDeleteDialogOpen: (open: boolean) => void
+  setGmailAccountId: (gmailAccountId: string | null) => void
+  openDialog: (gmailAccountId?: string | null) => void
+  closeDialog: () => void
   clearFilter: () => void
 }
 
@@ -27,10 +23,8 @@ export const initialGmailAccountState = {
     sortBy: 'createdAt',
     sortOrder: 'desc' as SortOrder,
   },
-  gmailAccounts: [],
-  selectedGmailAccount: null,
+  gmailAccountId: null,
   dialogOpen: false,
-  deleteDialogOpen: false,
 }
 
 export const useGmailAccountStore = create<GmailAccountState>()(
@@ -42,10 +36,17 @@ export const useGmailAccountStore = create<GmailAccountState>()(
       const currentFilter = get().filter
       set({ filter: { ...currentFilter, search, page: 1 } })
     },
-    setGmailAccounts: (gmailAccounts) => set({ gmailAccounts }),
-    setSelectedGmailAccount: (gmailAccount) => set({ selectedGmailAccount: gmailAccount }),
-    setDialogOpen: (open) => set({ dialogOpen: open }),
-    setDeleteDialogOpen: (open) => set({ deleteDialogOpen: open }),
+    setGmailAccountId: (gmailAccountId) => set({ gmailAccountId }),
+    openDialog: (gmailAccountId) =>
+      set({
+        gmailAccountId: gmailAccountId || null,
+        dialogOpen: true,
+      }),
+    closeDialog: () =>
+      set({
+        gmailAccountId: null,
+        dialogOpen: false,
+      }),
     clearFilter: () => set({ filter: initialGmailAccountState.filter }),
   })),
 )

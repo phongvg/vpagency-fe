@@ -2,10 +2,11 @@ import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
 import { Button, FormContainer, FormItem, Input } from '@/components/ui'
 import {
   useCreateGmailAccountMutation,
+  useGetGmailAccountDetailQuery,
   useUpdateGmailAccountMutation,
 } from '@/views/gmailAccounts/hooks/useGmailAccount'
 import { useGmailAccountStore } from '@/views/gmailAccounts/store/useGmailAccountStore'
-import { UpdateGmailAccountRequest } from '@/views/gmailAccounts/types'
+import { UpdateGmailAccountRequest } from '@/views/gmailAccounts/types/gmailAccount.type'
 import { Field, FieldProps, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
@@ -21,41 +22,39 @@ const validationSchema = Yup.object().shape({
   price: Yup.number().min(0, 'Số tiền lớn hơn hoặc bằng 0'),
 })
 
-type GmailAccountFormProps = {
-  onClose: () => void
-}
+export default function GmailAccountForm() {
+  const { gmailAccountId, dialogOpen, closeDialog } = useGmailAccountStore()
+  const isEdit = !!gmailAccountId
 
-export default function GmailAccountForm({ onClose }: GmailAccountFormProps) {
-  const { selectedGmailAccount } = useGmailAccountStore()
+  // Fetch data khi edit (chỉ khi dialog mở và có ID)
+  const { data: gmailAccount } = useGetGmailAccountDetailQuery(gmailAccountId!, dialogOpen)
 
   const createMutation = useCreateGmailAccountMutation()
   const updateMutation = useUpdateGmailAccountMutation()
 
-  const isEdit = !!selectedGmailAccount
-
   const initialValues: UpdateGmailAccountRequest = {
-    name: selectedGmailAccount?.name || '',
-    password: selectedGmailAccount?.password || '',
-    recoverMail: selectedGmailAccount?.recoverMail || '',
-    recoverMailPassword: selectedGmailAccount?.recoverMailPassword || '',
-    code2fa: selectedGmailAccount?.code2fa || '',
-    phone: selectedGmailAccount?.phone || '',
-    proxy: selectedGmailAccount?.proxy || '',
-    proxyPassword: selectedGmailAccount?.proxyPassword || '',
-    price: selectedGmailAccount?.price || 0,
+    name: gmailAccount?.name || '',
+    password: gmailAccount?.password || '',
+    recoverMail: gmailAccount?.recoverMail || '',
+    recoverMailPassword: gmailAccount?.recoverMailPassword || '',
+    code2fa: gmailAccount?.code2fa || '',
+    phone: gmailAccount?.phone || '',
+    proxy: gmailAccount?.proxy || '',
+    proxyPassword: gmailAccount?.proxyPassword || '',
+    price: gmailAccount?.price || 0,
   }
 
   const handleSubmit = async (values: UpdateGmailAccountRequest) => {
     if (isEdit) {
       await updateMutation.mutateAsync({
-        id: selectedGmailAccount.id,
+        id: gmailAccountId!,
         payload: values,
       })
     } else {
       await createMutation.mutateAsync(values)
     }
 
-    onClose()
+    closeDialog()
   }
 
   return (
@@ -141,7 +140,7 @@ export default function GmailAccountForm({ onClose }: GmailAccountFormProps) {
             </div>
 
             <div className="flex justify-end gap-2 mt-4">
-              <Button type="button" onClick={onClose}>
+              <Button type="button" onClick={closeDialog}>
                 Hủy
               </Button>
               <Button variant="solid" type="submit" loading={isSubmitting} disabled={isSubmitting}>

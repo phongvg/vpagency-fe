@@ -7,7 +7,7 @@ import { useProjectDailyReportStore } from '@/views/projects/pages/projectDetail
 import { HiOutlinePencilAlt } from 'react-icons/hi'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 import { formatDate } from '@/helpers/formatDate'
-import { useGetProjectDailyReportsQuery } from '@/views/projects/pages/projectDetail/hooks/useProjectDailyReportQueries'
+import { useGetProjectDailyReportsQuery } from '@/views/projects/pages/projectDetail/hooks/useProjectDailyReport'
 
 type ProjectDailyReportTableProps = {
   projectId: string

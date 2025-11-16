@@ -4,9 +4,9 @@ import { ColumnDef } from '@tanstack/react-table'
 import { Avatar, ConfirmDialog } from '@/components/ui'
 import { DataTable } from '@/components/shared'
 import { useProjectStore } from '@/views/projects/store/useProjectStore'
-import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
+import { HiOutlineEye, HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { urlConfig } from '@/configs/urls.config'
 import { Project } from '@/views/projects/types/project.type'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
@@ -26,6 +26,8 @@ const OwnerColumn = ({ row }: { row: Project }) => {
 
 export default function ProjectTable() {
   const { filter, openDialog, setFilter } = useProjectStore()
+
+  const navigate = useNavigate()
 
   const { data: getProjectsResponse, isLoading } = useGetProjectsQuery()
   const deleteProjectMutation = useDeleteProjectMutation()
@@ -127,7 +129,10 @@ export default function ProjectTable() {
         cell: (props) => {
           const row = props.row.original
           return (
-            <div className="flex items-center gap-4">
+            <div className="flex justify-center items-center gap-4">
+              <button type="button" onClick={() => navigate(urlConfig.projectDetail.replace(':id', row.id))}>
+                <HiOutlineEye size={24} />
+              </button>
               <button type="button" onClick={() => handleEdit(row)}>
                 <HiOutlinePencilAlt size={24} />
               </button>
@@ -139,7 +144,7 @@ export default function ProjectTable() {
         },
       },
     ],
-    [filter, handleDelete, handleEdit],
+    [filter, handleDelete, handleEdit, navigate],
   )
 
   const onPaginationChange = (page: number) => {

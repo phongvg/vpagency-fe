@@ -1,14 +1,18 @@
-import { GmailAccount } from '@/views/gmailAccounts/types'
-import { DataTable } from '@/components/shared'
-import { Avatar, ConfirmDialog } from '@/components/ui'
+import { GmailAccount } from '@/views/gmailAccounts/types/gmailAccount.type'
+import { DataTable, DataTableResetHandle } from '@/components/shared'
+import { Avatar, Button, ConfirmDialog } from '@/components/ui'
 import { urlConfig } from '@/configs/urls.config'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import GmailAccountEditDialog from '@/views/gmailAccounts/components/GmailAccountEditDialog'
-import { useDeleteGmailAccountMutation, useGetGmailAccountsQuery } from '@/views/gmailAccounts/hooks/useGmailAccount'
+import {
+  useAssignGmailAccountToSelfMutation,
+  useDeleteGmailAccountMutation,
+  useGetGmailAccountsQuery,
+} from '@/views/gmailAccounts/hooks/useGmailAccount'
 import { useGmailAccountStore } from '@/views/gmailAccounts/store/useGmailAccountStore'
-import { ColumnDef } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { ColumnDef, Row } from '@tanstack/react-table'
+import { useMemo, useRef, useState } from 'react'
 import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
 import { Link } from 'react-router-dom'
 
@@ -43,9 +47,13 @@ const CreatorColumn = ({ row }: { row: GmailAccount }) => {
 }
 
 export default function GmailAccountTable() {
-  const { filter, setFilter, setDialogOpen, setSelectedGmailAccount } = useGmailAccountStore()
+  const { filter, setFilter, openDialog } = useGmailAccountStore()
+
   const { data: getGmailAccountsResponse, isLoading } = useGetGmailAccountsQuery()
-  const deleteGmailAccountMutation = useDeleteGmailAccountMutation()
+
+  const deleteMutation = useDeleteGmailAccountMutation()
+  const assignMutation = useAssignGmailAccountToSelfMutation()
+
   const { showConfirm, confirmProps } = useConfirmDialog({
     title: 'Xác nhận xóa gmail',
     type: 'danger',
@@ -53,11 +61,21 @@ export default function GmailAccountTable() {
     cancelText: 'Hủy',
   })
 
+  const { showConfirm: showBatchConfirm, confirmProps: batchConfirmProps } = useConfirmDialog({
+    title: 'Xác nhận',
+    type: 'warning',
+    confirmText: 'Xác nhận',
+    cancelText: 'Hủy',
+  })
+
+  const tableRef = useRef<DataTableResetHandle>(null)
+
+  const [selectedRows, setSelectedRows] = useState<GmailAccount[]>([])
+
   const metaTableData = useMemo(() => getGmailAccountsResponse?.meta, [getGmailAccountsResponse])
 
   const handleEdit = (row: GmailAccount) => {
-    setSelectedGmailAccount(row)
-    setDialogOpen(true)
+    openDialog(row.id)
   }
 
   const handleDelete = async (id: string) => {
@@ -66,7 +84,7 @@ export default function GmailAccountTable() {
     })
 
     if (confirmed) {
-      await deleteGmailAccountMutation.mutateAsync(id)
+      await deleteMutation.mutateAsync(id)
     }
   }
 
@@ -145,6 +163,7 @@ export default function GmailAccountTable() {
       },
     },
   ]
+
   const onPaginationChange = (page: number) => {
     const newFilter = { ...filter, page }
     setFilter(newFilter)
@@ -155,9 +174,64 @@ export default function GmailAccountTable() {
     setFilter(newFilter)
   }
 
+  const handleCheckBoxChange = (checked: boolean, row: GmailAccount) => {
+    if (checked) {
+      setSelectedRows([...selectedRows, row])
+    } else {
+      setSelectedRows(selectedRows.filter((r) => r.id !== row.id))
+    }
+  }
+
+  const handleIndeterminateCheckBoxChange = (checked: boolean, rows: Row<GmailAccount>[]) => {
+    if (checked) {
+      setSelectedRows(rows.map((r) => r.original))
+    } else {
+      setSelectedRows([])
+    }
+  }
+
+  const handleBulkAssign = async () => {
+    if (selectedRows.length === 0) return
+
+    const confirmed = await showBatchConfirm({
+      message: `Bạn có chắc chắn muốn nhận ${selectedRows.length} gmail này?`,
+    })
+
+    if (confirmed) {
+      await Promise.all(
+        selectedRows.map(async (row) => {
+          await assignMutation.mutateAsync(row.id)
+        }),
+      )
+
+      tableRef.current?.resetSelected()
+      setSelectedRows([])
+    }
+  }
+
   return (
     <>
+      {selectedRows.length > 0 && (
+        <div className="flex items-center gap-4 bg-blue-50 mb-4 p-4 rounded">
+          <span className="font-medium">Đã chọn {selectedRows.length} tài khoản</span>
+          <Button size="sm" variant="solid" onClick={handleBulkAssign}>
+            Nhận Gmail
+          </Button>
+          <Button
+            size="sm"
+            onClick={() => {
+              tableRef.current?.resetSelected()
+              setSelectedRows([])
+            }}
+          >
+            Bỏ chọn
+          </Button>
+        </div>
+      )}
+
       <DataTable
+        ref={tableRef}
+        selectable
         columns={columns}
         data={getGmailAccountsResponse?.items ?? []}
         skeletonAvatarColumns={[3]}
@@ -168,12 +242,15 @@ export default function GmailAccountTable() {
           pageIndex: metaTableData?.page as number,
           pageSize: metaTableData?.limit as number,
         }}
+        onCheckBoxChange={handleCheckBoxChange}
+        onIndeterminateCheckBoxChange={handleIndeterminateCheckBoxChange}
         onPaginationChange={onPaginationChange}
         onSelectChange={onSelectChange}
       />
 
       <GmailAccountEditDialog />
-      <ConfirmDialog {...confirmProps} loading={deleteGmailAccountMutation.isPending} />
+      <ConfirmDialog {...confirmProps} loading={deleteMutation.isPending} />
+      <ConfirmDialog {...batchConfirmProps} />
     </>
   )
 }

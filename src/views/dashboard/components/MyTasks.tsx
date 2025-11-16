@@ -5,7 +5,7 @@ import { TaskPriority, TaskPriorityLabels, TaskStatusColors, TaskStatusLabels } 
 import { useAuthStore } from '@/store/auth/useAuthStore'
 import { isMember } from '@/utils/checkRole'
 import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
-import { useGetTasksWithFilters } from '@/views/tasks/assign/hooks/useTaskQueries'
+import { useGetTasksWithFilters } from '@/views/tasks/assign/hooks/useTask'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import { ColumnDef } from '@tanstack/react-table'
 import { useMemo } from 'react'

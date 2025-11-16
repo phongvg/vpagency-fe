@@ -1,15 +1,15 @@
-import { SelectOption } from '@/@types/common'
 import { Task } from '@/@types/task'
 import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
+import SelectCustom, { SelectParams } from '@/components/shared/SelectCustom'
 import { Button, DatePicker, FormItem, Input, Select, Textarea, UserSelect } from '@/components/ui'
 import { UserOption } from '@/components/ui/UserSelect/UserSelect'
 import { TaskFrequency, TaskPriority, TaskPriorityLabels, TaskType, TaskTypeLabels } from '@/enums/task.enum'
 import { setDeadlineTo1800 } from '@/helpers/date'
 import { apiGetAdsGroupList } from '@/services/AdsGroupService'
+import { apiGetFinalUrlList } from '@/views/finalUrls/services/FinalUrlService'
 import { apiGetProjectList } from '@/views/projects/services/ProjectService'
 import { Field, FieldProps, Form, Formik, FormikProps } from 'formik'
 import { useEffect, useRef, useState } from 'react'
-import AsyncSelect from 'react-select/async'
 import * as Yup from 'yup'
 
 interface TaskFormData {
@@ -27,6 +27,7 @@ interface TaskFormData {
   dailyBudget?: number
   numberOfAccounts?: number
   numberOfResultCampaigns?: number
+  finalUrlId: string
 }
 
 interface TaskFormProps {
@@ -63,8 +64,6 @@ const priorityOptions = Object.values(TaskPriority).map((priority) => ({
 
 export default function TaskForm({ task, isEdit = false, loading = false, onSubmit, onCancel }: TaskFormProps) {
   const [selectedUsers, setSelectedUsers] = useState<UserOption[]>([])
-  const [selectedProject, setSelectedProject] = useState<SelectOption | null>(null)
-  const [selectedAdsGroup, setSelectedAdsGroup] = useState<SelectOption | null>(null)
 
   const formikRef = useRef<FormikProps<TaskFormData>>(null)
 
@@ -83,6 +82,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
     dailyBudget: task?.dailyBudget || undefined,
     numberOfAccounts: task?.numberOfAccounts || undefined,
     numberOfResultCampaigns: task?.numberOfResultCampaigns || undefined,
+    finalUrlId: '',
   }
 
   useEffect(() => {
@@ -92,60 +92,52 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
         label: `${user.firstName || ''} ${user.lastName || ''} (${user.username})`.trim(),
         user,
       }))
+
       setSelectedUsers(userOptions)
     } else {
       setSelectedUsers([])
     }
-
-    if (task?.project) {
-      setSelectedProject({
-        value: task.project.id,
-        label: task.project.name,
-      })
-    } else {
-      setSelectedProject(null)
-    }
-
-    if (task?.adsGroup) {
-      setSelectedAdsGroup({
-        value: task.adsGroup.id,
-        label: task.adsGroup.name,
-      })
-    } else {
-      setSelectedAdsGroup(null)
-    }
   }, [task])
 
-  useEffect(() => {
-    if (formikRef.current && !task) {
-      formikRef.current.resetForm()
-      setSelectedUsers([])
-      setSelectedProject(null)
-      setSelectedAdsGroup(null)
-    }
-  }, [task])
-
-  const fetchProjectOptions = async (inputValue: string) => {
+  const fetchProjectOptions = async ({ page, limit, search }: SelectParams) => {
     try {
-      const response = await apiGetProjectList({ search: inputValue, page: 1, limit: 10 })
-      return response.data.data.items.map((project) => ({
-        value: project.id,
-        label: project.name,
-      }))
-    } catch (error) {
-      return []
+      const response = await apiGetProjectList({ search: search || '', page, limit })
+      const { items, meta } = response.data.data
+      return {
+        data: items,
+        total: meta.total,
+        hasMore: meta.hasNext,
+      }
+    } catch {
+      return { data: [], total: 0, hasMore: false }
     }
   }
 
-  const fetchAdsGroupOptions = async (inputValue: string) => {
+  const fetchAdsGroupOptions = async ({ page, limit, search }: SelectParams) => {
     try {
-      const response = await apiGetAdsGroupList({ search: inputValue, page: 1, limit: 10 })
-      return response.data.data.items.map((group) => ({
-        value: group.id,
-        label: group.name,
-      }))
-    } catch (error) {
-      return []
+      const response = await apiGetAdsGroupList({ search: search || '', page, limit })
+      const { items, meta } = response.data.data
+      return {
+        data: items,
+        total: meta.total,
+        hasMore: meta.hasNext,
+      }
+    } catch {
+      return { data: [], total: 0, hasMore: false }
+    }
+  }
+
+  const fetchFinalUrlOptions = async ({ page, limit, search }: SelectParams) => {
+    try {
+      const response = await apiGetFinalUrlList({ search: search || '', page, limit })
+      const { items, meta } = response.data.data
+      return {
+        data: items,
+        total: meta.total,
+        hasMore: meta.hasNext,
+      }
+    } catch {
+      return { data: [], total: 0, hasMore: false }
     }
   }
 
@@ -254,22 +246,21 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                 </FormItem>
 
                 <FormItem label="Dự án">
-                  <Select
-                    cacheOptions
-                    defaultOptions
-                    componentAs={AsyncSelect}
-                    loadOptions={fetchProjectOptions}
-                    placeholder="Chọn dự án..."
-                    value={selectedProject}
-                    onChange={(option: { value: string; label: string } | null) => {
-                      setSelectedProject(option)
-                      setFieldValue('projectId', option?.value || null)
-                    }}
-                  />
+                  <Field name="projectId">
+                    {({ field, form }: FieldProps) => (
+                      <SelectCustom
+                        isCreatable
+                        field={field}
+                        form={form}
+                        fetchOptions={fetchProjectOptions}
+                        placeholder="Chọn dự án..."
+                      />
+                    )}
+                  </Field>
                 </FormItem>
 
-                <FormItem label="Chọn tài khoản Ads">
-                  <Select
+                <FormItem label="Nhóm tài khoản Ads">
+                  {/* <Select
                     cacheOptions
                     defaultOptions
                     componentAs={AsyncSelect}
@@ -280,7 +271,18 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                       setSelectedAdsGroup(option)
                       setFieldValue('adsGroupId', option?.value || null)
                     }}
-                  />
+                  /> */}
+                  <Field name="adsGroupId">
+                    {({ field, form }: FieldProps) => (
+                      <SelectCustom
+                        isCreatable
+                        field={field}
+                        form={form}
+                        fetchOptions={fetchAdsGroupOptions}
+                        placeholder="Chọn nhóm tài khoản..."
+                      />
+                    )}
+                  </Field>
                 </FormItem>
 
                 <FormItem
@@ -288,7 +290,6 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                   errorMessage={errors.assignedUserIds as string}
                   invalid={touched.assignedUserIds && Boolean(errors.assignedUserIds)}
                   label="Người nhận việc"
-                  className="col-span-2"
                 >
                   <UserSelect
                     isMulti={true}
@@ -302,6 +303,20 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                       )
                     }}
                   />
+                </FormItem>
+
+                <FormItem label="Url cuối cùng">
+                  <Field name="finalUrlId">
+                    {({ field, form }: FieldProps) => (
+                      <SelectCustom
+                        isCreatable
+                        field={field}
+                        form={form}
+                        fetchOptions={fetchFinalUrlOptions}
+                        placeholder="Chọn URL cuối cùng..."
+                      />
+                    )}
+                  </Field>
                 </FormItem>
 
                 <FormItem label="Ghi chú" className="col-span-2">

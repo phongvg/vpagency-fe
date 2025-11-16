@@ -1,4 +1,4 @@
-import { useCreateTask, useUpdateTask } from '@/views/tasks/assign/hooks/useTaskQueries'
+import { useCreateTask, useUpdateTask } from '@/views/tasks/assign/hooks/useTask'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import TaskForm from './TaskForm'
 

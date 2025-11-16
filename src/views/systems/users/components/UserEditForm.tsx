@@ -46,65 +46,40 @@ const UserEditForm = forwardRef<FormikRef, UserEditFormProps>((props, ref) => {
                   src={user?.avatar || ''}
                 />
               </div>
-              <FormItem label="Tên đăng nhập">
-                <Field
-                  disabled
-                  type="text"
-                  autoComplete="off"
-                  name="username"
-                  placeholder="Tên đăng nhập"
-                  component={Input}
-                />
-              </FormItem>
-              <FormItem
-                label="Họ"
-                invalid={errors.firstName && touched.firstName}
-                errorMessage={errors.firstName}
-              >
-                <Field
-                  type="text"
-                  autoComplete="off"
-                  name="firstName"
-                  placeholder="Họ"
-                  component={Input}
-                />
-              </FormItem>
-              <FormItem
-                label="Tên"
-                invalid={errors.lastName && touched.lastName}
-                errorMessage={errors.lastName}
-              >
-                <Field
-                  type="text"
-                  autoComplete="off"
-                  name="lastName"
-                  placeholder="Tên"
-                  component={Input}
-                />
-              </FormItem>
-              <FormItem
-                label="Email"
-                invalid={errors.email && touched.email}
-                errorMessage={errors.email}
-              >
-                <Field
-                  type="email"
-                  autoComplete="off"
-                  name="email"
-                  placeholder="Email"
-                  component={Input}
-                />
-              </FormItem>
-              <FormItem
-                label="Phân quyền"
-                invalid={errors.roles && touched.roles}
-                errorMessage={
-                  typeof errors.roles === 'string' ? errors.roles : undefined
-                }
-                className="mb-0"
-              >
-                <Field name="roles" component={UserRoleManagerField} />
-              </FormItem>
+
+              <div className="gap-4 grid">
+                <FormItem label="Tên đăng nhập">
+                  <Field
+                    disabled
+                    type="text"
+                    autoComplete="off"
+                    name="username"
+                    placeholder="Tên đăng nhập"
+                    component={Input}
+                  />
+                </FormItem>
+
+                <FormItem label="Họ" invalid={errors.firstName && touched.firstName} errorMessage={errors.firstName}>
+                  <Field type="text" autoComplete="off" name="firstName" placeholder="Họ" component={Input} />
+                </FormItem>
+
+                <FormItem label="Tên" invalid={errors.lastName && touched.lastName} errorMessage={errors.lastName}>
+                  <Field type="text" autoComplete="off" name="lastName" placeholder="Tên" component={Input} />
+                </FormItem>
+
+                <FormItem label="Email" invalid={errors.email && touched.email} errorMessage={errors.email}>
+                  <Field type="email" autoComplete="off" name="email" placeholder="Email" component={Input} />
+                </FormItem>
+
+                <FormItem
+                  label="Phân quyền"
+                  invalid={errors.roles && touched.roles}
+                  errorMessage={typeof errors.roles === 'string' ? errors.roles : undefined}
+                  className="mb-0"
+                >
+                  <Field name="roles" component={UserRoleManagerField} />
+                </FormItem>
+              </div>
             </FormContainer>
           </Form>
         </div>
