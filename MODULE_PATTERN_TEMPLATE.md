@@ -8,21 +8,23 @@
 
 ```
 views/
-  modules/                      # Tên module (số nhiều, ví dụ: projectStatus, campaigns, projects)
-    ├── components/             # Các React components
-    │   ├── ModuleTable.tsx     # Bảng danh sách
+  modules/                       # Tên module (số nhiều, ví dụ: projectStatus, campaigns, projects)
+    ├── components/              # Các React components
+    │   ├── ModuleTable.tsx      # Bảng danh sách
     │   ├── ModuleTableTools.tsx # Toolbar (search, create button)
-    │   ├── ModuleForm.tsx      # Form tạo/sửa
+    │   ├── ModuleForm.tsx       # Form tạo/sửa
     │   └── ModuleEditDialog.tsx # Dialog wrapper cho form
-    ├── hooks/                  # Custom hooks
-    │   └── useModule.ts        # React Query hooks (useGetModulesQuery, mutations, etc.)
-    ├── services/               # API services
-    │   └── ModuleService.ts    # API calls (apiGetModuleList, apiGetModuleById, etc.)
-    ├── store/                  # Zustand stores
-    │   └── useModuleStore.ts   # UI state management (filter, moduleId, dialogOpen)
-    ├── types/                  # TypeScript types folder
-    │   └── module.type.ts      # TẤT CẢ types: Entity, Request, Response, Filter
-    └── index.tsx               # Main page component
+    │   └── ModuleSearch.tsx     # Component tìm kiếm
+    ├── hooks/                   # Custom hooks
+    │   └── useModule.ts         # React Query hooks (useGetModulesQuery, mutations, etc.)
+    ├── services/                # API services
+    │   └── ModuleService.ts     # API calls (apiGetModuleList, apiGetModuleById, etc.)
+    ├── store/                   # Zustand stores
+    │   └── useModuleStore.ts    # UI state management (filter, moduleId, dialogOpen)
+    ├── types/                   # TypeScript types folder
+    │   └── module.type.ts       # TẤT CẢ types: Entity, Request, Response, Filter
+    └── Module.tsx               # Main page view component
+    └── index.ts                 # Main page component
 ```
 
 **Lưu ý về cấu trúc types:**
@@ -33,6 +35,8 @@ views/
 - **KHÔNG** tạo file `types.ts` riêng ngoài folder types
 - Entity type có `id?: string` (optional vì khi create chưa có ID)
 - Update request dùng `Partial<Entity>` để tất cả field đều optional
+- Mọi types của module đều nằm trong một file duy nhất
+- Nếu tồn tại file type.ts riêng, cần merge tất cả types vào `module.type.ts`
 
 ## Kiến trúc
 
@@ -358,7 +362,37 @@ export const useDeleteModuleMutation = () => {
 }
 ```
 
-### 5. **Form Component** - Create/Edit Form
+### 5. **Main page view component** - Module.tsx
+
+**File:** `Module.tsx`
+
+**Nhiệm vụ:**
+
+- Kết hợp các component lại với nhau
+
+**Pattern:**
+
+```typescript
+import ModuleTable from './components/ModuleTable'
+import ModuleTableTools from './components/ModuleTableTools'
+import ModuleEditDialog from './components/ModuleEditDialog'
+import { AdaptableCard } from '@/components/shared'
+import { Card } from '@/components/ui'
+
+export default function Module() {
+  return (
+    <AdaptableCard className="h-full" bodyClass="h-full">
+      <ModuleTableTools />
+      <Card>
+        <ModuleTable />
+      <ModuleEditDialog />
+      </Card>
+    </AdaptableCard>
+  )
+}
+```
+
+### 6. **Form Component** - Create/Edit Form
 
 **File:** `components/ModuleForm.tsx`
 
@@ -372,13 +406,14 @@ export const useDeleteModuleMutation = () => {
 **Pattern:**
 
 ```typescript
+import { Button, DatePicker, FormContainer, FormItem, Input, Select, Textarea } from '@/components/ui'
 import { useModuleStore } from '../store/useModuleStore'
 import {
   useCreateModuleMutation,
   useGetModuleDetailQuery,
   useUpdateModuleMutation
 } from '../hooks/useModule'
-import { Formik, Form, Field } from 'formik'
+import { Formik, Form, Field, FieldProps,  } from 'formik'
 import * as Yup from 'yup'
 
 const validationSchema = Yup.object().shape({
@@ -387,25 +422,20 @@ const validationSchema = Yup.object().shape({
 })
 
 export default function ModuleForm() {
-  // 1. Lấy moduleId và dialogOpen từ store
   const { moduleId, dialogOpen, closeDialog } = useModuleStore()
   const isEdit = !!moduleId
 
-  // 2. Fetch data khi edit (chỉ khi dialog mở và có ID)
   const { data: module } = useGetModuleDetailQuery(moduleId!, dialogOpen)
 
-  // 3. Mutations
   const createMutation = useCreateModuleMutation()
   const updateMutation = useUpdateModuleMutation()
 
-  // 4. Initial values từ data đã fetch
   const initialValues = {
     name: module?.name || '',
     description: module?.description || '',
     // ... map tất cả các field
   }
 
-  // 5. Handle submit
   const handleSubmit = async (values: UpdateModuleRequest) => {
     if (isEdit) {
       await updateMutation.mutateAsync({
@@ -421,7 +451,7 @@ export default function ModuleForm() {
 
   return (
     <Formik
-      enableReinitialize  // Quan trọng: Re-init khi data thay đổi
+      enableReinitialize
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
@@ -429,21 +459,14 @@ export default function ModuleForm() {
       {({ errors, touched, isSubmitting, setFieldValue, values }) => (
         <Form>
           <FormContainer>
-            {/* Các field của form */}
-            <FormItem
-              asterisk
-              label="Tên"
-              invalid={errors.name && touched.name}
-              errorMessage={errors.name}
-            >
-              <Field
-                name="name"
-                placeholder="Nhập tên..."
-                component={Input}
-              />
-            </FormItem>
+            {/* Luôn hiển thị ít nhất hai field trên một dòng */}
+            <div className="grid grid-cols-2 gap-4">
+              <FormItem asterisk label="Tên" invalid={errors.name && touched.name} errorMessage={errors.name}>
+                <Field type="text" autoComplete="off" name="name" placeholder="Nhập tên..." component={Input} />
+              </FormItem>
+              {/* Các field khác tương tự */}
+            </div>
 
-            {/* Buttons */}
             <div className="flex justify-end gap-2 mt-6">
               <Button type="button" onClick={closeDialog}>
                 Hủy
@@ -460,7 +483,7 @@ export default function ModuleForm() {
 }
 ```
 
-### 6. **Table Component** - Danh sách & Actions
+### 7. **Table Component** - Danh sách & Actions
 
 **File:** `components/ModuleTable.tsx`
 
@@ -601,7 +624,7 @@ export default function ModuleTable() {
 }
 ```
 
-### 7. **Table Tools** - Toolbar với nút Create
+### 8. **Table Tools** - Toolbar với nút Create
 
 **File:** `components/ModuleTableTools.tsx`
 
@@ -614,6 +637,7 @@ export default function ModuleTable() {
 
 ```typescript
 import { Button } from '@/components/ui'
+import ModuleSearch from '@/views/modules/components/ModuleSearch'
 import { HiOutlinePlus } from 'react-icons/hi'
 import { useModuleStore } from '../store/useModuleStore'
 
@@ -622,20 +646,66 @@ export default function ModuleTableTools() {
 
   return (
     <div className="flex justify-between items-center mb-4">
-      <h3 className="text-lg font-semibold">Danh sách Module</h3>
-
-      <div className="flex gap-2">
-        {/* Nút tạo mới - gọi openDialog() không tham số */}
-        <Button
-          size="sm"
-          variant="solid"
-          icon={<HiOutlinePlus />}
-          onClick={() => openDialog()}
-        >
-          Tạo mới
-        </Button>
+      <div className="flex items-center space-x-2">
+        <ModuleSearch />
+        <Button size="sm" icon={<HiOutlineRefresh />} onClick={clearFilter} />
       </div>
+      <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={() => openDialog()}>
+        Thêm mới
+      </Button>
     </div>
+  )
+}
+```
+
+### 9. **Search Component** - Tìm kiếm & Lọc
+
+**File:** `components/ModuleSearch.tsx`
+
+**Nhiệm vụ:**
+
+- Input tìm kiếm với debounce
+
+**Pattern:**
+
+```typescript
+import { Input } from '@/components/ui'
+import { useDebounce } from '@/hooks/useDebounce'
+import { useModuleStore } from '../store/useModuleStore'
+import { useEffect, useState } from 'react'
+import { HiOutlineSearch } from 'react-icons/hi'
+
+export default function ModuleSearch() {
+  const { filter, setFilter } = useModuleStore()
+
+  const [searchValue, setSearchValue] = useState(filter.search || '')
+
+  const debouncedSearchValue = useDebounce(searchValue, 500)
+
+  useEffect(() => {
+    setFilter({
+      ...filter,
+      search: debouncedSearchValue,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearchValue])
+
+  useEffect(() => {
+    setSearchValue(filter.search || '')
+  }, [filter.search])
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value)
+  }
+
+  return (
+    <Input
+      placeholder="Tìm kiếm module..."
+      size="sm"
+      prefix={<HiOutlineSearch className="text-lg" />}
+      value={searchValue}
+      onChange={handleSearchChange}
+    />
   )
 }
 ```

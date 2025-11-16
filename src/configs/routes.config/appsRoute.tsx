@@ -141,11 +141,34 @@ const appsRoute: Routes = [
   },
   {
     key: 'campaigns',
-    path: urlConfig.campains,
+    path: urlConfig.campaigns,
     component: lazy(() => import('@/views/campaign')),
-    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY],
+    authority: [
+      Role.ADMIN,
+      Role.MANAGER_AFF,
+      Role.MANAGER_AGENCY,
+      Role.MEMBER_AFF,
+      Role.MEMBER_AGENCY,
+      Role.ACCOUNTING,
+    ],
     meta: {
       header: 'Chiến dịch dự án',
+    },
+  },
+  {
+    key: 'finalUrls',
+    path: urlConfig.finalUrls,
+    component: lazy(() => import('@/views/finalUrls')),
+    authority: [
+      Role.ADMIN,
+      Role.MANAGER_AFF,
+      Role.MANAGER_AGENCY,
+      Role.MEMBER_AFF,
+      Role.MEMBER_AGENCY,
+      Role.ACCOUNTING,
+    ],
+    meta: {
+      header: 'URL cuối cùng',
     },
   },
 ]

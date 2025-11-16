@@ -26,7 +26,8 @@ export const urlConfig = {
   projectTypes: `${APP_PREFIX_PATH}/master-data/project-types`,
   projectStatus: `${APP_PREFIX_PATH}/master-data/project-status`,
   uidStatus: `${APP_PREFIX_PATH}/master-data/uid-status`,
-  campains: `${APP_PREFIX_PATH}/campaigns`,
+  campaigns: `${APP_PREFIX_PATH}/campaigns`,
+  finalUrls: `${APP_PREFIX_PATH}/final-urls`,
 
   login: `${AUTH_PREFIX_PATH}/login`,
   loginTelegram: `${AUTH_PREFIX_PATH}/telegram`,
