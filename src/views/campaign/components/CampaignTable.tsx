@@ -67,7 +67,7 @@ export default function CampaignTable() {
   const handleDelete = useCallback(
     async (campaign: Campaign) => {
       const confirmed = await showConfirm({
-        message: `Bạn có chắc chắn muốn xóa dự án "${campaign.name}"? Hành động này không thể hoàn tác.`,
+        message: 'Bạn có chắc chắn muốn xóa dự án này? Hành động này không thể hoàn tác.',
       })
 
       if (confirmed) {

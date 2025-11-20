@@ -1,47 +1,64 @@
-import { Button, DatePicker, FormContainer, FormItem, Input, Textarea } from '@/components/ui'
+import { Button, DatePicker, FormContainer, FormItem, Input, Tabs } from '@/components/ui'
 import {
   useCreateCampaignMutation,
   useGetCampaignDetailQuery,
   useUpdateCampaignMutation,
 } from '@/views/campaign/hooks/useCampaign'
 import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
-import { UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
+import { KeywordMatch, LocationStat, SearchTerm, UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
 import { Field, FieldProps, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import TagInput from '@/components/shared/TagInput'
 import NumberInput from '@/components/shared/NumberInput'
 import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
+import { PlusIcon, TrashIcon } from '@phosphor-icons/react'
+import { useState } from 'react'
+
+const { TabNav, TabList, TabContent } = Tabs
 
 const validationSchema = Yup.object().shape({
-  datePull: Yup.date(),
-  dateData: Yup.date(),
-  uid: Yup.string(),
-  mcc: Yup.string(),
-  campaignName: Yup.string().required('Vui lòng nhập tên chiến dịch'),
-  campaignId: Yup.number().required('Vui lòng nhập ID chiến dịch'),
-  finalUrl: Yup.string().url('URL không hợp lệ'),
-  keyword: Yup.array().of(Yup.string()),
-  match: Yup.array().of(Yup.string()),
-  searchTerm: Yup.array().of(Yup.string()),
-  cpcSearchTerm: Yup.array().of(Yup.number()),
-  costSearchTerm: Yup.array().of(Yup.number()),
+  importAt: Yup.string().nullable(),
+  date: Yup.string().nullable(),
+  uid: Yup.string().nullable(),
+  mcc: Yup.string().nullable(),
+  name: Yup.string().required('Vui lòng nhập tên chiến dịch'),
+  externalId: Yup.string().required('Vui lòng nhập ID chiến dịch'),
+  finalUrl: Yup.string().url('URL không hợp lệ').nullable(),
+  keywords: Yup.array().of(
+    Yup.object().shape({
+      keyword: Yup.string().required(),
+      match: Yup.string().required(),
+    }),
+  ),
+  topSearchTerms: Yup.array().of(
+    Yup.object().shape({
+      term: Yup.string().required(),
+      cpc: Yup.number().required(),
+      spent: Yup.number().required(),
+    }),
+  ),
   statusCampaign: Yup.string(),
-  avgCpc: Yup.number(),
-  micros: Yup.number(),
-  click: Yup.number(),
-  ctr: Yup.number(),
-  cpm: Yup.number(),
-  cost: Yup.number(),
-  locationTarget: Yup.array().of(Yup.string()),
-  spendingCountry: Yup.number(),
-  cpcCountry: Yup.number(),
-  ctrCountry: Yup.number(),
-  clickCountry: Yup.number(),
-  costCountry: Yup.number(),
+  avgCpc: Yup.number().nullable(),
+  micros: Yup.number().nullable(),
+  click: Yup.number().nullable(),
+  ctr: Yup.number().nullable(),
+  cpm: Yup.number().nullable(),
+  cost: Yup.number().nullable(),
+  targetLocations: Yup.array().of(Yup.string()),
+  locationStats: Yup.array().of(
+    Yup.object().shape({
+      location: Yup.string().required(),
+      clicks: Yup.number().required(),
+      ctr: Yup.number().required(),
+      cpc: Yup.number().required(),
+      spent: Yup.number().required(),
+    }),
+  ),
 })
 
 export default function CampaignForm() {
   const { campaignId, dialogOpen, closeDialog } = useCampaignStore()
+  const [activeTab, setActiveTab] = useState('basic')
 
   const isEdit = !!campaignId
 
@@ -50,37 +67,30 @@ export default function CampaignForm() {
   const updateMutation = useUpdateCampaignMutation()
 
   const initialValues: UpdateCampaignRequest = {
-    datePull: campaign?.datePull || '',
-    dateData: campaign?.dateData || '',
-    uid: campaign?.uid || '',
-    mcc: campaign?.mcc || '',
-    campaignName: campaign?.campaignName || '',
-    campaignId: campaign?.campaignId || '',
-    finalUrl: campaign?.finalUrl || '',
-    keyword: campaign?.keyword || [],
-    match: campaign?.match || [],
-    searchTerm: campaign?.searchTerm || [],
-    cpcSearchTerm: campaign?.cpcSearchTerm || [],
-    costSearchTerm: campaign?.costSearchTerm || [],
+    importAt: campaign?.importAt || null,
+    date: campaign?.date || null,
+    uid: campaign?.uid || null,
+    mcc: campaign?.mcc || null,
+    name: campaign?.name || null,
+    externalId: campaign?.externalId || null,
+    finalUrl: campaign?.finalUrl?.finalURL || null,
+    keywords: campaign?.keywords || [],
+    topSearchTerms: campaign?.topSearchTerms || [],
     statusCampaign: campaign?.statusCampaign || '',
-    avgCpc: campaign?.avgCpc || 0,
-    micros: campaign?.micros || 0,
-    click: campaign?.click || 0,
-    ctr: campaign?.ctr || 0,
-    cpm: campaign?.cpm || 0,
-    cost: campaign?.cost || 0,
-    locationTarget: campaign?.locationTarget || [],
-    spendingCountry: campaign?.spendingCountry || 0,
-    cpcCountry: campaign?.cpcCountry || 0,
-    ctrCountry: campaign?.ctrCountry || 0,
-    clickCountry: campaign?.clickCountry || 0,
-    costCountry: campaign?.costCountry || 0,
+    avgCpc: campaign?.avgCpc || null,
+    micros: campaign?.micros || null,
+    click: campaign?.click || null,
+    ctr: campaign?.ctr || null,
+    cpm: campaign?.cpm || null,
+    cost: campaign?.cost || null,
+    targetLocations: campaign?.targetLocations || [],
+    locationStats: campaign?.locationStats || [],
   }
 
   const handleSubmit = async (values: UpdateCampaignRequest) => {
     if (isEdit) {
       await updateMutation.mutateAsync({
-        campaignId,
+        campaignId: campaignId!,
         payload: values,
       })
     } else {
@@ -100,239 +110,398 @@ export default function CampaignForm() {
       {({ errors, touched, isSubmitting, setFieldValue, values }) => (
         <Form>
           <FormContainer>
-            <div className="gap-4 grid grid-cols-3">
-              <FormItem
-                asterisk
-                label="ID chiến dịch"
-                invalid={errors.campaignId && touched.campaignId}
-                errorMessage={errors.campaignId}
-              >
-                <Field
-                  type="text"
-                  autoComplete="off"
-                  name="campaignId"
-                  placeholder="Nhập ID chiến dịch..."
-                  component={Input}
-                />
-              </FormItem>
+            <Tabs value={activeTab} onChange={setActiveTab}>
+              <TabList>
+                <TabNav value="basic">Thông tin cơ bản</TabNav>
+                <TabNav value="keywords">Từ khóa</TabNav>
+                <TabNav value="searchTerms">Thuật ngữ tìm kiếm</TabNav>
+                <TabNav value="locations">Thống kê quốc gia</TabNav>
+              </TabList>
 
-              <FormItem
-                asterisk
-                label="Tên chiến dịch"
-                invalid={errors.campaignName && touched.campaignName}
-                errorMessage={errors.campaignName}
-              >
-                <Field
-                  type="text"
-                  autoComplete="off"
-                  name="campaignName"
-                  placeholder="Nhập tên chiến dịch..."
-                  component={Input}
-                />
-              </FormItem>
+              <TabContent value="basic">
+                <div className="gap-4 grid grid-cols-3 mt-4">
+                  <FormItem
+                    asterisk
+                    label="ID chiến dịch"
+                    invalid={errors.externalId && touched.externalId}
+                    errorMessage={errors.externalId}
+                  >
+                    <Field
+                      type="text"
+                      autoComplete="off"
+                      name="externalId"
+                      placeholder="Nhập ID chiến dịch..."
+                      component={Input}
+                    />
+                  </FormItem>
 
-              <FormItem label="UID" invalid={errors.uid && touched.uid} errorMessage={errors.uid}>
-                <Field type="text" autoComplete="off" name="uid" placeholder="Nhập UID..." component={Input} />
-              </FormItem>
+                  <FormItem
+                    asterisk
+                    label="Tên chiến dịch"
+                    invalid={errors.name && touched.name}
+                    errorMessage={errors.name}
+                  >
+                    <Field
+                      type="text"
+                      autoComplete="off"
+                      name="name"
+                      placeholder="Nhập tên chiến dịch..."
+                      component={Input}
+                    />
+                  </FormItem>
 
-              <FormItem label="MCC" invalid={errors.mcc && touched.mcc} errorMessage={errors.mcc}>
-                <Field type="text" autoComplete="off" name="mcc" placeholder="Nhập MCC..." component={Input} />
-              </FormItem>
+                  <FormItem label="UID" invalid={errors.uid && touched.uid} errorMessage={errors.uid}>
+                    <Field type="text" autoComplete="off" name="uid" placeholder="Nhập UID..." component={Input} />
+                  </FormItem>
 
-              <FormItem
-                label="URL cuối cùng"
-                invalid={errors.finalUrl && touched.finalUrl}
-                errorMessage={errors.finalUrl}
-              >
-                <Field
-                  type="text"
-                  autoComplete="off"
-                  name="finalUrl"
-                  placeholder="Nhập URL cuối cùng..."
-                  component={Input}
-                />
-              </FormItem>
+                  <FormItem label="MCC" invalid={errors.mcc && touched.mcc} errorMessage={errors.mcc}>
+                    <Field type="text" autoComplete="off" name="mcc" placeholder="Nhập MCC..." component={Input} />
+                  </FormItem>
 
-              <FormItem label="Ngày kéo">
-                <DatePicker
-                  value={values.datePull ? new Date(values.datePull) : null}
-                  placeholder="dd/mm/yyyy"
-                  inputFormat="DD/MM/YYYY"
-                  onChange={(date) => setFieldValue('datePull', date ? date.toISOString().split('T')[0] : '')}
-                />
-              </FormItem>
+                  <FormItem
+                    label="URL cuối cùng"
+                    invalid={errors.finalUrl && touched.finalUrl}
+                    errorMessage={errors.finalUrl}
+                  >
+                    <Field
+                      type="text"
+                      autoComplete="off"
+                      name="finalUrl"
+                      placeholder="Nhập URL cuối cùng..."
+                      component={Input}
+                    />
+                  </FormItem>
 
-              <FormItem label="Ngày dữ liệu">
-                <DatePicker
-                  value={values.dateData ? new Date(values.dateData) : null}
-                  placeholder="dd/mm/yyyy"
-                  inputFormat="DD/MM/YYYY"
-                  onChange={(date) => setFieldValue('dateData', date ? date.toISOString().split('T')[0] : '')}
-                />
-              </FormItem>
+                  <FormItem label="Thời gian nhập">
+                    <DatePicker
+                      value={values.importAt ? new Date(values.importAt) : null}
+                      placeholder="dd/mm/yyyy"
+                      inputFormat="DD/MM/YYYY"
+                      onChange={(date) => setFieldValue('importAt', date ? date.toISOString().split('T')[0] : null)}
+                    />
+                  </FormItem>
 
-              <FormItem label="Từ khóa">
-                <TagInput
-                  value={values.keyword || []}
-                  placeholder="Nhập từ khóa..."
-                  onChange={(tags) => setFieldValue('keyword', tags)}
-                />
-              </FormItem>
+                  <FormItem label="Ngày">
+                    <DatePicker
+                      value={values.date ? new Date(values.date) : null}
+                      placeholder="dd/mm/yyyy"
+                      inputFormat="DD/MM/YYYY"
+                      onChange={(date) => setFieldValue('date', date ? date.toISOString().split('T')[0] : null)}
+                    />
+                  </FormItem>
 
-              <FormItem label="Phù hợp">
-                <TagInput
-                  value={values.match || []}
-                  placeholder="Nhập match type..."
-                  onChange={(tags) => setFieldValue('match', tags)}
-                />
-              </FormItem>
+                  <FormItem label="Trạng thái chiến dịch">
+                    <Field
+                      type="text"
+                      name="statusCampaign"
+                      placeholder="Nhập trạng thái..."
+                      component={Input}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setFieldValue('statusCampaign', e.target.value)
+                      }
+                    />
+                  </FormItem>
 
-              <FormItem label="Thuật ngữ tìm kiếm">
-                <TagInput
-                  value={values.searchTerm || []}
-                  placeholder="Nhập search term..."
-                  onChange={(tags) => setFieldValue('searchTerm', tags)}
-                />
-              </FormItem>
+                  <FormItem label="CPC trung bình">
+                    <Field name="avgCpc">
+                      {({ field, form }: FieldProps) => (
+                        <FormCurrencyInput form={form} field={field} placeholder="Nhập CPC trung bình" />
+                      )}
+                    </Field>
+                  </FormItem>
 
-              <FormItem label="CPC tìm kiếm">
-                <Field
-                  name="cpcSearchTerm"
-                  placeholder="Nhập CPC (phân cách bằng dấu phẩy)..."
-                  component={Textarea}
-                  rows={2}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                    const values = e.target.value
-                      .split(',')
-                      .map((v) => parseFloat(v.trim()))
-                      .filter((v) => !isNaN(v))
-                    setFieldValue('cpcSearchTerm', values)
-                  }}
-                />
-              </FormItem>
+                  <FormItem label="Thầu chung (Micros)">
+                    <Field name="micros">
+                      {({ field, form }: FieldProps) => (
+                        <FormCurrencyInput form={form} field={field} placeholder="Nhập micros" />
+                      )}
+                    </Field>
+                  </FormItem>
 
-              <FormItem label="Chi phí của từng CPC">
-                <Field
-                  name="costSearchTerm"
-                  placeholder="Nhập cost (phân cách bằng dấu phẩy)..."
-                  component={Textarea}
-                  rows={2}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                    const values = e.target.value
-                      .split(',')
-                      .map((v) => parseFloat(v.trim()))
-                      .filter((v) => !isNaN(v))
-                    setFieldValue('costSearchTerm', values)
-                  }}
-                />
-              </FormItem>
+                  <FormItem label="Click">
+                    <NumberInput
+                      value={values.click}
+                      placeholder="Nhập số click..."
+                      onChange={(value) => setFieldValue('click', value)}
+                    />
+                  </FormItem>
 
-              <FormItem label="Trạng thái chiến dịch">
-                <Field
-                  type="text"
-                  name="statusCampaign"
-                  placeholder="Nhập trạng thái..."
-                  component={Input}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('statusCampaign', e.target.value)}
-                />
-              </FormItem>
+                  <FormItem label="CTR">
+                    <NumberInput
+                      value={values.ctr}
+                      placeholder="Nhập CTR..."
+                      onChange={(value) => setFieldValue('ctr', value)}
+                    />
+                  </FormItem>
 
-              <FormItem label="CPC trung bình">
-                <Field name="avgCpc">
-                  {({ field, form }: FieldProps) => (
-                    <FormCurrencyInput form={form} field={field} placeholder="Nhập CPC trung bình" />
+                  <FormItem label="CPM">
+                    <NumberInput
+                      value={values.cpm}
+                      placeholder="Nhập CPM..."
+                      onChange={(value) => setFieldValue('cpm', value)}
+                    />
+                  </FormItem>
+
+                  <FormItem label="Ngân sách chi tiêu">
+                    <Field name="cost">
+                      {({ field, form }: FieldProps) => (
+                        <FormCurrencyInput form={form} field={field} placeholder="Nhập chi phí" />
+                      )}
+                    </Field>
+                  </FormItem>
+
+                  <FormItem label="Quốc gia mục tiêu" className="col-span-3">
+                    <TagInput
+                      value={values.targetLocations || []}
+                      placeholder="Nhập quốc gia..."
+                      onChange={(tags) => setFieldValue('targetLocations', tags)}
+                    />
+                  </FormItem>
+                </div>
+              </TabContent>
+
+              <TabContent value="keywords">
+                <div className="mt-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <h6 className="font-semibold">Danh sách từ khóa</h6>
+                    <Button
+                      type="button"
+                      size="sm"
+                      icon={<PlusIcon />}
+                      onClick={() => {
+                        const newKeyword: KeywordMatch = { keyword: '', match: '' }
+                        setFieldValue('keywords', [...values.keywords, newKeyword])
+                      }}
+                    >
+                      Thêm từ khóa
+                    </Button>
+                  </div>
+
+                  {values.keywords.length === 0 ? (
+                    <div className="py-8 text-gray-500 text-center">Chưa có từ khóa nào</div>
+                  ) : (
+                    <div className="space-y-3">
+                      {values.keywords.map((keyword, index) => (
+                        <div key={index} className="flex items-start gap-3">
+                          <div className="flex-1 gap-3 grid grid-cols-2">
+                            <FormItem label={index === 0 ? 'Từ khóa' : ''}>
+                              <Input
+                                value={keyword.keyword}
+                                placeholder="Nhập từ khóa..."
+                                onChange={(e) => {
+                                  const updatedKeywords = [...values.keywords]
+                                  updatedKeywords[index].keyword = e.target.value
+                                  setFieldValue('keywords', updatedKeywords)
+                                }}
+                              />
+                            </FormItem>
+                            <FormItem label={index === 0 ? 'Match Type' : ''}>
+                              <Input
+                                value={keyword.match}
+                                placeholder="exact, phrase, broad..."
+                                onChange={(e) => {
+                                  const updatedKeywords = [...values.keywords]
+                                  updatedKeywords[index].match = e.target.value
+                                  setFieldValue('keywords', updatedKeywords)
+                                }}
+                              />
+                            </FormItem>
+                          </div>
+                          <div className={index === 0 ? 'mt-8' : ''}>
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="plain"
+                              icon={<TrashIcon />}
+                              onClick={() => {
+                                const updatedKeywords = values.keywords.filter((_, i) => i !== index)
+                                setFieldValue('keywords', updatedKeywords)
+                              }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   )}
-                </Field>
-              </FormItem>
+                </div>
+              </TabContent>
 
-              <FormItem label="Thầu chung (Micros)">
-                <Field name="micros">
-                  {({ field, form }: FieldProps) => (
-                    <FormCurrencyInput form={form} field={field} placeholder="Nhập micros" />
+              <TabContent value="searchTerms">
+                <div className="mt-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <h6 className="font-semibold">Danh sách thuật ngữ tìm kiếm</h6>
+                    <Button
+                      type="button"
+                      size="sm"
+                      icon={<PlusIcon />}
+                      onClick={() => {
+                        const newTerm: SearchTerm = { term: '', cpc: 0, spent: 0 }
+                        setFieldValue('topSearchTerms', [...values.topSearchTerms, newTerm])
+                      }}
+                    >
+                      Thêm thuật ngữ
+                    </Button>
+                  </div>
+
+                  {values.topSearchTerms.length === 0 ? (
+                    <div className="py-8 text-gray-500 text-center">Chưa có thuật ngữ tìm kiếm nào</div>
+                  ) : (
+                    <div className="space-y-3">
+                      {values.topSearchTerms.map((term, index) => (
+                        <div key={index} className="flex items-start gap-3">
+                          <div className="flex-1 gap-3 grid grid-cols-3">
+                            <FormItem label={index === 0 ? 'Thuật ngữ' : ''}>
+                              <Input
+                                value={term.term}
+                                placeholder="Nhập thuật ngữ..."
+                                onChange={(e) => {
+                                  const updatedTerms = [...values.topSearchTerms]
+                                  updatedTerms[index].term = e.target.value
+                                  setFieldValue('topSearchTerms', updatedTerms)
+                                }}
+                              />
+                            </FormItem>
+                            <FormItem label={index === 0 ? 'CPC' : ''}>
+                              <NumberInput
+                                value={term.cpc}
+                                placeholder="Nhập CPC..."
+                                onChange={(value) => {
+                                  const updatedTerms = [...values.topSearchTerms]
+                                  updatedTerms[index].cpc = value || 0
+                                  setFieldValue('topSearchTerms', updatedTerms)
+                                }}
+                              />
+                            </FormItem>
+                            <FormItem label={index === 0 ? 'Spent' : ''}>
+                              <NumberInput
+                                value={term.spent}
+                                placeholder="Nhập spent..."
+                                onChange={(value) => {
+                                  const updatedTerms = [...values.topSearchTerms]
+                                  updatedTerms[index].spent = value || 0
+                                  setFieldValue('topSearchTerms', updatedTerms)
+                                }}
+                              />
+                            </FormItem>
+                          </div>
+                          <div className={index === 0 ? 'mt-8' : ''}>
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="plain"
+                              icon={<TrashIcon />}
+                              onClick={() => {
+                                const updatedTerms = values.topSearchTerms.filter((_, i) => i !== index)
+                                setFieldValue('topSearchTerms', updatedTerms)
+                              }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   )}
-                </Field>
-              </FormItem>
+                </div>
+              </TabContent>
 
-              <FormItem label="Click">
-                <NumberInput
-                  value={values.click}
-                  placeholder="Nhập số click..."
-                  onChange={(value) => setFieldValue('click', value)}
-                />
-              </FormItem>
+              <TabContent value="locations">
+                <div className="mt-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <h6 className="font-semibold">Thống kê theo quốc gia</h6>
+                    <Button
+                      type="button"
+                      size="sm"
+                      icon={<PlusIcon />}
+                      onClick={() => {
+                        const newLocation: LocationStat = { location: '', clicks: 0, ctr: 0, cpc: 0, spent: 0 }
+                        setFieldValue('locationStats', [...values.locationStats, newLocation])
+                      }}
+                    >
+                      Thêm quốc gia
+                    </Button>
+                  </div>
 
-              <FormItem label="CTR">
-                <NumberInput
-                  value={values.ctr}
-                  placeholder="Nhập CTR..."
-                  onChange={(value) => setFieldValue('ctr', value)}
-                />
-              </FormItem>
-
-              <FormItem label="CPM">
-                <NumberInput
-                  value={values.cpm}
-                  placeholder="Nhập CPM..."
-                  onChange={(value) => setFieldValue('cpm', value)}
-                />
-              </FormItem>
-
-              <FormItem label="Ngân sách chi tiêu">
-                <Field name="cost">
-                  {({ field, form }: FieldProps) => (
-                    <FormCurrencyInput form={form} field={field} placeholder="Nhập chi phí" />
+                  {values.locationStats.length === 0 ? (
+                    <div className="py-8 text-gray-500 text-center">Chưa có thống kê quốc gia nào</div>
+                  ) : (
+                    <div className="space-y-3">
+                      {values.locationStats.map((location, index) => (
+                        <div key={index} className="flex items-start gap-3">
+                          <div className="flex-1 gap-3 grid grid-cols-5">
+                            <FormItem label={index === 0 ? 'Quốc gia' : ''}>
+                              <Input
+                                value={location.location}
+                                placeholder="US, UK..."
+                                onChange={(e) => {
+                                  const updatedLocations = [...values.locationStats]
+                                  updatedLocations[index].location = e.target.value
+                                  setFieldValue('locationStats', updatedLocations)
+                                }}
+                              />
+                            </FormItem>
+                            <FormItem label={index === 0 ? 'Clicks' : ''}>
+                              <NumberInput
+                                value={location.clicks}
+                                placeholder="Clicks..."
+                                onChange={(value) => {
+                                  const updatedLocations = [...values.locationStats]
+                                  updatedLocations[index].clicks = value || 0
+                                  setFieldValue('locationStats', updatedLocations)
+                                }}
+                              />
+                            </FormItem>
+                            <FormItem label={index === 0 ? 'CTR' : ''}>
+                              <NumberInput
+                                value={location.ctr}
+                                placeholder="CTR..."
+                                onChange={(value) => {
+                                  const updatedLocations = [...values.locationStats]
+                                  updatedLocations[index].ctr = value || 0
+                                  setFieldValue('locationStats', updatedLocations)
+                                }}
+                              />
+                            </FormItem>
+                            <FormItem label={index === 0 ? 'CPC' : ''}>
+                              <NumberInput
+                                value={location.cpc}
+                                placeholder="CPC..."
+                                onChange={(value) => {
+                                  const updatedLocations = [...values.locationStats]
+                                  updatedLocations[index].cpc = value || 0
+                                  setFieldValue('locationStats', updatedLocations)
+                                }}
+                              />
+                            </FormItem>
+                            <FormItem label={index === 0 ? 'Spent' : ''}>
+                              <NumberInput
+                                value={location.spent}
+                                placeholder="Spent..."
+                                onChange={(value) => {
+                                  const updatedLocations = [...values.locationStats]
+                                  updatedLocations[index].spent = value || 0
+                                  setFieldValue('locationStats', updatedLocations)
+                                }}
+                              />
+                            </FormItem>
+                          </div>
+                          <div className={index === 0 ? 'mt-8' : ''}>
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="plain"
+                              icon={<TrashIcon />}
+                              onClick={() => {
+                                const updatedLocations = values.locationStats.filter((_, i) => i !== index)
+                                setFieldValue('locationStats', updatedLocations)
+                              }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   )}
-                </Field>
-              </FormItem>
-
-              <FormItem label="Mục tiêu quốc gia">
-                <TagInput
-                  value={values.locationTarget || []}
-                  placeholder="Nhập quốc gia..."
-                  onChange={(tags) => setFieldValue('locationTarget', tags)}
-                />
-              </FormItem>
-
-              <FormItem label="Quốc gia cắn tiền">
-                <NumberInput
-                  value={values.spendingCountry}
-                  placeholder="Nhập ID quốc gia..."
-                  onChange={(value) => setFieldValue('spendingCountry', value)}
-                />
-              </FormItem>
-
-              <FormItem label="CPC quốc gia">
-                <Field name="cpcCountry">
-                  {({ field, form }: FieldProps) => (
-                    <FormCurrencyInput form={form} field={field} placeholder="Nhập CPC quốc gia" />
-                  )}
-                </Field>
-              </FormItem>
-
-              <FormItem label="CTR quốc gia">
-                <NumberInput
-                  value={values.ctrCountry}
-                  placeholder="Nhập CTR quốc gia..."
-                  onChange={(value) => setFieldValue('ctrCountry', value)}
-                />
-              </FormItem>
-
-              <FormItem label="Click quốc gia">
-                <NumberInput
-                  value={values.clickCountry}
-                  placeholder="Nhập click quốc gia..."
-                  onChange={(value) => setFieldValue('clickCountry', value)}
-                />
-              </FormItem>
-
-              <FormItem label="Tổng chi tiêu quốc gia">
-                <Field name="costCountry">
-                  {({ field, form }: FieldProps) => (
-                    <FormCurrencyInput form={form} field={field} placeholder="Nhập tổng chi tiêu" />
-                  )}
-                </Field>
-              </FormItem>
-            </div>
+                </div>
+              </TabContent>
+            </Tabs>
 
             <div className="flex justify-end gap-2 mt-6">
               <Button type="button" disabled={isSubmitting} onClick={closeDialog}>
