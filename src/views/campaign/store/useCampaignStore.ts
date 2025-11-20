@@ -1,21 +1,25 @@
 import { CommonFilterRequest } from '@/@types/common'
-import { Campaign } from '@/views/campaign/types/campaign.type'
+import { CreateCampaignResponse, UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
 type CampaignState = {
   filter: CommonFilterRequest
-  campaigns: Campaign[]
+  campaigns: UpdateCampaignRequest[]
   campaignId: string | null
   dialogOpen: boolean
   dialogPreviewOpen: boolean
+  campaignSummary: CreateCampaignResponse | null
+  dialogCampaignSummaryOpen: boolean
 
   setFilter: (filter: CommonFilterRequest) => void
-  setCampaigns: (campaigns: Campaign[]) => void
+  setCampaigns: (campaigns: UpdateCampaignRequest[]) => void
   openDialog: (campaignId?: string | null) => void
   closeDialog: () => void
   openPreviewDialog: () => void
   closePreviewDialog: () => void
+  openCampaignSummaryDialog: (campaignSummary: CreateCampaignResponse | null) => void
+  closeCampaignSummaryDialog: () => void
 }
 
 export const initialCampaignState = {
@@ -28,6 +32,8 @@ export const initialCampaignState = {
   campaignId: null,
   dialogOpen: false,
   dialogPreviewOpen: false,
+  campaignSummary: null,
+  dialogCampaignSummaryOpen: false,
 }
 
 export const useCampaignStore = create<CampaignState>()(
@@ -40,5 +46,8 @@ export const useCampaignStore = create<CampaignState>()(
     closeDialog: () => set({ campaignId: null, dialogOpen: false }),
     openPreviewDialog: () => set({ dialogPreviewOpen: true }),
     closePreviewDialog: () => set({ dialogPreviewOpen: false }),
+    openCampaignSummaryDialog: (campaignSummary) =>
+      set({ campaignSummary: campaignSummary, dialogCampaignSummaryOpen: true }),
+    closeCampaignSummaryDialog: () => set({ campaignSummary: null, dialogCampaignSummaryOpen: false }),
   })),
 )

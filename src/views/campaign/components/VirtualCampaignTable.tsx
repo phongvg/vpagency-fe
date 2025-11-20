@@ -1,11 +1,11 @@
-import { Campaign } from '@/views/campaign/types/campaign.type'
+import { UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
 import { addDash } from '@/helpers/addDash'
 import { Badge, Tooltip } from '@/components/ui'
 import { FixedSizeList } from 'react-window'
 import { useCallback, useMemo } from 'react'
 
 interface VirtualCampaignTableProps {
-  campaigns: Campaign[]
+  campaigns: UpdateCampaignRequest[]
   height?: number
 }
 
@@ -18,18 +18,13 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
   const columnWidths = useMemo(
     () => ({
       stt: 60,
-      datePull: 120,
-      dateData: 120,
+      importAt: 120,
+      date: 120,
       uid: 140,
       mcc: 140,
-      campaignId: 150,
-      campaignName: 200,
+      externalId: 150,
+      name: 200,
       finalUrl: 250,
-      keyword: 300,
-      match: 200,
-      searchTerm: 300,
-      cpcSearchTerm: 300,
-      costSearchTerm: 300,
       statusCampaign: 200,
       avgCpc: 180,
       micros: 120,
@@ -37,44 +32,15 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
       ctr: 100,
       cpm: 100,
       cost: 180,
-      locationTarget: 300,
-      spendingCountry: 180,
-      cpcCountry: 180,
-      ctrCountry: 180,
-      clickCountry: 180,
-      costCountry: 200,
+      keywords: 300,
+      targetLocations: 300,
+      topSearchTerms: 300,
+      locationStats: 300,
     }),
     [],
   )
 
   const totalWidth = useMemo(() => Object.values(columnWidths).reduce((sum, width) => sum + width, 0), [columnWidths])
-
-  const renderBadgeList = useCallback((items: (string | number)[], maxVisible = 3) => {
-    if (items.length === 0) return null
-
-    const visibleItems = items.slice(0, maxVisible)
-    const remainingCount = items.length - maxVisible
-
-    return (
-      <div className="flex flex-wrap gap-2 py-2 w-full">
-        {visibleItems.map((item, i) => (
-          <Badge
-            key={`${item}-${i}`}
-            className="flex justify-center items-center bg-transparent border text-slate-900"
-            content={String(item)}
-          />
-        ))}
-        {remainingCount > 0 && (
-          <Tooltip title={items.slice(maxVisible).map(String).join(', ')}>
-            <Badge
-              content={`+${remainingCount} items`}
-              className="flex justify-center items-center bg-transparent border text-slate-900 cursor-help"
-            />
-          </Tooltip>
-        )}
-      </div>
-    )
-  }, [])
 
   const Row = useCallback(
     ({ index, style }: { index: number; style: React.CSSProperties }) => {
@@ -97,16 +63,16 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
             {index + 1}
           </div>
           <div
-            style={{ width: columnWidths.datePull, minWidth: columnWidths.datePull }}
+            style={{ width: columnWidths.importAt, minWidth: columnWidths.importAt }}
             className="flex items-center px-4 border-r whitespace-nowrap"
           >
-            {campaign.datePull}
+            {campaign.importAt}
           </div>
           <div
-            style={{ width: columnWidths.dateData, minWidth: columnWidths.dateData }}
+            style={{ width: columnWidths.date, minWidth: columnWidths.date }}
             className="flex items-center px-4 border-r whitespace-nowrap"
           >
-            {campaign.dateData}
+            {campaign.date}
           </div>
           <div
             style={{ width: columnWidths.uid, minWidth: columnWidths.uid }}
@@ -121,16 +87,16 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
             {addDash(campaign.mcc)}
           </div>
           <div
-            style={{ width: columnWidths.campaignId, minWidth: columnWidths.campaignId }}
+            style={{ width: columnWidths.externalId, minWidth: columnWidths.externalId }}
             className="flex items-center px-4 border-r whitespace-nowrap"
           >
-            {addDash(campaign.campaignId)}
+            {campaign.externalId}
           </div>
           <div
-            style={{ width: columnWidths.campaignName, minWidth: columnWidths.campaignName }}
+            style={{ width: columnWidths.name, minWidth: columnWidths.name }}
             className="flex items-center px-4 border-r"
           >
-            {campaign.campaignName}
+            {campaign.name}
           </div>
           <div
             style={{ width: columnWidths.finalUrl, minWidth: columnWidths.finalUrl }}
@@ -140,40 +106,11 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
               href={campaign.finalUrl || '#'}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 hover:underline truncate"
+              className="block max-w-xs text-blue-600 hover:underline truncate"
+              title={campaign.finalUrl || ''}
             >
               {campaign.finalUrl}
             </a>
-          </div>
-          <div
-            style={{ width: columnWidths.keyword, minWidth: columnWidths.keyword }}
-            className="flex items-center px-4 border-r"
-          >
-            {renderBadgeList(campaign.keyword)}
-          </div>
-          <div
-            style={{ width: columnWidths.match, minWidth: columnWidths.match }}
-            className="flex items-center px-4 border-r"
-          >
-            {renderBadgeList(campaign.match)}
-          </div>
-          <div
-            style={{ width: columnWidths.searchTerm, minWidth: columnWidths.searchTerm }}
-            className="flex items-center px-4 border-r"
-          >
-            {renderBadgeList(campaign.searchTerm)}
-          </div>
-          <div
-            style={{ width: columnWidths.cpcSearchTerm, minWidth: columnWidths.cpcSearchTerm }}
-            className="flex items-center px-4 border-r"
-          >
-            {renderBadgeList(campaign.cpcSearchTerm)}
-          </div>
-          <div
-            style={{ width: columnWidths.costSearchTerm, minWidth: columnWidths.costSearchTerm }}
-            className="flex items-center px-4 border-r"
-          >
-            {renderBadgeList(campaign.costSearchTerm)}
           </div>
           <div
             style={{ width: columnWidths.statusCampaign, minWidth: columnWidths.statusCampaign }}
@@ -218,45 +155,127 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
             {campaign.cost}
           </div>
           <div
-            style={{ width: columnWidths.locationTarget, minWidth: columnWidths.locationTarget }}
+            style={{ width: columnWidths.keywords, minWidth: columnWidths.keywords }}
             className="flex items-center px-4 border-r"
           >
-            {renderBadgeList(campaign.locationTarget)}
+            {campaign.keywords.length > 0 && (
+              <Tooltip title={campaign.keywords.map((k) => `${k.keyword} (${k.match})`).join(', ')}>
+                <Badge
+                  content={`${campaign.keywords.length} từ khóa`}
+                  className="bg-blue-50 text-blue-700 cursor-help"
+                />
+              </Tooltip>
+            )}
           </div>
           <div
-            style={{ width: columnWidths.spendingCountry, minWidth: columnWidths.spendingCountry }}
+            style={{ width: columnWidths.targetLocations, minWidth: columnWidths.targetLocations }}
             className="flex items-center px-4 border-r"
           >
-            {campaign.spendingCountry}
+            {campaign.targetLocations.length > 0 && (
+              <Tooltip title={campaign.targetLocations.join(', ')}>
+                <Badge
+                  content={`${campaign.targetLocations.length} quốc gia`}
+                  className="bg-blue-50 text-blue-700 cursor-help"
+                />
+              </Tooltip>
+            )}
           </div>
           <div
-            style={{ width: columnWidths.cpcCountry, minWidth: columnWidths.cpcCountry }}
+            style={{ width: columnWidths.topSearchTerms, minWidth: columnWidths.topSearchTerms }}
             className="flex items-center px-4 border-r"
           >
-            {campaign.cpcCountry}
+            {campaign.topSearchTerms.length > 0 && (
+              <Tooltip
+                scrollable
+                trigger="click"
+                maxHeight={700}
+                placement="left"
+                title={
+                  <div className="text-xs">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-gray-600 border-b">
+                          <th className="px-1 py-1 text-left whitespace-nowrap">Thuật ngữ</th>
+                          <th className="px-2 py-1 text-left whitespace-nowrap">CPC</th>
+                          <th className="px-2 py-1 text-left whitespace-nowrap">Đã tiêu</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {campaign.topSearchTerms.map((term, i) => (
+                          <tr key={i} className="border-gray-700 last:border-0 border-b">
+                            <td className="px-1 py-1 text-left">{term.term}</td>
+                            <td className="px-2 py-1 text-left">{term.cpc.toFixed(2)}</td>
+                            <td className="px-2 py-1 text-left">{term.spent.toFixed(2)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                }
+              >
+                <div className="cursor-help" title="Click để xem chi tiết">
+                  <div className="flex items-center gap-1">
+                    <Badge
+                      content={`+${campaign.topSearchTerms.length - 1}`}
+                      className="bg-blue-50 text-blue-700 text-xs"
+                    />
+                  </div>
+                </div>
+              </Tooltip>
+            )}
           </div>
           <div
-            style={{ width: columnWidths.ctrCountry, minWidth: columnWidths.ctrCountry }}
+            style={{ width: columnWidths.locationStats, minWidth: columnWidths.locationStats }}
             className="flex items-center px-4 border-r"
           >
-            {campaign.ctrCountry}
-          </div>
-          <div
-            style={{ width: columnWidths.clickCountry, minWidth: columnWidths.clickCountry }}
-            className="flex items-center px-4 border-r"
-          >
-            {campaign.clickCountry}
-          </div>
-          <div
-            style={{ width: columnWidths.costCountry, minWidth: columnWidths.costCountry }}
-            className="flex items-center px-4"
-          >
-            {campaign.costCountry}
+            {campaign.locationStats.length > 0 && (
+              <Tooltip
+                scrollable
+                trigger="click"
+                maxHeight={700}
+                placement="left"
+                title={
+                  <div className="text-xs">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-gray-600 border-b">
+                          <th className="px-1 py-1 text-left whitespace-nowrap">Quốc gia</th>
+                          <th className="px-1 py-1 text-left whitespace-nowrap">Click</th>
+                          <th className="px-1 py-1 text-left whitespace-nowrap">CTR</th>
+                          <th className="px-1 py-1 text-left whitespace-nowrap">CPC</th>
+                          <th className="px-1 py-1 text-left whitespace-nowrap">Đã tiêu</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {campaign.locationStats.map((stat, i) => (
+                          <tr key={i} className="border-gray-700 last:border-0 border-b">
+                            <td className="px-1 py-1 text-left">{stat.location}</td>
+                            <td className="px-1 py-1 text-left">{stat.clicks}</td>
+                            <td className="px-1 py-1 text-left">{stat.ctr}</td>
+                            <td className="px-1 py-1 text-left">{stat.cpc.toFixed(2)}</td>
+                            <td className="px-1 py-1 text-left">{stat.spent.toFixed(2)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                }
+              >
+                <div className="cursor-help">
+                  <div className="flex items-center gap-1">
+                    <Badge
+                      content={`+${campaign.locationStats.length - 1}`}
+                      className="bg-blue-50 text-blue-700 text-xs"
+                    />
+                  </div>
+                </div>
+              </Tooltip>
+            )}
           </div>
         </div>
       )
     },
-    [campaigns, columnWidths, renderBadgeList],
+    [campaigns, columnWidths],
   )
 
   return (
@@ -272,13 +291,13 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
                 STT
               </div>
               <div
-                style={{ width: columnWidths.datePull, minWidth: columnWidths.datePull }}
+                style={{ width: columnWidths.importAt, minWidth: columnWidths.importAt }}
                 className="flex items-center px-4 border-r font-semibold"
               >
                 Ngày kéo
               </div>
               <div
-                style={{ width: columnWidths.dateData, minWidth: columnWidths.dateData }}
+                style={{ width: columnWidths.date, minWidth: columnWidths.date }}
                 className="flex items-center px-4 border-r font-semibold"
               >
                 Ngày dữ liệu
@@ -296,13 +315,13 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
                 MCC
               </div>
               <div
-                style={{ width: columnWidths.campaignId, minWidth: columnWidths.campaignId }}
+                style={{ width: columnWidths.externalId, minWidth: columnWidths.externalId }}
                 className="flex items-center px-4 border-r font-semibold"
               >
                 ID chiến dịch
               </div>
               <div
-                style={{ width: columnWidths.campaignName, minWidth: columnWidths.campaignName }}
+                style={{ width: columnWidths.name, minWidth: columnWidths.name }}
                 className="flex items-center px-4 border-r font-semibold"
               >
                 Tên chiến dịch
@@ -312,36 +331,6 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
                 className="flex items-center px-4 border-r font-semibold"
               >
                 URL cuối cùng
-              </div>
-              <div
-                style={{ width: columnWidths.keyword, minWidth: columnWidths.keyword }}
-                className="flex items-center px-4 border-r font-semibold"
-              >
-                Từ khóa
-              </div>
-              <div
-                style={{ width: columnWidths.match, minWidth: columnWidths.match }}
-                className="flex items-center px-4 border-r font-semibold"
-              >
-                Phù hợp
-              </div>
-              <div
-                style={{ width: columnWidths.searchTerm, minWidth: columnWidths.searchTerm }}
-                className="flex items-center px-4 border-r font-semibold"
-              >
-                Thuật ngữ tìm kiếm
-              </div>
-              <div
-                style={{ width: columnWidths.cpcSearchTerm, minWidth: columnWidths.cpcSearchTerm }}
-                className="flex items-center px-4 border-r font-semibold"
-              >
-                CPC tìm kiếm
-              </div>
-              <div
-                style={{ width: columnWidths.costSearchTerm, minWidth: columnWidths.costSearchTerm }}
-                className="flex items-center px-4 border-r font-semibold"
-              >
-                Chi phí của từng CPC
               </div>
               <div
                 style={{ width: columnWidths.statusCampaign, minWidth: columnWidths.statusCampaign }}
@@ -386,40 +375,28 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
                 Ngân sách chi tiêu
               </div>
               <div
-                style={{ width: columnWidths.locationTarget, minWidth: columnWidths.locationTarget }}
+                style={{ width: columnWidths.keywords, minWidth: columnWidths.keywords }}
                 className="flex items-center px-4 border-r font-semibold"
               >
-                Mục tiêu quốc gia
+                Từ khóa tìm kiếm
               </div>
               <div
-                style={{ width: columnWidths.spendingCountry, minWidth: columnWidths.spendingCountry }}
+                style={{ width: columnWidths.targetLocations, minWidth: columnWidths.targetLocations }}
                 className="flex items-center px-4 border-r font-semibold"
               >
-                Quốc gia cắn tiền
+                Quốc gia mục tiêu
               </div>
               <div
-                style={{ width: columnWidths.cpcCountry, minWidth: columnWidths.cpcCountry }}
+                style={{ width: columnWidths.topSearchTerms, minWidth: columnWidths.topSearchTerms }}
                 className="flex items-center px-4 border-r font-semibold"
               >
-                CPC quốc gia
+                Thuật ngữ tìm kiếm
               </div>
               <div
-                style={{ width: columnWidths.ctrCountry, minWidth: columnWidths.ctrCountry }}
+                style={{ width: columnWidths.locationStats, minWidth: columnWidths.locationStats }}
                 className="flex items-center px-4 border-r font-semibold"
               >
-                CTR quốc gia
-              </div>
-              <div
-                style={{ width: columnWidths.clickCountry, minWidth: columnWidths.clickCountry }}
-                className="flex items-center px-4 border-r font-semibold"
-              >
-                Click quốc gia
-              </div>
-              <div
-                style={{ width: columnWidths.costCountry, minWidth: columnWidths.costCountry }}
-                className="flex items-center px-4 font-semibold"
-              >
-                Tổng chi tiêu quốc gia
+                Thống kê quốc gia
               </div>
             </div>
           </div>

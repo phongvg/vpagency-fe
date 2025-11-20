@@ -1,4 +1,4 @@
-import { Campaign, UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
+import { Campaign, CreateCampaignResponse, UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
 import { BaseListResponse, BaseResponse, CommonFilterRequest } from '@/@types/common'
 import ApiService from '@/services/ApiService'
 
@@ -17,11 +17,11 @@ export async function apiGetCampaignById(id: string) {
   })
 }
 
-export async function apiCreateCampaign(payload: UpdateCampaignRequest) {
-  return ApiService.fetchData<BaseResponse<Campaign>>({
+export async function apiCreateCampaign(payload: UpdateCampaignRequest | UpdateCampaignRequest[]) {
+  return ApiService.fetchData<BaseResponse<CreateCampaignResponse>>({
     url: '/campaigns',
     method: 'post',
-    data: payload,
+    data: payload as any,
   })
 }
 

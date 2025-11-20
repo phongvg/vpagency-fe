@@ -1,42 +1,36 @@
 import { DataTable } from '@/components/shared'
 import { Badge, ConfirmDialog, Tooltip, Button, Checkbox, Dropdown } from '@/components/ui'
 import { addDash } from '@/helpers/addDash'
+import { formatDate } from '@/helpers/formatDate'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
+import { toastError, toastSuccess } from '@/utils/toast'
 import { useDeleteCampaignMutation, useGetCampaignsQuery } from '@/views/campaign/hooks/useCampaign'
 import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
 import { Campaign } from '@/views/campaign/types/campaign.type'
 import { ColumnDef } from '@tanstack/react-table'
 import { useCallback, useMemo, useState } from 'react'
-import { HiOutlinePencilAlt, HiOutlineTrash, HiOutlineViewList } from 'react-icons/hi'
+import { HiOutlineDuplicate, HiOutlinePencilAlt, HiOutlineTrash, HiOutlineViewList } from 'react-icons/hi'
 
-// Column configuration with default visibility
 const COLUMN_CONFIG = [
   { id: 'stt', label: 'STT', visible: true, required: true },
-  { id: 'datePull', label: 'Ngày kéo', visible: true, required: false },
-  { id: 'dateData', label: 'Ngày dữ liệu', visible: true, required: false },
+  { id: 'importAt', label: 'Ngày kéo', visible: true, required: false },
+  { id: 'date', label: 'Ngày dữ liệu', visible: true, required: false },
   { id: 'uid', label: 'UID', visible: true, required: false },
   { id: 'mcc', label: 'MCC', visible: true, required: false },
-  { id: 'campaignId', label: 'ID chiến dịch', visible: true, required: false },
-  { id: 'campaignName', label: 'Tên chiến dịch', visible: true, required: false },
-  { id: 'finalUrl', label: 'URL cuối cùng', visible: false, required: false },
-  { id: 'keyword', label: 'Từ khóa', visible: false, required: false },
-  { id: 'match', label: 'Phù hợp', visible: false, required: false },
-  { id: 'searchTerm', label: 'Thuật ngữ tìm kiếm', visible: false, required: false },
-  { id: 'cpcSearchTerm', label: 'CPC tìm kiếm', visible: false, required: false },
-  { id: 'costSearchTerm', label: 'Chi phí của từng CPC', visible: false, required: false },
-  { id: 'statusCampaign', label: 'Trạng thái chiến dịch', visible: true, required: false },
+  { id: 'externalId', label: 'ID chiến dịch', visible: true, required: false },
+  { id: 'name', label: 'Tên chiến dịch', visible: true, required: false },
+  { id: 'finalUrl', label: 'URL cuối cùng', visible: true, required: false },
+  { id: 'statusCampaign', label: 'Trạng thái chiến dịch', visible: false, required: false },
   { id: 'avgCpc', label: 'CPC trung bình', visible: false, required: false },
   { id: 'micros', label: 'Thầu chung', visible: false, required: false },
   { id: 'click', label: 'Click', visible: false, required: false },
   { id: 'ctr', label: 'CTR', visible: false, required: false },
   { id: 'cpm', label: 'CPM', visible: false, required: false },
   { id: 'cost', label: 'Ngân sách chi tiêu', visible: false, required: false },
-  { id: 'locationTarget', label: 'Mục tiêu quốc gia', visible: false, required: false },
-  { id: 'spendingCountry', label: 'Quốc gia cắn tiền', visible: false, required: false },
-  { id: 'cpcCountry', label: 'CPC quốc gia', visible: false, required: false },
-  { id: 'ctrCountry', label: 'CTR quốc gia', visible: false, required: false },
-  { id: 'clickCountry', label: 'Click quốc gia', visible: false, required: false },
-  { id: 'costCountry', label: 'Tổng chi tiêu quốc gia', visible: false, required: false },
+  { id: 'keywords', label: 'Từ khóa', visible: false, required: false },
+  { id: 'targetLocations', label: 'Quốc gia mục tiêu', visible: false, required: false },
+  { id: 'topSearchTerms', label: 'Thuật ngữ tìm kiếm', visible: false, required: false },
+  { id: 'locationStats', label: 'Thống kê quốc gia', visible: false, required: false },
   { id: 'actions', label: 'Hành động', visible: true, required: true },
 ]
 
@@ -63,33 +57,6 @@ export default function CampaignTable() {
 
   const metaTableData = useMemo(() => getCampaignsResponse?.meta, [getCampaignsResponse])
 
-  const renderBadgeList = useCallback((items: (string | number)[], maxVisible = 3) => {
-    if (!items || items.length === 0) return null
-
-    const visibleItems = items.slice(0, maxVisible)
-    const remainingCount = items.length - maxVisible
-
-    return (
-      <div className="flex flex-wrap gap-2 py-2">
-        {visibleItems.map((item, i) => (
-          <Badge
-            key={`${item}-${i}`}
-            className="flex justify-center items-center bg-transparent border text-slate-900"
-            content={String(item)}
-          />
-        ))}
-        {remainingCount > 0 && (
-          <Tooltip title={items.slice(maxVisible).map(String).join(', ')}>
-            <Badge
-              content={`+${remainingCount} items`}
-              className="flex justify-center items-center bg-transparent border text-slate-900 cursor-help"
-            />
-          </Tooltip>
-        )}
-      </div>
-    )
-  }, [])
-
   const handleEdit = useCallback(
     (campaign: Campaign) => {
       openDialog(campaign.id ?? null)
@@ -100,7 +67,7 @@ export default function CampaignTable() {
   const handleDelete = useCallback(
     async (campaign: Campaign) => {
       const confirmed = await showConfirm({
-        message: `Bạn có chắc chắn muốn xóa dự án "${campaign.campaignName}"? Hành động này không thể hoàn tác.`,
+        message: `Bạn có chắc chắn muốn xóa dự án "${campaign.name}"? Hành động này không thể hoàn tác.`,
       })
 
       if (confirmed) {
@@ -117,6 +84,17 @@ export default function CampaignTable() {
     }))
   }, [])
 
+  const handleCopyToClipboard = useCallback((text: string) => {
+    navigator.clipboard.writeText(text).then(
+      () => {
+        toastSuccess('Đã sao chép vào clipboard')
+      },
+      () => {
+        toastError('Sao chép thất bại')
+      },
+    )
+  }, [])
+
   const allColumns: ColumnDef<Campaign>[] = useMemo(
     () => [
       {
@@ -129,22 +107,52 @@ export default function CampaignTable() {
         },
       },
       {
-        id: 'datePull',
+        id: 'importAt',
         header: 'Ngày kéo',
-        accessorKey: 'datePull',
-        cell: (props) => <span>{props.row.original.datePull}</span>,
+        accessorKey: 'importAt',
+        cell: (props) => <span>{formatDate(props.row.original.importAt, 'DD/MM/YYYY')}</span>,
       },
       {
-        id: 'dateData',
+        id: 'date',
         header: 'Ngày dữ liệu',
-        accessorKey: 'dateData',
-        cell: (props) => <span>{props.row.original.dateData}</span>,
+        accessorKey: 'date',
+        cell: (props) => <span>{formatDate(props.row.original.date, 'DD/MM/YYYY')}</span>,
+      },
+      {
+        id: 'externalId',
+        header: 'ID chiến dịch',
+        accessorKey: 'externalId',
+        cell: (props) => (
+          <div className="flex items-center gap-2">
+            {addDash(props.row.original.externalId)}
+            <button
+              type="button"
+              title="Sao chép"
+              onClick={() => handleCopyToClipboard(props.row.original.externalId || '')}
+            >
+              <HiOutlineDuplicate />
+            </button>
+          </div>
+        ),
+      },
+      {
+        id: 'name',
+        header: 'Tên chiến dịch',
+        accessorKey: 'name',
+        cell: (props) => <span>{props.row.original.name}</span>,
       },
       {
         id: 'uid',
         header: 'UID',
         accessorKey: 'uid',
-        cell: (props) => <span>{addDash(props.row.original.uid)}</span>,
+        cell: (props) => (
+          <div className="flex items-center gap-2">
+            {addDash(props.row.original.uid)}
+            <button type="button" title="Sao chép" onClick={() => handleCopyToClipboard(props.row.original.uid || '')}>
+              <HiOutlineDuplicate />
+            </button>
+          </div>
+        ),
       },
       {
         id: 'mcc',
@@ -153,61 +161,20 @@ export default function CampaignTable() {
         cell: (props) => <span>{addDash(props.row.original.mcc)}</span>,
       },
       {
-        id: 'campaignId',
-        header: 'ID chiến dịch',
-        accessorKey: 'campaignId',
-        cell: (props) => <span>{addDash(props.row.original.campaignId)}</span>,
-      },
-      {
-        id: 'campaignName',
-        header: 'Tên chiến dịch',
-        accessorKey: 'campaignName',
-        cell: (props) => <span>{props.row.original.campaignName}</span>,
-      },
-      {
         id: 'finalUrl',
         header: 'URL cuối cùng',
         accessorKey: 'finalUrl',
         cell: (props) => (
           <a
-            href={props.row.original.finalUrl || '#'}
+            href={props.row.original.finalUrl?.finalURL || '#'}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600 hover:underline truncate"
+            className="block max-w-xs text-blue-600 hover:underline truncate"
+            title={props.row.original.finalUrl?.finalURL}
           >
-            {props.row.original.finalUrl}
+            {props.row.original.finalUrl?.finalURL}
           </a>
         ),
-      },
-      {
-        id: 'keyword',
-        header: 'Từ khóa',
-        accessorKey: 'keyword',
-        cell: (props) => renderBadgeList(props.row.original.keyword),
-      },
-      {
-        id: 'match',
-        header: 'Phù hợp',
-        accessorKey: 'match',
-        cell: (props) => renderBadgeList(props.row.original.match),
-      },
-      {
-        id: 'searchTerm',
-        header: 'Thuật ngữ tìm kiếm',
-        accessorKey: 'searchTerm',
-        cell: (props) => renderBadgeList(props.row.original.searchTerm),
-      },
-      {
-        id: 'cpcSearchTerm',
-        header: 'CPC tìm kiếm',
-        accessorKey: 'cpcSearchTerm',
-        cell: (props) => renderBadgeList(props.row.original.cpcSearchTerm),
-      },
-      {
-        id: 'costSearchTerm',
-        header: 'Chi phí của từng CPC',
-        accessorKey: 'costSearchTerm',
-        cell: (props) => renderBadgeList(props.row.original.costSearchTerm),
       },
       {
         id: 'statusCampaign',
@@ -252,40 +219,128 @@ export default function CampaignTable() {
         cell: (props) => <span>{props.row.original.cost}</span>,
       },
       {
-        id: 'locationTarget',
-        header: 'Mục tiêu quốc gia',
-        accessorKey: 'locationTarget',
-        cell: (props) => renderBadgeList(props.row.original.locationTarget),
+        id: 'keywords',
+        header: 'Từ khóa',
+        cell: (props) => {
+          const keywords = props.row.original.keywords || []
+          if (keywords.length === 0) return ''
+
+          return (
+            <Tooltip title={keywords.map((k) => `${k.keyword} (${k.match})`).join(', ')}>
+              <Badge content={`${keywords.length} từ khóa`} className="bg-blue-50 text-blue-700 cursor-help" />
+            </Tooltip>
+          )
+        },
       },
       {
-        id: 'spendingCountry',
-        header: 'Quốc gia cắn tiền',
-        accessorKey: 'spendingCountry',
-        cell: (props) => <span>{props.row.original.spendingCountry}</span>,
+        id: 'targetLocations',
+        header: 'Quốc gia mục tiêu',
+        accessorKey: 'targetLocations',
+        cell: (props) => {
+          const locations = props.row.original.targetLocations || []
+          if (locations.length === 0) return ''
+
+          return (
+            <Tooltip title={locations.join(', ')}>
+              <Badge content={`${locations.length} quốc gia`} className="bg-blue-50 text-blue-700 cursor-help" />
+            </Tooltip>
+          )
+        },
       },
       {
-        id: 'cpcCountry',
-        header: 'CPC quốc gia',
-        accessorKey: 'cpcCountry',
-        cell: (props) => <span>{props.row.original.cpcCountry}</span>,
+        id: 'topSearchTerms',
+        header: 'Thuật ngữ tìm kiếm',
+        cell: (props) => {
+          const terms = props.row.original.topSearchTerms || []
+          if (terms.length === 0) return ''
+
+          return (
+            <Tooltip
+              scrollable
+              trigger="click"
+              maxHeight={700}
+              placement="left"
+              title={
+                <div className="text-xs">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-gray-600 border-b">
+                        <th className="px-1 py-1 text-left whitespace-nowrap">Thuật ngữ</th>
+                        <th className="px-2 py-1 text-left whitespace-nowrap">CPC</th>
+                        <th className="px-2 py-1 text-left whitespace-nowrap">Đã tiêu</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {terms.map((term, i) => (
+                        <tr key={i} className="border-gray-700 last:border-0 border-b">
+                          <td className="px-1 py-1 text-left">{term.term}</td>
+                          <td className="px-2 py-1 text-left">{term.cpc.toFixed(2)}</td>
+                          <td className="px-2 py-1 text-left">{term.spent.toFixed(2)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              }
+            >
+              <div className="cursor-help" title="Click để xem chi tiết">
+                <div className="flex items-center gap-1">
+                  <Badge content={`+${terms.length - 1}`} className="bg-blue-50 text-blue-700 text-xs" />
+                </div>
+              </div>
+            </Tooltip>
+          )
+        },
       },
       {
-        id: 'ctrCountry',
-        header: 'CTR quốc gia',
-        accessorKey: 'ctrCountry',
-        cell: (props) => <span>{props.row.original.ctrCountry}</span>,
-      },
-      {
-        id: 'clickCountry',
-        header: 'Click quốc gia',
-        accessorKey: 'clickCountry',
-        cell: (props) => <span>{props.row.original.clickCountry}</span>,
-      },
-      {
-        id: 'costCountry',
-        header: 'Tổng chi tiêu quốc gia',
-        accessorKey: 'costCountry',
-        cell: (props) => <span>{props.row.original.costCountry}</span>,
+        id: 'locationStats',
+        header: 'Thống kê quốc gia',
+        accessorKey: 'locationStats',
+        cell: (props) => {
+          const stats = props.row.original.locationStats || []
+          if (stats.length === 0) return ''
+
+          return (
+            <Tooltip
+              scrollable
+              trigger="click"
+              maxHeight={700}
+              placement="left"
+              title={
+                <div className="text-xs">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-gray-600 border-b">
+                        <th className="px-1 py-1 text-left whitespace-nowrap">Quốc gia</th>
+                        <th className="px-1 py-1 text-left whitespace-nowrap">Click</th>
+                        <th className="px-1 py-1 text-left whitespace-nowrap">CTR</th>
+                        <th className="px-1 py-1 text-left whitespace-nowrap">CPC</th>
+                        <th className="px-1 py-1 text-left whitespace-nowrap">Đã tiêu</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {stats.map((stat, i) => (
+                        <tr key={i} className="border-gray-700 last:border-0 border-b">
+                          <td className="px-1 py-1 text-left">{stat.location}</td>
+                          <td className="px-1 py-1 text-left">{stat.clicks}</td>
+                          <td className="px-1 py-1 text-left">{stat.ctr}</td>
+                          <td className="px-1 py-1 text-left">{stat.cpc.toFixed(2)}</td>
+                          <td className="px-1 py-1 text-left">{stat.spent.toFixed(2)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              }
+            >
+              <div className="cursor-help">
+                <div className="flex items-center gap-1">
+                  <Badge content={`+${stats.length - 1}`} className="bg-blue-50 text-blue-700 text-xs" />
+                </div>
+              </div>
+            </Tooltip>
+          )
+        },
       },
       {
         id: 'actions',
@@ -305,7 +360,7 @@ export default function CampaignTable() {
         },
       },
     ],
-    [filter, handleDelete, handleEdit, renderBadgeList],
+    [filter, handleDelete, handleEdit, handleCopyToClipboard],
   )
 
   const visibleColumns = useMemo(() => {
@@ -346,6 +401,7 @@ export default function CampaignTable() {
           </div>
         </Dropdown>
       </div>
+
       <DataTable
         columns={visibleColumns}
         data={getCampaignsResponse?.items || []}
@@ -358,6 +414,7 @@ export default function CampaignTable() {
         onPaginationChange={onPaginationChange}
         onSelectChange={onSelectChange}
       />
+
       <ConfirmDialog {...confirmProps} loading={deleteCampaignMutation.isPending} />
     </>
   )

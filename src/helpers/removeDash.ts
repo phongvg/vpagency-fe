@@ -1,5 +1,9 @@
 export function removeDash(str: string) {
-  if (!str.includes('-')) return str
+  try {
+    if (!str.includes('-')) return str
 
-  return str.replace(/-/g, '')
+    return str.replace(/-/g, '')
+  } catch {
+    return str || ''
+  }
 }

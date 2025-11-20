@@ -53,7 +53,6 @@ export default function CampaignTableTools() {
       {isProcessing && (
         <div className="flex items-center gap-3">
           <Progress showInfo percent={progress} width="w-full" />
-          <span className="text-gray-600 dark:text-gray-400 text-sm whitespace-nowrap">{progress}%</span>
         </div>
       )}
 

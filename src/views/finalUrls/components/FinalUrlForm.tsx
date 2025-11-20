@@ -1,28 +1,33 @@
 import { useFinalUrlStore } from '../store/useFinalUrlStore'
 import { useCreateFinalUrlMutation, useGetFinalUrlDetailQuery, useUpdateFinalUrlMutation } from '../hooks/useFinalUrl'
-import { Formik, Form, Field } from 'formik'
+import { Formik, Form, Field, FieldProps } from 'formik'
 import * as Yup from 'yup'
-import { FormContainer, FormItem, Button, Input, Switcher } from '@/components/ui'
+import { FormContainer, FormItem, Button, Input } from '@/components/ui'
 import { UpdateFinalUrlRequest } from '../types/finalUrl.type'
+import TagInput from '@/components/shared/TagInput'
+import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
+import SelectCustom, { SelectParams } from '@/components/shared/SelectCustom'
+import { apiGetProjectList } from '@/views/projects/services/ProjectService'
 
 const validationSchema = Yup.object().shape({
-  campaignId: Yup.string().required('Campaign là bắt buộc'),
-  name: Yup.string().required('Tên URL là bắt buộc'),
-  url: Yup.string().url('URL không hợp lệ').required('URL là bắt buộc'),
-  country: Yup.string().required('Quốc gia là bắt buộc'),
+  name: Yup.string().required('Tên là bắt buộc'),
+  finalURL: Yup.string().url('URL không hợp lệ').required('URL là bắt buộc'),
+  countries: Yup.array().of(Yup.string()).min(1, 'Vui lòng nhập ít nhất một quốc gia'),
+  projectId: Yup.string().required('Dự án là bắt buộc'),
   title: Yup.string().nullable(),
-  description: Yup.string().nullable(),
   content: Yup.string().nullable(),
-  refTarget: Yup.number().min(0, 'Giá trị phải >= 0').required('Mục tiêu Ref là bắt buộc'),
-  costPerRef: Yup.number().min(0, 'Giá trị phải >= 0').required('Chi phí/Ref là bắt buộc'),
-  ftdTarget: Yup.number().min(0, 'Giá trị phải >= 0').required('Mục tiêu FTD là bắt buộc'),
-  costPerFtd: Yup.number().min(0, 'Giá trị phải >= 0').required('Chi phí/FTD là bắt buộc'),
-  volumeKeyPerDay: Yup.number().min(0, 'Giá trị phải >= 0').required('Volume key/ngày là bắt buộc'),
-  estimatedRefPerDay: Yup.number().min(0, 'Giá trị phải >= 0').required('Dự tính Ref/ngày là bắt buộc'),
-  cpc: Yup.number().min(0, 'Giá trị phải >= 0').required('CPC là bắt buộc'),
-  budget: Yup.number().min(0, 'Giá trị phải >= 0').required('Ngân sách là bắt buộc'),
-  suggestedBid: Yup.number().min(0, 'Giá trị phải >= 0').required('Giá thầu đề xuất là bắt buộc'),
-  active: Yup.boolean(),
+  targetRef: Yup.number().min(0, 'Giá trị phải >= 0'),
+  targetCostPerRef: Yup.number().min(0, 'Giá trị phải >= 0'),
+  targetFtd: Yup.number().min(0, 'Giá trị phải >= 0'),
+  targetCostPerFtd: Yup.number().min(0, 'Giá trị phải >= 0'),
+  targetDailyKeyVolume: Yup.number().min(0, 'Giá trị phải >= 0'),
+  targetCpc: Yup.number().min(0, 'Giá trị phải >= 0'),
+  budget: Yup.number().min(0, 'Giá trị phải >= 0'),
+  suggestedBid: Yup.number().min(0, 'Giá trị phải >= 0'),
+  totalClicks: Yup.number().min(0, 'Giá trị phải >= 0'),
+  totalSpent: Yup.number().min(0, 'Giá trị phải >= 0'),
+  totalRef: Yup.number().min(0, 'Giá trị phải >= 0'),
+  totalFtd: Yup.number().min(0, 'Giá trị phải >= 0'),
 })
 
 export default function FinalUrlForm() {
@@ -35,23 +40,34 @@ export default function FinalUrlForm() {
   const updateMutation = useUpdateFinalUrlMutation()
 
   const initialValues: UpdateFinalUrlRequest = {
-    campaignId: finalUrl?.campaignId || '',
     name: finalUrl?.name || '',
-    url: finalUrl?.url || '',
-    country: finalUrl?.country || '',
+    finalURL: finalUrl?.finalURL || '',
+    countries: finalUrl?.countries || [],
+    projectId: finalUrl?.projectId || '',
     title: finalUrl?.title || '',
-    description: finalUrl?.description || '',
     content: finalUrl?.content || '',
-    refTarget: finalUrl?.refTarget || 0,
-    costPerRef: finalUrl?.costPerRef || 0,
-    ftdTarget: finalUrl?.ftdTarget || 0,
-    costPerFtd: finalUrl?.costPerFtd || 0,
-    volumeKeyPerDay: finalUrl?.volumeKeyPerDay || 0,
-    estimatedRefPerDay: finalUrl?.estimatedRefPerDay || 0,
-    cpc: finalUrl?.cpc || 0,
+    targetRef: finalUrl?.targetRef || 0,
+    targetCostPerRef: finalUrl?.targetCostPerRef || 0,
+    targetFtd: finalUrl?.targetFtd || 0,
+    targetCostPerFtd: finalUrl?.targetCostPerFtd || 0,
+    targetDailyKeyVolume: finalUrl?.targetDailyKeyVolume || 0,
+    targetCpc: finalUrl?.targetCpc || 0,
     budget: finalUrl?.budget || 0,
     suggestedBid: finalUrl?.suggestedBid || 0,
-    active: finalUrl?.active ?? true,
+  }
+
+  const fetchProjectOptions = async ({ page, limit, search }: SelectParams) => {
+    try {
+      const response = await apiGetProjectList({ search: search || '', page, limit })
+      const { items, meta } = response.data.data
+      return {
+        data: items,
+        total: meta.total,
+        hasMore: meta.hasNext,
+      }
+    } catch {
+      return { data: [], total: 0, hasMore: false }
+    }
   }
 
   const handleSubmit = async (values: UpdateFinalUrlRequest) => {
@@ -82,35 +98,49 @@ export default function FinalUrlForm() {
                 <h5 className="mb-3 font-semibold text-base">Thông tin cơ bản</h5>
 
                 <div className="gap-4 grid grid-cols-2">
-                  <FormItem
-                    asterisk
-                    label="Campaign ID"
-                    invalid={!!(errors.campaignId && touched.campaignId)}
-                    errorMessage={errors.campaignId}
-                  >
-                    <Field name="campaignId" placeholder="Nhập Campaign ID..." component={Input} />
-                  </FormItem>
-
-                  <FormItem
-                    asterisk
-                    label="Tên URL"
-                    invalid={!!(errors.name && touched.name)}
-                    errorMessage={errors.name}
-                  >
+                  <FormItem asterisk label="Tên" invalid={!!(errors.name && touched.name)} errorMessage={errors.name}>
                     <Field name="name" placeholder="Nhập tên dễ nhớ cho URL..." component={Input} />
                   </FormItem>
 
-                  <FormItem asterisk label="URL" invalid={!!(errors.url && touched.url)} errorMessage={errors.url}>
-                    <Field name="url" placeholder="https://example.com" component={Input} type="url" />
+                  <FormItem
+                    asterisk
+                    label="URL"
+                    invalid={!!(errors.finalURL && touched.finalURL)}
+                    errorMessage={errors.finalURL}
+                  >
+                    <Field name="finalURL" type="url" placeholder="https://example.com" component={Input} />
+                  </FormItem>
+
+                  <FormItem
+                    asterisk
+                    label="Dự án"
+                    invalid={!!(errors.projectId && touched.projectId)}
+                    errorMessage={errors.projectId}
+                  >
+                    <Field name="projectId">
+                      {({ field, form }: FieldProps) => (
+                        <SelectCustom
+                          isCreatable
+                          field={field}
+                          form={form}
+                          fetchOptions={fetchProjectOptions}
+                          placeholder="Chọn dự án..."
+                        />
+                      )}
+                    </Field>
                   </FormItem>
 
                   <FormItem
                     asterisk
                     label="Quốc gia"
-                    invalid={!!(errors.country && touched.country)}
-                    errorMessage={errors.country}
+                    invalid={!!(errors.countries && touched.countries)}
+                    errorMessage={errors.countries}
                   >
-                    <Field name="country" placeholder="VN, US, JP..." component={Input} />
+                    <TagInput
+                      value={values.countries || []}
+                      placeholder="Nhập quốc gia..."
+                      onChange={(tags) => setFieldValue('countries', tags)}
+                    />
                   </FormItem>
                 </div>
               </div>
@@ -118,22 +148,9 @@ export default function FinalUrlForm() {
               <div>
                 <h5 className="mb-3 font-semibold text-base">Nội dung</h5>
 
-                <div className="gap-4 grid grid-cols-2">
-                  <FormItem
-                    label="Tiêu đề"
-                    className="col-span-2"
-                    invalid={!!(errors.title && touched.title)}
-                    errorMessage={errors.title}
-                  >
+                <div className="gap-4 grid grid-cols-1">
+                  <FormItem label="Tiêu đề" invalid={!!(errors.title && touched.title)} errorMessage={errors.title}>
                     <Field name="title" placeholder="Nhập tiêu đề..." component={Input} />
-                  </FormItem>
-
-                  <FormItem
-                    label="Mô tả"
-                    invalid={!!(errors.description && touched.description)}
-                    errorMessage={errors.description}
-                  >
-                    <Field textArea name="description" placeholder="Nhập mô tả..." component={Input} rows={3} />
                   </FormItem>
 
                   <FormItem
@@ -151,21 +168,23 @@ export default function FinalUrlForm() {
 
                 <div className="gap-4 grid grid-cols-2">
                   <FormItem
-                    asterisk
                     label="Mục tiêu số lượng Ref"
-                    invalid={!!(errors.refTarget && touched.refTarget)}
-                    errorMessage={errors.refTarget}
+                    invalid={!!(errors.targetRef && touched.targetRef)}
+                    errorMessage={errors.targetRef}
                   >
-                    <Field name="refTarget" placeholder="0" component={Input} type="number" />
+                    <Field name="targetRef" placeholder="0" component={Input} type="number" />
                   </FormItem>
 
                   <FormItem
-                    asterisk
-                    label="Chi phí/Ref (Target)"
-                    invalid={!!(errors.costPerRef && touched.costPerRef)}
-                    errorMessage={errors.costPerRef}
+                    label="Chi phí/Ref"
+                    invalid={!!(errors.targetCostPerRef && touched.targetCostPerRef)}
+                    errorMessage={errors.targetCostPerRef}
                   >
-                    <Field name="costPerRef" placeholder="0.00" component={Input} type="number" step="0.01" />
+                    <Field name="targetCostPerRef" component={Input} type="number" step="0.01" />
+                  </FormItem>
+
+                  <FormItem label="Tổng Ref">
+                    <Field name="totalRefs" component={Input} type="number" step="0.01" />
                   </FormItem>
                 </div>
               </div>
@@ -175,21 +194,23 @@ export default function FinalUrlForm() {
 
                 <div className="gap-4 grid grid-cols-2">
                   <FormItem
-                    asterisk
                     label="Mục tiêu số lượng FTD"
-                    invalid={!!(errors.ftdTarget && touched.ftdTarget)}
-                    errorMessage={errors.ftdTarget}
+                    invalid={!!(errors.targetFtd && touched.targetFtd)}
+                    errorMessage={errors.targetFtd}
                   >
-                    <Field name="ftdTarget" placeholder="0" component={Input} type="number" />
+                    <Field name="targetFtd" placeholder="0" component={Input} type="number" />
                   </FormItem>
 
                   <FormItem
-                    asterisk
-                    label="Chi phí/FTD (Target)"
-                    invalid={!!(errors.costPerFtd && touched.costPerFtd)}
-                    errorMessage={errors.costPerFtd}
+                    label="Chi phí/FTD"
+                    invalid={!!(errors.targetCostPerFtd && touched.targetCostPerFtd)}
+                    errorMessage={errors.targetCostPerFtd}
                   >
-                    <Field name="costPerFtd" placeholder="0.00" component={Input} type="number" step="0.01" />
+                    <Field name="targetCostPerFtd" component={Input} type="number" step="0.01" />
+                  </FormItem>
+
+                  <FormItem label="Tổng FTD">
+                    <Field name="totalFtd" component={Input} type="number" step="0.01" />
                   </FormItem>
                 </div>
               </div>
@@ -199,30 +220,23 @@ export default function FinalUrlForm() {
 
                 <div className="gap-4 grid grid-cols-2">
                   <FormItem
-                    asterisk
                     label="Volume key/ngày"
-                    invalid={!!(errors.volumeKeyPerDay && touched.volumeKeyPerDay)}
-                    errorMessage={errors.volumeKeyPerDay}
+                    invalid={!!(errors.targetDailyKeyVolume && touched.targetDailyKeyVolume)}
+                    errorMessage={errors.targetDailyKeyVolume}
                   >
-                    <Field name="volumeKeyPerDay" placeholder="0" component={Input} type="number" />
+                    <Field name="targetDailyKeyVolume" placeholder="0" component={Input} type="number" />
                   </FormItem>
 
                   <FormItem
-                    asterisk
-                    label="Dự tính Ref/ngày"
-                    invalid={!!(errors.estimatedRefPerDay && touched.estimatedRefPerDay)}
-                    errorMessage={errors.estimatedRefPerDay}
+                    label="CPC"
+                    invalid={!!(errors.targetCpc && touched.targetCpc)}
+                    errorMessage={errors.targetCpc}
                   >
-                    <Field name="estimatedRefPerDay" placeholder="0" component={Input} type="number" />
+                    <Field name="targetCpc" placeholder="0.00" component={Input} type="number" step="0.01" />
                   </FormItem>
 
-                  <FormItem
-                    asterisk
-                    label="CPC (Cost Per Click)"
-                    invalid={!!(errors.cpc && touched.cpc)}
-                    errorMessage={errors.cpc}
-                  >
-                    <Field name="cpc" placeholder="0.00" component={Input} type="number" step="0.01" />
+                  <FormItem label="Tổng lượt click">
+                    <Field name="totalClicks" placeholder="0" component={Input} type="number" />
                   </FormItem>
                 </div>
               </div>
@@ -232,29 +246,33 @@ export default function FinalUrlForm() {
 
                 <div className="gap-4 grid grid-cols-2">
                   <FormItem
-                    asterisk
                     label="Ngân sách"
                     invalid={!!(errors.budget && touched.budget)}
                     errorMessage={errors.budget}
                   >
-                    <Field name="budget" placeholder="0.00" component={Input} type="number" step="0.01" />
+                    <Field name="budget">
+                      {({ field, form }: FieldProps) => (
+                        <FormCurrencyInput form={form} field={field} placeholder="Nhập ngân sách" />
+                      )}
+                    </Field>
                   </FormItem>
 
                   <FormItem
-                    asterisk
                     label="Giá thầu đề xuất"
                     invalid={!!(errors.suggestedBid && touched.suggestedBid)}
                     errorMessage={errors.suggestedBid}
                   >
                     <Field name="suggestedBid" placeholder="0.00" component={Input} type="number" step="0.01" />
                   </FormItem>
-                </div>
-              </div>
 
-              <div>
-                <FormItem label="Trạng thái">
-                  <Switcher checked={values.active} onChange={(checked) => setFieldValue('active', checked)} />
-                </FormItem>
+                  <FormItem label="Tổng chi tiêu">
+                    <Field name="totalSpent">
+                      {({ field, form }: FieldProps) => (
+                        <FormCurrencyInput form={form} field={field} placeholder="Nhập chi tiêu" />
+                      )}
+                    </Field>
+                  </FormItem>
+                </div>
               </div>
             </div>
 

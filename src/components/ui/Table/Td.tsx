@@ -9,7 +9,7 @@ export interface TdProps extends ComponentPropsWithRef<'td'> {
 const Td = forwardRef<HTMLElement, TdProps>((props, ref) => {
   const { asElement: Component = 'td', children, className, ...rest } = props
 
-  const tdClass = classNames(Component !== 'td' && 'td', className)
+  const tdClass = classNames(Component !== 'td' && 'td', 'border-r', className)
 
   return (
     <Component ref={ref} className={tdClass} {...rest}>

@@ -260,18 +260,6 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                 </FormItem>
 
                 <FormItem label="Nhóm tài khoản Ads">
-                  {/* <Select
-                    cacheOptions
-                    defaultOptions
-                    componentAs={AsyncSelect}
-                    loadOptions={fetchAdsGroupOptions}
-                    placeholder="Chọn nhóm tài khoản..."
-                    value={selectedAdsGroup}
-                    onChange={(option: { value: string; label: string } | null) => {
-                      setSelectedAdsGroup(option)
-                      setFieldValue('adsGroupId', option?.value || null)
-                    }}
-                  /> */}
                   <Field name="adsGroupId">
                     {({ field, form }: FieldProps) => (
                       <SelectCustom

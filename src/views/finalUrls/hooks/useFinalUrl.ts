@@ -12,7 +12,6 @@ import { toastError, toastSuccess } from '@/utils/toast'
 import { ApiAxiosError } from '@/@types/apiError'
 import { UpdateFinalUrlRequest } from '../types/finalUrl.type'
 
-// Query - Lấy danh sách
 export const useGetFinalUrlsQuery = () => {
   const { filter } = useFinalUrlStore()
 
@@ -25,7 +24,6 @@ export const useGetFinalUrlsQuery = () => {
   })
 }
 
-// Query - Lấy chi tiết (enabled khi dialog mở)
 export const useGetFinalUrlDetailQuery = (id: string, enabled = false) => {
   return useQuery({
     queryKey: [GET_FINAL_URL_DETAIL, id],
@@ -37,7 +35,6 @@ export const useGetFinalUrlDetailQuery = (id: string, enabled = false) => {
   })
 }
 
-// Mutation - Tạo mới
 export const useCreateFinalUrlMutation = () => {
   const queryClient = useQueryClient()
 
@@ -53,7 +50,6 @@ export const useCreateFinalUrlMutation = () => {
   })
 }
 
-// Mutation - Cập nhật
 export const useUpdateFinalUrlMutation = () => {
   const queryClient = useQueryClient()
 
@@ -70,7 +66,6 @@ export const useUpdateFinalUrlMutation = () => {
   })
 }
 
-// Mutation - Xóa
 export const useDeleteFinalUrlMutation = () => {
   const queryClient = useQueryClient()
 

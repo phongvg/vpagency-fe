@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { CommonProps } from '@/@types/common'
 import { LoginFormSchema } from '@/views/auth/login/types'
-import { Alert, Button, Checkbox, FormContainer, FormItem, Input } from '@/components/ui'
+import { Alert, Button, FormContainer, FormItem, Input } from '@/components/ui'
 import { Field, Form, Formik } from 'formik'
 import { loginValidationSchema } from '@/views/auth/login/schemas/login.schema'
 import { PasswordInput } from '@/components/shared'
@@ -76,33 +76,27 @@ export default function LoginForm(props: LoginFormProps) {
         {({ touched, errors, isSubmitting }) => (
           <Form>
             <FormContainer>
-              <FormItem
-                label="Tên đăng nhập"
-                invalid={(errors.username && touched.username) as boolean}
-                errorMessage={errors.username}
-              >
-                <Field type="text" autoComplete="off" name="username" placeholder="Tên đăng nhập" component={Input} />
-              </FormItem>
-              <FormItem
-                label="Mật khẩu"
-                invalid={(errors.password && touched.password) as boolean}
-                errorMessage={errors.password}
-              >
-                <Field autoComplete="off" name="password" placeholder="Mật khẩu" component={PasswordInput} />
-              </FormItem>
-              <div className="flex justify-between mb-6">
-                <Field className="mb-0" name="rememberMe" component={Checkbox}>
-                  Lưu thông tin đăng nhập
-                </Field>
-                {/* <ActionLink to={forgotPasswordUrl}>Quên mật khẩu?</ActionLink> */}
+              <div className="gap-4 grid">
+                <FormItem
+                  label="Tên đăng nhập"
+                  invalid={(errors.username && touched.username) as boolean}
+                  errorMessage={errors.username}
+                >
+                  <Field type="text" autoComplete="off" name="username" placeholder="Tên đăng nhập" component={Input} />
+                </FormItem>
+
+                <FormItem
+                  label="Mật khẩu"
+                  invalid={(errors.password && touched.password) as boolean}
+                  errorMessage={errors.password}
+                >
+                  <Field autoComplete="off" name="password" placeholder="Mật khẩu" component={PasswordInput} />
+                </FormItem>
+
+                <Button block loading={isSubmitting} variant="solid" type="submit">
+                  Đăng nhập
+                </Button>
               </div>
-              <Button block loading={isSubmitting} variant="solid" type="submit">
-                Đăng nhập
-              </Button>
-              {/* <div className="mt-4 text-center">
-                <span>Chưa có tài khoản? </span>
-                <ActionLink to={signUpUrl}>Đăng ký</ActionLink>
-              </div> */}
             </FormContainer>
           </Form>
         )}

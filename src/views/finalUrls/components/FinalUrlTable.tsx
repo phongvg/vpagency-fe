@@ -5,8 +5,9 @@ import { DataTable } from '@/components/shared'
 import { ColumnDef } from '@tanstack/react-table'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
-import { Badge, ConfirmDialog } from '@/components/ui'
+import { ConfirmDialog } from '@/components/ui'
 import { FinalUrl } from '../types/finalUrl.type'
+import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 
 export default function FinalUrlTable() {
   const { filter, openDialog, setFilter } = useFinalUrlStore()
@@ -33,7 +34,7 @@ export default function FinalUrlTable() {
   const handleDelete = useCallback(
     async (finalUrl: FinalUrl) => {
       const confirmed = await showConfirm({
-        message: `Bạn có chắc chắn muốn xóa URL "${finalUrl.url}"?`,
+        message: 'Bạn có chắc chắn muốn xóa URL này?',
       })
 
       if (confirmed && finalUrl.id) {
@@ -68,38 +69,38 @@ export default function FinalUrlTable() {
           const row = props.row.original
           return (
             <a
-              href={row.url}
+              href={row.finalURL}
               target="_blank"
               rel="noopener noreferrer"
-              className="block max-w-xs text-blue-600 hover:underline truncate"
+              className="block max-w-[150px] text-blue-600 hover:underline truncate"
             >
-              {row.url}
+              {row.finalURL}
             </a>
           )
         },
       },
       {
         header: 'Quốc gia',
-        accessorKey: 'country',
+        accessorKey: 'countries',
         cell: (props) => {
           const row = props.row.original
-          return <span>{row.country}</span>
+          return <span>{row.countries.join(', ')}</span>
         },
       },
       {
         header: 'Ref Target',
-        accessorKey: 'refTarget',
+        accessorKey: 'targetRef',
         cell: (props) => {
           const row = props.row.original
-          return <span>{row.refTarget}</span>
+          return <span>{row.targetRef}</span>
         },
       },
       {
         header: 'FTD Target',
-        accessorKey: 'ftdTarget',
+        accessorKey: 'targetFtd',
         cell: (props) => {
           const row = props.row.original
-          return <span>{row.ftdTarget}</span>
+          return <span>{row.targetFtd}</span>
         },
       },
       {
@@ -107,35 +108,23 @@ export default function FinalUrlTable() {
         accessorKey: 'budget',
         cell: (props) => {
           const row = props.row.original
-          return <span>${row.budget.toLocaleString()}</span>
+          return <span>{formatVietnameseMoney(row.budget)}</span>
         },
       },
       {
         header: 'CPC',
-        accessorKey: 'cpc',
+        accessorKey: 'targetCpc',
         cell: (props) => {
           const row = props.row.original
-          return <span>${row.cpc}</span>
+          return <span>${row.targetCpc}</span>
         },
       },
       {
-        header: 'Clicks',
-        accessorKey: 'clickCount',
+        header: 'Lượt click',
+        accessorKey: 'totalClicks',
         cell: (props) => {
           const row = props.row.original
-          return <span>{row.clickCount}</span>
-        },
-      },
-      {
-        header: 'Trạng thái',
-        accessorKey: 'active',
-        cell: (props) => {
-          const row = props.row.original
-          return (
-            <Badge className={row.active ? 'bg-green-500' : 'bg-gray-500'}>
-              {row.active ? 'Kích hoạt' : 'Vô hiệu'}
-            </Badge>
-          )
+          return <span>{row.totalClicks}</span>
         },
       },
       {

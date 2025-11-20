@@ -1,8 +1,8 @@
-import { Campaign } from '@/views/campaign/types/campaign.type'
+import { UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
 import { useCallback, useRef, useState } from 'react'
 
 interface UseExcelWorkerReturn {
-  processFile: (file: File) => Promise<Campaign[]>
+  processFile: (file: File) => Promise<UpdateCampaignRequest[]>
   isProcessing: boolean
   progress: number
   error: string | null
@@ -14,13 +14,12 @@ export const useExcelWorker = (): UseExcelWorkerReturn => {
   const [error, setError] = useState<string | null>(null)
   const workerRef = useRef<Worker | null>(null)
 
-  const processFile = useCallback((file: File): Promise<Campaign[]> => {
+  const processFile = useCallback((file: File): Promise<UpdateCampaignRequest[]> => {
     return new Promise((resolve, reject) => {
       setIsProcessing(true)
       setProgress(0)
       setError(null)
 
-      // Create worker
       const worker = new Worker(new URL('../workers/excelWorker.ts', import.meta.url), {
         type: 'module',
       })

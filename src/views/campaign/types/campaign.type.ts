@@ -1,17 +1,16 @@
+import { FinalUrl } from '@/views/finalUrls/types/finalUrl.type'
+
 export type Campaign = {
-  id?: string
-  datePull: string | null
-  dateData: string | null
+  id: string
+  importAt: string | null
+  date: string | null
   uid: string | null
   mcc: string | null
-  campaignName: string | null
-  campaignId: string | null
-  finalUrl: string | null
-  keyword: string[]
-  match: string[]
-  searchTerm: string[]
-  cpcSearchTerm: number[]
-  costSearchTerm: number[]
+  name: string | null
+  externalId: string | null
+  finalUrl: FinalUrl | null
+  keywords: KeywordMatch[]
+  topSearchTerms: SearchTerm[]
   statusCampaign: string
   avgCpc: number | null
   micros: number | null
@@ -19,12 +18,58 @@ export type Campaign = {
   ctr: number | null
   cpm: number | null
   cost: number | null
-  locationTarget: string[]
-  spendingCountry: number | null
-  cpcCountry: number | null
-  ctrCountry: number | null
-  clickCountry: number | null
-  costCountry: number | null
+  targetLocations: string[]
+  locationStats: LocationStat[]
 }
 
-export type UpdateCampaignRequest = Partial<Campaign>
+export type KeywordMatch = {
+  keyword: string
+  match: string
+}
+
+export type SearchTerm = {
+  term: string
+  cpc: number
+  spent: number
+}
+
+export type LocationStat = {
+  location: string
+  clicks: number
+  ctr: number
+  cpc: number
+  spent: number
+}
+
+export type UpdateCampaignRequest = {
+  importAt: string | null
+  date: string | null
+  uid: string | null
+  mcc: string | null
+  name: string | null
+  externalId: string | null
+  finalUrl: string | null
+  keywords: KeywordMatch[]
+  topSearchTerms: SearchTerm[]
+  statusCampaign: string
+  avgCpc: number | null
+  micros: number | null
+  click: number | null
+  ctr: number | null
+  cpm: number | null
+  cost: number | null
+  targetLocations: string[]
+  locationStats: LocationStat[]
+}
+
+export type CreateCampaignResponse = {
+  summary: Summary
+  success: Campaign[]
+  failed: Array<{ campaign: Campaign; error: string }>
+}
+
+export type Summary = {
+  total: number
+  succeeded: number
+  failed: number
+}

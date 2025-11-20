@@ -9,7 +9,7 @@ export interface ThProps extends ComponentPropsWithRef<'th'> {
 const Th = forwardRef<HTMLTableCellElement, ThProps>((props, ref) => {
   const { asElement: Component = 'th', children, className, ...rest } = props
 
-  const thClass = classNames(Component !== 'th' && 'th', 'whitespace-nowrap', className)
+  const thClass = classNames(Component !== 'th' && 'th', 'whitespace-nowrap min-w-[200px] border-r border-t', className)
 
   return (
     <Component className={thClass} {...rest} ref={ref}>

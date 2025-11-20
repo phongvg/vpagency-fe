@@ -17,6 +17,7 @@ import {
   useRole,
   useInteractions,
   FloatingPortal,
+  useClick,
 } from '@floating-ui/react'
 
 export interface TooltipProps extends CommonProps {
@@ -24,10 +25,23 @@ export interface TooltipProps extends CommonProps {
   placement?: ArrowPlacement
   title: string | ReactNode
   wrapperClass?: string
+  trigger?: 'hover' | 'click'
+  maxHeight?: string | number
+  scrollable?: boolean
 }
 
 const Tooltip = (props: TooltipProps) => {
-  const { className, children, isOpen = false, placement = 'top', title, wrapperClass } = props
+  const {
+    className,
+    children,
+    isOpen = false,
+    placement = 'top',
+    title,
+    wrapperClass,
+    trigger = 'hover',
+    maxHeight,
+    scrollable = false,
+  } = props
 
   const [tooltipOpen, setTooltipOpen] = useState<boolean>(isOpen)
 
@@ -37,7 +51,7 @@ const Tooltip = (props: TooltipProps) => {
   const defaultTooltipClass = `tooltip bg-${tooltipBackground} dark:bg-${tooltipDarkBackground}`
 
   const { refs, floatingStyles, context } = useFloating({
-    open: isOpen,
+    open: tooltipOpen,
     onOpenChange: setTooltipOpen,
     placement,
     whileElementsMounted: autoUpdate,
@@ -50,12 +64,18 @@ const Tooltip = (props: TooltipProps) => {
     ],
   })
 
-  const hover = useHover(context, { move: false })
-  const focus = useFocus(context)
+  const hover = useHover(context, { move: false, enabled: trigger === 'hover' })
+  const click = useClick(context, { enabled: trigger === 'click' })
+  const focus = useFocus(context, { enabled: trigger === 'hover' })
   const dismiss = useDismiss(context)
   const role = useRole(context, { role: 'tooltip' })
 
-  const { getReferenceProps, getFloatingProps } = useInteractions([hover, focus, dismiss, role])
+  const { getReferenceProps, getFloatingProps } = useInteractions([hover, click, focus, dismiss, role])
+
+  const contentStyle = {
+    ...(maxHeight && { maxHeight: typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight }),
+    ...(scrollable && { overflowY: 'auto' as const }),
+  }
 
   return (
     <>
@@ -87,7 +107,7 @@ const Tooltip = (props: TooltipProps) => {
                 duration: 0.15,
                 type: 'tween',
               }}
-              style={floatingStyles}
+              style={{ ...floatingStyles, ...contentStyle }}
               {...getFloatingProps()}
             >
               <span>{title}</span>
