@@ -11,7 +11,7 @@ export type Campaign = {
   finalUrl: FinalUrl | null
   keywords: KeywordMatch[]
   topSearchTerms: SearchTerm[]
-  statusCampaign: string
+  status: string
   avgCpc: number | null
   micros: number | null
   click: number | null
@@ -51,7 +51,7 @@ export type UpdateCampaignRequest = {
   finalUrl: string | null
   keywords: KeywordMatch[]
   topSearchTerms: SearchTerm[]
-  statusCampaign: string
+  status: string
   avgCpc: number | null
   micros: number | null
   click: number | null

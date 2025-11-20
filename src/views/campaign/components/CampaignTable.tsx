@@ -4,35 +4,13 @@ import { addDash } from '@/helpers/addDash'
 import { formatDate } from '@/helpers/formatDate'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { toastError, toastSuccess } from '@/utils/toast'
+import { COLUMN_CONFIG } from '@/views/campaign/constants/campaignColumnConfig.constant'
 import { useDeleteCampaignMutation, useGetCampaignsQuery } from '@/views/campaign/hooks/useCampaign'
 import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
 import { Campaign } from '@/views/campaign/types/campaign.type'
 import { ColumnDef } from '@tanstack/react-table'
 import { useCallback, useMemo, useState } from 'react'
 import { HiOutlineDuplicate, HiOutlinePencilAlt, HiOutlineTrash, HiOutlineViewList } from 'react-icons/hi'
-
-const COLUMN_CONFIG = [
-  { id: 'stt', label: 'STT', visible: true, required: true },
-  { id: 'importAt', label: 'Ngày kéo', visible: true, required: false },
-  { id: 'date', label: 'Ngày dữ liệu', visible: true, required: false },
-  { id: 'uid', label: 'UID', visible: true, required: false },
-  { id: 'mcc', label: 'MCC', visible: true, required: false },
-  { id: 'externalId', label: 'ID chiến dịch', visible: true, required: false },
-  { id: 'name', label: 'Tên chiến dịch', visible: true, required: false },
-  { id: 'finalUrl', label: 'URL cuối cùng', visible: true, required: false },
-  { id: 'statusCampaign', label: 'Trạng thái chiến dịch', visible: false, required: false },
-  { id: 'avgCpc', label: 'CPC trung bình', visible: false, required: false },
-  { id: 'micros', label: 'Thầu chung', visible: false, required: false },
-  { id: 'click', label: 'Click', visible: false, required: false },
-  { id: 'ctr', label: 'CTR', visible: false, required: false },
-  { id: 'cpm', label: 'CPM', visible: false, required: false },
-  { id: 'cost', label: 'Ngân sách chi tiêu', visible: false, required: false },
-  { id: 'keywords', label: 'Từ khóa', visible: false, required: false },
-  { id: 'targetLocations', label: 'Quốc gia mục tiêu', visible: false, required: false },
-  { id: 'topSearchTerms', label: 'Thuật ngữ tìm kiếm', visible: false, required: false },
-  { id: 'locationStats', label: 'Thống kê quốc gia', visible: false, required: false },
-  { id: 'actions', label: 'Hành động', visible: true, required: true },
-]
 
 export default function CampaignTable() {
   const { filter, setFilter, openDialog } = useCampaignStore()
@@ -108,13 +86,13 @@ export default function CampaignTable() {
       },
       {
         id: 'importAt',
-        header: 'Ngày kéo',
+        header: 'Ngày nhập',
         accessorKey: 'importAt',
         cell: (props) => <span>{formatDate(props.row.original.importAt, 'DD/MM/YYYY')}</span>,
       },
       {
         id: 'date',
-        header: 'Ngày dữ liệu',
+        header: 'Dữ liệu ngày',
         accessorKey: 'date',
         cell: (props) => <span>{formatDate(props.row.original.date, 'DD/MM/YYYY')}</span>,
       },
@@ -162,7 +140,7 @@ export default function CampaignTable() {
       },
       {
         id: 'finalUrl',
-        header: 'URL cuối cùng',
+        header: 'URL',
         accessorKey: 'finalUrl',
         cell: (props) => (
           <a
@@ -179,8 +157,8 @@ export default function CampaignTable() {
       {
         id: 'statusCampaign',
         header: 'Trạng thái chiến dịch',
-        accessorKey: 'statusCampaign',
-        cell: (props) => <span>{props.row.original.statusCampaign}</span>,
+        accessorKey: 'status',
+        cell: (props) => <span>{props.row.original.status}</span>,
       },
       {
         id: 'avgCpc',

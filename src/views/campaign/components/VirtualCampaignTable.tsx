@@ -25,7 +25,7 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
       externalId: 150,
       name: 200,
       finalUrl: 250,
-      statusCampaign: 200,
+      status: 200,
       avgCpc: 180,
       micros: 120,
       click: 100,
@@ -113,10 +113,10 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
             </a>
           </div>
           <div
-            style={{ width: columnWidths.statusCampaign, minWidth: columnWidths.statusCampaign }}
+            style={{ width: columnWidths.status, minWidth: columnWidths.status }}
             className="flex items-center px-4 border-r"
           >
-            {campaign.statusCampaign}
+            {campaign.status}
           </div>
           <div
             style={{ width: columnWidths.avgCpc, minWidth: columnWidths.avgCpc }}
@@ -333,7 +333,7 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
                 URL cuối cùng
               </div>
               <div
-                style={{ width: columnWidths.statusCampaign, minWidth: columnWidths.statusCampaign }}
+                style={{ width: columnWidths.status, minWidth: columnWidths.status }}
                 className="flex items-center px-4 border-r font-semibold"
               >
                 Trạng thái chiến dịch

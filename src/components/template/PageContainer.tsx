@@ -5,6 +5,7 @@ import { PAGE_CONTAINER_GUTTER_X, PAGE_CONTAINER_GUTTER_Y } from '@/constants/th
 import type { CommonProps } from '@/@types/common'
 import type { Meta } from '@/@types/routes'
 import type { ElementType, ComponentPropsWithRef } from 'react'
+import { HiOutlineViewGrid } from 'react-icons/hi'
 
 export interface PageContainerProps extends CommonProps, Meta {
   contained?: boolean
@@ -24,7 +25,7 @@ const PageContainer = (props: PageContainerProps) => {
   const { pageContainerType = 'default', children, header, contained = false, extraHeader } = props
 
   return (
-    <div className="flex flex-col flex-auto justify-between h-full">
+    <div className="flex flex-col flex-auto justify-between bg-white mt-4 rounded-[8px] h-full">
       <main className="h-full">
         <div
           className={classNames(
@@ -36,7 +37,12 @@ const PageContainer = (props: PageContainerProps) => {
           {(header || extraHeader) && (
             <div className={classNames(contained && 'container mx-auto', 'flex items-center justify-between mb-4')}>
               <div>
-                {header && typeof header === 'string' && <h3>{header}</h3>}
+                {header && typeof header === 'string' && (
+                  <div className="flex items-center gap-2">
+                    <HiOutlineViewGrid size={28} color="#4F46B5" />
+                    <h3 className="font-semibold text-[#2C2C2C] text-[24px]">{header}</h3>
+                  </div>
+                )}
                 <Suspense fallback={<div></div>}>
                   {header && typeof header !== 'string' && <CustomHeader header={header} />}
                 </Suspense>

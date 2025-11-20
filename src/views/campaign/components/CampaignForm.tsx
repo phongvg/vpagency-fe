@@ -37,7 +37,7 @@ const validationSchema = Yup.object().shape({
       spent: Yup.number().required(),
     }),
   ),
-  statusCampaign: Yup.string(),
+  status: Yup.string(),
   avgCpc: Yup.number().nullable(),
   micros: Yup.number().nullable(),
   click: Yup.number().nullable(),
@@ -76,7 +76,7 @@ export default function CampaignForm() {
     finalUrl: campaign?.finalUrl?.finalURL || null,
     keywords: campaign?.keywords || [],
     topSearchTerms: campaign?.topSearchTerms || [],
-    statusCampaign: campaign?.statusCampaign || '',
+    status: campaign?.status || '',
     avgCpc: campaign?.avgCpc || null,
     micros: campaign?.micros || null,
     click: campaign?.click || null,
@@ -193,12 +193,10 @@ export default function CampaignForm() {
                   <FormItem label="Trạng thái chiến dịch">
                     <Field
                       type="text"
-                      name="statusCampaign"
+                      name="status"
                       placeholder="Nhập trạng thái..."
                       component={Input}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setFieldValue('statusCampaign', e.target.value)
-                      }
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('status', e.target.value)}
                     />
                   </FormItem>
 

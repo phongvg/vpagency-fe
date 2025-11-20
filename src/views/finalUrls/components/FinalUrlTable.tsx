@@ -116,7 +116,7 @@ export default function FinalUrlTable() {
         accessorKey: 'targetCpc',
         cell: (props) => {
           const row = props.row.original
-          return <span>${row.targetCpc}</span>
+          return <span>{formatVietnameseMoney(row.targetCpc)}</span>
         },
       },
       {

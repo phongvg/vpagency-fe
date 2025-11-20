@@ -50,42 +50,6 @@ const appsRoute: Routes = [
     authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY],
   },
   {
-    key: 'adsAccounts',
-    path: urlConfig.adsAccounts,
-    component: lazy(() => import('@/views/adsAccounts')),
-    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY],
-    meta: {
-      header: 'Tài khoản Ads',
-    },
-  },
-  {
-    key: 'adsAccountDetail',
-    path: urlConfig.adsAccountDetail,
-    component: lazy(() => import('@/views/adsAccounts/pages/adsAccountDetail')),
-    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY],
-    meta: {
-      header: 'Thông tin tài khoản Ads',
-    },
-  },
-  {
-    key: 'adsGroups',
-    path: urlConfig.adsGroups,
-    component: lazy(() => import('@/views/adsGroups')),
-    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY],
-    meta: {
-      header: 'Nhóm tài khoản Ads',
-    },
-  },
-  {
-    key: 'adsGroupDetail',
-    path: urlConfig.adsGroupDetail,
-    component: lazy(() => import('@/views/adsGroups/pages/adsGroupDetail')),
-    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY],
-    meta: {
-      header: 'Thông tin nhóm tài khoản Ads',
-    },
-  },
-  {
     key: 'projects',
     path: urlConfig.projects,
     component: lazy(() => import('@/views/projects')),
@@ -100,7 +64,7 @@ const appsRoute: Routes = [
     component: lazy(() => import('@/views/projects/pages/projectDetail')),
     authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY],
     meta: {
-      header: 'Thông tin Dự án',
+      header: 'Thông tin dự án',
     },
   },
   {
@@ -152,7 +116,7 @@ const appsRoute: Routes = [
       Role.ACCOUNTING,
     ],
     meta: {
-      header: 'Chiến dịch dự án',
+      header: 'Chiến dịch',
     },
   },
   {
@@ -168,7 +132,7 @@ const appsRoute: Routes = [
       Role.ACCOUNTING,
     ],
     meta: {
-      header: 'URL cuối cùng',
+      header: 'URL',
     },
   },
 ]

@@ -9,7 +9,6 @@ import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { Link, useNavigate } from 'react-router-dom'
 import { urlConfig } from '@/configs/urls.config'
 import { Project } from '@/views/projects/types/project.type'
-import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 
 const OwnerColumn = ({ row }: { row: Project }) => {
   const ownerName = row.owner
@@ -92,27 +91,11 @@ export default function ProjectTable() {
         },
       },
       {
-        header: 'Phụ trách',
+        header: 'Quản lý',
         accessorKey: 'owner',
         cell: (props) => {
           const row = props.row.original
           return <OwnerColumn row={row} />
-        },
-      },
-      {
-        header: 'Tổng ngân sách',
-        accessorKey: 'totalBudget',
-        cell: (props) => {
-          const row = props.row.original
-          return <span>{formatVietnameseMoney(row.totalBudget)}</span>
-        },
-      },
-      {
-        header: 'Ngân sách còn lại',
-        accessorKey: 'spentBudget',
-        cell: (props) => {
-          const row = props.row.original
-          return <span>{formatVietnameseMoney(row.spentBudget)}</span>
         },
       },
       {

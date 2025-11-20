@@ -2,7 +2,6 @@ import { ApiAxiosError } from '@/@types/apiError'
 import {
   apiCreateTask,
   apiDeleteTask,
-  apiGetAdsGroupByTaskId,
   apiGetTaskDetail,
   apiGetTasks,
   apiGetTasksGroupedByStatus,
@@ -10,7 +9,7 @@ import {
   apiUpdateTaskProgress,
   apiUpdateTaskStatus,
 } from '@/services/TaskService'
-import { GET_ADS_GROUP_BY_TASK_ID, GET_TASK_DETAIL, GET_TASK_LIST, GET_TASKS_GROUPED_BY_STATUS } from '@/utils/queryKey'
+import { GET_TASK_DETAIL, GET_TASK_LIST, GET_TASKS_GROUPED_BY_STATUS } from '@/utils/queryKey'
 import { toastError, toastSuccess } from '@/utils/toast'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -142,13 +141,5 @@ export const useUpdateTaskProgress = () => {
     onError: (error: ApiAxiosError) => {
       toastError(error.response?.data?.message)
     },
-  })
-}
-
-export const useGetAdsGroupByTaskId = (taskId: string, enabled: boolean = false) => {
-  return useQuery({
-    queryKey: [GET_ADS_GROUP_BY_TASK_ID, taskId],
-    queryFn: () => apiGetAdsGroupByTaskId(taskId),
-    enabled: enabled && !!taskId,
   })
 }

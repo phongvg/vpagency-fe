@@ -206,7 +206,7 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
           : finalUrlAds[finalUrlAds.length - 1],
         keywords,
         topSearchTerms,
-        statusCampaign: statusCampaign[statusCampaign.length - 1] ?? null,
+        status: statusCampaign[statusCampaign.length - 1] ?? null,
         avgCpc: avgCpc[avgCpc.length - 1] ?? null,
         micros: microsCalc,
         click: click[click.length - 1] ?? null,

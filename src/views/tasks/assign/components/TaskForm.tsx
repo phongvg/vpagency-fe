@@ -5,7 +5,6 @@ import { Button, DatePicker, FormItem, Input, Select, Textarea, UserSelect } fro
 import { UserOption } from '@/components/ui/UserSelect/UserSelect'
 import { TaskFrequency, TaskPriority, TaskPriorityLabels, TaskType, TaskTypeLabels } from '@/enums/task.enum'
 import { setDeadlineTo1800 } from '@/helpers/date'
-import { apiGetAdsGroupList } from '@/services/AdsGroupService'
 import { apiGetFinalUrlList } from '@/views/finalUrls/services/FinalUrlService'
 import { apiGetProjectList } from '@/views/projects/services/ProjectService'
 import { Field, FieldProps, Form, Formik, FormikProps } from 'formik'
@@ -20,7 +19,6 @@ interface TaskFormData {
   deadline: Date | null
   assignedUserIds: string[]
   projectId: string | null
-  adsGroupId: string | null
   note: string
   numberOfCampaigns?: number
   numberOfBackupCampaigns?: number
@@ -75,7 +73,6 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
     deadline: task?.deadline ? new Date(task.deadline) : null,
     assignedUserIds: task?.assignedUsers?.map((u) => u.id) || [],
     projectId: task?.project?.id || null,
-    adsGroupId: task?.adsGroup?.id || null,
     note: task?.note || '',
     numberOfCampaigns: task?.numberOfCampaigns || undefined,
     numberOfBackupCampaigns: task?.numberOfBackupCampaigns || undefined,
@@ -102,20 +99,6 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
   const fetchProjectOptions = async ({ page, limit, search }: SelectParams) => {
     try {
       const response = await apiGetProjectList({ search: search || '', page, limit })
-      const { items, meta } = response.data.data
-      return {
-        data: items,
-        total: meta.total,
-        hasMore: meta.hasNext,
-      }
-    } catch {
-      return { data: [], total: 0, hasMore: false }
-    }
-  }
-
-  const fetchAdsGroupOptions = async ({ page, limit, search }: SelectParams) => {
-    try {
-      const response = await apiGetAdsGroupList({ search: search || '', page, limit })
       const { items, meta } = response.data.data
       return {
         data: items,
@@ -254,20 +237,6 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                         form={form}
                         fetchOptions={fetchProjectOptions}
                         placeholder="Chọn dự án..."
-                      />
-                    )}
-                  </Field>
-                </FormItem>
-
-                <FormItem label="Nhóm tài khoản Ads">
-                  <Field name="adsGroupId">
-                    {({ field, form }: FieldProps) => (
-                      <SelectCustom
-                        isCreatable
-                        field={field}
-                        form={form}
-                        fetchOptions={fetchAdsGroupOptions}
-                        placeholder="Chọn nhóm tài khoản..."
                       />
                     )}
                   </Field>

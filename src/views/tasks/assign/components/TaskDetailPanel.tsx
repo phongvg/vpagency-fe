@@ -1,7 +1,6 @@
 import { Task } from '@/@types/task'
 import { Accordion, Badge, Button, ConfirmDialog } from '@/components/ui'
 import { getStatusColor } from '@/constants/task.constant'
-import { ProjectTypeLabels } from '@/enums/project.enum'
 import {
   TaskFrequency,
   TaskPriority,
@@ -117,7 +116,6 @@ export default function TaskDetailPanel({ inSplitView = false }: TaskDetailPanel
         isOpen={isProgressModalOpen}
         currentProgress={selectedTask.progress}
         taskName={selectedTask.name}
-        taskId={selectedTask.id}
         isLoading={updateProgressMutation.isPending}
         onClose={() => setIsProgressModalOpen(false)}
         onConfirm={handleUpdateProgress}
@@ -211,7 +209,7 @@ function TaskProjectSection({ task }: TaskPanelProps) {
       </li>
       <li className="flex justify-between items-center">
         <span>Loại dự án:</span>
-        <span>{ProjectTypeLabels[task.project?.type] || 'N/A'}</span>
+        <span>{task.project?.type.name || 'N/A'}</span>
       </li>
     </ul>
   )

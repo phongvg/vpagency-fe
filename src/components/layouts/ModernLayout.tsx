@@ -29,9 +29,9 @@ const ModernLayout = () => {
     <div className="flex flex-col flex-auto app-layout-modern">
       <div className="flex flex-auto min-w-0">
         <SideNav />
-        <div className="relative flex flex-col flex-auto bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 border-l w-full min-w-0 min-h-screen">
+        <div className="relative flex flex-col flex-auto bg-[#EEEEEF] p-4 border-gray-200 border-l w-full min-w-0 min-h-screen">
           <Header
-            className="border-gray-200 dark:border-gray-700 border-b"
+            className="border-gray-200 border-b"
             headerEnd={<HeaderActionsEnd />}
             headerStart={<HeaderActionsStart />}
           />

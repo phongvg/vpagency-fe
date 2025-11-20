@@ -1,34 +1,11 @@
-import { AdsAccount } from '@/@types/adsAccount'
-import { DataTable } from '@/components/shared'
-import { Avatar, Badge, Button, Dialog, Input, Spinner, Tooltip } from '@/components/ui'
-import { AdsAccountStatusColors, AdsAccountStatusLabels } from '@/enums/adsAccount.enum'
-import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
-import DailyMetricForm from '@/views/adsAccounts/pages/adsAccountDetail/components/DailyMetricForm'
-import { useGetAdsGroupByTaskId } from '@/views/tasks/assign/hooks/useTask'
-import { ColumnDef } from '@tanstack/react-table'
-import { useEffect, useMemo, useState } from 'react'
-import { HiCheckCircle, HiOutlineCheckCircle, HiOutlinePencilAlt, HiOutlinePlusCircle, HiXCircle } from 'react-icons/hi'
-
-const ManagerColumn = ({ row }: { row: AdsAccount }) => {
-  if (!row.manager) {
-    return <span className="text-gray-400">Chưa có</span>
-  }
-
-  return (
-    <div className="flex items-center">
-      <Avatar size={32} shape="circle" src={row.manager.avatar ?? ''} />
-      <span className="rtl:mr-2 ml-2 max-w-[150px] truncate">
-        {row.manager.firstName} {row.manager.lastName}
-      </span>
-    </div>
-  )
-}
+import { Button, Dialog, Input } from '@/components/ui'
+import { useEffect, useState } from 'react'
+import { HiOutlineCheckCircle } from 'react-icons/hi'
 
 interface UpdateProgressModalProps {
   isOpen: boolean
   currentProgress: number
   taskName: string
-  taskId: string
   onClose: () => void
   onConfirm: (progress: number) => void
   isLoading?: boolean
@@ -38,17 +15,12 @@ export default function UpdateProgressModal({
   isOpen,
   currentProgress,
   taskName,
-  taskId,
   onClose,
   onConfirm,
   isLoading = false,
 }: UpdateProgressModalProps) {
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState('')
-  const [selectedAdsAccountId, setSelectedAdsAccountId] = useState<string | null>(null)
-  const [isDailyMetricDialogOpen, setIsDailyMetricDialogOpen] = useState(false)
-
-  const { data: adsGroupData, isLoading: isLoadingAdsGroup } = useGetAdsGroupByTaskId(taskId, isOpen)
 
   useEffect(() => {
     setProgress(currentProgress)
@@ -94,119 +66,6 @@ export default function UpdateProgressModal({
     onClose()
   }
 
-  const adsGroup = adsGroupData?.data?.data
-  const adsAccounts = adsGroup?.adsAccounts || []
-
-  const handleOpenDailyMetricDialog = (adsAccountId: string) => {
-    setSelectedAdsAccountId(adsAccountId)
-    setIsDailyMetricDialogOpen(true)
-  }
-
-  const handleCloseDailyMetricDialog = () => {
-    setIsDailyMetricDialogOpen(false)
-    setSelectedAdsAccountId(null)
-  }
-
-  const calculateAdsAccountWithDailyMetric = adsAccounts.filter(
-    (account) => account.todayMetric && account.todayMetric.hasMetricToday,
-  ).length
-
-  const columns: ColumnDef<AdsAccount>[] = useMemo(
-    () => [
-      {
-        header: 'STT',
-        accessorKey: 'index',
-        cell: (props) => {
-          const row = props.row.index
-          return <span>{row + 1}</span>
-        },
-      },
-      {
-        header: 'UUID',
-        accessorKey: 'uuid',
-      },
-      {
-        header: 'Người quản lý',
-        accessorKey: 'manager',
-        cell: (props) => {
-          const row = props.row.original
-          return <ManagerColumn row={row} />
-        },
-      },
-      {
-        header: 'Trạng thái',
-        accessorKey: 'status',
-        cell: (props) => {
-          const row = props.row.original
-          return (
-            <div className="flex items-center gap-2">
-              <Badge className={`bg-${AdsAccountStatusColors[row.status]}`} />
-              <span className={`capitalize font-semibold text-${AdsAccountStatusColors[row.status]}`}>
-                {AdsAccountStatusLabels[row.status]}
-              </span>
-            </div>
-          )
-        },
-      },
-      {
-        header: 'Số tiền đã tiêu',
-        accessorKey: 'totalSpent',
-        cell: (props) => {
-          const row = props.row.original
-          return <span>{formatVietnameseMoney(row.totalSpent)}</span>
-        },
-      },
-      {
-        header: 'CPC',
-        accessorKey: 'todayMetric.cpc',
-        cell: (props) => {
-          const row = props.row.original
-          return <span>{formatVietnameseMoney(row.todayMetric?.cpc)}</span>
-        },
-      },
-      {
-        header: '',
-        accessorKey: 'hasMetricToday',
-        cell: (props) => {
-          const row = props.row.original
-          return (
-            <div>
-              {row.todayMetric?.hasMetricToday ? (
-                <Tooltip title="Đã cập nhật chỉ số hôm nay">
-                  <HiCheckCircle size={20} className="text-green-500" />
-                </Tooltip>
-              ) : (
-                <Tooltip title="Chưa cập nhật chỉ số hôm nay">
-                  <HiXCircle size={20} className="text-red-500" />
-                </Tooltip>
-              )}
-            </div>
-          )
-        },
-      },
-      {
-        header: '',
-        accessorKey: 'action',
-        cell: (props) => {
-          const row = props.row.original
-          return (
-            <div className="flex justify-center items-center gap-4">
-              <button
-                type="button"
-                className="flex items-center gap-2 hover:text-indigo-600 transition-colors"
-                onClick={() => handleOpenDailyMetricDialog(row.id)}
-              >
-                {row.todayMetric?.hasMetricToday ? <HiOutlinePencilAlt size={20} /> : <HiOutlinePlusCircle size={20} />}
-                {row.todayMetric?.hasMetricToday ? 'Cập nhật' : 'Thêm chỉ số'}
-              </button>
-            </div>
-          )
-        },
-      },
-    ],
-    [],
-  )
-
   return (
     <Dialog isOpen={isOpen} width={1200} onClose={handleClose} onRequestClose={handleClose}>
       <div className="p-2">
@@ -250,38 +109,6 @@ export default function UpdateProgressModal({
           </div>
         </div>
 
-        {adsGroup && (
-          <div className="mb-6">
-            <div className="flex lg:flex-row flex-col justify-between lg:items-center mb-3">
-              <h4 className="font-semibold text-gray-900 text-md">Nhóm quảng cáo: {adsGroup.name}</h4>
-              <p className="text-sm">
-                Tổng quan:{' '}
-                <span className="font-bold">
-                  {calculateAdsAccountWithDailyMetric}/{adsAccounts.length} tài khoản đã cập nhật hôm nay
-                </span>
-              </p>
-            </div>
-
-            {isLoadingAdsGroup ? (
-              <div className="flex justify-center items-center py-8">
-                <Spinner size={40} />
-              </div>
-            ) : (
-              <div className="max-h-96 overflow-y-auto">
-                <DataTable
-                  columns={columns}
-                  data={adsAccounts}
-                  skeletonAvatarColumns={[4]}
-                  skeletonAvatarProps={{ width: 32, height: 32 }}
-                  loading={false}
-                  emptyTitle="Chưa có tài khoản quảng cáo"
-                  emptyDescription="Nhóm quảng cáo này chưa có tài khoản nào"
-                />
-              </div>
-            )}
-          </div>
-        )}
-
         <div className="flex justify-end gap-3">
           <Button variant="default" disabled={isLoading} onClick={handleClose}>
             Hủy
@@ -291,22 +118,6 @@ export default function UpdateProgressModal({
           </Button>
         </div>
       </div>
-
-      {selectedAdsAccountId && (
-        <Dialog
-          isOpen={isDailyMetricDialogOpen}
-          width={600}
-          onClose={handleCloseDailyMetricDialog}
-          onRequestClose={handleCloseDailyMetricDialog}
-        >
-          <h5 className="mb-4">Cập nhật chỉ số hàng ngày</h5>
-          <DailyMetricForm
-            adsAccountId={selectedAdsAccountId}
-            isOpen={isDailyMetricDialogOpen}
-            onClose={handleCloseDailyMetricDialog}
-          />
-        </Dialog>
-      )}
     </Dialog>
   )
 }

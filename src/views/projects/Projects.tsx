@@ -1,5 +1,4 @@
 import { AdaptableCard } from '@/components/shared'
-import { Card } from '@/components/ui'
 import ProjectEditDialog from '@/views/projects/components/ProjectEditDialog'
 import ProjectTable from '@/views/projects/components/ProjectTable'
 import ProjectTableTools from '@/views/projects/components/ProjectTableTools'
@@ -8,10 +7,8 @@ export default function Projects() {
   return (
     <AdaptableCard className="h-full" bodyClass="h-full">
       <ProjectTableTools />
-      <Card>
-        <ProjectTable />
-        <ProjectEditDialog />
-      </Card>
+      <ProjectTable />
+      <ProjectEditDialog />
     </AdaptableCard>
   )
 }

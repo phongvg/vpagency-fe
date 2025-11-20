@@ -2,7 +2,6 @@ import { FinalUrl, UpdateFinalUrlRequest } from '../types/finalUrl.type'
 import { BaseListResponse, BaseResponse } from '@/@types/common'
 import ApiService from '@/services/ApiService'
 
-// GET List - Với pagination và filter
 export async function apiGetFinalUrlList(params: any) {
   return ApiService.fetchData<BaseListResponse<FinalUrl>>({
     url: '/final-urls',
@@ -11,7 +10,6 @@ export async function apiGetFinalUrlList(params: any) {
   })
 }
 
-// GET Detail - Lấy một item theo ID
 export async function apiGetFinalUrlById(id: string) {
   return ApiService.fetchData<BaseResponse<FinalUrl>>({
     url: `/final-urls/${id}`,
@@ -19,7 +17,6 @@ export async function apiGetFinalUrlById(id: string) {
   })
 }
 
-// POST Create - Tạo mới
 export async function apiCreateFinalUrl(payload: UpdateFinalUrlRequest) {
   return ApiService.fetchData<BaseResponse<FinalUrl>>({
     url: '/final-urls',
@@ -28,7 +25,6 @@ export async function apiCreateFinalUrl(payload: UpdateFinalUrlRequest) {
   })
 }
 
-// PUT Update - Cập nhật
 export async function apiUpdateFinalUrl(finalUrlId: string, payload: UpdateFinalUrlRequest) {
   return ApiService.fetchData<BaseResponse<FinalUrl>>({
     url: `/final-urls/${finalUrlId}`,
@@ -37,10 +33,16 @@ export async function apiUpdateFinalUrl(finalUrlId: string, payload: UpdateFinal
   })
 }
 
-// DELETE - Xóa
 export async function apiDeleteFinalUrl(finalUrlId: string) {
   return ApiService.fetchData<BaseResponse<null>>({
     url: `/final-urls/${finalUrlId}`,
     method: 'delete',
+  })
+}
+
+export async function apiGetFinalUrlByProjectId(projectId: string) {
+  return ApiService.fetchData<BaseListResponse<FinalUrl>>({
+    url: `/final-urls/projects/${projectId}`,
+    method: 'get',
   })
 }

@@ -268,7 +268,7 @@ function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableRese
             <Tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <Th key={header.id} colSpan={header.colSpan}>
+                  <Th key={header.id} colSpan={header.colSpan} index={header.index}>
                     {header.isPlaceholder ? null : (
                       <>{flexRender(header.column.columnDef.header, header.getContext())}</>
                     )}

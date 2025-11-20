@@ -14,20 +14,10 @@ const Header = (props: HeaderProps) => {
   const { headerStart, headerEnd, headerMiddle, className, container } = props
 
   return (
-    <header className={classNames('header', className)}>
-      <div
-        className={classNames(
-          'header-wrapper',
-          HEADER_HEIGHT_CLASS,
-          container && 'container mx-auto',
-        )}
-      >
+    <header className={classNames('header rounded-[8px]', className)}>
+      <div className={classNames('header-wrapper', HEADER_HEIGHT_CLASS, container && 'container mx-auto')}>
         <div className="header-action header-action-start">{headerStart}</div>
-        {headerMiddle && (
-          <div className="header-action header-action-middle">
-            {headerMiddle}
-          </div>
-        )}
+        {headerMiddle && <div className="header-action header-action-middle">{headerMiddle}</div>}
         <div className="header-action header-action-end">{headerEnd}</div>
       </div>
     </header>

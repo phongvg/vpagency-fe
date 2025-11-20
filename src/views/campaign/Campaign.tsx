@@ -1,5 +1,4 @@
 import { AdaptableCard } from '@/components/shared'
-import { Card } from '@/components/ui'
 import CampaignEditDialog from '@/views/campaign/components/CampaignEditDialog'
 import CampaignPreviewDialog from '@/views/campaign/components/CampaignPreviewDialog'
 import CampaignSummaryDialog from '@/views/campaign/components/CampaignSummaryDialog'
@@ -10,12 +9,10 @@ export default function Campaign() {
   return (
     <AdaptableCard className="h-full" bodyClass="h-full">
       <CampaignTableTools />
-      <Card>
-        <CampaignTable />
-        <CampaignPreviewDialog />
-        <CampaignEditDialog />
-        <CampaignSummaryDialog />
-      </Card>
+      <CampaignTable />
+      <CampaignPreviewDialog />
+      <CampaignEditDialog />
+      <CampaignSummaryDialog />
     </AdaptableCard>
   )
 }
