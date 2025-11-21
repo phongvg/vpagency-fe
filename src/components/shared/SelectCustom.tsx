@@ -207,13 +207,16 @@ export default function SelectCustom<IsMulti extends boolean = false>({
 
   const handleChange = useCallback(
     (newValue: any, actionMeta: any) => {
-      // Extract value from option object for form
-      const extractedValue = newValue?.value !== undefined ? newValue.value : newValue
+      let extractedValue: any
 
-      // If field and form are provided (Formik integration)
+      if (isMulti && Array.isArray(newValue)) {
+        extractedValue = newValue.map((item) => (item?.value !== undefined ? item.value : item))
+      } else {
+        extractedValue = newValue?.value !== undefined ? newValue.value : newValue
+      }
+
       if (field && form) {
         form.setFieldValue(field.name, extractedValue)
-        // Don't set touched immediately on change, let onBlur handle it
       }
 
       if (onChange) {
@@ -229,7 +232,7 @@ export default function SelectCustom<IsMulti extends boolean = false>({
         loadOptions(1, '', false)
       }
     },
-    [onChange, onValueChange, field, form, fetchOptions, loadOptions],
+    [onChange, onValueChange, field, form, fetchOptions, loadOptions, isMulti],
   )
 
   const handleCreateOption = useCallback(
@@ -289,7 +292,19 @@ export default function SelectCustom<IsMulti extends boolean = false>({
   const selectedValue = (() => {
     const currentValue = field ? field.value : value
 
-    if (!currentValue) return null
+    if (!currentValue) return isMulti ? [] : null
+
+    if (isMulti && Array.isArray(currentValue)) {
+      return currentValue
+        .map((val) => {
+          if (typeof val === 'object' && 'value' in val) {
+            return val
+          }
+          const foundOption = options.find((opt) => opt.value === val)
+          return foundOption || { label: String(val), value: val }
+        })
+        .filter(Boolean)
+    }
 
     if (typeof currentValue === 'object' && 'value' in currentValue) {
       return currentValue

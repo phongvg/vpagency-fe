@@ -1,6 +1,7 @@
 import { CommonFilterRequest } from '@/@types/common'
 import { User } from '@/@types/user'
 import { TaskFrequency, TaskPriority, TaskStatus, TaskType } from '@/enums/task.enum'
+import { Campaign } from '@/views/campaign/types/campaign.type'
 import { Project } from '@/views/projects/types/project.type'
 
 export type Task = {
@@ -25,6 +26,7 @@ export type Task = {
   createdAt: Date
   updatedAt: Date
   numberOfResultCampaigns: number | null
+  finalUrlIds: string[]
 }
 
 export type TasksGroupedByStatus = {
@@ -45,7 +47,7 @@ export type TasksFilterRequest = CommonFilterRequest & {
   toDate?: string
 }
 
-export interface TaskStatisticResponse {
+export type TaskStatisticResponse = {
   onGoing: number
   finished: number
   delayed: number
@@ -57,4 +59,47 @@ export interface TaskStatisticResponse {
 export interface Series {
   name: string
   data: number[]
+}
+
+export type Columns = Record<string, Task[]>
+
+export type UpdateTaskRequest = {
+  name: string
+  type: TaskType | null
+  frequency: TaskFrequency | null
+  priority: TaskPriority | null
+  deadline: Date | null
+  assignedUserIds: string[]
+  projectId: string | null
+  note: string
+  numberOfCampaigns?: number
+  numberOfBackupCampaigns?: number
+  dailyBudget?: number
+  numberOfAccounts?: number
+  numberOfResultCampaigns?: number
+  finalUrlIds: string[]
+}
+
+export type UrlMapping = {
+  campaignIds: string[]
+  finalUrlId: string
+}
+
+export type TaskProgressRequest = {
+  progress: number
+  urlMappings: UrlMapping[]
+}
+
+export type TaskProgressResponse = {
+  id: string
+  name: string
+  progress: number
+  finalUrls: FinalUrl[]
+}
+
+export type FinalUrl = {
+  id: string
+  name: string
+  finalURL: string
+  campaigns: Campaign[]
 }

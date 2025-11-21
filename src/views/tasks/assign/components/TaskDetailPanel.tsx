@@ -1,4 +1,4 @@
-import { Task } from '@/@types/task'
+import { Task } from '@/views/tasks/assign/types/task.type'
 import { Accordion, Badge, Button, ConfirmDialog } from '@/components/ui'
 import { getStatusColor } from '@/constants/task.constant'
 import {
@@ -16,9 +16,9 @@ import { useAuthStore } from '@/store/auth/useAuthStore'
 import { isAdminOrManager } from '@/utils/checkRole'
 import UpdateProgressModal from '@/views/tasks/assign/components/UpdateProgressModal'
 import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
-import { useDeleteTask, useUpdateTaskProgress } from '@/views/tasks/assign/hooks/useTask'
+import { useDeleteTask } from '@/views/tasks/assign/hooks/useTask'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   HiChevronDoubleUp,
   HiChevronDown,
@@ -28,15 +28,18 @@ import {
   HiOutlineTrash,
 } from 'react-icons/hi'
 
-interface TaskDetailPanelProps {
+type Props = {
   inSplitView?: boolean
 }
 
-export default function TaskDetailPanel({ inSplitView = false }: TaskDetailPanelProps) {
-  const { selectedTask, openDialog, setSelectedTask } = useBoardStore()
+export default function TaskDetailPanel({ inSplitView = false }: Props) {
+  const { selectedTask, openDialog, setSelectedTask: setStoreSelectedTask } = useBoardStore()
+  const [displayTask, setDisplayTask] = useState<Task | null>(selectedTask)
+
   const deleteTask = useDeleteTask()
+
   const [isProgressModalOpen, setIsProgressModalOpen] = useState(false)
-  const updateProgressMutation = useUpdateTaskProgress()
+
   const { showConfirm, confirmProps } = useConfirmDialog({
     title: 'Xác nhận xóa công việc',
     type: 'danger',
@@ -44,35 +47,37 @@ export default function TaskDetailPanel({ inSplitView = false }: TaskDetailPanel
     cancelText: 'Hủy',
   })
 
-  if (!selectedTask) return null
+  useEffect(() => {
+    if (selectedTask) {
+      setDisplayTask(selectedTask)
+    }
+  }, [selectedTask])
+
+  if (!displayTask) return null
 
   const handleEdit = () => {
-    openDialog('EDIT', selectedTask.id)
+    openDialog('EDIT', displayTask.id)
   }
 
   const handleDelete = async () => {
     const confirmed = await showConfirm({
-      message: `Bạn có chắc chắn muốn xóa công việc "${selectedTask?.name}"? Hành động này không thể hoàn tác.`,
+      message: `Bạn có chắc chắn muốn xóa công việc "${displayTask?.name}"? Hành động này không thể hoàn tác.`,
     })
 
     if (confirmed) {
-      await deleteTask.mutateAsync(selectedTask.id)
+      await deleteTask.mutateAsync(displayTask.id)
 
       if (inSplitView) {
-        setSelectedTask(null)
+        setStoreSelectedTask(null)
+        setDisplayTask(null)
       }
     }
-  }
-
-  const handleUpdateProgress = async (progress: number) => {
-    await updateProgressMutation.mutateAsync({ taskId: selectedTask.id, progress })
-    setIsProgressModalOpen(false)
   }
 
   return (
     <>
       <TaskHeaderPanel
-        task={selectedTask}
+        task={displayTask}
         onEdit={handleEdit}
         onUpdateProgress={() => setIsProgressModalOpen(true)}
         onDelete={handleDelete}
@@ -81,31 +86,31 @@ export default function TaskDetailPanel({ inSplitView = false }: TaskDetailPanel
       <div className="gap-x-28 grid grid-cols-1 lg:grid-cols-2">
         <Accordion defaultActiveKey={['1', '2', '3']} accordion={false}>
           <Accordion.Item itemKey="1" title="Thông tin chung">
-            <TaskDetailSection task={selectedTask} />
+            <TaskDetailSection task={displayTask} />
           </Accordion.Item>
 
           <Accordion.Item itemKey="2" title="Ghi chú">
-            <div>{selectedTask.note}</div>
+            <div>{displayTask.note}</div>
           </Accordion.Item>
 
-          {[TaskType.LAUNCH_CAMPAIGN, TaskType.SET_CAMPAIGN].includes(selectedTask.type) && (
+          {[TaskType.LAUNCH_CAMPAIGN, TaskType.SET_CAMPAIGN].includes(displayTask.type) && (
             <Accordion.Item itemKey="3" title="Thông tin chiến dịch">
-              <TaskCampaignSection task={selectedTask} />
+              <TaskCampaignSection task={displayTask} />
             </Accordion.Item>
           )}
         </Accordion>
 
         <Accordion defaultActiveKey={['1', '2', '3']} accordion={false}>
           <Accordion.Item itemKey="1" title="Thông tin dự án">
-            <TaskProjectSection task={selectedTask} />
+            <TaskProjectSection task={displayTask} />
           </Accordion.Item>
 
           <Accordion.Item itemKey="2" title="Mọi người">
-            <TaskPeopleSection task={selectedTask} />
+            <TaskPeopleSection task={displayTask} />
           </Accordion.Item>
 
           <Accordion.Item itemKey="3" title="Thời gian">
-            <TaskDatesSection task={selectedTask} />
+            <TaskDatesSection task={displayTask} />
           </Accordion.Item>
         </Accordion>
       </div>
@@ -114,11 +119,8 @@ export default function TaskDetailPanel({ inSplitView = false }: TaskDetailPanel
 
       <UpdateProgressModal
         isOpen={isProgressModalOpen}
-        currentProgress={selectedTask.progress}
-        taskName={selectedTask.name}
-        isLoading={updateProgressMutation.isPending}
+        taskId={displayTask.id}
         onClose={() => setIsProgressModalOpen(false)}
-        onConfirm={handleUpdateProgress}
       />
     </>
   )

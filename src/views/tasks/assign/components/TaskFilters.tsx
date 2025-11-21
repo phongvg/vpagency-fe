@@ -1,5 +1,5 @@
 import { SelectOption } from '@/@types/common'
-import { TasksFilterRequest } from '@/@types/task'
+import { TasksFilterRequest } from '@/views/tasks/assign/types/task.type'
 import { Button, DatePicker, Input, Select, UserSelect } from '@/components/ui'
 import { UserOption } from '@/components/ui/UserSelect/UserSelect'
 import {

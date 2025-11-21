@@ -1,4 +1,4 @@
-import { Task } from '@/@types/task'
+import { Task } from '@/views/tasks/assign/types/task.type'
 import { TaskStatus } from '@/enums/task.enum'
 import BoardColumn from '@/views/tasks/assign/components/BoardColumn'
 import { useGetTasksGroupedByStatus, useUpdateTaskStatus } from '@/views/tasks/assign/hooks/useTask'

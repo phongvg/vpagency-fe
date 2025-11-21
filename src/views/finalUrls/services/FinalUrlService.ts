@@ -42,7 +42,7 @@ export async function apiDeleteFinalUrl(finalUrlId: string) {
 
 export async function apiGetFinalUrlByProjectId(projectId: string) {
   return ApiService.fetchData<BaseListResponse<FinalUrl>>({
-    url: `/final-urls/projects/${projectId}`,
+    url: `/final-urls/project/${projectId}`,
     method: 'get',
   })
 }

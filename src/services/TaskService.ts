@@ -1,5 +1,13 @@
 import { BaseListResponse, BaseResponse } from '@/@types/common'
-import { Task, TasksGroupedByStatus, TasksFilterRequest, TaskStatisticResponse } from '@/@types/task'
+import {
+  Task,
+  TasksGroupedByStatus,
+  TasksFilterRequest,
+  TaskStatisticResponse,
+  UpdateTaskRequest,
+  TaskProgressResponse,
+  TaskProgressRequest,
+} from '@/views/tasks/assign/types/task.type'
 import ApiService from '@/services/ApiService'
 
 export async function apiGetTasks(params: TasksFilterRequest) {
@@ -32,7 +40,7 @@ export async function apiGetTaskDetail(taskId: string) {
   })
 }
 
-export async function apiCreateTask(data: any) {
+export async function apiCreateTask(data: UpdateTaskRequest) {
   return ApiService.fetchData<BaseResponse<Task>>({
     url: '/tasks',
     method: 'post',
@@ -40,7 +48,7 @@ export async function apiCreateTask(data: any) {
   })
 }
 
-export async function apiUpdateTask(taskId: string, data: any) {
+export async function apiUpdateTask(taskId: string, data: UpdateTaskRequest) {
   return ApiService.fetchData<BaseResponse<Task>>({
     url: `/tasks/${taskId}`,
     method: 'put',
@@ -55,17 +63,24 @@ export async function apiDeleteTask(taskId: string) {
   })
 }
 
-export async function apiUpdateTaskProgress(taskId: string, progress: number) {
+export async function apiUpdateTaskProgress(taskId: string, payload: TaskProgressRequest) {
   return ApiService.fetchData<BaseResponse<Task>>({
     url: `/tasks/${taskId}/progress`,
     method: 'put',
-    data: { progress },
+    data: payload,
   })
 }
 
 export async function apiGetUserTaskStats() {
   return ApiService.fetchData<BaseResponse<TaskStatisticResponse>>({
     url: '/tasks/stats/user',
+    method: 'get',
+  })
+}
+
+export async function apiGetTaskProgress(taskId: string) {
+  return ApiService.fetchData<BaseResponse<TaskProgressResponse>>({
+    url: `/tasks/${taskId}/progress`,
     method: 'get',
   })
 }

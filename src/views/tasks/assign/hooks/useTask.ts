@@ -3,15 +3,17 @@ import {
   apiCreateTask,
   apiDeleteTask,
   apiGetTaskDetail,
+  apiGetTaskProgress,
   apiGetTasks,
   apiGetTasksGroupedByStatus,
   apiUpdateTask,
   apiUpdateTaskProgress,
   apiUpdateTaskStatus,
 } from '@/services/TaskService'
-import { GET_TASK_DETAIL, GET_TASK_LIST, GET_TASKS_GROUPED_BY_STATUS } from '@/utils/queryKey'
+import { GET_TASK_DETAIL, GET_TASK_LIST, GET_TASK_PROGRESS, GET_TASKS_GROUPED_BY_STATUS } from '@/utils/queryKey'
 import { toastError, toastSuccess } from '@/utils/toast'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
+import { TaskProgressRequest, UpdateTaskRequest } from '@/views/tasks/assign/types/task.type'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 export const useGetTasksWithFilters = (enabled: boolean = false) => {
@@ -69,7 +71,7 @@ export const useCreateTask = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: UpdateTaskRequest) => {
       const response = await apiCreateTask(data)
       return response.data
     },
@@ -88,7 +90,7 @@ export const useUpdateTask = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ taskId, data }: { taskId: string; data: any }) => {
+    mutationFn: async ({ taskId, data }: { taskId: string; data: UpdateTaskRequest }) => {
       const response = await apiUpdateTask(taskId, data)
       return response.data
     },
@@ -128,8 +130,8 @@ export const useUpdateTaskProgress = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ taskId, progress }: { taskId: string; progress: number }) => {
-      const response = await apiUpdateTaskProgress(taskId, progress)
+    mutationFn: async ({ taskId, payload }: { taskId: string; payload: TaskProgressRequest }) => {
+      const response = await apiUpdateTaskProgress(taskId, payload)
       return response.data
     },
     onSuccess: (response) => {
@@ -141,5 +143,16 @@ export const useUpdateTaskProgress = () => {
     onError: (error: ApiAxiosError) => {
       toastError(error.response?.data?.message)
     },
+  })
+}
+
+export const useGetTaskProgress = (taskId: string | null, enabled = false) => {
+  return useQuery({
+    queryKey: [GET_TASK_PROGRESS, taskId],
+    queryFn: async () => {
+      const response = await apiGetTaskProgress(taskId!)
+      return response.data.data
+    },
+    enabled: !!taskId && enabled,
   })
 }

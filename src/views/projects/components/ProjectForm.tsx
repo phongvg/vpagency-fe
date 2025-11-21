@@ -20,9 +20,9 @@ import { UpdateProjectRequest } from '@/views/projects/types/project.type'
 const { TabNav, TabList, TabContent } = Tabs
 
 const finalUrlValidationSchema = Yup.object().shape({
-  name: Yup.string().required('Vui lòng nhập tên'),
-  finalURL: Yup.string().required('Vui lòng nhập URL'),
-  countries: Yup.array().of(Yup.string()).min(1, 'Vui lòng chọn ít nhất 1 quốc gia'),
+  name: Yup.string(),
+  finalURL: Yup.string(),
+  countries: Yup.array().of(Yup.string()),
 })
 
 const validationSchema = Yup.object().shape({
@@ -80,13 +80,7 @@ export default function ProjectForm() {
             finalURL: fu.finalURL || '',
             countries: fu.countries || [],
           }))
-        : [
-            {
-              name: '',
-              finalURL: '',
-              countries: [],
-            },
-          ],
+        : [],
   }
 
   const handleSubmit = async (values: UpdateProjectRequest) => {
@@ -204,7 +198,6 @@ export default function ProjectForm() {
 
                             <div className="gap-4 grid grid-cols-2">
                               <FormItem
-                                asterisk
                                 label="Tên"
                                 invalid={
                                   (touched.finalUrls as any)?.[index]?.name &&
@@ -222,7 +215,6 @@ export default function ProjectForm() {
                               </FormItem>
 
                               <FormItem
-                                asterisk
                                 label="URL"
                                 invalid={
                                   (touched.finalUrls as any)?.[index]?.finalURL &&
@@ -240,7 +232,6 @@ export default function ProjectForm() {
                               </FormItem>
 
                               <FormItem
-                                asterisk
                                 className="col-span-2"
                                 label="Quốc gia"
                                 invalid={

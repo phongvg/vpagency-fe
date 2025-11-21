@@ -12,7 +12,7 @@ import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
 import { UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-export const useGetCampaignsQuery = () => {
+export const useGetCampaignsQuery = (enabled = true) => {
   const { filter } = useCampaignStore()
 
   return useQuery({
@@ -21,6 +21,7 @@ export const useGetCampaignsQuery = () => {
       const response = await apiGetCampaignList(filter)
       return response.data.data
     },
+    enabled,
   })
 }
 

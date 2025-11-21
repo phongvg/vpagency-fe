@@ -1,6 +1,5 @@
-import { Task, TasksFilterRequest } from '@/@types/task'
+import { Task, TasksFilterRequest, Columns } from '@/views/tasks/assign/types/task.type'
 import { TaskViewType } from '@/enums/taskView.enum'
-import { Columns } from '@/views/tasks/assign/types'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 

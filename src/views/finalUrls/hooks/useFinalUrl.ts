@@ -1,11 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { GET_FINAL_URL_LIST, GET_FINAL_URL_DETAIL } from '@/utils/queryKey'
+import { GET_FINAL_URL_LIST, GET_FINAL_URL_DETAIL, GET_FINAL_URLS_BY_PROJECT_ID } from '@/utils/queryKey'
 import {
   apiGetFinalUrlList,
   apiGetFinalUrlById,
   apiCreateFinalUrl,
   apiUpdateFinalUrl,
   apiDeleteFinalUrl,
+  apiGetFinalUrlByProjectId,
 } from '../services/FinalUrlService'
 import { useFinalUrlStore } from '../store/useFinalUrlStore'
 import { toastError, toastSuccess } from '@/utils/toast'
@@ -40,8 +41,12 @@ export const useCreateFinalUrlMutation = () => {
 
   return useMutation({
     mutationFn: (payload: UpdateFinalUrlRequest) => apiCreateFinalUrl(payload),
-    onSuccess: (response) => {
+    onSuccess: (response, variables) => {
       queryClient.invalidateQueries({ queryKey: [GET_FINAL_URL_LIST] })
+      // Invalidate the specific project's final URLs list
+      if (variables.projectId) {
+        queryClient.invalidateQueries({ queryKey: [GET_FINAL_URLS_BY_PROJECT_ID, variables.projectId] })
+      }
       toastSuccess(response.data.message)
     },
     onError: (error: ApiAxiosError) => {
@@ -78,5 +83,16 @@ export const useDeleteFinalUrlMutation = () => {
     onError: (error: ApiAxiosError) => {
       toastError(error.response?.data?.message)
     },
+  })
+}
+
+export const useGetFinalUrlsByProjectId = (projectId: string, enabled = false) => {
+  return useQuery({
+    queryKey: [GET_FINAL_URLS_BY_PROJECT_ID, projectId],
+    queryFn: async () => {
+      const response = await apiGetFinalUrlByProjectId(projectId)
+      return response.data.data
+    },
+    enabled: enabled && !!projectId,
   })
 }

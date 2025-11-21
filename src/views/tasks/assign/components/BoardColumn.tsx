@@ -1,4 +1,4 @@
-import { Task } from '@/@types/task'
+import { Task } from '@/views/tasks/assign/types/task.type'
 import { Badge } from '@/components/ui'
 import { TaskStatus, TaskStatusLabels } from '@/enums/task.enum'
 import BoardCard from '@/views/tasks/assign/components/BoardCard'

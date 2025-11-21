@@ -1,38 +1,27 @@
-import { Task } from '@/@types/task'
+import { Task, UpdateTaskRequest } from '@/views/tasks/assign/types/task.type'
 import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
 import SelectCustom, { SelectParams } from '@/components/shared/SelectCustom'
-import { Button, DatePicker, FormItem, Input, Select, Textarea, UserSelect } from '@/components/ui'
+import { Button, Checkbox, DatePicker, FormItem, Input, Select, Textarea, UserSelect } from '@/components/ui'
 import { UserOption } from '@/components/ui/UserSelect/UserSelect'
-import { TaskFrequency, TaskPriority, TaskPriorityLabels, TaskType, TaskTypeLabels } from '@/enums/task.enum'
+import { TaskFrequency, TaskPriority, TaskType } from '@/enums/task.enum'
 import { setDeadlineTo1800 } from '@/helpers/date'
-import { apiGetFinalUrlList } from '@/views/finalUrls/services/FinalUrlService'
 import { apiGetProjectList } from '@/views/projects/services/ProjectService'
+import { useGetFinalUrlsByProjectId, useCreateFinalUrlMutation } from '@/views/finalUrls/hooks/useFinalUrl'
 import { Field, FieldProps, Form, Formik, FormikProps } from 'formik'
 import { useEffect, useRef, useState } from 'react'
 import * as Yup from 'yup'
+import {
+  frequencyOptions,
+  priorityOptions,
+  typeOptions,
+} from '@/views/tasks/assign/constants/taskOptionSelect.constant'
+import { HiOutlinePlus } from 'react-icons/hi'
 
-interface TaskFormData {
-  name: string
-  type: TaskType | null
-  frequency: TaskFrequency | null
-  priority: TaskPriority | null
-  deadline: Date | null
-  assignedUserIds: string[]
-  projectId: string | null
-  note: string
-  numberOfCampaigns?: number
-  numberOfBackupCampaigns?: number
-  dailyBudget?: number
-  numberOfAccounts?: number
-  numberOfResultCampaigns?: number
-  finalUrlId: string
-}
-
-interface TaskFormProps {
+type Props = {
   task?: Task | null
   isEdit?: boolean
   loading?: boolean
-  onSubmit: (values: TaskFormData) => void
+  onSubmit: (values: UpdateTaskRequest) => void
   onCancel: () => void
 }
 
@@ -42,30 +31,31 @@ const validationSchema = Yup.object().shape({
   frequency: Yup.string().required('Tần suất là bắt buộc'),
   priority: Yup.string().required('Độ ưu tiên là bắt buộc'),
   deadline: Yup.date().required('Deadline là bắt buộc'),
+  projectId: Yup.string().required('Dự án là bắt buộc'),
   assignedUserIds: Yup.array().min(1, 'Phải chọn ít nhất một người nhận việc'),
+  finalUrlIds: Yup.array().min(1, 'Phải chọn ít nhất một URL'),
 })
 
-const typeOptions = Object.values(TaskType).map((type) => ({
-  value: type,
-  label: TaskTypeLabels[type],
-}))
-
-const frequencyOptions = Object.values(TaskFrequency).map((freq) => ({
-  value: freq,
-  label: freq === TaskFrequency.ONCE ? 'Một lần' : 'Hàng ngày',
-}))
-
-const priorityOptions = Object.values(TaskPriority).map((priority) => ({
-  value: priority,
-  label: TaskPriorityLabels[priority],
-}))
-
-export default function TaskForm({ task, isEdit = false, loading = false, onSubmit, onCancel }: TaskFormProps) {
+export default function TaskForm({ task, isEdit = false, loading = false, onSubmit, onCancel }: Props) {
   const [selectedUsers, setSelectedUsers] = useState<UserOption[]>([])
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(task?.project?.id || null)
+  const [selectedFinalUrlIds, setSelectedFinalUrlIds] = useState<string[]>([])
+  const [isAddingUrl, setIsAddingUrl] = useState(false)
+  const [newUrlName, setNewUrlName] = useState('')
+  const [newUrlFinalURL, setNewUrlFinalURL] = useState('')
 
-  const formikRef = useRef<FormikProps<TaskFormData>>(null)
+  const formikRef = useRef<FormikProps<UpdateTaskRequest>>(null)
 
-  const initialValues: TaskFormData = {
+  const { data: finalUrlsData, isLoading: isLoadingFinalUrls } = useGetFinalUrlsByProjectId(
+    selectedProjectId || '',
+    !!selectedProjectId,
+  )
+
+  const createFinalUrlMutation = useCreateFinalUrlMutation()
+
+  const finalUrls = finalUrlsData?.items || []
+
+  const initialValues: UpdateTaskRequest = {
     name: task?.name || '',
     type: task?.type || null,
     frequency: task?.frequency || null,
@@ -79,7 +69,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
     dailyBudget: task?.dailyBudget || undefined,
     numberOfAccounts: task?.numberOfAccounts || undefined,
     numberOfResultCampaigns: task?.numberOfResultCampaigns || undefined,
-    finalUrlId: '',
+    finalUrlIds: task?.finalUrlIds || [],
   }
 
   useEffect(() => {
@@ -93,6 +83,12 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
       setSelectedUsers(userOptions)
     } else {
       setSelectedUsers([])
+    }
+
+    if (task?.finalUrlIds) {
+      setSelectedFinalUrlIds(task.finalUrlIds)
+    } else {
+      setSelectedFinalUrlIds([])
     }
   }, [task])
 
@@ -110,18 +106,24 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
     }
   }
 
-  const fetchFinalUrlOptions = async ({ page, limit, search }: SelectParams) => {
-    try {
-      const response = await apiGetFinalUrlList({ search: search || '', page, limit })
-      const { items, meta } = response.data.data
-      return {
-        data: items,
-        total: meta.total,
-        hasMore: meta.hasNext,
-      }
-    } catch {
-      return { data: [], total: 0, hasMore: false }
-    }
+  const handleCreateUrl = async () => {
+    if (!selectedProjectId || !newUrlName || !newUrlFinalURL) return
+
+    await createFinalUrlMutation.mutateAsync({
+      projectId: selectedProjectId,
+      name: newUrlName,
+      finalURL: newUrlFinalURL,
+    })
+
+    setNewUrlName('')
+    setNewUrlFinalURL('')
+    setIsAddingUrl(false)
+  }
+
+  const handleCancelAddUrl = () => {
+    setNewUrlName('')
+    setNewUrlFinalURL('')
+    setIsAddingUrl(false)
   }
 
   return (
@@ -138,6 +140,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
         onSubmit={(values) => {
           onSubmit({
             ...values,
+            finalUrlIds: selectedFinalUrlIds,
             assignedUserIds: selectedUsers.map((user) => user.value),
           })
         }}
@@ -228,7 +231,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                   />
                 </FormItem>
 
-                <FormItem label="Dự án">
+                <FormItem asterisk label="Dự án">
                   <Field name="projectId">
                     {({ field, form }: FieldProps) => (
                       <SelectCustom
@@ -237,6 +240,12 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                         form={form}
                         fetchOptions={fetchProjectOptions}
                         placeholder="Chọn dự án..."
+                        onChange={(value) => {
+                          form.setFieldValue('projectId', value)
+                          setSelectedProjectId(value as string | null)
+                          setSelectedFinalUrlIds([])
+                          form.setFieldValue('finalUrlIds', [])
+                        }}
                       />
                     )}
                   </Field>
@@ -262,19 +271,121 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                   />
                 </FormItem>
 
-                <FormItem label="Url cuối cùng">
-                  <Field name="finalUrlId">
-                    {({ field, form }: FieldProps) => (
-                      <SelectCustom
-                        isCreatable
-                        field={field}
-                        form={form}
-                        fetchOptions={fetchFinalUrlOptions}
-                        placeholder="Chọn URL cuối cùng..."
-                      />
+                {selectedProjectId && (
+                  <div className="col-span-2 bg-gray-50 px-4 py-4 rounded-lg">
+                    <div className="flex justify-between items-center mb-3">
+                      <h5 className="font-semibold text-gray-900">
+                        Danh sách URL <span className="text-red-500">*</span>
+                        {selectedFinalUrlIds.length > 0 && (
+                          <span className="ml-2 text-sm">({selectedFinalUrlIds.length} đã chọn)</span>
+                        )}
+                      </h5>
+                      {!isAddingUrl && (
+                        <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={() => setIsAddingUrl(true)}>
+                          Thêm URL
+                        </Button>
+                      )}
+                    </div>
+                    {touched.finalUrlIds && errors.finalUrlIds && (
+                      <div className="mb-3 text-red-500 text-sm">{errors.finalUrlIds as string}</div>
                     )}
-                  </Field>
-                </FormItem>
+
+                    {isAddingUrl && (
+                      <div className="bg-white mb-4 p-4 border border-gray-200 rounded-lg">
+                        <h6 className="mb-3 font-semibold text-gray-900">Thêm URL mới</h6>
+                        <div className="space-y-3">
+                          <FormItem asterisk label="Tên">
+                            <Input
+                              placeholder="Nhập tên..."
+                              value={newUrlName}
+                              onChange={(e) => setNewUrlName(e.target.value)}
+                            />
+                          </FormItem>
+                          <FormItem asterisk label="URL">
+                            <Input
+                              placeholder="https://example.com"
+                              value={newUrlFinalURL}
+                              onChange={(e) => setNewUrlFinalURL(e.target.value)}
+                            />
+                          </FormItem>
+                          <div className="flex justify-end gap-2">
+                            <Button size="sm" variant="plain" onClick={handleCancelAddUrl}>
+                              Hủy
+                            </Button>
+                            <Button
+                              disabled={!newUrlName || !newUrlFinalURL}
+                              loading={createFinalUrlMutation.isPending}
+                              size="sm"
+                              variant="solid"
+                              onClick={handleCreateUrl}
+                            >
+                              Lưu
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {isLoadingFinalUrls ? (
+                      <div className="py-4 text-gray-500 text-center">Đang tải...</div>
+                    ) : finalUrls.length > 0 ? (
+                      <div className="border rounded-lg overflow-hidden">
+                        <table className="w-full align-middle">
+                          <thead className="bg-gray-100">
+                            <tr>
+                              <th className="px-4 py-2 font-semibold text-gray-700 text-sm text-left">Chọn</th>
+                              <th className="px-4 py-2 font-semibold text-gray-700 text-sm text-left">Tên</th>
+                              <th className="px-4 py-2 font-semibold text-gray-700 text-sm text-left">URL</th>
+                            </tr>
+                          </thead>
+                          <tbody className="bg-white">
+                            {finalUrls.map((url) => {
+                              const isChecked = selectedFinalUrlIds.includes(url.id)
+                              return (
+                                <tr
+                                  key={url.id}
+                                  className={`border-t cursor-pointer hover:bg-gray-50 ${
+                                    isChecked ? 'bg-blue-50' : ''
+                                  }`}
+                                  onClick={() => {
+                                    const newSelectedIds = isChecked
+                                      ? selectedFinalUrlIds.filter((id) => id !== url.id)
+                                      : [...selectedFinalUrlIds, url.id]
+                                    setSelectedFinalUrlIds(newSelectedIds)
+                                    setFieldValue('finalUrlIds', newSelectedIds)
+                                  }}
+                                >
+                                  <td className="px-4 py-2">
+                                    <div className="flex justify-start items-center">
+                                      <Checkbox readOnly checked={isChecked} color="green-500" />
+                                    </div>
+                                  </td>
+                                  <td className="px-4 py-2 text-gray-900 text-sm">{url.name}</td>
+                                  <td
+                                    className="px-4 py-2 max-w-xs text-gray-600 text-sm truncate"
+                                    title={url.finalURL}
+                                  >
+                                    <a
+                                      href={url.finalURL}
+                                      className="text-blue-700 hover:underline"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      {url.finalURL}
+                                    </a>
+                                  </td>
+                                </tr>
+                              )
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <div className="py-4 text-gray-500 text-center">Dự án này chưa có URL</div>
+                    )}
+                  </div>
+                )}
 
                 <FormItem label="Ghi chú" className="col-span-2">
                   <Textarea

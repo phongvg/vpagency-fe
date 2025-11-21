@@ -1,4 +1,4 @@
-import { Task } from '@/@types/task'
+import { Task } from '@/views/tasks/assign/types/task.type'
 import { Card, Tag } from '@/components/ui'
 import { TaskPriority, TaskType, TaskTypeLabels } from '@/enums/task.enum'
 import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'

@@ -1,4 +1,4 @@
-import { TaskStatisticResponse } from '@/@types/task'
+import { TaskStatisticResponse } from '@/views/tasks/assign/types/task.type'
 import { useAuthStore } from '@/store/auth/useAuthStore'
 
 type Props = {

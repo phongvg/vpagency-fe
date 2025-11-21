@@ -1,4 +1,4 @@
-import { Task } from '@/@types/task'
+import { Task } from '@/views/tasks/assign/types/task.type'
 import { DataTable } from '@/components/shared'
 import { Badge, Card, Tag } from '@/components/ui'
 import { TaskPriority, TaskPriorityLabels, TaskStatusColors, TaskStatusLabels } from '@/enums/task.enum'

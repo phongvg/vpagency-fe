@@ -7,7 +7,6 @@ import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
 import { ConfirmDialog } from '@/components/ui'
 import { FinalUrl } from '../types/finalUrl.type'
-import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 
 export default function FinalUrlTable() {
   const { filter, openDialog, setFilter } = useFinalUrlStore()
@@ -88,52 +87,12 @@ export default function FinalUrlTable() {
         },
       },
       {
-        header: 'Ref Target',
-        accessorKey: 'targetRef',
-        cell: (props) => {
-          const row = props.row.original
-          return <span>{row.targetRef}</span>
-        },
-      },
-      {
-        header: 'FTD Target',
-        accessorKey: 'targetFtd',
-        cell: (props) => {
-          const row = props.row.original
-          return <span>{row.targetFtd}</span>
-        },
-      },
-      {
-        header: 'Ngân sách',
-        accessorKey: 'budget',
-        cell: (props) => {
-          const row = props.row.original
-          return <span>{formatVietnameseMoney(row.budget)}</span>
-        },
-      },
-      {
-        header: 'CPC',
-        accessorKey: 'targetCpc',
-        cell: (props) => {
-          const row = props.row.original
-          return <span>{formatVietnameseMoney(row.targetCpc)}</span>
-        },
-      },
-      {
-        header: 'Lượt click',
-        accessorKey: 'totalClicks',
-        cell: (props) => {
-          const row = props.row.original
-          return <span>{row.totalClicks}</span>
-        },
-      },
-      {
         header: '',
         id: 'actions',
         cell: (props) => {
           const row = props.row.original
           return (
-            <div className="flex items-center gap-4">
+            <div className="flex justify-end items-center gap-4">
               <button type="button" onClick={() => handleEdit(row)}>
                 <HiOutlinePencilAlt size={24} />
               </button>

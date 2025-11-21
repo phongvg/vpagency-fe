@@ -1,11 +1,10 @@
-import { Task } from '@/@types/task'
+import { Task } from '@/views/tasks/assign/types/task.type'
 import { Avatar, Badge, Button, Progress } from '@/components/ui'
 import { TaskFrequency, TaskPriorityLabels, TaskStatusLabels, TaskType, TaskTypeLabels } from '@/enums/task.enum'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import { HiOutlineCalendar, HiOutlineClock, HiOutlineStar, HiUsers } from 'react-icons/hi'
 import { useState } from 'react'
 import UpdateProgressModal from './UpdateProgressModal'
-import { useUpdateTaskProgress } from '@/views/tasks/assign/hooks/useTask'
 import { getPriorityColor, getStatusColor } from '@/constants/task.constant'
 import { formatDate } from '@/helpers/formatDate'
 import { useAuthStore } from '@/store/auth/useAuthStore'
@@ -22,12 +21,6 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
   const { user } = useAuthStore()
 
   const [isProgressModalOpen, setIsProgressModalOpen] = useState(false)
-  const updateProgressMutation = useUpdateTaskProgress()
-
-  const handleUpdateProgress = async (progress: number) => {
-    await updateProgressMutation.mutateAsync({ taskId: task.id, progress })
-    setIsProgressModalOpen(false)
-  }
 
   return (
     <div className="task-detail-view">
@@ -172,12 +165,8 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
 
       <UpdateProgressModal
         isOpen={isProgressModalOpen}
-        currentProgress={task.progress}
-        taskName={task.name}
         taskId={task.id}
-        isLoading={updateProgressMutation.isPending}
         onClose={() => setIsProgressModalOpen(false)}
-        onConfirm={handleUpdateProgress}
       />
     </div>
   )

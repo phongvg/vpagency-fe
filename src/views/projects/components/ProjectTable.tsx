@@ -112,7 +112,7 @@ export default function ProjectTable() {
         cell: (props) => {
           const row = props.row.original
           return (
-            <div className="flex justify-center items-center gap-4">
+            <div className="flex justify-end items-center gap-4">
               <button type="button" onClick={() => navigate(urlConfig.projectDetail.replace(':id', row.id))}>
                 <HiOutlineEye size={24} />
               </button>

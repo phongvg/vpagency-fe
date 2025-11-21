@@ -1,4 +1,4 @@
-import { TaskStatisticResponse } from '@/@types/task'
+import { TaskStatisticResponse } from '@/views/tasks/assign/types/task.type'
 import { Badge, Card } from '@/components/ui'
 import { isEmpty } from 'lodash'
 import { COLORS } from '@/constants/chart.constant'

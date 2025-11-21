@@ -1,4 +1,4 @@
-import { Task } from '@/@types/task'
+import { Task } from '@/views/tasks/assign/types/task.type'
 import { Loading } from '@/components/shared'
 import { Pagination } from '@/components/ui'
 import { useQueryParam } from '@/hooks/useQueryParam'
@@ -11,14 +11,16 @@ import { useNavigate } from 'react-router-dom'
 export default function TaskSplitView() {
   const id = useQueryParam('id')
   const navigate = useNavigate()
-  const { selectedTask, setSelectedTask, filters, setFilters } = useBoardStore()
+  const { setSelectedTask, filters, setFilters } = useBoardStore()
   const { data: taskList } = useGetTasksWithFilters(true)
   const { data: taskDetail, isFetching: isLoadingTask } = useGetTaskDetail(id)
   const [isMobileDetailView, setIsMobileDetailView] = useState(false)
+  const [displayTask, setDisplayTask] = useState<Task | null>(null)
 
   useEffect(() => {
     if (taskDetail) {
       setSelectedTask(taskDetail)
+      setDisplayTask(taskDetail)
     }
 
     return () => {
@@ -49,7 +51,7 @@ export default function TaskSplitView() {
       >
         <TaskListPanel
           tasks={taskList?.items ?? []}
-          selectedTaskId={selectedTask?.id ?? null}
+          selectedTaskId={displayTask?.id ?? null}
           pagination={{
             total: taskList?.meta?.total ?? 0,
             currentPage: taskList?.meta?.page ?? 1,
@@ -85,7 +87,7 @@ export default function TaskSplitView() {
               <div className="flex justify-center items-center h-full">
                 <Loading loading={true} />
               </div>
-            ) : selectedTask ? (
+            ) : displayTask ? (
               <Suspense fallback={<Loading />}>
                 <div className="p-4 md:p-6 h-full overflow-y-auto">
                   <TaskDetailPanel inSplitView />
