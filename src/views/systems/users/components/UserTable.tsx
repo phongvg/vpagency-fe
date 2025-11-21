@@ -94,7 +94,7 @@ export default function UserTable() {
         cell: (props) => {
           const row = props.row.original
           return (
-            <div className="flex items-center gap-4">
+            <div className="flex justify-end items-center gap-4">
               <Switcher checked={row.status === StatusEnum.Active} onChange={() => userMutation.mutate(row.id)} />
               <button
                 type="button"

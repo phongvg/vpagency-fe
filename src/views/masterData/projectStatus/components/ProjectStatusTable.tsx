@@ -36,7 +36,7 @@ export default function ProjectStatusTable() {
 
   const handleUpdateStatusActive = async (row: ProjectStatus, active: boolean) => {
     await updateProjectStatusMutation.mutateAsync({
-      id: row.id,
+      id: row.id || '',
       payload: { active },
     })
   }
@@ -94,11 +94,11 @@ export default function ProjectStatusTable() {
       cell: (props) => {
         const row = props.row.original
         return (
-          <div className="flex items-center gap-4">
+          <div className="flex justify-end items-center gap-4">
             <button type="button" onClick={() => handleEdit(row)}>
               <HiOutlinePencilAlt size={24} />
             </button>
-            <button type="button" onClick={() => handleDelete(row.id)}>
+            <button type="button" onClick={() => handleDelete(row.id || '')}>
               <HiOutlineTrash size={24} />
             </button>
           </div>

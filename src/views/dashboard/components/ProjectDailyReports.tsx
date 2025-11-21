@@ -158,7 +158,7 @@ export default function ProjectDailyReports() {
         cell: (props) => {
           const row = props.row.original
           return (
-            <div className="flex items-center gap-4">
+            <div className="flex justify-end items-center gap-4">
               <button type="button" className="hover:text-blue-600" onClick={() => handleEdit(row)}>
                 <HiOutlinePencilAlt size={20} />
               </button>
@@ -167,7 +167,7 @@ export default function ProjectDailyReports() {
         },
       },
     ],
-    [filters.page, filters.limit, data],
+    [filters, handleEdit],
   )
 
   return (

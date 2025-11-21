@@ -76,7 +76,7 @@ export default function ProjectDailyReportTable({ projectId }: ProjectDailyRepor
         accessorKey: 'totalClicks',
         cell: (props) => {
           const row = props.row.original
-          return <span className="font-semibold text-green-600">{row.totalClicks.toLocaleString('vi-VN')}</span>
+          return <span className="font-semibold text-green-600">{row.totalClicks}</span>
         },
       },
       {
@@ -92,7 +92,7 @@ export default function ProjectDailyReportTable({ projectId }: ProjectDailyRepor
         accessorKey: 'totalRef',
         cell: (props) => {
           const row = props.row.original
-          return <span className="font-semibold text-yellow-600">{row.totalRef.toLocaleString('vi-VN')}</span>
+          return <span className="font-semibold text-yellow-600">{row.totalRef}</span>
         },
       },
       {
@@ -100,7 +100,7 @@ export default function ProjectDailyReportTable({ projectId }: ProjectDailyRepor
         accessorKey: 'totalFtd',
         cell: (props) => {
           const row = props.row.original
-          return <span className="font-semibold text-red-600">{row.totalFtd.toLocaleString('vi-VN')}</span>
+          return <span className="font-semibold text-red-600">{row.totalFtd}</span>
         },
       },
       {
@@ -109,7 +109,7 @@ export default function ProjectDailyReportTable({ projectId }: ProjectDailyRepor
         cell: (props) => {
           const row = props.row.original
           return (
-            <div className="flex items-center gap-4">
+            <div className="flex justify-end items-center gap-4">
               <button type="button" className="hover:text-blue-600" onClick={() => handleEdit(row)}>
                 <HiOutlinePencilAlt size={20} />
               </button>
@@ -118,7 +118,7 @@ export default function ProjectDailyReportTable({ projectId }: ProjectDailyRepor
         },
       },
     ],
-    [filter.page, filter.limit],
+    [filter, handleEdit],
   )
 
   const onPaginationChange = (page: number) => {

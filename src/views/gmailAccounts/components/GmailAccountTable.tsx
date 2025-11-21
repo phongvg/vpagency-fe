@@ -1,6 +1,7 @@
 import { GmailAccount } from '@/views/gmailAccounts/types/gmailAccount.type'
 import { DataTable, DataTableResetHandle } from '@/components/shared'
-import { Avatar, Button, ConfirmDialog } from '@/components/ui'
+import { Avatar, Button, ConfirmDialog, Checkbox, Dropdown } from '@/components/ui'
+import { COLUMN_CONFIG } from '@/views/gmailAccounts/constants/gmailAccountColumnConfig.constant'
 import { urlConfig } from '@/configs/urls.config'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
@@ -12,8 +13,8 @@ import {
 } from '@/views/gmailAccounts/hooks/useGmailAccount'
 import { useGmailAccountStore } from '@/views/gmailAccounts/store/useGmailAccountStore'
 import { ColumnDef, Row } from '@tanstack/react-table'
-import { useMemo, useRef, useState } from 'react'
-import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { HiOutlinePencilAlt, HiOutlineTrash, HiOutlineViewList } from 'react-icons/hi'
 import { Link } from 'react-router-dom'
 
 const ManagerColumn = ({ row }: { row: GmailAccount }) => {
@@ -72,97 +73,133 @@ export default function GmailAccountTable() {
 
   const [selectedRows, setSelectedRows] = useState<GmailAccount[]>([])
 
+  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {}
+    COLUMN_CONFIG.forEach((col) => {
+      initial[col.id] = col.visible
+    })
+    return initial
+  })
+
   const metaTableData = useMemo(() => getGmailAccountsResponse?.meta, [getGmailAccountsResponse])
 
-  const handleEdit = (row: GmailAccount) => {
-    openDialog(row.id)
-  }
+  const handleEdit = useCallback(
+    (row: GmailAccount) => {
+      openDialog(row.id)
+    },
+    [openDialog],
+  )
 
-  const handleDelete = async (id: string) => {
-    const confirmed = await showConfirm({
-      message: `Bạn có chắc chắn muốn xóa tài khoản gmail này? Hành động này không thể hoàn tác.`,
-    })
+  const handleDelete = useCallback(
+    async (id: string) => {
+      const confirmed = await showConfirm({
+        message: `Bạn có chắc chắn muốn xóa tài khoản gmail này? Hành động này không thể hoàn tác.`,
+      })
 
-    if (confirmed) {
-      await deleteMutation.mutateAsync(id)
-    }
-  }
+      if (confirmed) {
+        await deleteMutation.mutateAsync(id)
+      }
+    },
+    [deleteMutation, showConfirm],
+  )
 
-  const columns: ColumnDef<GmailAccount>[] = [
-    {
-      header: 'STT',
-      accessorKey: 'index',
-      cell: (props) => {
-        const row = props.row.index
-        return <span>{(filter.page - 1) * filter.limit + row + 1}</span>
+  const toggleColumnVisibility = useCallback((columnId: string) => {
+    setColumnVisibility((prev) => ({
+      ...prev,
+      [columnId]: !prev[columnId],
+    }))
+  }, [])
+
+  const allColumns: ColumnDef<GmailAccount>[] = useMemo(
+    () => [
+      {
+        id: 'stt',
+        header: 'STT',
+        accessorKey: 'index',
+        cell: (props) => {
+          const row = props.row.index
+          return <span>{(filter.page - 1) * filter.limit + row + 1}</span>
+        },
       },
-    },
-    {
-      header: 'Proxy',
-      accessorKey: 'proxy',
-    },
-    {
-      header: 'Email',
-      accessorKey: 'name',
-      cell: (props) => {
-        const row = props.row.original
-        return (
-          <Link to={urlConfig.gmailAccountDetail.replace(':id', row.id)} className="hover:text-indigo-600">
-            {row.name}
-          </Link>
-        )
+      {
+        id: 'proxy',
+        header: 'Proxy',
+        accessorKey: 'proxy',
       },
-    },
-    {
-      header: 'Mail khôi phục',
-      accessorKey: 'recoverMail',
-    },
-    {
-      header: 'Mã 2FA',
-      accessorKey: 'code2fa',
-    },
-    {
-      header: 'Giá tiền',
-      accessorKey: 'price',
-      cell: (props) => {
-        const row = props.row.original
-        return <span>{formatVietnameseMoney(row.price)}</span>
+      {
+        id: 'name',
+        header: 'Email',
+        accessorKey: 'name',
+        cell: (props) => {
+          const row = props.row.original
+          return (
+            <Link to={urlConfig.gmailAccountDetail.replace(':id', row.id)} className="hover:text-indigo-600">
+              {row.name}
+            </Link>
+          )
+        },
       },
-    },
-    {
-      header: 'Người quản lý',
-      accessorKey: 'manager',
-      cell: (props) => {
-        const row = props.row.original
-        return <ManagerColumn row={row} />
+      {
+        id: 'recoverMail',
+        header: 'Mail khôi phục',
+        accessorKey: 'recoverMail',
       },
-    },
-    {
-      header: 'Người tạo',
-      accessorKey: 'creator',
-      cell: (props) => {
-        const row = props.row.original
-        return <CreatorColumn row={row} />
+      {
+        id: 'code2fa',
+        header: 'Mã 2FA',
+        accessorKey: 'code2fa',
       },
-    },
-    {
-      header: '',
-      accessorKey: 'action',
-      cell: (props) => {
-        const row = props.row.original
-        return (
-          <div className="flex items-center gap-4">
-            <button type="button" onClick={() => handleEdit(row)}>
-              <HiOutlinePencilAlt size={24} />
-            </button>
-            <button type="button" onClick={() => handleDelete(row.id)}>
-              <HiOutlineTrash size={24} />
-            </button>
-          </div>
-        )
+      {
+        id: 'price',
+        header: 'Giá tiền',
+        accessorKey: 'price',
+        cell: (props) => {
+          const row = props.row.original
+          return <span>{formatVietnameseMoney(row.price)}</span>
+        },
       },
-    },
-  ]
+      {
+        id: 'manager',
+        header: 'Người quản lý',
+        accessorKey: 'manager',
+        cell: (props) => {
+          const row = props.row.original
+          return <ManagerColumn row={row} />
+        },
+      },
+      {
+        id: 'creator',
+        header: 'Người tạo',
+        accessorKey: 'creator',
+        cell: (props) => {
+          const row = props.row.original
+          return <CreatorColumn row={row} />
+        },
+      },
+      {
+        id: 'action',
+        header: '',
+        cell: (props) => {
+          const row = props.row.original
+          return (
+            <div className="flex justify-end items-center gap-4">
+              <button type="button" onClick={() => handleEdit(row)}>
+                <HiOutlinePencilAlt size={24} />
+              </button>
+              <button type="button" onClick={() => handleDelete(row.id)}>
+                <HiOutlineTrash size={24} />
+              </button>
+            </div>
+          )
+        },
+      },
+    ],
+    [filter, handleDelete, handleEdit],
+  )
+
+  const visibleColumns = useMemo(() => {
+    return allColumns.filter((col) => columnVisibility[col.id as string])
+  }, [allColumns, columnVisibility])
 
   const onPaginationChange = (page: number) => {
     const newFilter = { ...filter, page }
@@ -211,6 +248,29 @@ export default function GmailAccountTable() {
 
   return (
     <>
+      <div className="flex justify-between items-center mb-4">
+        <Dropdown
+          renderTitle={
+            <Button size="sm" variant="twoTone" icon={<HiOutlineViewList />}>
+              Tùy chỉnh cột
+            </Button>
+          }
+        >
+          <div className="p-2 max-h-96 overflow-y-auto" style={{ minWidth: '250px' }}>
+            {COLUMN_CONFIG.map((col) => (
+              <div key={col.id} className="flex items-center gap-2 hover:bg-gray-50 px-2 py-1.5 rounded">
+                <Checkbox
+                  checked={columnVisibility[col.id]}
+                  disabled={col.required}
+                  onChange={() => toggleColumnVisibility(col.id)}
+                />
+                <span className="text-sm">{col.label}</span>
+              </div>
+            ))}
+          </div>
+        </Dropdown>
+      </div>
+
       {selectedRows.length > 0 && (
         <div className="flex items-center gap-4 bg-blue-50 mb-4 p-4 rounded">
           <span className="font-medium">Đã chọn {selectedRows.length} tài khoản</span>
@@ -232,7 +292,7 @@ export default function GmailAccountTable() {
       <DataTable
         ref={tableRef}
         selectable
-        columns={columns}
+        columns={visibleColumns}
         data={getGmailAccountsResponse?.items ?? []}
         skeletonAvatarColumns={[3]}
         skeletonAvatarProps={{ width: 32, height: 32 }}

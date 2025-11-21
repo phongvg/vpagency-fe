@@ -96,7 +96,7 @@ export default function UidStatusTable() {
       cell: (props) => {
         const row = props.row.original
         return (
-          <div className="flex items-center gap-4">
+          <div className="flex justify-end items-center gap-4">
             <button type="button" onClick={() => handleEdit(row)}>
               <HiOutlinePencilAlt size={24} />
             </button>
