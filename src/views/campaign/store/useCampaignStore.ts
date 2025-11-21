@@ -20,6 +20,7 @@ type CampaignState = {
   closePreviewDialog: () => void
   openCampaignSummaryDialog: (campaignSummary: CreateCampaignResponse | null) => void
   closeCampaignSummaryDialog: () => void
+  clearFilter: () => void
 }
 
 export const initialCampaignState = {
@@ -49,5 +50,6 @@ export const useCampaignStore = create<CampaignState>()(
     openCampaignSummaryDialog: (campaignSummary) =>
       set({ campaignSummary: campaignSummary, dialogCampaignSummaryOpen: true }),
     closeCampaignSummaryDialog: () => set({ campaignSummary: null, dialogCampaignSummaryOpen: false }),
+    clearFilter: () => set({ filter: initialCampaignState.filter }),
   })),
 )

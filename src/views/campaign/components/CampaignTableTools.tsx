@@ -7,7 +7,7 @@ import { useRef, ChangeEvent } from 'react'
 import { HiOutlineDownload, HiOutlinePlus, HiOutlineRefresh } from 'react-icons/hi'
 
 export default function CampaignTableTools() {
-  const { openDialog, openPreviewDialog, setCampaigns } = useCampaignStore()
+  const { openDialog, openPreviewDialog, setCampaigns, clearFilter } = useCampaignStore()
   const { processFile, isProcessing, progress } = useExcelWorker()
 
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -38,7 +38,7 @@ export default function CampaignTableTools() {
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-2">
           <CampaignSearch />
-          <Button size="sm" icon={<HiOutlineRefresh />} />
+          <Button size="sm" icon={<HiOutlineRefresh />} onClick={clearFilter} />
         </div>
         <div className="flex gap-2">
           <Button loading={isProcessing} size="sm" icon={<HiOutlineDownload />} onClick={handleImportClick}>
