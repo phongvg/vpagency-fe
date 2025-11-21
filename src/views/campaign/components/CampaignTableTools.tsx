@@ -1,6 +1,7 @@
 import { Button, Progress } from '@/components/ui'
 import { toastError, toastSuccess } from '@/utils/toast'
 import CampaignSearch from '@/views/campaign/components/CampaignSearch'
+import CampaignFilter, { CampaignFilterPanel } from '@/views/campaign/components/CampaignFilter'
 import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
 import { useExcelWorker } from '@/views/campaign/hooks/useExcelWorker'
 import { useRef, ChangeEvent } from 'react'
@@ -9,6 +10,7 @@ import { HiOutlineDownload, HiOutlinePlus, HiOutlineRefresh } from 'react-icons/
 export default function CampaignTableTools() {
   const { openDialog, openPreviewDialog, setCampaigns, clearFilter } = useCampaignStore()
   const { processFile, isProcessing, progress } = useExcelWorker()
+  const { showFilters, filterButton } = CampaignFilter()
 
   const inputRef = useRef<HTMLInputElement | null>(null)
 
@@ -38,6 +40,7 @@ export default function CampaignTableTools() {
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-2">
           <CampaignSearch />
+          {filterButton}
           <Button size="sm" icon={<HiOutlineRefresh />} onClick={clearFilter} />
         </div>
         <div className="flex gap-2">
@@ -49,6 +52,8 @@ export default function CampaignTableTools() {
           </Button>
         </div>
       </div>
+
+      {showFilters && <CampaignFilterPanel />}
 
       {isProcessing && (
         <div className="flex items-center gap-3">

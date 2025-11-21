@@ -3,8 +3,17 @@ import { CreateCampaignResponse, UpdateCampaignRequest } from '@/views/campaign/
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
+export type CampaignFilterRequest = CommonFilterRequest & {
+  importAtFrom?: string
+  importAtTo?: string
+  dateFrom?: string
+  dateTo?: string
+  uid?: string
+  externalId?: string
+}
+
 type CampaignState = {
-  filter: CommonFilterRequest
+  filter: CampaignFilterRequest
   campaigns: UpdateCampaignRequest[]
   campaignId: string | null
   dialogOpen: boolean
@@ -12,7 +21,7 @@ type CampaignState = {
   campaignSummary: CreateCampaignResponse | null
   dialogCampaignSummaryOpen: boolean
 
-  setFilter: (filter: CommonFilterRequest) => void
+  setFilter: (filter: CampaignFilterRequest) => void
   setCampaigns: (campaigns: UpdateCampaignRequest[]) => void
   openDialog: (campaignId?: string | null) => void
   closeDialog: () => void

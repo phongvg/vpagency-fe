@@ -20,6 +20,7 @@ export type Campaign = {
   cost: number | null
   targetLocations: string[]
   locationStats: LocationStat[]
+  finalUrlImport: string | null
 }
 
 export type KeywordMatch = {

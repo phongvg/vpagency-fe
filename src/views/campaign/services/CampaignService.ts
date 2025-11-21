@@ -1,8 +1,9 @@
 import { Campaign, CreateCampaignResponse, UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
-import { BaseListResponse, BaseResponse, CommonFilterRequest } from '@/@types/common'
+import { BaseListResponse, BaseResponse } from '@/@types/common'
+import { CampaignFilterRequest } from '@/views/campaign/store/useCampaignStore'
 import ApiService from '@/services/ApiService'
 
-export async function apiGetCampaignList(params: CommonFilterRequest) {
+export async function apiGetCampaignList(params: CampaignFilterRequest) {
   return ApiService.fetchData<BaseListResponse<Campaign>>({
     url: '/campaigns',
     method: 'get',

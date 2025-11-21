@@ -144,13 +144,13 @@ export default function CampaignTable() {
         accessorKey: 'finalUrl',
         cell: (props) => (
           <a
-            href={props.row.original.finalUrl?.finalURL || '#'}
+            href={props.row.original.finalUrlImport || '#'}
             target="_blank"
             rel="noopener noreferrer"
             className="block max-w-xs text-blue-600 hover:underline truncate"
-            title={props.row.original.finalUrl?.finalURL}
+            title={props.row.original.finalUrlImport || ''}
           >
-            {props.row.original.finalUrl?.finalURL}
+            {props.row.original.finalUrlImport}
           </a>
         ),
       },
