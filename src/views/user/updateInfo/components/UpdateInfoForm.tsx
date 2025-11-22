@@ -107,6 +107,7 @@ export default function UpdateInfoForm() {
               </FormItem>
 
               <FormItem
+                asterisk
                 label="Tên đăng nhập"
                 invalid={(errors.username && touched.username) as boolean}
                 errorMessage={errors.username}
@@ -122,6 +123,7 @@ export default function UpdateInfoForm() {
 
               <div className="gap-4 grid grid-cols-2">
                 <FormItem
+                  asterisk
                   label="Họ"
                   invalid={(errors.firstName && touched.firstName) as boolean}
                   errorMessage={errors.firstName}
@@ -130,6 +132,7 @@ export default function UpdateInfoForm() {
                 </FormItem>
 
                 <FormItem
+                  asterisk
                   label="Tên"
                   invalid={(errors.lastName && touched.lastName) as boolean}
                   errorMessage={errors.lastName}
@@ -138,11 +141,17 @@ export default function UpdateInfoForm() {
                 </FormItem>
               </div>
 
-              <FormItem label="Email" invalid={(errors.email && touched.email) as boolean} errorMessage={errors.email}>
+              <FormItem
+                asterisk
+                label="Email"
+                invalid={(errors.email && touched.email) as boolean}
+                errorMessage={errors.email}
+              >
                 <Field type="email" autoComplete="off" name="email" placeholder="Tên" component={Input} />
               </FormItem>
 
               <FormItem
+                asterisk
                 label="Mật khẩu"
                 invalid={(errors.password && touched.password) as boolean}
                 errorMessage={errors.password}

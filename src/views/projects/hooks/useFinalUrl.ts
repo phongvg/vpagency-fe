@@ -1,5 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { GET_FINAL_URL_LIST, GET_FINAL_URL_DETAIL, GET_FINAL_URLS_BY_PROJECT_ID } from '@/utils/queryKey'
+import {
+  GET_FINAL_URL_LIST,
+  GET_FINAL_URL_DETAIL,
+  GET_FINAL_URLS_BY_PROJECT_ID,
+  GET_PROJECT_DETAIL,
+} from '@/utils/queryKey'
 import {
   apiGetFinalUrlList,
   apiGetFinalUrlById,
@@ -46,6 +51,7 @@ export const useCreateFinalUrlMutation = () => {
       // Invalidate the specific project's final URLs list
       if (variables.projectId) {
         queryClient.invalidateQueries({ queryKey: [GET_FINAL_URLS_BY_PROJECT_ID, variables.projectId] })
+        queryClient.invalidateQueries({ queryKey: [GET_PROJECT_DETAIL, variables.projectId] })
       }
       toastSuccess(response.data.message)
     },
@@ -61,8 +67,12 @@ export const useUpdateFinalUrlMutation = () => {
   return useMutation({
     mutationFn: ({ finalUrlId, payload }: { finalUrlId: string; payload: UpdateFinalUrlRequest }) =>
       apiUpdateFinalUrl(finalUrlId, payload),
-    onSuccess: (response) => {
+    onSuccess: (response, variables) => {
       queryClient.invalidateQueries({ queryKey: [GET_FINAL_URL_LIST] })
+      if (variables.payload.projectId) {
+        queryClient.invalidateQueries({ queryKey: [GET_FINAL_URLS_BY_PROJECT_ID, variables.payload.projectId] })
+        queryClient.invalidateQueries({ queryKey: [GET_PROJECT_DETAIL, variables.payload.projectId] })
+      }
       toastSuccess(response.data.message)
     },
     onError: (error: ApiAxiosError) => {
@@ -75,9 +85,13 @@ export const useDeleteFinalUrlMutation = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (finalUrlId: string) => apiDeleteFinalUrl(finalUrlId),
-    onSuccess: (response) => {
+    mutationFn: ({ finalUrlId }: { finalUrlId: string; projectId?: string }) => apiDeleteFinalUrl(finalUrlId),
+    onSuccess: (response, variables) => {
       queryClient.invalidateQueries({ queryKey: [GET_FINAL_URL_LIST] })
+      if (variables.projectId) {
+        queryClient.invalidateQueries({ queryKey: [GET_FINAL_URLS_BY_PROJECT_ID, variables.projectId] })
+        queryClient.invalidateQueries({ queryKey: [GET_PROJECT_DETAIL, variables.projectId] })
+      }
       toastSuccess(response.data.message)
     },
     onError: (error: ApiAxiosError) => {

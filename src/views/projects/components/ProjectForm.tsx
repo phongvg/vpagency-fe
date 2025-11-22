@@ -1,5 +1,5 @@
 import { Button, FormContainer, FormItem, Input, Tabs } from '@/components/ui'
-import { Field, FieldProps, Form, Formik, FieldArray } from 'formik'
+import { Field, FieldProps, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { useProjectStore } from '@/views/projects/store/useProjectStore'
 import {
@@ -7,15 +7,15 @@ import {
   useGetProjectDetailQuery,
   useUpdateProjectMutation,
 } from '@/views/projects/hooks/useProject'
-import TagInput from '@/components/shared/TagInput'
 import SelectCustom, { SelectParams } from '@/components/shared/SelectCustom'
 import { apiGetProjectTypeList } from '@/services/ProjectTypeService'
 import { apiGetProjectStatusList } from '@/views/masterData/projectStatus/services/ProjectStatusService'
 import { useCreateProjectTypeMutation } from '@/views/masterData/projectType/hooks/useProjectType'
 import { useCreateProjectStatusMutation } from '@/views/masterData/projectStatus/hooks/useProjectStatus'
-import { HiOutlinePlus, HiOutlineTrash } from 'react-icons/hi'
 import { useState } from 'react'
 import { UpdateProjectRequest } from '@/views/projects/types/project.type'
+import ProjectFinalUrlTable from './ProjectFinalUrlTable'
+import FinalUrlEditDialog from '@/views/projects/components/FinalUrlEditDialog'
 
 const { TabNav, TabList, TabContent } = Tabs
 
@@ -33,9 +33,10 @@ const validationSchema = Yup.object().shape({
 })
 
 export default function ProjectForm() {
-  const { projectId, dialogOpen, closeDialog } = useProjectStore()
-  const isEdit = !!projectId
-  const [currentTab, setCurrentTab] = useState('info')
+  const { projectId, dialogOpen, closeDialog, mode, showFinalUrlTab, setProjectId, setShowFinalUrlTab, setMode } =
+    useProjectStore()
+  const isEdit = mode === 'EDIT'
+  const [currentTab, setCurrentTab] = useState<'info' | 'finalUrls'>('info')
 
   const { data: project } = useGetProjectDetailQuery(projectId!, dialogOpen)
 
@@ -85,17 +86,19 @@ export default function ProjectForm() {
 
   const handleSubmit = async (values: UpdateProjectRequest) => {
     const projectData = { ...values }
-
     if (isEdit) {
-      await updateMutation.mutateAsync({
-        projectId: projectId!,
-        payload: projectData,
-      })
-    } else {
-      await createMutation.mutateAsync(projectData)
+      await updateMutation.mutateAsync({ projectId: projectId!, payload: projectData })
+      closeDialog()
+      return
     }
 
-    closeDialog()
+    // Create project but keep dialog open and reveal URL tab
+    const response = await createMutation.mutateAsync(projectData)
+    const newId = response.data.data.id
+    setProjectId(newId)
+    setMode('EDIT')
+    setShowFinalUrlTab(true)
+    setCurrentTab('finalUrls')
   }
 
   return (
@@ -105,13 +108,13 @@ export default function ProjectForm() {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ errors, touched, isSubmitting, setFieldValue, values }) => (
+      {({ errors, touched, isSubmitting }) => (
         <Form>
           <FormContainer>
-            <Tabs value={currentTab} onChange={(val) => setCurrentTab(val)}>
+            <Tabs value={currentTab} onChange={(val) => setCurrentTab(val as 'info' | 'finalUrls')}>
               <TabList>
                 <TabNav value="info">Thông tin dự án</TabNav>
-                <TabNav value="finalUrls">Danh sách URL</TabNav>
+                {(isEdit || showFinalUrlTab) && <TabNav value="finalUrls">Danh sách URL</TabNav>}
               </TabList>
               <div className="mt-4">
                 <TabContent value="info">
@@ -175,100 +178,11 @@ export default function ProjectForm() {
                   </div>
                 </TabContent>
 
-                <TabContent value="finalUrls">
-                  <FieldArray name="finalUrls">
-                    {({ push, remove }) => (
-                      <div className="space-y-6">
-                        {values.finalUrls?.map((_finalUrl: any, index: number) => (
-                          <div key={index} className="relative p-4 border border-gray-200 rounded-lg">
-                            <div className="flex justify-between items-center mb-4">
-                              <h6 className="font-semibold">URL {index + 1}</h6>
-                              {values.finalUrls && values.finalUrls.length > 1 && (
-                                <Button
-                                  type="button"
-                                  size="sm"
-                                  variant="plain"
-                                  icon={<HiOutlineTrash />}
-                                  onClick={() => remove(index)}
-                                >
-                                  Xóa
-                                </Button>
-                              )}
-                            </div>
-
-                            <div className="gap-4 grid grid-cols-2">
-                              <FormItem
-                                label="Tên"
-                                invalid={
-                                  (touched.finalUrls as any)?.[index]?.name &&
-                                  Boolean((errors.finalUrls as any)?.[index]?.name)
-                                }
-                                errorMessage={(errors.finalUrls as any)?.[index]?.name}
-                              >
-                                <Field
-                                  type="text"
-                                  autoComplete="off"
-                                  name={`finalUrls.${index}.name`}
-                                  placeholder="Nhập tên..."
-                                  component={Input}
-                                />
-                              </FormItem>
-
-                              <FormItem
-                                label="URL"
-                                invalid={
-                                  (touched.finalUrls as any)?.[index]?.finalURL &&
-                                  Boolean((errors.finalUrls as any)?.[index]?.finalURL)
-                                }
-                                errorMessage={(errors.finalUrls as any)?.[index]?.finalURL}
-                              >
-                                <Field
-                                  type="text"
-                                  autoComplete="off"
-                                  name={`finalUrls.${index}.finalURL`}
-                                  placeholder="Nhập URL..."
-                                  component={Input}
-                                />
-                              </FormItem>
-
-                              <FormItem
-                                className="col-span-2"
-                                label="Quốc gia"
-                                invalid={
-                                  (touched.finalUrls as any)?.[index]?.countries &&
-                                  Boolean((errors.finalUrls as any)?.[index]?.countries)
-                                }
-                                errorMessage={(errors.finalUrls as any)?.[index]?.countries}
-                              >
-                                <TagInput
-                                  value={values.finalUrls?.[index]?.countries || []}
-                                  placeholder="Nhập quốc gia..."
-                                  onChange={(tags) => setFieldValue(`finalUrls.${index}.countries`, tags)}
-                                />
-                              </FormItem>
-                            </div>
-                          </div>
-                        ))}
-
-                        <Button
-                          type="button"
-                          variant="solid"
-                          size="sm"
-                          icon={<HiOutlinePlus />}
-                          onClick={() =>
-                            push({
-                              name: '',
-                              finalURL: '',
-                              countries: [],
-                            })
-                          }
-                        >
-                          Thêm URL
-                        </Button>
-                      </div>
-                    )}
-                  </FieldArray>
-                </TabContent>
+                {(isEdit || showFinalUrlTab) && (
+                  <TabContent value="finalUrls">
+                    <ProjectFinalUrlTable projectId={projectId || undefined} active={currentTab === 'finalUrls'} />
+                  </TabContent>
+                )}
               </div>
             </Tabs>
 
@@ -277,10 +191,11 @@ export default function ProjectForm() {
                 Hủy
               </Button>
               <Button variant="solid" type="submit" loading={isSubmitting}>
-                {isEdit ? 'Cập nhật' : 'Tạo mới'}
+                {isEdit ? 'Cập nhật' : 'Tạo & Quản lý URL'}
               </Button>
             </div>
           </FormContainer>
+          {(isEdit || showFinalUrlTab) && <FinalUrlEditDialog />}
         </Form>
       )}
     </Formik>

@@ -7,6 +7,8 @@ type ProjectState = {
   projects: Project[]
   projectId: string | null
   dialogOpen: boolean
+  mode: 'CREATE' | 'EDIT'
+  showFinalUrlTab: boolean
 
   setFilter: (filter: CommonFilterRequest) => void
   setSearch: (search: string) => void
@@ -15,6 +17,8 @@ type ProjectState = {
   openDialog: (projectId?: string | null) => void
   closeDialog: () => void
   clearFilter: () => void
+  setShowFinalUrlTab: (show: boolean) => void
+  setMode: (mode: 'CREATE' | 'EDIT') => void
 }
 
 export const initialProjectState = {
@@ -26,6 +30,8 @@ export const initialProjectState = {
   projects: [],
   projectId: null,
   dialogOpen: false,
+  mode: 'CREATE',
+  showFinalUrlTab: false,
 }
 
 export const useProjectStore = create<ProjectState>((set, get) => ({
@@ -38,7 +44,21 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   },
   setProjects: (projects) => set({ projects }),
   setProjectId: (projectId) => set({ projectId }),
-  openDialog: (projectId) => set({ projectId: projectId || null, dialogOpen: true }),
-  closeDialog: () => set({ projectId: null, dialogOpen: false }),
+  openDialog: (projectId) =>
+    set({
+      projectId: projectId || null,
+      dialogOpen: true,
+      mode: projectId ? 'EDIT' : 'CREATE',
+      showFinalUrlTab: Boolean(projectId),
+    }),
+  closeDialog: () =>
+    set({
+      projectId: null,
+      dialogOpen: false,
+      mode: 'CREATE',
+      showFinalUrlTab: false,
+    }),
   clearFilter: () => set({ filter: initialProjectState.filter }),
+  setShowFinalUrlTab: (show) => set({ showFinalUrlTab: show }),
+  setMode: (mode) => set({ mode }),
 }))

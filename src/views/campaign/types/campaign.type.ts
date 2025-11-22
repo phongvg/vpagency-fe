@@ -1,4 +1,4 @@
-import { FinalUrl } from '@/views/finalUrls/types/finalUrl.type'
+import { FinalUrl } from '@/views/projects/types/finalUrl.type'
 
 export type Campaign = {
   id: string

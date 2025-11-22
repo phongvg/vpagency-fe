@@ -1,6 +1,6 @@
 import { MasterData } from '@/@types/masterData'
 import { User } from '@/@types/user'
-import { FinalUrl } from '@/views/finalUrls/types/finalUrl.type'
+import { FinalUrl } from '@/views/projects/types/finalUrl.type'
 
 export interface Project {
   id: string

@@ -119,22 +119,6 @@ const appsRoute: Routes = [
       header: 'Chiến dịch',
     },
   },
-  {
-    key: 'finalUrls',
-    path: urlConfig.finalUrls,
-    component: lazy(() => import('@/views/finalUrls')),
-    authority: [
-      Role.ADMIN,
-      Role.MANAGER_AFF,
-      Role.MANAGER_AGENCY,
-      Role.MEMBER_AFF,
-      Role.MEMBER_AGENCY,
-      Role.ACCOUNTING,
-    ],
-    meta: {
-      header: 'URL',
-    },
-  },
 ]
 
 export default appsRoute
