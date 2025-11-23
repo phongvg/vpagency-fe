@@ -18,7 +18,6 @@ import ProjectFinalUrlTable from './ProjectFinalUrlTable'
 import FinalUrlEditDialog from '@/views/projects/components/FinalUrlEditDialog'
 import { SelectOption } from '@/@types/common'
 import NumberInput from '@/components/shared/NumberInput'
-import TagInput from '@/components/shared/TagInput'
 import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
 import { setDeadlineTo1800 } from '@/helpers/date'
 
@@ -34,22 +33,13 @@ const validationSchema = Yup.object().shape({
   name: Yup.string().required('Tên dự án là bắt buộc'),
   typeId: Yup.string().required('Loại dự án là bắt buộc'),
   statusId: Yup.string().required('Trạng thái là bắt buộc'),
-  cpc: Yup.number().nullable(),
-  exclusiveKeywords: Yup.array().of(Yup.string()),
-  rejectedKeywords: Yup.array().of(Yup.string()),
-  targetCountries: Yup.array().of(Yup.string()),
-  rejectedCountries: Yup.array().of(Yup.string()),
-  devices: Yup.array().of(Yup.string()),
+  totalBudget: Yup.number().nullable(),
   age: Yup.number().nullable(),
   gender: Yup.string(),
   title: Yup.string(),
   description: Yup.string(),
   note: Yup.string(),
   content: Yup.string(),
-  domainStatus: Yup.string(),
-  originalDomain: Yup.string(),
-  originalLadipage: Yup.string(),
-  trackingURL: Yup.string(),
   deadline: Yup.date().nullable(),
   startedAt: Yup.date().nullable(),
   finalUrls: Yup.array().of(finalUrlValidationSchema),
@@ -106,22 +96,13 @@ export default function ProjectForm() {
     name: project?.name || '',
     typeId: project?.typeId || '',
     statusId: project?.statusId || '',
-    cpc: project?.cpc || null,
-    exclusiveKeywords: project?.exclusiveKeywords || [],
-    rejectedKeywords: project?.rejectedKeywords || [],
-    targetCountries: project?.targetCountries || [],
-    rejectedCountries: project?.rejectedCountries || [],
-    devices: project?.devices || [],
+    totalBudget: project?.totalBudget || null,
     age: project?.age || null,
     gender: project?.gender || '',
     title: project?.title || '',
     description: project?.description || '',
     note: project?.note || '',
     content: project?.content || '',
-    domainStatus: project?.domainStatus || '',
-    originalDomain: project?.originalDomain || '',
-    originalLadipage: project?.originalLadipage || '',
-    trackingURL: project?.trackingURL || '',
     deadline: project?.deadline ? new Date(project.deadline) : null,
     startedAt: project?.startedAt ? new Date(project.startedAt) : null,
     finalUrls:
@@ -310,132 +291,15 @@ export default function ProjectForm() {
                     </FormItem>
 
                     <FormItem
-                      label="Tình trạng domain"
-                      invalid={errors.domainStatus && touched.domainStatus}
-                      errorMessage={errors.domainStatus}
+                      label="Tổng ngân sách"
+                      invalid={errors.totalBudget && touched.totalBudget}
+                      errorMessage={errors.totalBudget}
                     >
-                      <Field
-                        name="domainStatus"
-                        placeholder="Nhập tình trạng domain..."
-                        component={Input}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          setFieldValue('domainStatus', e.target.value)
-                        }
-                      />
-                    </FormItem>
-
-                    <FormItem
-                      label="Domain gốc"
-                      invalid={errors.originalDomain && touched.originalDomain}
-                      errorMessage={errors.originalDomain}
-                    >
-                      <Field
-                        name="originalDomain"
-                        placeholder="Nhập domain gốc..."
-                        component={Input}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          setFieldValue('originalDomain', e.target.value)
-                        }
-                      />
-                    </FormItem>
-
-                    <FormItem
-                      label="Ladipage"
-                      invalid={errors.originalLadipage && touched.originalLadipage}
-                      errorMessage={errors.originalLadipage}
-                    >
-                      <Field
-                        name="originalLadipage"
-                        placeholder="Nhập link ladipage..."
-                        component={Input}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          setFieldValue('originalLadipage', e.target.value)
-                        }
-                      />
-                    </FormItem>
-
-                    <FormItem
-                      label="URL theo dõi"
-                      invalid={errors.trackingURL && touched.trackingURL}
-                      errorMessage={errors.trackingURL}
-                    >
-                      <Field
-                        type="url"
-                        name="trackingURL"
-                        placeholder="Nhập URL theo dõi..."
-                        component={Input}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          setFieldValue('trackingURL', e.target.value)
-                        }
-                      />
-                    </FormItem>
-
-                    <FormItem label="CPC" invalid={errors.cpc && touched.cpc} errorMessage={errors.cpc}>
-                      <Field name="cpc">
+                      <Field name="totalBudget">
                         {({ field, form }: FieldProps) => (
-                          <FormCurrencyInput form={form} field={field} placeholder="Nhập CPC..." />
+                          <FormCurrencyInput form={form} field={field} placeholder="Nhập tổng ngân sách..." />
                         )}
                       </Field>
-                    </FormItem>
-
-                    <FormItem
-                      label="Từ khóa độc quyền"
-                      invalid={errors.exclusiveKeywords && touched.exclusiveKeywords}
-                      errorMessage={errors.exclusiveKeywords}
-                    >
-                      <TagInput
-                        value={values.exclusiveKeywords || []}
-                        placeholder="Nhập từ khóa..."
-                        onChange={(tags) => setFieldValue('exclusiveKeywords', tags)}
-                      />
-                    </FormItem>
-
-                    <FormItem
-                      label="Từ khóa bị hạn chế"
-                      invalid={errors.rejectedKeywords && touched.rejectedKeywords}
-                      errorMessage={errors.rejectedKeywords}
-                    >
-                      <TagInput
-                        value={values.rejectedKeywords || []}
-                        placeholder="Nhập từ khóa..."
-                        onChange={(tags) => setFieldValue('rejectedKeywords', tags)}
-                      />
-                    </FormItem>
-
-                    <FormItem
-                      label="Thiết bị"
-                      invalid={errors.devices && touched.devices}
-                      errorMessage={errors.devices}
-                    >
-                      <TagInput
-                        value={values.devices || []}
-                        placeholder="Nhập thiết bị..."
-                        onChange={(tags) => setFieldValue('devices', tags)}
-                      />
-                    </FormItem>
-
-                    <FormItem
-                      label="Quốc gia"
-                      invalid={errors.targetCountries && touched.targetCountries}
-                      errorMessage={errors.targetCountries}
-                    >
-                      <TagInput
-                        value={values.targetCountries || []}
-                        placeholder="Nhập quốc gia..."
-                        onChange={(tags) => setFieldValue('targetCountries', tags)}
-                      />
-                    </FormItem>
-
-                    <FormItem
-                      label="Quốc gia bị hạn chế"
-                      invalid={errors.rejectedCountries && touched.rejectedCountries}
-                      errorMessage={errors.rejectedCountries}
-                    >
-                      <TagInput
-                        value={values.rejectedCountries || []}
-                        placeholder="Nhập quốc gia..."
-                        onChange={(tags) => setFieldValue('rejectedCountries', tags)}
-                      />
                     </FormItem>
 
                     <FormItem label="Giới tính" invalid={errors.gender && touched.gender} errorMessage={errors.gender}>
