@@ -1,4 +1,5 @@
 import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
+import SelectCustom, { SelectParams } from '@/components/shared/SelectCustom'
 import { Button, FormContainer, FormItem, Input } from '@/components/ui'
 import {
   useCreateGmailAccountMutation,
@@ -7,11 +8,14 @@ import {
 } from '@/views/gmailAccounts/hooks/useGmailAccount'
 import { useGmailAccountStore } from '@/views/gmailAccounts/store/useGmailAccountStore'
 import { UpdateGmailAccountRequest } from '@/views/gmailAccounts/types/gmailAccount.type'
+import { useCreateGmailStatusMutation } from '@/views/masterData/gmailStatus/hooks/useGmailStatus'
+import { apiGetGmailStatusList } from '@/views/masterData/gmailStatus/services/GmailStatusService'
 import { Field, FieldProps, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().email('Email không hợp lệ').required('Vui lòng nhập email'),
+  statusId: Yup.string().required('Vui lòng chọn trạng thái'),
   password: Yup.string(),
   recoverMail: Yup.string().email('Email không hợp lệ'),
   recoverMailPassword: Yup.string(),
@@ -26,14 +30,15 @@ export default function GmailAccountForm() {
   const { gmailAccountId, dialogOpen, closeDialog } = useGmailAccountStore()
   const isEdit = !!gmailAccountId
 
-  // Fetch data khi edit (chỉ khi dialog mở và có ID)
   const { data: gmailAccount } = useGetGmailAccountDetailQuery(gmailAccountId!, dialogOpen)
 
   const createMutation = useCreateGmailAccountMutation()
   const updateMutation = useUpdateGmailAccountMutation()
+  const createGmailStatusMutation = useCreateGmailStatusMutation()
 
   const initialValues: UpdateGmailAccountRequest = {
     name: gmailAccount?.name || '',
+    statusId: gmailAccount?.statusId || null,
     password: gmailAccount?.password || '',
     recoverMail: gmailAccount?.recoverMail || '',
     recoverMailPassword: gmailAccount?.recoverMailPassword || '',
@@ -42,6 +47,20 @@ export default function GmailAccountForm() {
     proxy: gmailAccount?.proxy || '',
     proxyPassword: gmailAccount?.proxyPassword || '',
     price: gmailAccount?.price || 0,
+  }
+
+  const fetchGmailStatuses = async ({ page, limit, search }: SelectParams) => {
+    try {
+      const response = await apiGetGmailStatusList({ page, limit, search: search || '' })
+      const { items, meta } = response.data.data
+      return {
+        data: items,
+        total: meta.total,
+        hasMore: meta.hasNext,
+      }
+    } catch {
+      return { data: [], total: 0, hasMore: false }
+    }
   }
 
   const handleSubmit = async (values: UpdateGmailAccountRequest) => {
@@ -70,6 +89,28 @@ export default function GmailAccountForm() {
             <div className="gap-4 grid grid-cols-2">
               <FormItem asterisk label="Email" invalid={errors.name && touched.name} errorMessage={errors.name}>
                 <Field type="text" autoComplete="off" name="name" placeholder="Nhập email" component={Input} />
+              </FormItem>
+
+              <FormItem
+                asterisk
+                label="Trạng thái"
+                invalid={errors.statusId && touched.statusId}
+                errorMessage={errors.statusId}
+              >
+                <Field name="statusId">
+                  {({ field, form }: FieldProps) => (
+                    <SelectCustom
+                      isCreatable
+                      field={field}
+                      form={form}
+                      fetchOptions={fetchGmailStatuses}
+                      onCreateOption={async (inputValue: string) => {
+                        const response = await createGmailStatusMutation.mutateAsync({ name: inputValue })
+                        return response.data.data.id
+                      }}
+                    />
+                  )}
+                </Field>
               </FormItem>
 
               <FormItem

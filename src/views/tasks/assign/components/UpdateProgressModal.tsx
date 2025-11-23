@@ -1,10 +1,12 @@
 import { Button, Dialog, Input } from '@/components/ui'
-import SelectCustom from '@/components/shared/SelectCustom'
+import SelectCustom, { SelectParams } from '@/components/shared/SelectCustom'
 import { useGetTaskProgress, useUpdateTaskProgress } from '@/views/tasks/assign/hooks/useTask'
 import { useGetCampaignsQuery } from '@/views/campaign/hooks/useCampaign'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { HiOutlineCheckCircle } from 'react-icons/hi'
 import { UrlMapping } from '@/views/tasks/assign/types/task.type'
+import { addDash } from '@/helpers/addDash'
+import { apiGetMyGmails } from '@/views/gmailAccounts/services/GmailAccountService'
 
 type Props = {
   isOpen: boolean
@@ -30,6 +32,7 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
           currentProgress.finalUrls.map((url) => ({
             finalUrlId: url.id,
             campaignIds: url.campaigns?.map((c) => c.id) || [],
+            gmailId: url.gmailId,
           })),
         )
       }
@@ -51,6 +54,7 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
         .map((mapping) => ({
           campaignIds: mapping.campaignIds,
           finalUrlId: mapping.finalUrlId,
+          gmailId: mapping.gmailId,
         })),
     }
 
@@ -70,16 +74,39 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
     )
   }
 
-  const campaignOptions =
-    campaignData?.items?.map((campaign) => ({
-      value: campaign.id,
-      label: `${campaign.externalId} | ${campaign.name} | ${campaign.uid}(UID)` || '',
-    })) || []
+  const handleGmailChange = (finalUrlId: string, gmailId: string) => {
+    setUrlMappings((prev) =>
+      prev.map((mapping) => (mapping.finalUrlId === finalUrlId ? { ...mapping, gmailId } : mapping)),
+    )
+  }
+
+  const campaignOptions = useMemo(
+    () =>
+      campaignData?.items?.map((campaign) => ({
+        value: campaign.id,
+        label: `${campaign.name} (${addDash(campaign.externalId)})`,
+      })) || [],
+    [campaignData],
+  )
 
   const getSelectedCampaigns = (campaignIds: string[]) => {
     return campaignIds
       .map((id) => campaignOptions.find((opt) => opt.value === id))
       .filter((opt): opt is { value: string; label: string } => opt !== undefined)
+  }
+
+  const fetchMyGmails = async ({ page, limit, search }: SelectParams) => {
+    try {
+      const response = await apiGetMyGmails({ page, limit, search: search || '' })
+      const { items, meta } = response.data.data
+      return {
+        data: items,
+        total: meta.total,
+        hasMore: meta.hasNext,
+      }
+    } catch {
+      return { data: [], total: 0, hasMore: false }
+    }
   }
 
   return (
@@ -130,6 +157,7 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
                   <tr>
                     <th className="px-4 py-3 font-medium text-sm text-left">URL</th>
                     <th className="px-4 py-3 w-64 font-medium text-sm text-left">Chiến dịch</th>
+                    <th className="px-4 py-3 w-64 font-medium text-sm text-left">Gmail</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -139,7 +167,7 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
                       <tr key={url.id} className="hover:bg-gray-50">
                         <td className="px-4 py-3 text-sm">
                           <div className="font-medium text-gray-900">{url.name}</div>
-                          <div className="max-w-md text-gray-500 text-xs truncate">{url.finalURL}</div>
+                          <div className="max-w-sm text-gray-500 text-xs truncate">{url.finalURL}</div>
                         </td>
                         <td className="px-4 py-3">
                           <SelectCustom
@@ -150,6 +178,17 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
                             value={getSelectedCampaigns(mapping?.campaignIds || [])}
                             onChange={(campaignIds: any) => {
                               handleCampaignChange(url.id, Array.isArray(campaignIds) ? campaignIds : [])
+                            }}
+                          />
+                        </td>
+                        <td className="px-4 py-3">
+                          <SelectCustom
+                            size="sm"
+                            placeholder="Chọn Gmail"
+                            fetchOptions={fetchMyGmails}
+                            value={mapping?.gmailId as any}
+                            onChange={(gmailId: any) => {
+                              handleGmailChange(url.id, gmailId || '')
                             }}
                           />
                         </td>

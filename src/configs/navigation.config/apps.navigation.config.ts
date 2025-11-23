@@ -175,9 +175,9 @@ const appsNavigationConfig: NavigationTree[] = [
             subMenu: [],
           },
           {
-            key: 'uidStatus',
-            path: urlConfig.uidStatus,
-            title: 'Trạng thái UID',
+            key: 'gmailStatus',
+            path: urlConfig.gmailStatus,
+            title: 'Trạng thái Gmail',
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,

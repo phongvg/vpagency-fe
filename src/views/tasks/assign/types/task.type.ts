@@ -27,6 +27,7 @@ export type Task = {
   updatedAt: Date
   numberOfResultCampaigns: number | null
   finalUrlIds: string[]
+  gmailIds: string[]
 }
 
 export type TasksGroupedByStatus = {
@@ -78,11 +79,13 @@ export type UpdateTaskRequest = {
   numberOfAccounts?: number
   numberOfResultCampaigns?: number
   finalUrlIds: string[]
+  gmailIds: string[]
 }
 
 export type UrlMapping = {
   campaignIds: string[]
   finalUrlId: string
+  gmailId: string
 }
 
 export type TaskProgressRequest = {
@@ -101,5 +104,6 @@ export type FinalUrl = {
   id: string
   name: string
   finalURL: string
+  gmailId: string
   campaigns: Campaign[]
 }

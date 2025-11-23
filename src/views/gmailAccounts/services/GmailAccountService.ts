@@ -4,7 +4,7 @@ import { GmailAccount, UpdateGmailAccountRequest } from '@/views/gmailAccounts/t
 
 export async function apiGetGmailAccountList(params: CommonFilterRequest) {
   return ApiService.fetchData<BaseListResponse<GmailAccount>>({
-    url: '/gmail',
+    url: '/gmails',
     method: 'get',
     params,
   })
@@ -12,14 +12,14 @@ export async function apiGetGmailAccountList(params: CommonFilterRequest) {
 
 export async function apiGetGmailAccountById(id: string) {
   return ApiService.fetchData<BaseResponse<GmailAccount>>({
-    url: `/gmail/${id}`,
+    url: `/gmails/${id}`,
     method: 'get',
   })
 }
 
 export async function apiCreateGmailAccount(payload: UpdateGmailAccountRequest) {
   return ApiService.fetchData<BaseResponse<GmailAccount>>({
-    url: '/gmail',
+    url: '/gmails',
     method: 'post',
     data: payload,
   })
@@ -27,7 +27,7 @@ export async function apiCreateGmailAccount(payload: UpdateGmailAccountRequest) 
 
 export async function apiUpdateGmailAccount(id: string, payload: UpdateGmailAccountRequest) {
   return ApiService.fetchData<BaseResponse<GmailAccount>>({
-    url: `/gmail/${id}`,
+    url: `/gmails/${id}`,
     method: 'put',
     data: payload,
   })
@@ -35,14 +35,22 @@ export async function apiUpdateGmailAccount(id: string, payload: UpdateGmailAcco
 
 export async function apiDeleteGmailAccount(id: string) {
   return ApiService.fetchData<BaseResponse<null>>({
-    url: `/gmail/${id}`,
+    url: `/gmails/${id}`,
     method: 'delete',
   })
 }
 
 export async function apiAssignGmailAccountToSelf(id: string) {
   return ApiService.fetchData<BaseResponse<GmailAccount>>({
-    url: `/gmail/${id}/assign`,
+    url: `/gmails/${id}/assign`,
     method: 'post',
+  })
+}
+
+export async function apiGetMyGmails(params: CommonFilterRequest) {
+  return ApiService.fetchData<BaseListResponse<GmailAccount>>({
+    url: '/gmails/my-gmails',
+    method: 'post',
+    params,
   })
 }

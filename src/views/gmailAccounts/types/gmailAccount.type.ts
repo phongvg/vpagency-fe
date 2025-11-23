@@ -3,6 +3,7 @@ import { User } from '@/@types/user'
 export type GmailAccount = {
   id: string
   name: string
+  statusId: string | null
   password: string
   recoverMail: string | null
   recoverMailPassword: string | null

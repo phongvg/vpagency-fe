@@ -16,6 +16,7 @@ import {
   typeOptions,
 } from '@/views/tasks/assign/constants/taskOptionSelect.constant'
 import { HiOutlinePlus } from 'react-icons/hi'
+import { apiGetGmailAccountList } from '@/views/gmailAccounts/services/GmailAccountService'
 
 type Props = {
   task?: Task | null
@@ -34,6 +35,7 @@ const validationSchema = Yup.object().shape({
   projectId: Yup.string().required('Dự án là bắt buộc'),
   assignedUserIds: Yup.array().min(1, 'Phải chọn ít nhất một người nhận việc'),
   finalUrlIds: Yup.array().min(1, 'Phải chọn ít nhất một URL'),
+  gmailIds: Yup.array(),
 })
 
 export default function TaskForm({ task, isEdit = false, loading = false, onSubmit, onCancel }: Props) {
@@ -70,6 +72,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
     numberOfAccounts: task?.numberOfAccounts || undefined,
     numberOfResultCampaigns: task?.numberOfResultCampaigns || undefined,
     finalUrlIds: task?.finalUrlIds || [],
+    gmailIds: task?.gmailIds || [],
   }
 
   useEffect(() => {
@@ -95,6 +98,20 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
   const fetchProjectOptions = async ({ page, limit, search }: SelectParams) => {
     try {
       const response = await apiGetProjectList({ search: search || '', page, limit })
+      const { items, meta } = response.data.data
+      return {
+        data: items,
+        total: meta.total,
+        hasMore: meta.hasNext,
+      }
+    } catch {
+      return { data: [], total: 0, hasMore: false }
+    }
+  }
+
+  const fetchGmailOptions = async ({ page, limit, search }: SelectParams) => {
+    try {
+      const response = await apiGetGmailAccountList({ search: search || '', page, limit })
       const { items, meta } = response.data.data
       return {
         data: items,
@@ -145,7 +162,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
           })
         }}
       >
-        {({ values, errors, touched, setFieldValue, handleChange, handleBlur }) => {
+        {({ values, errors, touched, setFieldValue, handleChange }) => {
           return (
             <Form>
               <div className="gap-4 grid grid-cols-1 lg:grid-cols-2">
@@ -156,13 +173,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                   label="Tên công việc"
                   className="col-span-2"
                 >
-                  <Input
-                    name="name"
-                    placeholder="Nhập tên công việc..."
-                    value={values.name}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
+                  <Input name="name" placeholder="Nhập tên công việc..." value={values.name} onChange={handleChange} />
                 </FormItem>
 
                 <FormItem
@@ -231,21 +242,19 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                   />
                 </FormItem>
 
-                <FormItem asterisk label="Dự án">
-                  <Field name="projectId">
+                <FormItem
+                  label="Gmail"
+                  errorMessage={errors.gmailIds as string}
+                  invalid={touched.gmailIds && Boolean(errors.gmailIds)}
+                >
+                  <Field name="gmailIds">
                     {({ field, form }: FieldProps) => (
                       <SelectCustom
-                        isCreatable
+                        isMulti
                         field={field}
                         form={form}
-                        fetchOptions={fetchProjectOptions}
-                        placeholder="Chọn dự án..."
-                        onChange={(value) => {
-                          form.setFieldValue('projectId', value)
-                          setSelectedProjectId(value as string | null)
-                          setSelectedFinalUrlIds([])
-                          form.setFieldValue('finalUrlIds', [])
-                        }}
+                        placeholder="Chọn tài khoản Gmail..."
+                        fetchOptions={fetchGmailOptions}
                       />
                     )}
                   </Field>
@@ -269,6 +278,32 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                       )
                     }}
                   />
+                </FormItem>
+
+                <FormItem
+                  asterisk
+                  label="Dự án"
+                  errorMessage={errors.projectId}
+                  invalid={touched.projectId && Boolean(errors.projectId)}
+                  className="col-span-2"
+                >
+                  <Field name="projectId">
+                    {({ field, form }: FieldProps) => (
+                      <SelectCustom
+                        isCreatable
+                        field={field}
+                        form={form}
+                        fetchOptions={fetchProjectOptions}
+                        placeholder="Chọn dự án..."
+                        onChange={(value) => {
+                          form.setFieldValue('projectId', value)
+                          setSelectedProjectId(value as string | null)
+                          setSelectedFinalUrlIds([])
+                          form.setFieldValue('finalUrlIds', [])
+                        }}
+                      />
+                    )}
+                  </Field>
                 </FormItem>
 
                 {selectedProjectId && (
@@ -387,14 +422,18 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                   </div>
                 )}
 
-                <FormItem label="Ghi chú" className="col-span-2">
+                <FormItem
+                  label="Ghi chú"
+                  className="col-span-2"
+                  errorMessage={errors.note}
+                  invalid={touched.note && Boolean(errors.note)}
+                >
                   <Textarea
                     name="note"
                     placeholder="Nhập ghi chú..."
                     rows={3}
                     value={values.note}
                     onChange={handleChange}
-                    onBlur={handleBlur}
                   />
                 </FormItem>
 

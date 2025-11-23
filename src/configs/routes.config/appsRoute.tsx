@@ -95,12 +95,12 @@ const appsRoute: Routes = [
     },
   },
   {
-    key: 'uidStatus',
-    path: urlConfig.uidStatus,
-    component: lazy(() => import('@/views/masterData/uidStatus')),
+    key: 'gmailStatus',
+    path: urlConfig.gmailStatus,
+    component: lazy(() => import('@/views/masterData/gmailStatus')),
     authority: [Role.ADMIN],
     meta: {
-      header: 'Trạng thái UID',
+      header: 'Trạng thái Gmail',
     },
   },
   {
