@@ -5,6 +5,7 @@ import Select from '@/components/ui/Select'
 import Checkbox from '@/components/ui/Checkbox'
 import TableRowSkeleton from './loaders/TableRowSkeleton'
 import Loading from './Loading'
+import classNames from 'classnames'
 import {
   useReactTable,
   getCoreRowModel,
@@ -238,7 +239,7 @@ function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableRese
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     manualPagination: true,
-    manualSorting: true,
+    manualSorting: onSort ? true : false,
     onSortingChange: (sorter) => {
       setSorting(sorter as ColumnSort[])
     },
@@ -267,10 +268,38 @@ function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableRese
           {table.getHeaderGroups().map((headerGroup) => (
             <Tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
+                const canSort = header.column.getCanSort()
+                const sortDirection = header.column.getIsSorted()
+
                 return (
                   <Th key={header.id} colSpan={header.colSpan} index={header.index}>
                     {header.isPlaceholder ? null : (
-                      <>{flexRender(header.column.columnDef.header, header.getContext())}</>
+                      <div
+                        className={classNames('flex items-center gap-2', canSort && 'cursor-pointer select-none')}
+                        onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
+                      >
+                        <div className="flex-1">{flexRender(header.column.columnDef.header, header.getContext())}</div>
+                        {canSort && (
+                          <div className="flex flex-col">
+                            <span
+                              className={classNames(
+                                'text-xs leading-none',
+                                sortDirection === 'asc' ? 'text-blue-600' : 'text-gray-400',
+                              )}
+                            >
+                              ▲
+                            </span>
+                            <span
+                              className={classNames(
+                                'text-xs leading-none',
+                                sortDirection === 'desc' ? 'text-blue-600' : 'text-gray-400',
+                              )}
+                            >
+                              ▼
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     )}
                   </Th>
                 )
