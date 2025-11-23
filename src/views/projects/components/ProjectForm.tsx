@@ -75,12 +75,16 @@ export default function ProjectForm() {
   const createProjectStatusMutation = useCreateProjectStatusMutation()
 
   const fetchProjectTypes = async ({ page, limit, search }: SelectParams) => {
-    const response = await apiGetProjectTypeList({ page, limit, search: search || '' })
-    const { items, meta } = response.data.data
-    return {
-      data: items,
-      total: meta.total,
-      hasMore: meta.hasNext,
+    try {
+      const response = await apiGetProjectTypeList({ page, limit, search: search || '' })
+      const { items, meta } = response.data.data
+      return {
+        data: items,
+        total: meta.total,
+        hasMore: meta.hasNext,
+      }
+    } catch {
+      return { data: [], total: 0, hasMore: false }
     }
   }
 
@@ -133,6 +137,7 @@ export default function ProjectForm() {
 
   const handleSubmit = async (values: UpdateProjectRequest) => {
     const projectData = { ...values }
+
     if (isEdit) {
       await updateMutation.mutateAsync({ projectId: projectId!, payload: projectData })
       closeDialog()
@@ -194,7 +199,8 @@ export default function ProjectForm() {
                             form={form}
                             fetchOptions={fetchProjectTypes}
                             onCreateOption={async (inputValue: string) => {
-                              await createProjectTypeMutation.mutateAsync({ name: inputValue })
+                              const response = await createProjectTypeMutation.mutateAsync({ name: inputValue })
+                              return response.data.data.id
                             }}
                           />
                         )}
@@ -215,7 +221,8 @@ export default function ProjectForm() {
                             form={form}
                             fetchOptions={fetchProjectStatuses}
                             onCreateOption={async (inputValue: string) => {
-                              await createProjectStatusMutation.mutateAsync({ name: inputValue })
+                              const response = await createProjectStatusMutation.mutateAsync({ name: inputValue })
+                              return response.data.data.id
                             }}
                           />
                         )}
@@ -242,7 +249,7 @@ export default function ProjectForm() {
                         placeholder="dd/mm/yyyy"
                         inputFormat="DD/MM/YYYY"
                         minDate={new Date()}
-                        onChange={(date) => setFieldValue('deadline', setDeadlineTo1800(date))}
+                        onChange={(date) => setFieldValue('deadline', date)}
                       />
                     </FormItem>
 

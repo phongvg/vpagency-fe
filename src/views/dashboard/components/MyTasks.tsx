@@ -79,7 +79,7 @@ export default function MyTasks() {
         },
       },
     ],
-    [],
+    [filters],
   )
 
   const handlePageChange = (page: number) => {

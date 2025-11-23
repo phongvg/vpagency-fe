@@ -39,7 +39,7 @@ export interface SelectCustomProps<IsMulti extends boolean = false>
   fetchOptions?: (params: SelectParams) => Promise<ApiResponse>
   onValueChange?: (value: IsMulti extends true ? OptionType[] : OptionType | null) => void
   transformResponse?: (data: any) => OptionType[]
-  onCreateOption?: (inputValue: string) => void | Promise<void>
+  onCreateOption?: (inputValue: string) => Promise<string | void> | void
   formatCreateLabel?: (inputValue: string) => string
 }
 
@@ -237,32 +237,39 @@ export default function SelectCustom<IsMulti extends boolean = false>({
 
   const handleCreateOption = useCallback(
     async (inputValue: string) => {
-      const newOption: OptionType = {
-        label: inputValue,
-        value: inputValue,
-      }
-
-      setOptions((prev) => [...prev, newOption])
-
-      const extractedValue = newOption.value
-
-      if (field && form) {
-        form.setFieldValue(field.name, extractedValue)
-      }
-
-      if (onChange) {
-        onChange(extractedValue, { action: 'create-option', option: newOption } as any)
-      }
-
-      if (onValueChange) {
-        onValueChange(newOption as any)
-      }
+      let createdId: string | undefined
 
       if (onCreateOption) {
-        await onCreateOption(inputValue)
+        const result = await onCreateOption(inputValue)
+        if (typeof result === 'string') {
+          createdId = result
+        }
+      }
+
+      if (createdId) {
+        const newOption: OptionType = {
+          label: inputValue,
+          value: createdId,
+        }
+
+        setOptions((prev) => [...prev, newOption])
+
+        if (field && form) {
+          form.setFieldValue(field.name, createdId)
+        }
+
+        if (onChange) {
+          onChange(newOption as any, { action: 'create-option', option: newOption } as any)
+        }
+
+        if (onValueChange) {
+          onValueChange(newOption as any)
+        }
+      } else if (fetchOptions) {
+        await loadOptions(1, '', false)
       }
     },
-    [field, form, onChange, onValueChange, onCreateOption],
+    [field, form, onChange, onValueChange, onCreateOption, fetchOptions, loadOptions],
   )
 
   useEffect(() => {
