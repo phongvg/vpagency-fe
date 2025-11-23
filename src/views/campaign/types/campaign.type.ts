@@ -9,6 +9,7 @@ export type Campaign = {
   name: string | null
   externalId: string | null
   finalUrl: FinalUrl | null
+  gmailId: string | null
   keywords: KeywordMatch[]
   topSearchTerms: SearchTerm[]
   status: string

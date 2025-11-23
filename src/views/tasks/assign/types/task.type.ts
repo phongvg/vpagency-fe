@@ -83,7 +83,7 @@ export type UpdateTaskRequest = {
 }
 
 export type UrlMapping = {
-  campaignIds: string[]
+  campaignId: string
   finalUrlId: string
   gmailId: string
 }
@@ -104,6 +104,5 @@ export type FinalUrl = {
   id: string
   name: string
   finalURL: string
-  gmailId: string
-  campaigns: Campaign[]
+  campaign?: Campaign | null
 }

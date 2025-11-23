@@ -1,12 +1,12 @@
 import { Button, Dialog, Input } from '@/components/ui'
 import SelectCustom, { SelectParams } from '@/components/shared/SelectCustom'
 import { useGetTaskProgress, useUpdateTaskProgress } from '@/views/tasks/assign/hooks/useTask'
-import { useGetCampaignsQuery } from '@/views/campaign/hooks/useCampaign'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { HiOutlineCheckCircle } from 'react-icons/hi'
 import { UrlMapping } from '@/views/tasks/assign/types/task.type'
 import { addDash } from '@/helpers/addDash'
 import { apiGetMyGmails } from '@/views/gmailAccounts/services/GmailAccountService'
+import { apiGetCampaignList } from '@/views/campaign/services/CampaignService'
 
 type Props = {
   isOpen: boolean
@@ -19,7 +19,6 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
   const [urlMappings, setUrlMappings] = useState<UrlMapping[]>([])
 
   const { data: currentProgress } = useGetTaskProgress(taskId, isOpen)
-  const { data: campaignData } = useGetCampaignsQuery(isOpen)
 
   const updateProgressMutation = useUpdateTaskProgress()
 
@@ -31,8 +30,8 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
         setUrlMappings(
           currentProgress.finalUrls.map((url) => ({
             finalUrlId: url.id,
-            campaignIds: url.campaigns?.map((c) => c.id) || [],
-            gmailId: url.gmailId,
+            campaignId: url.campaign?.id || '',
+            gmailId: url.campaign?.gmailId || '',
           })),
         )
       }
@@ -50,9 +49,9 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
     const payload = {
       progress,
       urlMappings: urlMappings
-        .filter((mapping) => mapping.campaignIds.length > 0)
+        .filter((mapping) => mapping.campaignId && mapping.gmailId)
         .map((mapping) => ({
-          campaignIds: mapping.campaignIds,
+          campaignId: mapping.campaignId,
           finalUrlId: mapping.finalUrlId,
           gmailId: mapping.gmailId,
         })),
@@ -68,9 +67,9 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
     onClose()
   }
 
-  const handleCampaignChange = (finalUrlId: string, campaignIds: string[]) => {
+  const handleCampaignChange = (finalUrlId: string, campaignId: string) => {
     setUrlMappings((prev) =>
-      prev.map((mapping) => (mapping.finalUrlId === finalUrlId ? { ...mapping, campaignIds } : mapping)),
+      prev.map((mapping) => (mapping.finalUrlId === finalUrlId ? { ...mapping, campaignId } : mapping)),
     )
   }
 
@@ -80,19 +79,21 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
     )
   }
 
-  const campaignOptions = useMemo(
-    () =>
-      campaignData?.items?.map((campaign) => ({
-        value: campaign.id,
-        label: `${campaign.name} (${addDash(campaign.externalId)})`,
-      })) || [],
-    [campaignData],
-  )
-
-  const getSelectedCampaigns = (campaignIds: string[]) => {
-    return campaignIds
-      .map((id) => campaignOptions.find((opt) => opt.value === id))
-      .filter((opt): opt is { value: string; label: string } => opt !== undefined)
+  const fetchCampaigns = async ({ page, limit, search }: SelectParams) => {
+    try {
+      const response = await apiGetCampaignList({ page, limit, search: search || '' })
+      const { items, meta } = response.data.data
+      return {
+        data: items.map((campaign) => ({
+          value: campaign.id,
+          label: `${campaign.name} (${addDash(campaign.externalId)})`,
+        })),
+        total: meta.total,
+        hasMore: meta.hasNext,
+      }
+    } catch {
+      return { data: [], total: 0, hasMore: false }
+    }
   }
 
   const fetchMyGmails = async ({ page, limit, search }: SelectParams) => {
@@ -171,13 +172,12 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
                         </td>
                         <td className="px-4 py-3">
                           <SelectCustom
-                            isMulti
                             size="sm"
                             placeholder="Chọn chiến dịch"
-                            options={campaignOptions}
-                            value={getSelectedCampaigns(mapping?.campaignIds || [])}
-                            onChange={(campaignIds: any) => {
-                              handleCampaignChange(url.id, Array.isArray(campaignIds) ? campaignIds : [])
+                            fetchOptions={fetchCampaigns}
+                            value={mapping?.campaignId as any}
+                            onChange={(campaignId: any) => {
+                              handleCampaignChange(url.id, campaignId || '')
                             }}
                           />
                         </td>
