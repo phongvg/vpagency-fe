@@ -173,10 +173,10 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
       const microsCalc =
         (cpcBidMicros[cpcBidMicros.length - 1] ? cpcBidMicros[cpcBidMicros.length - 1] / 1000000 : null) ||
         (targetCpc[targetCpc.length - 1] ? targetCpc[targetCpc.length - 1] / 1000000 : null)
-      const click = campaignPfmRows.map((item) => item['Clicks'])
+      const clicks = campaignPfmRows.map((item) => item['Clicks'])
       const ctr = campaignPfmRows.map((item) => item['CTR'])
       const cpm = campaignPfmRows.map((item) => item['CPM'])
-      const cost = campaignPfmRows.map((item) => item['Cost'])
+      const budget = campaignPfmRows.map((item) => item['Cost'])
       const targetLocations = campaignCriterionRows
         .filter((row) => row['Negative (Excluded)'] === 'No')
         .map((row) => row['Location Geo Target Constant'])
@@ -208,11 +208,11 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
         topSearchTerms,
         status: statusCampaign[statusCampaign.length - 1] ?? null,
         avgCpc: avgCpc[avgCpc.length - 1] ?? null,
-        micros: microsCalc,
-        click: click[click.length - 1] ?? null,
+        targetCpc: microsCalc,
+        clicks: clicks[clicks.length - 1] ?? null,
         ctr: ctr[ctr.length - 1] ?? null,
         cpm: cpm[cpm.length - 1] ?? null,
-        cost: cost[cost.length - 1] ?? null,
+        budget: budget[budget.length - 1] ?? null,
         targetLocations,
         locationStats,
       }

@@ -13,14 +13,15 @@ export type Campaign = {
   topSearchTerms: SearchTerm[]
   status: string
   avgCpc: number | null
-  micros: number | null
-  click: number | null
+  targetCpc: number | null
+  clicks: number | null
   ctr: number | null
   cpm: number | null
-  cost: number | null
+  budget: number | null
   targetLocations: string[]
   locationStats: LocationStat[]
   finalUrlImport: string | null
+  finalUrlImportId: string | null
 }
 
 export type KeywordMatch = {
@@ -54,11 +55,11 @@ export type UpdateCampaignRequest = {
   topSearchTerms: SearchTerm[]
   status: string
   avgCpc: number | null
-  micros: number | null
-  click: number | null
+  targetCpc: number | null
+  clicks: number | null
   ctr: number | null
   cpm: number | null
-  cost: number | null
+  budget: number | null
   targetLocations: string[]
   locationStats: LocationStat[]
 }

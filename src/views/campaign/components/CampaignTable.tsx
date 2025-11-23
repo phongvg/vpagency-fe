@@ -167,16 +167,16 @@ export default function CampaignTable() {
         cell: (props) => <span>{props.row.original.avgCpc}</span>,
       },
       {
-        id: 'micros',
+        id: 'targetCpc',
         header: 'Thầu chung',
-        accessorKey: 'micros',
-        cell: (props) => <span>{props.row.original.micros}</span>,
+        accessorKey: 'targetCpc',
+        cell: (props) => <span>{props.row.original.targetCpc}</span>,
       },
       {
-        id: 'click',
+        id: 'clicks',
         header: 'Click',
-        accessorKey: 'click',
-        cell: (props) => <span>{props.row.original.click}</span>,
+        accessorKey: 'clicks',
+        cell: (props) => <span>{props.row.original.clicks}</span>,
       },
       {
         id: 'ctr',
@@ -191,10 +191,10 @@ export default function CampaignTable() {
         cell: (props) => <span>{props.row.original.cpm}</span>,
       },
       {
-        id: 'cost',
+        id: 'budget',
         header: 'Ngân sách chi tiêu',
-        accessorKey: 'cost',
-        cell: (props) => <span>{props.row.original.cost}</span>,
+        accessorKey: 'budget',
+        cell: (props) => <span>{props.row.original.budget}</span>,
       },
       {
         id: 'keywords',

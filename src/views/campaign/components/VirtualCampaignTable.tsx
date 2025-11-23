@@ -27,11 +27,11 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
       finalUrl: 250,
       status: 200,
       avgCpc: 180,
-      micros: 120,
-      click: 100,
+      targetCpc: 120,
+      clicks: 100,
       ctr: 100,
       cpm: 100,
-      cost: 180,
+      budget: 180,
       keywords: 300,
       targetLocations: 300,
       topSearchTerms: 300,
@@ -125,16 +125,16 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
             {campaign.avgCpc}
           </div>
           <div
-            style={{ width: columnWidths.micros, minWidth: columnWidths.micros }}
+            style={{ width: columnWidths.targetCpc, minWidth: columnWidths.targetCpc }}
             className="flex items-center px-4 border-r"
           >
-            {campaign.micros}
+            {campaign.targetCpc}
           </div>
           <div
-            style={{ width: columnWidths.click, minWidth: columnWidths.click }}
+            style={{ width: columnWidths.clicks, minWidth: columnWidths.clicks }}
             className="flex items-center px-4 border-r"
           >
-            {campaign.click}
+            {campaign.clicks}
           </div>
           <div
             style={{ width: columnWidths.ctr, minWidth: columnWidths.ctr }}
@@ -149,10 +149,10 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
             {campaign.cpm}
           </div>
           <div
-            style={{ width: columnWidths.cost, minWidth: columnWidths.cost }}
+            style={{ width: columnWidths.budget, minWidth: columnWidths.budget }}
             className="flex items-center px-4 border-r"
           >
-            {campaign.cost}
+            {campaign.budget}
           </div>
           <div
             style={{ width: columnWidths.keywords, minWidth: columnWidths.keywords }}
@@ -345,13 +345,13 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
                 CPC trung bình
               </div>
               <div
-                style={{ width: columnWidths.micros, minWidth: columnWidths.micros }}
+                style={{ width: columnWidths.targetCpc, minWidth: columnWidths.targetCpc }}
                 className="flex items-center px-4 border-r font-semibold"
               >
                 Thầu chung
               </div>
               <div
-                style={{ width: columnWidths.click, minWidth: columnWidths.click }}
+                style={{ width: columnWidths.clicks, minWidth: columnWidths.clicks }}
                 className="flex items-center px-4 border-r font-semibold"
               >
                 Click
@@ -369,7 +369,7 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
                 CPM
               </div>
               <div
-                style={{ width: columnWidths.cost, minWidth: columnWidths.cost }}
+                style={{ width: columnWidths.budget, minWidth: columnWidths.budget }}
                 className="flex items-center px-4 border-r font-semibold"
               >
                 Ngân sách chi tiêu

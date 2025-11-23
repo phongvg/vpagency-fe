@@ -6,13 +6,12 @@ import {
 } from '@/views/campaign/hooks/useCampaign'
 import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
 import { KeywordMatch, LocationStat, SearchTerm, UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
-import { Field, FieldProps, Form, Formik } from 'formik'
+import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import TagInput from '@/components/shared/TagInput'
-import NumberInput from '@/components/shared/NumberInput'
-import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
 import { PlusIcon, TrashIcon } from '@phosphor-icons/react'
 import { useState } from 'react'
+import { setDeadlineTo1800 } from '@/helpers/date'
 
 const { TabNav, TabList, TabContent } = Tabs
 
@@ -39,11 +38,11 @@ const validationSchema = Yup.object().shape({
   ),
   status: Yup.string(),
   avgCpc: Yup.number().nullable(),
-  micros: Yup.number().nullable(),
+  targetCpc: Yup.number().nullable(),
   click: Yup.number().nullable(),
   ctr: Yup.number().nullable(),
   cpm: Yup.number().nullable(),
-  cost: Yup.number().nullable(),
+  budget: Yup.number().nullable(),
   targetLocations: Yup.array().of(Yup.string()),
   locationStats: Yup.array().of(
     Yup.object().shape({
@@ -73,16 +72,16 @@ export default function CampaignForm() {
     mcc: campaign?.mcc || null,
     name: campaign?.name || null,
     externalId: campaign?.externalId || null,
-    finalUrl: campaign?.finalUrl?.finalURL || null,
+    finalUrl: campaign?.finalUrlImport || null,
     keywords: campaign?.keywords || [],
     topSearchTerms: campaign?.topSearchTerms || [],
     status: campaign?.status || '',
     avgCpc: campaign?.avgCpc || null,
-    micros: campaign?.micros || null,
-    click: campaign?.click || null,
+    targetCpc: campaign?.targetCpc || null,
+    clicks: campaign?.clicks || null,
     ctr: campaign?.ctr || null,
     cpm: campaign?.cpm || null,
-    cost: campaign?.cost || null,
+    budget: campaign?.budget || null,
     targetLocations: campaign?.targetLocations || [],
     locationStats: campaign?.locationStats || [],
   }
@@ -186,7 +185,7 @@ export default function CampaignForm() {
                       value={values.date ? new Date(values.date) : null}
                       placeholder="dd/mm/yyyy"
                       inputFormat="DD/MM/YYYY"
-                      onChange={(date) => setFieldValue('date', date ? date.toISOString().split('T')[0] : null)}
+                      onChange={(date) => setFieldValue('date', setDeadlineTo1800(date))}
                     />
                   </FormItem>
 
@@ -201,51 +200,57 @@ export default function CampaignForm() {
                   </FormItem>
 
                   <FormItem label="CPC trung bình">
-                    <Field name="avgCpc">
-                      {({ field, form }: FieldProps) => (
-                        <FormCurrencyInput form={form} field={field} placeholder="Nhập CPC trung bình" />
-                      )}
-                    </Field>
+                    <Field
+                      name="avgCpc"
+                      type="number"
+                      component={Input}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('avgCpc', e.target.value)}
+                    />
                   </FormItem>
 
-                  <FormItem label="Thầu chung (Micros)">
-                    <Field name="micros">
-                      {({ field, form }: FieldProps) => (
-                        <FormCurrencyInput form={form} field={field} placeholder="Nhập micros" />
-                      )}
-                    </Field>
+                  <FormItem label="Thầu chung">
+                    <Field
+                      name="targetCpc"
+                      type="number"
+                      component={Input}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('targetCpc', e.target.value)}
+                    />
                   </FormItem>
 
                   <FormItem label="Click">
-                    <NumberInput
-                      value={values.click}
-                      placeholder="Nhập số click..."
-                      onChange={(value) => setFieldValue('click', value)}
+                    <Field
+                      name="clicks"
+                      type="number"
+                      component={Input}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('clicks', e.target.value)}
                     />
                   </FormItem>
 
                   <FormItem label="CTR">
-                    <NumberInput
-                      value={values.ctr}
-                      placeholder="Nhập CTR..."
-                      onChange={(value) => setFieldValue('ctr', value)}
+                    <Field
+                      name="ctr"
+                      type="number"
+                      component={Input}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('ctr', e.target.value)}
                     />
                   </FormItem>
 
                   <FormItem label="CPM">
-                    <NumberInput
-                      value={values.cpm}
-                      placeholder="Nhập CPM..."
-                      onChange={(value) => setFieldValue('cpm', value)}
+                    <Field
+                      name="cpm"
+                      type="number"
+                      component={Input}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('cpm', e.target.value)}
                     />
                   </FormItem>
 
                   <FormItem label="Ngân sách chi tiêu">
-                    <Field name="cost">
-                      {({ field, form }: FieldProps) => (
-                        <FormCurrencyInput form={form} field={field} placeholder="Nhập chi phí" />
-                      )}
-                    </Field>
+                    <Field
+                      name="budget"
+                      type="number"
+                      component={Input}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('budget', e.target.value)}
+                    />
                   </FormItem>
 
                   <FormItem label="Quốc gia mục tiêu" className="col-span-3">
@@ -360,23 +365,25 @@ export default function CampaignForm() {
                               />
                             </FormItem>
                             <FormItem label={index === 0 ? 'CPC' : ''}>
-                              <NumberInput
+                              <Input
+                                type="number"
                                 value={term.cpc}
                                 placeholder="Nhập CPC..."
-                                onChange={(value) => {
+                                onChange={(e) => {
                                   const updatedTerms = [...values.topSearchTerms]
-                                  updatedTerms[index].cpc = value || 0
+                                  updatedTerms[index].cpc = parseFloat(e.target.value) || 0
                                   setFieldValue('topSearchTerms', updatedTerms)
                                 }}
                               />
                             </FormItem>
                             <FormItem label={index === 0 ? 'Spent' : ''}>
-                              <NumberInput
+                              <Input
+                                type="number"
                                 value={term.spent}
                                 placeholder="Nhập spent..."
-                                onChange={(value) => {
+                                onChange={(e) => {
                                   const updatedTerms = [...values.topSearchTerms]
-                                  updatedTerms[index].spent = value || 0
+                                  updatedTerms[index].spent = parseFloat(e.target.value) || 0
                                   setFieldValue('topSearchTerms', updatedTerms)
                                 }}
                               />
@@ -437,45 +444,49 @@ export default function CampaignForm() {
                               />
                             </FormItem>
                             <FormItem label={index === 0 ? 'Clicks' : ''}>
-                              <NumberInput
+                              <Input
+                                type="number"
                                 value={location.clicks}
                                 placeholder="Clicks..."
-                                onChange={(value) => {
+                                onChange={(e) => {
                                   const updatedLocations = [...values.locationStats]
-                                  updatedLocations[index].clicks = value || 0
+                                  updatedLocations[index].clicks = parseFloat(e.target.value) || 0
                                   setFieldValue('locationStats', updatedLocations)
                                 }}
                               />
                             </FormItem>
                             <FormItem label={index === 0 ? 'CTR' : ''}>
-                              <NumberInput
+                              <Input
+                                type="number"
                                 value={location.ctr}
                                 placeholder="CTR..."
-                                onChange={(value) => {
+                                onChange={(e) => {
                                   const updatedLocations = [...values.locationStats]
-                                  updatedLocations[index].ctr = value || 0
+                                  updatedLocations[index].ctr = parseFloat(e.target.value) || 0
                                   setFieldValue('locationStats', updatedLocations)
                                 }}
                               />
                             </FormItem>
                             <FormItem label={index === 0 ? 'CPC' : ''}>
-                              <NumberInput
+                              <Input
+                                type="number"
                                 value={location.cpc}
                                 placeholder="CPC..."
-                                onChange={(value) => {
+                                onChange={(e) => {
                                   const updatedLocations = [...values.locationStats]
-                                  updatedLocations[index].cpc = value || 0
+                                  updatedLocations[index].cpc = parseFloat(e.target.value) || 0
                                   setFieldValue('locationStats', updatedLocations)
                                 }}
                               />
                             </FormItem>
                             <FormItem label={index === 0 ? 'Spent' : ''}>
-                              <NumberInput
+                              <Input
+                                type="number"
                                 value={location.spent}
                                 placeholder="Spent..."
-                                onChange={(value) => {
+                                onChange={(e) => {
                                   const updatedLocations = [...values.locationStats]
-                                  updatedLocations[index].spent = value || 0
+                                  updatedLocations[index].spent = parseFloat(e.target.value) || 0
                                   setFieldValue('locationStats', updatedLocations)
                                 }}
                               />
