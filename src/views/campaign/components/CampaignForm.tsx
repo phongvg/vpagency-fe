@@ -11,7 +11,6 @@ import * as Yup from 'yup'
 import TagInput from '@/components/shared/TagInput'
 import { PlusIcon, TrashIcon } from '@phosphor-icons/react'
 import { useState } from 'react'
-import { setDeadlineTo1800 } from '@/helpers/date'
 
 const { TabNav, TabList, TabContent } = Tabs
 
@@ -176,7 +175,7 @@ export default function CampaignForm() {
                       value={values.importAt ? new Date(values.importAt) : null}
                       placeholder="dd/mm/yyyy"
                       inputFormat="DD/MM/YYYY"
-                      onChange={(date) => setFieldValue('importAt', date ? date.toISOString().split('T')[0] : null)}
+                      onChange={(date) => setFieldValue('importAt', date)}
                     />
                   </FormItem>
 
@@ -185,7 +184,7 @@ export default function CampaignForm() {
                       value={values.date ? new Date(values.date) : null}
                       placeholder="dd/mm/yyyy"
                       inputFormat="DD/MM/YYYY"
-                      onChange={(date) => setFieldValue('date', setDeadlineTo1800(date))}
+                      onChange={(date) => setFieldValue('date', date)}
                     />
                   </FormItem>
 

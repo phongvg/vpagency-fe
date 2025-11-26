@@ -4,7 +4,6 @@ import SelectCustom, { SelectParams } from '@/components/shared/SelectCustom'
 import { Button, Checkbox, DatePicker, FormItem, Input, Select, Textarea, UserSelect } from '@/components/ui'
 import { UserOption } from '@/components/ui/UserSelect/UserSelect'
 import { TaskFrequency, TaskPriority, TaskType } from '@/enums/task.enum'
-import { setDeadlineTo1800 } from '@/helpers/date'
 import { apiGetProjectList } from '@/views/projects/services/ProjectService'
 import { useGetFinalUrlsByProjectId, useCreateFinalUrlMutation } from '@/views/projects/hooks/useFinalUrl'
 import { Field, FieldProps, Form, Formik, FormikProps } from 'formik'
@@ -238,7 +237,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                     minDate={new Date()}
                     placeholder="dd/MM/yyyy"
                     value={values.deadline}
-                    onChange={(date) => setFieldValue('deadline', setDeadlineTo1800(date))}
+                    onChange={(date) => setFieldValue('deadline', date)}
                   />
                 </FormItem>
 

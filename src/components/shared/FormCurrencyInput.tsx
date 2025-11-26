@@ -20,7 +20,7 @@ interface FormCurrencyInputProps {
 const FormCurrencyInput = ({
   form,
   field,
-  inputSuffix = 'đ',
+  inputSuffix = 'USD',
   inputPrefix,
   thousandSeparator = ',',
   decimalSeparator = '.',

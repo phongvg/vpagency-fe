@@ -1,6 +1,7 @@
 import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
 import SelectCustom, { SelectParams } from '@/components/shared/SelectCustom'
 import { Button, FormContainer, FormItem, Input } from '@/components/ui'
+import UserSelect, { UserOption } from '@/components/ui/UserSelect/UserSelect'
 import {
   useCreateGmailAccountMutation,
   useGetGmailAccountDetailQuery,
@@ -11,22 +12,28 @@ import { UpdateGmailAccountRequest } from '@/views/gmailAccounts/types/gmailAcco
 import { useCreateGmailStatusMutation } from '@/views/masterData/gmailStatus/hooks/useGmailStatus'
 import { apiGetGmailStatusList } from '@/views/masterData/gmailStatus/services/GmailStatusService'
 import { Field, FieldProps, Form, Formik } from 'formik'
+import { useEffect, useState } from 'react'
 import * as Yup from 'yup'
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().email('Email không hợp lệ').required('Vui lòng nhập email'),
   statusId: Yup.string().required('Vui lòng chọn trạng thái'),
+  assignedUserIds: Yup.array().of(Yup.string()),
   password: Yup.string(),
   recoverMail: Yup.string().email('Email không hợp lệ'),
   recoverMailPassword: Yup.string(),
   code2fa: Yup.string(),
   phone: Yup.string(),
   proxy: Yup.string(),
-  proxyPassword: Yup.string(),
   price: Yup.number().min(0, 'Số tiền lớn hơn hoặc bằng 0'),
+  appPassword: Yup.string(),
+  profileName: Yup.string(),
+  createdYear: Yup.number().min(1900, 'Năm không hợp lệ').max(new Date().getFullYear(), 'Năm không hợp lệ'),
 })
 
 export default function GmailAccountForm() {
+  const [selectedUsers, setSelectedUsers] = useState<UserOption[]>([])
+
   const { gmailAccountId, dialogOpen, closeDialog } = useGmailAccountStore()
   const isEdit = !!gmailAccountId
 
@@ -39,15 +46,33 @@ export default function GmailAccountForm() {
   const initialValues: UpdateGmailAccountRequest = {
     name: gmailAccount?.name || '',
     statusId: gmailAccount?.statusId || null,
+    assignedUserIds: gmailAccount?.assignedUsers?.map((u) => u.id) || [],
     password: gmailAccount?.password || '',
     recoverMail: gmailAccount?.recoverMail || '',
     recoverMailPassword: gmailAccount?.recoverMailPassword || '',
     code2fa: gmailAccount?.code2fa || '',
     phone: gmailAccount?.phone || '',
     proxy: gmailAccount?.proxy || '',
-    proxyPassword: gmailAccount?.proxyPassword || '',
     price: gmailAccount?.price || 0,
+    appPassword: gmailAccount?.appPassword || '',
+    createdYear: gmailAccount?.createdYear || null,
+    profileName: gmailAccount?.profileName || '',
   }
+
+  useEffect(() => {
+    if (gmailAccount?.assignedUsers) {
+      const userOptions = gmailAccount.assignedUsers.map((user) => ({
+        label: `${user.firstName || ''} ${user.lastName || ''} (${user.username})`,
+        value: user.id,
+        user,
+      }))
+      setSelectedUsers(userOptions)
+    }
+
+    return () => {
+      setSelectedUsers([])
+    }
+  }, [gmailAccount])
 
   const fetchGmailStatuses = async ({ page, limit, search }: SelectParams) => {
     try {
@@ -83,10 +108,10 @@ export default function GmailAccountForm() {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ errors, touched, isSubmitting }) => (
+      {({ errors, touched, isSubmitting, setFieldValue }) => (
         <Form>
           <FormContainer>
-            <div className="gap-4 grid grid-cols-2">
+            <div className="gap-4 grid grid-cols-3">
               <FormItem asterisk label="Email" invalid={errors.name && touched.name} errorMessage={errors.name}>
                 <Field type="text" autoComplete="off" name="name" placeholder="Nhập email" component={Input} />
               </FormItem>
@@ -111,6 +136,26 @@ export default function GmailAccountForm() {
                     />
                   )}
                 </Field>
+              </FormItem>
+
+              <FormItem
+                asterisk
+                errorMessage={errors.assignedUserIds as string}
+                invalid={touched.assignedUserIds && Boolean(errors.assignedUserIds)}
+                label="Người nhận mail"
+              >
+                <UserSelect
+                  isMulti={true}
+                  placeholder="Chọn người nhận mail..."
+                  value={selectedUsers}
+                  onChange={(users) => {
+                    setSelectedUsers(users)
+                    setFieldValue(
+                      'assignedUserIds',
+                      users.map((user: UserOption) => user.value),
+                    )
+                  }}
+                />
               </FormItem>
 
               <FormItem
@@ -157,26 +202,56 @@ export default function GmailAccountForm() {
                 <Field type="text" autoComplete="off" name="proxy" placeholder="Nhập proxy" component={Input} />
               </FormItem>
 
-              <FormItem
-                label="Mật khẩu Proxy"
-                invalid={errors.proxyPassword && touched.proxyPassword}
-                errorMessage={errors.proxyPassword}
-              >
-                <Field
-                  type="text"
-                  autoComplete="off"
-                  name="proxyPassword"
-                  placeholder="Nhập mật khẩu proxy"
-                  component={Input}
-                />
-              </FormItem>
-
               <FormItem label="Số tiền" invalid={errors.price && touched.price} errorMessage={errors.price}>
                 <Field name="price">
                   {({ field, form }: FieldProps) => (
                     <FormCurrencyInput form={form} field={field} placeholder="Nhập số tiền" />
                   )}
                 </Field>
+              </FormItem>
+
+              <FormItem
+                label="Mật khẩu ứng dụng"
+                invalid={errors.appPassword && touched.appPassword}
+                errorMessage={errors.appPassword}
+              >
+                <Field
+                  type="text"
+                  autoComplete="off"
+                  name="appPassword"
+                  placeholder="Nhập mật khẩu ứng dụng"
+                  component={Input}
+                />
+              </FormItem>
+
+              <FormItem
+                label="Năm tạo"
+                invalid={errors.createdYear && touched.createdYear}
+                errorMessage={errors.createdYear}
+              >
+                <Field
+                  type="number"
+                  autoComplete="off"
+                  name="createdYear"
+                  placeholder="Nhập năm tạo"
+                  min={1900}
+                  max={new Date().getFullYear()}
+                  component={Input}
+                />
+              </FormItem>
+
+              <FormItem
+                label="Tên hồ sơ"
+                invalid={errors.profileName && touched.profileName}
+                errorMessage={errors.profileName}
+              >
+                <Field
+                  type="text"
+                  autoComplete="off"
+                  name="profileName"
+                  placeholder="Nhập tên hồ sơ"
+                  component={Input}
+                />
               </FormItem>
             </div>
 

@@ -19,7 +19,6 @@ import FinalUrlEditDialog from '@/views/projects/components/FinalUrlEditDialog'
 import { SelectOption } from '@/@types/common'
 import NumberInput from '@/components/shared/NumberInput'
 import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
-import { setDeadlineTo1800 } from '@/helpers/date'
 
 const { TabNav, TabList, TabContent } = Tabs
 
@@ -244,7 +243,7 @@ export default function ProjectForm() {
                         placeholder="dd/mm/yyyy"
                         inputFormat="DD/MM/YYYY"
                         minDate={new Date()}
-                        onChange={(date) => setFieldValue('startedAt', setDeadlineTo1800(date))}
+                        onChange={(date) => setFieldValue('startedAt', date)}
                       />
                     </FormItem>
 

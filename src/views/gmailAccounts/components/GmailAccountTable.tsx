@@ -2,7 +2,6 @@ import { GmailAccount } from '@/views/gmailAccounts/types/gmailAccount.type'
 import { DataTable, DataTableResetHandle } from '@/components/shared'
 import { Avatar, Button, ConfirmDialog, Checkbox, Dropdown } from '@/components/ui'
 import { COLUMN_CONFIG } from '@/views/gmailAccounts/constants/gmailAccountColumnConfig.constant'
-import { urlConfig } from '@/configs/urls.config'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import GmailAccountEditDialog from '@/views/gmailAccounts/components/GmailAccountEditDialog'
@@ -15,22 +14,7 @@ import { useGmailAccountStore } from '@/views/gmailAccounts/store/useGmailAccoun
 import { ColumnDef, Row } from '@tanstack/react-table'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { HiOutlinePencilAlt, HiOutlineTrash, HiOutlineViewList } from 'react-icons/hi'
-import { Link } from 'react-router-dom'
-
-const ManagerColumn = ({ row }: { row: GmailAccount }) => {
-  if (!row.manager) {
-    return <span className="text-gray-400">Chưa có</span>
-  }
-
-  return (
-    <div className="flex items-center">
-      <Avatar size={32} shape="circle" src={row.manager.avatar ?? ''} />
-      <span className="rtl:mr-2 ml-2 max-w-[150px] truncate">
-        {row.manager.firstName} {row.manager.lastName}
-      </span>
-    </div>
-  )
-}
+import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
 
 const CreatorColumn = ({ row }: { row: GmailAccount }) => {
   if (!row.creator) {
@@ -122,22 +106,34 @@ export default function GmailAccountTable() {
         },
       },
       {
+        id: 'name',
+        header: 'Email',
+        accessorKey: 'name',
+      },
+      {
+        id: 'status',
+        header: 'Trạng thái',
+        accessorKey: 'status',
+        cell: (props) => <span className="font-bold">{props.row.original.status.name}</span>,
+      },
+      {
+        id: 'creator',
+        header: 'Người tạo',
+        accessorKey: 'creator',
+        cell: (props) => {
+          const row = props.row.original
+          return <CreatorColumn row={row} />
+        },
+      },
+      {
         id: 'proxy',
         header: 'Proxy',
         accessorKey: 'proxy',
       },
       {
-        id: 'name',
-        header: 'Email',
-        accessorKey: 'name',
-        cell: (props) => {
-          const row = props.row.original
-          return (
-            <Link to={urlConfig.gmailAccountDetail.replace(':id', row.id)} className="hover:text-indigo-600">
-              {row.name}
-            </Link>
-          )
-        },
+        id: 'password',
+        header: 'Mật khẩu',
+        accessorKey: 'password',
       },
       {
         id: 'recoverMail',
@@ -159,22 +155,28 @@ export default function GmailAccountTable() {
         },
       },
       {
-        id: 'manager',
+        id: 'assignedUsers',
         header: 'Người quản lý',
-        accessorKey: 'manager',
+        accessorKey: 'assignedUsers',
         cell: (props) => {
           const row = props.row.original
-          return <ManagerColumn row={row} />
+          return <UsersAvatarGroup users={row.assignedUsers} />
         },
       },
       {
-        id: 'creator',
-        header: 'Người tạo',
-        accessorKey: 'creator',
-        cell: (props) => {
-          const row = props.row.original
-          return <CreatorColumn row={row} />
-        },
+        id: 'phone',
+        header: 'Số điện thoại',
+        accessorKey: 'phone',
+      },
+      {
+        id: 'createdYear',
+        header: 'Năm tạo',
+        accessorKey: 'createdYear',
+      },
+      {
+        id: 'profileName',
+        header: 'Tên hồ sơ',
+        accessorKey: 'profileName',
       },
       {
         id: 'action',

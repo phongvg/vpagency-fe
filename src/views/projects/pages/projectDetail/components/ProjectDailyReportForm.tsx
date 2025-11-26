@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from 'react'
 import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
 import UserSelect, { UserOption } from '@/components/ui/UserSelect/UserSelect'
 import 'dayjs/locale/vi'
+import { setDeadlineTo1800 } from '@/helpers/date'
 
 const validationSchema = Yup.object().shape({
   date: Yup.date().required('Vui lòng chọn ngày'),
@@ -110,7 +111,7 @@ export default function ProjectDailyReportForm({ onClose }: ProjectDailyReportFo
                         placeholder="Chọn ngày"
                         inputFormat="DD/MM/YYYY"
                         locale="vi"
-                        onChange={(date) => setFieldValue('date', date)}
+                        onChange={(date) => setFieldValue('date', setDeadlineTo1800(date))}
                       />
                     )}
                   </Field>
