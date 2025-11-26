@@ -1,4 +1,4 @@
-import { Button , Dialog } from '@/components/ui'
+import { Button, Dialog } from '@/components/ui'
 
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 
@@ -59,19 +59,20 @@ export default function ConfirmDialog({
   return (
     <Dialog isOpen={isOpen} width={400} closable={!loading} onClose={onCancel} onRequestClose={onCancel}>
       <div className="text-center">
-        <div className="flex justify-center items-center bg-red-100 mx-auto mb-4 rounded-full w-12 h-12">
+        <div className="flex justify-center items-center bg-gray-100 mx-auto mb-4 rounded-full w-12 h-12">
           <HiOutlineExclamationCircle className={`h-6 w-6 ${typeStyles.iconColor}`} />
         </div>
 
-        <h3 className="mb-2 font-bold text-gray-900 text-lg">{title}</h3>
+        <h3 className="mb-2 font-semibold text-gray-900 text-lg">{title}</h3>
 
         <p className="mb-6 text-gray-500 text-sm">{message}</p>
 
-        <div className="flex justify-end items-center gap-3">
-          <Button variant="plain" disabled={loading} onClick={onCancel}>
+        <div className="flex gap-3">
+          <Button block variant="default" disabled={loading} onClick={onCancel}>
             {cancelText}
           </Button>
           <Button
+            block
             variant={typeStyles.confirmVariant}
             loading={loading}
             className="bg-red-600 hover:bg-red-700"

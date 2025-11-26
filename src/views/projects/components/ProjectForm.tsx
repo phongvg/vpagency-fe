@@ -18,7 +18,6 @@ import ProjectFinalUrlTable from './ProjectFinalUrlTable'
 import FinalUrlEditDialog from '@/views/projects/components/FinalUrlEditDialog'
 import { SelectOption } from '@/@types/common'
 import NumberInput from '@/components/shared/NumberInput'
-import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
 
 const { TabNav, TabList, TabContent } = Tabs
 
@@ -294,11 +293,15 @@ export default function ProjectForm() {
                       invalid={errors.totalBudget && touched.totalBudget}
                       errorMessage={errors.totalBudget}
                     >
-                      <Field name="totalBudget">
-                        {({ field, form }: FieldProps) => (
-                          <FormCurrencyInput form={form} field={field} placeholder="Nhập tổng ngân sách..." />
-                        )}
-                      </Field>
+                      <Field
+                        name="totalBudget"
+                        type="number"
+                        placeholder="Nhập tổng ngân sách..."
+                        component={Input}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setFieldValue('totalBudget', e.target.value)
+                        }
+                      />
                     </FormItem>
 
                     <FormItem label="Giới tính" invalid={errors.gender && touched.gender} errorMessage={errors.gender}>

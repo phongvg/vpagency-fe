@@ -9,14 +9,14 @@ export type FinalUrl = {
   projectId: string
   title: string | null
   content: string | null
-  targetRef: number
-  targetCostPerRef: number
-  targetFtd: number
-  targetCostPerFtd: number
-  targetDailyKeyVolume: number
-  targetCpc: number
-  budget: number
-  suggestedBid: number
+  targetRef: number | null
+  targetCostPerRef: number | null
+  targetFtd: number | null
+  targetCostPerFtd: number | null
+  targetDailyKeyVolume: number | null
+  targetCpc: number | null
+  budget: number | null
+  suggestedBid: number | null
   totalClicks: number
   totalSpent: number
   totalRef: number

@@ -83,6 +83,38 @@ export default function ProjectFinalUrlTable({ projectId, active = false }: Proj
         },
       },
       {
+        header: 'Mục tiêu Ref',
+        accessorKey: 'targetRef',
+      },
+      {
+        header: 'Mục tiêu chi phí Ref',
+        accessorKey: 'targetCostPerRef',
+      },
+      {
+        header: 'Mục tiêu FTD',
+        accessorKey: 'targetFtd',
+      },
+      {
+        header: 'Mục tiêu chi phí FTD',
+        accessorKey: 'targetCostPerFtd',
+      },
+      {
+        header: 'Volume key/ngày',
+        accessorKey: 'targetDailyKeyVolume',
+      },
+      {
+        header: 'Mục tiêu CPC',
+        accessorKey: 'targetCpc',
+      },
+      {
+        header: 'Ngân sách',
+        accessorKey: 'budget',
+      },
+      {
+        header: 'Giá thầu đề xuất',
+        accessorKey: 'suggestedBid',
+      },
+      {
         id: 'countries',
         header: 'Quốc gia',
         accessorKey: 'countries',

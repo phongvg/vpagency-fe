@@ -1,10 +1,9 @@
 import { useCreateFinalUrlMutation, useGetFinalUrlDetailQuery, useUpdateFinalUrlMutation } from '../hooks/useFinalUrl'
-import { Formik, Form, Field, FieldProps } from 'formik'
+import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import { FormContainer, FormItem, Button, Input } from '@/components/ui'
 import { UpdateFinalUrlRequest } from '../types/finalUrl.type'
 import TagInput from '@/components/shared/TagInput'
-import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Tên là bắt buộc'),
@@ -12,14 +11,14 @@ const validationSchema = Yup.object().shape({
   countries: Yup.array().of(Yup.string()),
   title: Yup.string().nullable(),
   content: Yup.string().nullable(),
-  targetRef: Yup.number().min(0, 'Giá trị phải >= 0'),
-  targetCostPerRef: Yup.number().min(0, 'Giá trị phải >= 0'),
-  targetFtd: Yup.number().min(0, 'Giá trị phải >= 0'),
-  targetCostPerFtd: Yup.number().min(0, 'Giá trị phải >= 0'),
-  targetDailyKeyVolume: Yup.number().min(0, 'Giá trị phải >= 0'),
-  targetCpc: Yup.number().min(0, 'Giá trị phải >= 0'),
-  budget: Yup.number().min(0, 'Giá trị phải >= 0'),
-  suggestedBid: Yup.number().min(0, 'Giá trị phải >= 0'),
+  targetRef: Yup.number().min(0, 'Giá trị phải >= 0').nullable(),
+  targetCostPerRef: Yup.number().min(0, 'Giá trị phải >= 0').nullable(),
+  targetFtd: Yup.number().min(0, 'Giá trị phải >= 0').nullable(),
+  targetCostPerFtd: Yup.number().min(0, 'Giá trị phải >= 0').nullable(),
+  targetDailyKeyVolume: Yup.number().min(0, 'Giá trị phải >= 0').nullable(),
+  targetCpc: Yup.number().min(0, 'Giá trị phải >= 0').nullable(),
+  budget: Yup.number().min(0, 'Giá trị phải >= 0').nullable(),
+  suggestedBid: Yup.number().min(0, 'Giá trị phải >= 0').nullable(),
 })
 
 interface FinalUrlFormProps {
@@ -42,14 +41,14 @@ export default function FinalUrlForm({ projectId, finalUrlId, isEdit, onClose }:
     projectId: finalUrl?.projectId || projectId,
     title: finalUrl?.title || '',
     content: finalUrl?.content || '',
-    targetRef: finalUrl?.targetRef || 0,
-    targetCostPerRef: finalUrl?.targetCostPerRef || 0,
-    targetFtd: finalUrl?.targetFtd || 0,
-    targetCostPerFtd: finalUrl?.targetCostPerFtd || 0,
-    targetDailyKeyVolume: finalUrl?.targetDailyKeyVolume || 0,
-    targetCpc: finalUrl?.targetCpc || 0,
-    budget: finalUrl?.budget || 0,
-    suggestedBid: finalUrl?.suggestedBid || 0,
+    targetRef: finalUrl?.targetRef || null,
+    targetCostPerRef: finalUrl?.targetCostPerRef || null,
+    targetFtd: finalUrl?.targetFtd || null,
+    targetCostPerFtd: finalUrl?.targetCostPerFtd || null,
+    targetDailyKeyVolume: finalUrl?.targetDailyKeyVolume || null,
+    targetCpc: finalUrl?.targetCpc || null,
+    budget: finalUrl?.budget || null,
+    suggestedBid: finalUrl?.suggestedBid || null,
   }
 
   const handleSubmit = async (values: UpdateFinalUrlRequest) => {
@@ -134,11 +133,13 @@ export default function FinalUrlForm({ projectId, finalUrlId, isEdit, onClose }:
                     invalid={!!(errors.targetRef && touched.targetRef)}
                     errorMessage={errors.targetRef}
                   >
-                    <Field name="targetRef">
-                      {({ field, form }: FieldProps) => (
-                        <FormCurrencyInput form={form} field={field} placeholder="Nhập số lượng Ref" inputSuffix="" />
-                      )}
-                    </Field>
+                    <Field
+                      name="targetRef"
+                      type="number"
+                      placeholder="Nhập số lượng Ref"
+                      component={Input}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('targetRef', e.target.value)}
+                    />
                   </FormItem>
 
                   <FormItem
@@ -146,11 +147,15 @@ export default function FinalUrlForm({ projectId, finalUrlId, isEdit, onClose }:
                     invalid={!!(errors.targetCostPerRef && touched.targetCostPerRef)}
                     errorMessage={errors.targetCostPerRef}
                   >
-                    <Field name="targetCostPerRef">
-                      {({ field, form }: FieldProps) => (
-                        <FormCurrencyInput form={form} field={field} placeholder="Nhập chi phí/Ref" inputSuffix="" />
-                      )}
-                    </Field>
+                    <Field
+                      name="targetCostPerRef"
+                      type="number"
+                      placeholder="Nhập chi phí/Ref"
+                      component={Input}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setFieldValue('targetCostPerRef', e.target.value)
+                      }
+                    />
                   </FormItem>
 
                   <FormItem
@@ -158,11 +163,13 @@ export default function FinalUrlForm({ projectId, finalUrlId, isEdit, onClose }:
                     invalid={!!(errors.targetFtd && touched.targetFtd)}
                     errorMessage={errors.targetFtd}
                   >
-                    <Field name="targetFtd">
-                      {({ field, form }: FieldProps) => (
-                        <FormCurrencyInput form={form} field={field} placeholder="Nhập số lượng FTD" inputSuffix="" />
-                      )}
-                    </Field>
+                    <Field
+                      name="targetFtd"
+                      type="number"
+                      placeholder="Nhập số lượng FTD"
+                      component={Input}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('targetFtd', e.target.value)}
+                    />
                   </FormItem>
 
                   <FormItem
@@ -170,11 +177,15 @@ export default function FinalUrlForm({ projectId, finalUrlId, isEdit, onClose }:
                     invalid={!!(errors.targetCostPerFtd && touched.targetCostPerFtd)}
                     errorMessage={errors.targetCostPerFtd}
                   >
-                    <Field name="targetCostPerFtd">
-                      {({ field, form }: FieldProps) => (
-                        <FormCurrencyInput form={form} field={field} placeholder="Nhập chi phí/FTD" inputSuffix="" />
-                      )}
-                    </Field>
+                    <Field
+                      name="targetCostPerFtd"
+                      type="number"
+                      placeholder="Nhập chi phí/FTD"
+                      component={Input}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setFieldValue('targetCostPerFtd', e.target.value)
+                      }
+                    />
                   </FormItem>
 
                   <FormItem
@@ -182,16 +193,15 @@ export default function FinalUrlForm({ projectId, finalUrlId, isEdit, onClose }:
                     invalid={!!(errors.targetDailyKeyVolume && touched.targetDailyKeyVolume)}
                     errorMessage={errors.targetDailyKeyVolume}
                   >
-                    <Field name="targetDailyKeyVolume">
-                      {({ field, form }: FieldProps) => (
-                        <FormCurrencyInput
-                          form={form}
-                          field={field}
-                          placeholder="Nhập volume key/ngày"
-                          inputSuffix=""
-                        />
-                      )}
-                    </Field>
+                    <Field
+                      name="targetDailyKeyVolume"
+                      type="number"
+                      placeholder="Nhập volume key/ngày"
+                      component={Input}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setFieldValue('targetDailyKeyVolume', e.target.value)
+                      }
+                    />
                   </FormItem>
 
                   <FormItem
@@ -199,11 +209,13 @@ export default function FinalUrlForm({ projectId, finalUrlId, isEdit, onClose }:
                     invalid={!!(errors.targetCpc && touched.targetCpc)}
                     errorMessage={errors.targetCpc}
                   >
-                    <Field name="targetCpc">
-                      {({ field, form }: FieldProps) => (
-                        <FormCurrencyInput form={form} field={field} placeholder="Nhập CPC" />
-                      )}
-                    </Field>
+                    <Field
+                      name="targetCpc"
+                      type="number"
+                      placeholder="Nhập CPC"
+                      component={Input}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('targetCpc', e.target.value)}
+                    />
                   </FormItem>
 
                   <FormItem
@@ -211,11 +223,13 @@ export default function FinalUrlForm({ projectId, finalUrlId, isEdit, onClose }:
                     invalid={!!(errors.budget && touched.budget)}
                     errorMessage={errors.budget}
                   >
-                    <Field name="budget">
-                      {({ field, form }: FieldProps) => (
-                        <FormCurrencyInput form={form} field={field} placeholder="Nhập ngân sách" />
-                      )}
-                    </Field>
+                    <Field
+                      name="budget"
+                      type="number"
+                      placeholder="Nhập ngân sách"
+                      component={Input}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('budget', e.target.value)}
+                    />
                   </FormItem>
 
                   <FormItem
@@ -223,11 +237,15 @@ export default function FinalUrlForm({ projectId, finalUrlId, isEdit, onClose }:
                     invalid={!!(errors.suggestedBid && touched.suggestedBid)}
                     errorMessage={errors.suggestedBid}
                   >
-                    <Field name="suggestedBid">
-                      {({ field, form }: FieldProps) => (
-                        <FormCurrencyInput form={form} field={field} placeholder="Nhập giá thầu đề xuất" />
-                      )}
-                    </Field>
+                    <Field
+                      name="suggestedBid"
+                      type="number"
+                      placeholder="Nhập giá thầu đề xuất"
+                      component={Input}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setFieldValue('suggestedBid', e.target.value)
+                      }
+                    />
                   </FormItem>
                 </div>
               </div>

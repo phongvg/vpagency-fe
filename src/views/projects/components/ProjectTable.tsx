@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useGetProjectsQuery, useDeleteProjectMutation } from '@/views/projects/hooks/useProject'
 import { ColumnDef } from '@tanstack/react-table'
-import { Avatar, ConfirmDialog } from '@/components/ui'
+import { Avatar, Badge, ConfirmDialog } from '@/components/ui'
 import { DataTable } from '@/components/shared'
 import { useProjectStore } from '@/views/projects/store/useProjectStore'
 import { HiOutlineEye, HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
@@ -101,10 +101,13 @@ export default function ProjectTable() {
       {
         header: 'Trạng thái',
         accessorKey: 'status',
-        cell: (props) => {
-          const row = props.row.original
-          return <span className="font-bold">{row.status.name}</span>
-        },
+        cell: (props) => (
+          <Badge
+            className="mr-4 font-semibold"
+            content={props.row.original.status.name}
+            innerClass="bg-red-50 text-red-500"
+          />
+        ),
       },
       {
         header: '',

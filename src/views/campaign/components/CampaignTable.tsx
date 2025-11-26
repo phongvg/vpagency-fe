@@ -176,7 +176,13 @@ export default function CampaignTable() {
         id: 'statusCampaign',
         header: 'Trạng thái chiến dịch',
         accessorKey: 'status',
-        cell: (props) => <span>{props.row.original.status}</span>,
+        cell: (props) => (
+          <Badge
+            className="mr-4 font-semibold"
+            content={props.row.original.status}
+            innerClass="bg-red-50 text-red-500"
+          />
+        ),
       },
       {
         id: 'avgCpc',

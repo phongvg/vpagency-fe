@@ -1,6 +1,6 @@
 import { GmailAccount } from '@/views/gmailAccounts/types/gmailAccount.type'
 import { DataTable, DataTableResetHandle } from '@/components/shared'
-import { Avatar, Button, ConfirmDialog, Checkbox, Dropdown } from '@/components/ui'
+import { Avatar, Button, ConfirmDialog, Checkbox, Dropdown, Badge } from '@/components/ui'
 import { COLUMN_CONFIG } from '@/views/gmailAccounts/constants/gmailAccountColumnConfig.constant'
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
@@ -114,7 +114,13 @@ export default function GmailAccountTable() {
         id: 'status',
         header: 'Trạng thái',
         accessorKey: 'status',
-        cell: (props) => <span className="font-bold">{props.row.original.status.name}</span>,
+        cell: (props) => (
+          <Badge
+            className="mr-4 font-semibold"
+            content={props.row.original.status.name}
+            innerClass="bg-red-50 text-red-500"
+          />
+        ),
       },
       {
         id: 'creator',

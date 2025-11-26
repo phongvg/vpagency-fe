@@ -71,7 +71,14 @@ const appsRoute: Routes = [
     key: 'gmailAccounts',
     path: urlConfig.gmailAccounts,
     component: lazy(() => import('@/views/gmailAccounts')),
-    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY],
+    authority: [
+      Role.ADMIN,
+      Role.MANAGER_AFF,
+      Role.MANAGER_AGENCY,
+      Role.MEMBER_AFF,
+      Role.MEMBER_AGENCY,
+      Role.ACCOUNTING,
+    ],
     meta: {
       header: 'Tài khoản Gmail',
     },
