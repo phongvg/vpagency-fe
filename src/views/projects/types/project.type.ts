@@ -32,7 +32,6 @@ export interface Project {
   note: string | null
   deadline: Date | null
   description: string | null
-  ageRanges: string | null
   finalUrls: Partial<FinalUrl>[]
   createdAt: string | Date | null
   updatedAt: string | Date | null

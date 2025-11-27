@@ -6,7 +6,7 @@ import { isAdmin } from '@/utils/checkRole'
 import { ColumnDef } from '@tanstack/react-table'
 import { formatDate } from '@/helpers/formatDate'
 import { Avatar, Card } from '@/components/ui'
-import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
+import { formatUSD } from '@/helpers/formatUSD'
 import { DataTable } from '@/components/shared'
 import { HiOutlinePencilAlt } from 'react-icons/hi'
 import { useProjectDailyReportStore } from '@/views/projects/pages/projectDetail/store/useProjectDailyReportStore'
@@ -93,7 +93,7 @@ export default function ProjectDailyReports() {
         accessorKey: 'totalSpent',
         cell: (props) => {
           const row = props.row.original
-          return <span>{formatVietnameseMoney(row.totalSpent)}</span>
+          return <span>{formatUSD(row.totalSpent)}</span>
         },
       },
       {
@@ -109,7 +109,7 @@ export default function ProjectDailyReports() {
         accessorKey: 'totalCpc',
         cell: (props) => {
           const row = props.row.original
-          return <span>{formatVietnameseMoney(row.totalCpc)}</span>
+          return <span>{formatUSD(row.totalCpc)}</span>
         },
       },
       {
@@ -117,7 +117,7 @@ export default function ProjectDailyReports() {
         accessorKey: 'highestCpc',
         cell: (props) => {
           const row = props.row.original
-          return <span>{formatVietnameseMoney(row.highestCpc)}</span>
+          return <span>{formatUSD(row.highestCpc)}</span>
         },
       },
       {

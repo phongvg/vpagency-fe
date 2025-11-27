@@ -5,7 +5,7 @@ import { Avatar } from '@/components/ui'
 import { DataTable } from '@/components/shared'
 import { useProjectDailyReportStore } from '@/views/projects/pages/projectDetail/store/useProjectDailyReportStore'
 import { HiOutlinePencilAlt } from 'react-icons/hi'
-import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
+import { formatUSD } from '@/helpers/formatUSD'
 import { formatDate } from '@/helpers/formatDate'
 import { useGetProjectDailyReportsQuery } from '@/views/projects/pages/projectDetail/hooks/useProjectDailyReport'
 
@@ -68,7 +68,7 @@ export default function ProjectDailyReportTable({ projectId }: ProjectDailyRepor
         accessorKey: 'totalSpent',
         cell: (props) => {
           const row = props.row.original
-          return <span className="font-semibold text-blue-600">{formatVietnameseMoney(row.totalSpent)}</span>
+          return <span className="font-semibold text-blue-600">{formatUSD(row.totalSpent)}</span>
         },
       },
       {
@@ -84,7 +84,7 @@ export default function ProjectDailyReportTable({ projectId }: ProjectDailyRepor
         accessorKey: 'totalCpc',
         cell: (props) => {
           const row = props.row.original
-          return <span className="font-semibold text-purple-600">{formatVietnameseMoney(row.totalCpc)}</span>
+          return <span className="font-semibold text-purple-600">{formatUSD(row.totalCpc)}</span>
         },
       },
       {

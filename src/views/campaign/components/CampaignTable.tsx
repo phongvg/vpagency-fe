@@ -1,4 +1,5 @@
 import { DataTable } from '@/components/shared'
+import BadgeStatus from '@/components/shared/BadgeStatus'
 import { Badge, ConfirmDialog, Tooltip, Button, Checkbox, Dropdown } from '@/components/ui'
 import { addDash } from '@/helpers/addDash'
 import { formatDate } from '@/helpers/formatDate'
@@ -176,13 +177,7 @@ export default function CampaignTable() {
         id: 'statusCampaign',
         header: 'Trạng thái chiến dịch',
         accessorKey: 'status',
-        cell: (props) => (
-          <Badge
-            className="mr-4 font-semibold"
-            content={props.row.original.status}
-            innerClass="bg-red-50 text-red-500"
-          />
-        ),
+        cell: (props) => <BadgeStatus content={props.row.original.status} />,
       },
       {
         id: 'avgCpc',

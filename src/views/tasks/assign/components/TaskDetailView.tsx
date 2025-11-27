@@ -9,6 +9,7 @@ import { getPriorityColor, getStatusColor } from '@/constants/task.constant'
 import { formatDate } from '@/helpers/formatDate'
 import { useAuthStore } from '@/store/auth/useAuthStore'
 import { isAdminOrManager } from '@/utils/checkRole'
+import BadgeStatus from '@/components/shared/BadgeStatus'
 
 interface TaskDetailViewProps {
   task: Task
@@ -73,6 +74,15 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
         </div>
       </div>
 
+      {task.note && (
+        <div className="mb-6">
+          <h3 className="mb-2 font-medium text-gray-700 text-sm">Ghi chú</h3>
+          <div className="bg-gray-50 p-3 border rounded-lg">
+            <p className="text-gray-700 text-sm whitespace-pre-wrap">{task.note}</p>
+          </div>
+        </div>
+      )}
+
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-3">
           <HiUsers className="w-4 h-4 text-gray-500" />
@@ -97,52 +107,65 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
       </div>
 
       {task.type === TaskType.SET_CAMPAIGN && (
-        <div className="bg-blue-50 mb-6 p-4 border border-blue-100 rounded-lg">
+        <div className="mb-6 p-4 border border-blue-100 rounded-lg">
           <h5 className="mb-3">Thông tin chi tiết</h5>
           <div className="gap-4 grid grid-cols-2 text-sm">
             {task.numberOfCampaigns && (
               <div>
                 <span>Số lượng campaign lên:</span>
-                <span className="ml-1 font-medium text-blue-700">{task.numberOfCampaigns}</span>
+                <span className="ml-1 font-medium">{task.numberOfCampaigns}</span>
               </div>
             )}
             {task.numberOfResultCampaigns && (
               <div>
                 <span>Số lượng kết quả campaign:</span>
-                <span className="ml-1 font-medium text-blue-700">{task.numberOfResultCampaigns}</span>
+                <span className="ml-1 font-medium">{task.numberOfResultCampaigns}</span>
               </div>
             )}
           </div>
         </div>
       )}
       {task.type === TaskType.LAUNCH_CAMPAIGN && (
-        <div className="bg-blue-50 mb-6 p-4 border border-blue-100 rounded-lg">
+        <div className="mb-6 p-4 border border-blue-100 rounded-lg">
           <h5 className="mb-3">Thông tin chi tiết</h5>
           <div className="gap-4 grid grid-cols-2 text-sm">
             {task.dailyBudget && (
               <div>
                 <span>Ngân sách hàng ngày:</span>
-                <span className="ml-1 font-medium text-blue-700">{task.dailyBudget}</span>
+                <span className="ml-1 font-medium">{task.dailyBudget}</span>
               </div>
             )}
             {task.numberOfBackupCampaigns && (
               <div>
                 <span>Số lượng tài khoản dự phòng:</span>
-                <span className="ml-1 font-medium text-blue-700">{task.numberOfBackupCampaigns}</span>
+                <span className="ml-1 font-medium">{task.numberOfBackupCampaigns}</span>
               </div>
             )}
           </div>
         </div>
       )}
 
-      {task.note && (
-        <div className="mb-6">
-          <h3 className="mb-2 font-medium text-gray-700 text-sm">Ghi chú</h3>
-          <div className="bg-gray-50 p-3 border rounded-lg">
-            <p className="text-gray-700 text-sm whitespace-pre-wrap">{task.note}</p>
+      <div className="mb-6">
+        <div className="mb-6 p-4 border border-blue-100 rounded-lg">
+          <h5 className="mb-3">Thông tin dự án</h5>
+          <div className="gap-4 grid grid-cols-2 text-sm">
+            <div>
+              <span>Tên dự án:</span>
+              <span className="ml-1 font-medium">{task.project?.name}</span>
+            </div>
+            <div>
+              <span>Loại dự án:</span>
+              <span className="ml-1 font-medium">{task.project?.type.name}</span>
+            </div>
+            <div>
+              <span>Trạng thái:</span>
+              <span className="ml-2">
+                <BadgeStatus content={task.project?.status.name} />
+              </span>
+            </div>
           </div>
         </div>
-      )}
+      </div>
 
       <div className="flex justify-between pt-4 border-t">
         <Button size="sm" variant="default" onClick={closeDialog}>

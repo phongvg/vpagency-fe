@@ -10,7 +10,7 @@ import {
   TaskTypeLabels,
 } from '@/enums/task.enum'
 import { formatDate } from '@/helpers/formatDate'
-import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
+import { formatUSD } from '@/helpers/formatUSD'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { useAuthStore } from '@/store/auth/useAuthStore'
 import { isAdminOrManager } from '@/utils/checkRole'
@@ -27,6 +27,7 @@ import {
   HiOutlinePencilAlt,
   HiOutlineTrash,
 } from 'react-icons/hi'
+import BadgeStatus from '@/components/shared/BadgeStatus'
 
 type Props = {
   inSplitView?: boolean
@@ -153,6 +154,9 @@ function TaskHeaderPanel({ task, onEdit, onUpdateProgress, onDelete }: TaskHeade
             </Button>
           </>
         )}
+        <Button variant="default" size="xs">
+          Xem chi tiết
+        </Button>
         <Button variant="default" size="xs" onClick={onUpdateProgress}>
           Cập nhật tiến độ
         </Button>
@@ -213,6 +217,10 @@ function TaskProjectSection({ task }: TaskPanelProps) {
         <span>Loại dự án:</span>
         <span>{task.project?.type.name || 'N/A'}</span>
       </li>
+      <li className="flex justify-between items-center">
+        <span>Trạng thái:</span>
+        <BadgeStatus content={task.project?.status.name} />
+      </li>
     </ul>
   )
 }
@@ -261,7 +269,7 @@ function TaskCampaignSection({ task }: TaskPanelProps) {
       {task.dailyBudget && (
         <li className="flex justify-between items-center">
           <span>Ngân sách hàng ngày:</span>
-          <span>{formatVietnameseMoney(task.dailyBudget) || 'N/A'}</span>
+          <span>{formatUSD(task.dailyBudget) || 'N/A'}</span>
         </li>
       )}
       {task.numberOfBackupCampaigns && (

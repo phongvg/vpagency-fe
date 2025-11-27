@@ -2,12 +2,19 @@ import { Breadcrumb, BreadcrumbItem } from '@/components/shared'
 import { Avatar, Button, Card } from '@/components/ui'
 import { urlConfig } from '@/configs/urls.config'
 import { formatDate } from '@/helpers/formatDate'
+import { formatUSD } from '@/helpers/formatUSD'
 import ProjectDailyReportsSection from '@/views/projects/pages/projectDetail/components/ProjectDailyReportsSection'
 import { Project } from '@/views/projects/types/project.type'
 import { HiOutlineDocumentText } from 'react-icons/hi'
 
 type Props = {
   data: Project
+}
+
+const genderMap: Record<string, string> = {
+  male: 'Nam',
+  female: 'Nữ',
+  both: 'Nam và Nữ',
 }
 
 export default function ProjectInformation({ data }: Props) {
@@ -32,6 +39,15 @@ export default function ProjectInformation({ data }: Props) {
               <div className="gap-x-4 gap-y-7 grid grid-cols-1 xl:grid-cols-2">
                 <ProjectInfoField title="Loại dự án" value={data.type.name} />
                 <ProjectInfoField title="Trạng thái" value={data.status.name} />
+                <ProjectInfoField title="Deadline" value={formatDate(data.deadline, 'DD/MM/YYYY')} />
+                <ProjectInfoField title="Tổng ngân sách" value={formatUSD(data.totalBudget)} />
+                <ProjectInfoField title="Tiêu đề" value={data.title} />
+                <ProjectInfoField title="Mô tả" value={data.description} />
+                <ProjectInfoField title="Ghi chú" value={data.note} />
+                <ProjectInfoField title="Nội dung" value={data.content} />
+                <ProjectInfoField title="Giới tính" value={genderMap[data.gender || '']} />
+                <ProjectInfoField title="Độ tuổi" value={data.age} />
+                <ProjectInfoField title="Ngày bắt đầu dự án" value={formatDate(data.startedAt, 'DD/MM/YYYY')} />
                 <ProjectInfoField title="Ngày tạo dự án" value={formatDate(data.createdAt, 'DD/MM/YYYY HH:mm')} />
                 <ProjectInfoField title="Ngày cập nhật" value={formatDate(data.updatedAt, 'DD/MM/YYYY HH:mm')} />
               </div>
@@ -64,7 +80,7 @@ function ProjectInfoField({ title, value }: { title: string; value: string | num
   return (
     <div>
       <span>{title}</span>
-      <p className="font-semibold text-gray-700">{value || `<${title}>`}</p>
+      <p className="font-semibold text-gray-700 break-words">{value || `<${title}>`}</p>
     </div>
   )
 }

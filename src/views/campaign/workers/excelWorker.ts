@@ -53,8 +53,8 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
 
     self.postMessage({ type: 'progress', progress: 50 } as WorkerResponse)
 
-    const importAt = excelDateToJSDate(campaignPfmYesterdaySheet[campaignPfmYesterdaySheet.length - 1]['Date Pulled'])
-    const date = excelDateToJSDate(campaignPfmYesterdaySheet[campaignPfmYesterdaySheet.length - 1]['Data Date'])
+    // const importAt = excelDateToJSDate(campaignPfmYesterdaySheet[campaignPfmYesterdaySheet.length - 1]['Date Pulled'])
+    // const date = excelDateToJSDate(campaignPfmYesterdaySheet[campaignPfmYesterdaySheet.length - 1]['Data Date'])
 
     const campaignMap = new Map<any, any[]>()
     const campaignPfmMap = new Map<any, any[]>()
@@ -140,6 +140,8 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
       const campaignCriterionRows = campaignCriterionMap.get(id) || []
       const geographicViewYesterdayRows = geographicViewMap.get(id) || []
 
+      const importAt = campaignPfmRows.map((row) => row['Date Pulled'])
+      const date = campaignPfmRows.map((row) => row['Data Date'])
       const uid = campaignRows.map((row) => row['Customer ID'])
       const uidValue = uid[uid.length - 1]
       let uidString =
@@ -195,8 +197,8 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
       )
 
       return {
-        importAt,
-        date,
+        importAt: importAt[importAt.length - 1] ? excelDateToJSDate(importAt[importAt.length - 1]) : null,
+        date: date[date.length - 1] ? excelDateToJSDate(date[date.length - 1]) : null,
         uid: uidString,
         mcc,
         name: campaignName[index] || null,

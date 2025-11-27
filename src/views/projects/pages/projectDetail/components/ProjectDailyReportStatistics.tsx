@@ -1,6 +1,6 @@
 import { ProjectDailyReport } from '@/@types/projectDailyReport'
 import { Card } from '@/components/ui'
-import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
+import { formatUSD } from '@/helpers/formatUSD'
 import { useMemo } from 'react'
 
 type Props = {
@@ -51,7 +51,7 @@ export default function ProjectDailyReportStatistics({ reports }: Props) {
       <Card>
         <div className="flex flex-col">
           <span className="mb-2 font-semibold text-gray-600 text-sm">Tổng chi tiêu</span>
-          <span className="font-bold text-gray-700 text-2xl">{formatVietnameseMoney(statistics.totalSpent)}</span>
+          <span className="font-bold text-gray-700 text-2xl">{formatUSD(statistics.totalSpent)}</span>
         </div>
       </Card>
 
@@ -65,7 +65,7 @@ export default function ProjectDailyReportStatistics({ reports }: Props) {
       <Card>
         <div className="flex flex-col">
           <span className="mb-2 font-semibold text-gray-600 text-sm">CPC trung bình</span>
-          <span className="font-bold text-gray-700 text-2xl">{formatVietnameseMoney(statistics.averageCpc)}</span>
+          <span className="font-bold text-gray-700 text-2xl">{formatUSD(statistics.averageCpc)}</span>
         </div>
       </Card>
 

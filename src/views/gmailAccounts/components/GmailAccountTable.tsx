@@ -1,8 +1,8 @@
 import { GmailAccount } from '@/views/gmailAccounts/types/gmailAccount.type'
 import { DataTable, DataTableResetHandle } from '@/components/shared'
-import { Avatar, Button, ConfirmDialog, Checkbox, Dropdown, Badge } from '@/components/ui'
+import { Avatar, Button, ConfirmDialog, Checkbox, Dropdown } from '@/components/ui'
 import { COLUMN_CONFIG } from '@/views/gmailAccounts/constants/gmailAccountColumnConfig.constant'
-import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
+import { formatUSD } from '@/helpers/formatUSD'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import GmailAccountEditDialog from '@/views/gmailAccounts/components/GmailAccountEditDialog'
 import GmailAccountPreviewDialog from '@/views/gmailAccounts/components/GmailAccountPreviewDialog'
@@ -16,6 +16,7 @@ import { ColumnDef, Row } from '@tanstack/react-table'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { HiOutlinePencilAlt, HiOutlineTrash, HiOutlineViewList } from 'react-icons/hi'
 import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
+import BadgeStatus from '@/components/shared/BadgeStatus'
 
 const CreatorColumn = ({ row }: { row: GmailAccount }) => {
   if (!row.creator) {
@@ -115,13 +116,7 @@ export default function GmailAccountTable() {
         id: 'status',
         header: 'Trạng thái',
         accessorKey: 'status',
-        cell: (props) => (
-          <Badge
-            className="mr-4 font-semibold"
-            content={props.row.original.status.name}
-            innerClass="bg-red-50 text-red-500"
-          />
-        ),
+        cell: (props) => <BadgeStatus content={props.row.original.status.name} />,
       },
       {
         id: 'creator',
@@ -158,7 +153,7 @@ export default function GmailAccountTable() {
         accessorKey: 'price',
         cell: (props) => {
           const row = props.row.original
-          return <span>{formatVietnameseMoney(row.price)}</span>
+          return <span>{formatUSD(row.price)}</span>
         },
       },
       {

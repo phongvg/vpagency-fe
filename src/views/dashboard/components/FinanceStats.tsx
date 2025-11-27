@@ -1,7 +1,7 @@
 import { FinanceStats as FinanceStatsType } from '@/@types/statistic'
 import Chart from '@/components/shared/Chart'
 import { Card, Progress } from '@/components/ui'
-import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
+import { formatUSD } from '@/helpers/formatUSD'
 import { isEmpty } from 'lodash'
 import { NumericFormat } from 'react-number-format'
 
@@ -63,8 +63,8 @@ export default function FinanceStats({ data }: Props) {
           <FinanceStatsCard title="Dự án đang hoạt động" value={data?.activeProjects} />
           <FinanceStatsCard title="Công việc" value={data?.totalTasks} />
           <FinanceStatsCard title="Công việc hoàn thành hôm nay" value={data?.completedTasksToday} />
-          <FinanceStatsCard title="Tổng chi tiêu hôm nay" value={formatVietnameseMoney(data?.todaySpent)} />
-          <FinanceStatsCard title="Tổng chi tiêu" value={formatVietnameseMoney(data?.totalSpent)} />
+          <FinanceStatsCard title="Tổng chi tiêu hôm nay" value={formatUSD(data?.todaySpent)} />
+          <FinanceStatsCard title="Tổng chi tiêu" value={formatUSD(data?.totalSpent)} />
         </div>
 
         <Card>
