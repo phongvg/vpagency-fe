@@ -1,7 +1,7 @@
 import { CommonFilterRequest } from '@/@types/common'
 import { User } from '@/@types/user'
 import { TaskFrequency, TaskPriority, TaskStatus, TaskType } from '@/enums/task.enum'
-import { Campaign } from '@/views/campaign/types/campaign.type'
+import { FinalUrl } from '@/views/projects/types/finalUrl.type'
 import { Project } from '@/views/projects/types/project.type'
 
 export type Task = {
@@ -28,6 +28,7 @@ export type Task = {
   numberOfResultCampaigns: number | null
   finalUrlIds: string[]
   gmailIds: string[]
+  finalUrls: FinalUrl[]
 }
 
 export type TasksGroupedByStatus = {
@@ -98,11 +99,4 @@ export type TaskProgressResponse = {
   name: string
   progress: number
   finalUrls: FinalUrl[]
-}
-
-export type FinalUrl = {
-  id: string
-  name: string
-  finalURL: string
-  campaign?: Campaign | null
 }

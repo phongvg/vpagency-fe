@@ -84,7 +84,7 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
         onDelete={handleDelete}
       />
 
-      <div className="gap-x-28 grid grid-cols-1 lg:grid-cols-2">
+      <div className="gap-x-28 grid grid-cols-1 lg:grid-cols-2 mb-8">
         <Accordion defaultActiveKey={['1', '2', '3']} accordion={false}>
           <Accordion.Item itemKey="1" title="Thông tin chung">
             <TaskDetailSection task={displayTask} />
@@ -114,6 +114,11 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
             <TaskDatesSection task={displayTask} />
           </Accordion.Item>
         </Accordion>
+      </div>
+
+      <div className="mt-8">
+        <h2 className="mb-4 font-semibold text-lg">Thông tin URL cuối</h2>
+        <TaskFinalUrlSection task={displayTask} />
       </div>
 
       <ConfirmDialog {...confirmProps} loading={deleteTask.isPending} />
@@ -218,8 +223,24 @@ function TaskProjectSection({ task }: TaskPanelProps) {
         <span>{task.project?.type.name || 'N/A'}</span>
       </li>
       <li className="flex justify-between items-center">
+        <span>Tổng ngân sách:</span>
+        <span>{formatUSD(task.project?.totalBudget)}</span>
+      </li>
+      <li className="flex justify-between items-center">
+        <span>Ngân sách đã tiêu:</span>
+        <span>{formatUSD(task.project?.spentBudget)}</span>
+      </li>
+      <li className="flex justify-between items-center">
+        <span>CPC:</span>
+        <span>{formatUSD(task.project?.cpc)}</span>
+      </li>
+      <li className="flex justify-between items-center">
         <span>Trạng thái:</span>
         <BadgeStatus content={task.project?.status.name} />
+      </li>
+      <li className="flex justify-between items-center">
+        <span>Ngày bắt đầu dự án:</span>
+        <span>{formatDate(task.project?.startedAt, 'DD/MM/YYYY')}</span>
       </li>
     </ul>
   )
@@ -279,5 +300,52 @@ function TaskCampaignSection({ task }: TaskPanelProps) {
         </li>
       )}
     </ul>
+  )
+}
+
+function TaskFinalUrlSection({ task }: TaskPanelProps) {
+  return (
+    <div className="overflow-x-auto">
+      {task.finalUrls.length > 0 ? (
+        <table className="min-w-full text-sm">
+          <thead className="bg-gray-50 border-b">
+            <tr>
+              <th className="px-3 py-2 font-semibold text-gray-700 text-left whitespace-nowrap">Tên</th>
+              <th className="px-3 py-2 font-semibold text-gray-700 text-left whitespace-nowrap">URL</th>
+              <th className="px-3 py-2 font-semibold text-gray-700 text-right whitespace-nowrap">Target REF</th>
+              <th className="px-3 py-2 font-semibold text-gray-700 text-right whitespace-nowrap">Target FTD</th>
+              <th className="px-3 py-2 font-semibold text-gray-700 text-right whitespace-nowrap">Cost/REF</th>
+              <th className="px-3 py-2 font-semibold text-gray-700 text-right whitespace-nowrap">Cost/FTD</th>
+              <th className="px-3 py-2 font-semibold text-gray-700 text-right whitespace-nowrap">Target CPC</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {task.finalUrls.map((url) => (
+              <tr key={url.id} className="hover:bg-gray-50">
+                <td className="px-3 py-3 font-medium">{url.name}</td>
+                <td className="px-3 py-3">
+                  <a
+                    href={url.finalURL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block max-w-[150px] text-blue-600 hover:underline truncate"
+                    title={url.finalURL}
+                  >
+                    {url.finalURL}
+                  </a>
+                </td>
+                <td className="px-3 py-3 text-right">{url.targetRef?.toLocaleString() || '-'}</td>
+                <td className="px-3 py-3 text-right">{url.targetFtd?.toLocaleString() || '-'}</td>
+                <td className="px-3 py-3 text-right">{url.targetCostPerRef ? formatUSD(url.targetCostPerRef) : '-'}</td>
+                <td className="px-3 py-3 text-right">{url.targetCostPerFtd ? formatUSD(url.targetCostPerFtd) : '-'}</td>
+                <td className="px-3 py-3 text-right">{url.targetCpc ? formatUSD(url.targetCpc) : '-'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p className="text-gray-500 text-sm">Không có URL cuối nào được liên kết với công việc này.</p>
+      )}
+    </div>
   )
 }
