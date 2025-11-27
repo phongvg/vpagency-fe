@@ -17,11 +17,11 @@ export async function apiGetGmailAccountById(id: string) {
   })
 }
 
-export async function apiCreateGmailAccount(payload: UpdateGmailAccountRequest) {
+export async function apiCreateGmailAccount(payload: UpdateGmailAccountRequest | UpdateGmailAccountRequest[]) {
   return ApiService.fetchData<BaseResponse<GmailAccount>>({
     url: '/gmails',
     method: 'post',
-    data: payload,
+    data: payload as any,
   })
 }
 

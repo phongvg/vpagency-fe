@@ -40,24 +40,8 @@ export const useCreateGmailAccountMutation = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (payload: UpdateGmailAccountRequest | UpdateGmailAccountRequest[]) => {
-      if (Array.isArray(payload)) {
-        const results = await Promise.allSettled(payload.map((item) => apiCreateGmailAccount(item)))
-
-        const successCount = results.filter((r) => r.status === 'fulfilled').length
-        const failCount = results.filter((r) => r.status === 'rejected').length
-
-        return {
-          data: {
-            message: `Đã nhập thành công ${successCount} tài khoản Gmail${
-              failCount > 0 ? `, ${failCount} thất bại` : ''
-            }`,
-          },
-        }
-      } else {
-        return apiCreateGmailAccount(payload)
-      }
-    },
+    mutationFn: async (payload: UpdateGmailAccountRequest | UpdateGmailAccountRequest[]) =>
+      apiCreateGmailAccount(payload),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: [GET_GMAIL_ACCOUNT_LIST] })
       toastSuccess(response.data.message)
