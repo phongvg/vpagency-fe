@@ -1,4 +1,3 @@
-import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
 import SelectCustom, { SelectParams } from '@/components/shared/SelectCustom'
 import { Button, FormContainer, FormItem, Input } from '@/components/ui'
 import UserSelect, { UserOption } from '@/components/ui/UserSelect/UserSelect'
@@ -19,16 +18,16 @@ const validationSchema = Yup.object().shape({
   name: Yup.string().email('Email không hợp lệ').required('Vui lòng nhập email'),
   statusId: Yup.string().required('Vui lòng chọn trạng thái'),
   assignedUserIds: Yup.array().of(Yup.string()),
-  password: Yup.string(),
-  recoverMail: Yup.string().email('Email không hợp lệ'),
-  recoverMailPassword: Yup.string(),
-  code2fa: Yup.string(),
-  phone: Yup.string(),
-  proxy: Yup.string(),
-  price: Yup.number().min(0, 'Số tiền lớn hơn hoặc bằng 0'),
-  appPassword: Yup.string(),
-  profileName: Yup.string(),
-  createdYear: Yup.number().min(1900, 'Năm không hợp lệ').max(new Date().getFullYear(), 'Năm không hợp lệ'),
+  password: Yup.string().nullable(),
+  recoverMail: Yup.string().email('Email không hợp lệ').nullable(),
+  recoverMailPassword: Yup.string().nullable(),
+  code2fa: Yup.string().nullable(),
+  phone: Yup.string().nullable(),
+  proxy: Yup.string().nullable(),
+  price: Yup.number().min(0, 'Số tiền lớn hơn hoặc bằng 0').nullable(),
+  appPassword: Yup.string().nullable(),
+  profileName: Yup.string().nullable(),
+  createdYear: Yup.number().min(1900, 'Năm không hợp lệ').max(new Date().getFullYear(), 'Năm không hợp lệ').nullable(),
 })
 
 export default function GmailAccountForm() {
@@ -53,7 +52,7 @@ export default function GmailAccountForm() {
     code2fa: gmailAccount?.code2fa || '',
     phone: gmailAccount?.phone || '',
     proxy: gmailAccount?.proxy || '',
-    price: gmailAccount?.price || 0,
+    price: gmailAccount?.price || null,
     appPassword: gmailAccount?.appPassword || '',
     createdYear: gmailAccount?.createdYear || null,
     profileName: gmailAccount?.profileName || '',
@@ -139,14 +138,13 @@ export default function GmailAccountForm() {
               </FormItem>
 
               <FormItem
-                asterisk
                 errorMessage={errors.assignedUserIds as string}
                 invalid={touched.assignedUserIds && Boolean(errors.assignedUserIds)}
                 label="Người nhận mail"
               >
                 <UserSelect
                   isMulti={true}
-                  placeholder="Chọn người nhận mail..."
+                  placeholder="Mặc định là người tạo, có thể chọn thêm"
                   value={selectedUsers}
                   onChange={(users) => {
                     setSelectedUsers(users)
@@ -203,11 +201,7 @@ export default function GmailAccountForm() {
               </FormItem>
 
               <FormItem label="Số tiền" invalid={errors.price && touched.price} errorMessage={errors.price}>
-                <Field name="price">
-                  {({ field, form }: FieldProps) => (
-                    <FormCurrencyInput form={form} field={field} placeholder="Nhập số tiền" />
-                  )}
-                </Field>
+                <Field type="number" autoComplete="off" name="price" placeholder="Nhập số tiền" component={Input} />
               </FormItem>
 
               <FormItem

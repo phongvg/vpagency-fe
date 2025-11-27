@@ -14,7 +14,7 @@ export type GmailAccount = {
   code2fa: string | null
   phone: string | null
   proxy: string | null
-  price: number
+  price: number | null
   appPassword: string | null
   createdYear: number | null
   profileName: string | null

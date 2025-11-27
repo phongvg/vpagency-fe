@@ -5,6 +5,7 @@ import { COLUMN_CONFIG } from '@/views/gmailAccounts/constants/gmailAccountColum
 import { formatVietnameseMoney } from '@/helpers/formatVietnameseMoney'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import GmailAccountEditDialog from '@/views/gmailAccounts/components/GmailAccountEditDialog'
+import GmailAccountPreviewDialog from '@/views/gmailAccounts/components/GmailAccountPreviewDialog'
 import {
   useAssignGmailAccountToSelfMutation,
   useDeleteGmailAccountMutation,
@@ -162,7 +163,7 @@ export default function GmailAccountTable() {
       },
       {
         id: 'assignedUsers',
-        header: 'Người quản lý',
+        header: 'Người nhận mail',
         accessorKey: 'assignedUsers',
         cell: (props) => {
           const row = props.row.original
@@ -204,6 +205,24 @@ export default function GmailAccountTable() {
     ],
     [filter, handleDelete, handleEdit],
   )
+
+  const isAllColumnsVisible = useMemo(() => {
+    return COLUMN_CONFIG.every((col) => col.required || columnVisibility[col.id])
+  }, [columnVisibility])
+
+  const toggleAllColumns = useCallback(() => {
+    const allVisible = COLUMN_CONFIG.every((col) => col.required || columnVisibility[col.id])
+
+    setColumnVisibility((prev) => {
+      const updated = { ...prev }
+      COLUMN_CONFIG.forEach((col) => {
+        if (!col.required) {
+          updated[col.id] = !allVisible
+        }
+      })
+      return updated
+    })
+  }, [columnVisibility])
 
   const visibleColumns = useMemo(() => {
     return allColumns.filter((col) => columnVisibility[col.id as string])
@@ -265,6 +284,10 @@ export default function GmailAccountTable() {
           }
         >
           <div className="p-2 max-h-96 overflow-y-auto" style={{ minWidth: '250px' }}>
+            <div className="flex items-center gap-2 hover:bg-gray-50 mb-2 px-2 py-1.5 pb-2 border-gray-200 border-b rounded">
+              <Checkbox checked={isAllColumnsVisible} onChange={toggleAllColumns} />
+              <span className="font-medium text-sm">Tất cả</span>
+            </div>
             {COLUMN_CONFIG.map((col) => (
               <div key={col.id} className="flex items-center gap-2 hover:bg-gray-50 px-2 py-1.5 rounded">
                 <Checkbox
@@ -317,6 +340,7 @@ export default function GmailAccountTable() {
       />
 
       <GmailAccountEditDialog />
+      <GmailAccountPreviewDialog />
       <ConfirmDialog {...confirmProps} loading={deleteMutation.isPending} />
       <ConfirmDialog {...batchConfirmProps} />
     </>

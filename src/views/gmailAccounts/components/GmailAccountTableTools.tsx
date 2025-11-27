@@ -1,24 +1,67 @@
-import { Button } from '@/components/ui'
+import { Button, Progress } from '@/components/ui'
+import { toastError, toastSuccess } from '@/utils/toast'
 import GmailAccountSearch from '@/views/gmailAccounts/components/GmailAccountSearch'
 import { useGmailAccountStore } from '@/views/gmailAccounts/store/useGmailAccountStore'
-import { HiOutlinePlus, HiOutlineRefresh } from 'react-icons/hi'
+import { useExcelWorker } from '@/views/gmailAccounts/hooks/useExcelWorker'
+import { ChangeEvent, useRef } from 'react'
+import { HiOutlineDownload, HiOutlinePlus, HiOutlineRefresh } from 'react-icons/hi'
 
 export default function GmailAccountTableTools() {
-  const { clearFilter, openDialog } = useGmailAccountStore()
+  const { clearFilter, openDialog, openPreviewDialog, setGmailAccounts } = useGmailAccountStore()
+  const { processFile, isProcessing, progress } = useExcelWorker()
+
+  const inputRef = useRef<HTMLInputElement | null>(null)
+
+  const handleImportClick = () => {
+    inputRef.current?.click()
+  }
 
   const handleAddNew = () => {
     openDialog()
   }
 
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    try {
+      const data = await processFile(file)
+
+      setGmailAccounts(data)
+      openPreviewDialog()
+      toastSuccess(`Đã nhập ${data.length} tài khoản Gmail thành công`)
+    } catch (err) {
+      toastError((err as Error).message ?? 'Lỗi nhập dữ liệu')
+    } finally {
+      e.target.value = ''
+    }
+  }
+
   return (
-    <div className="flex justify-between items-center mb-4">
-      <div className="flex items-center space-x-2">
-        <GmailAccountSearch />
-        <Button size="sm" icon={<HiOutlineRefresh />} onClick={clearFilter} />
+    <div className="flex flex-col gap-2 mb-4">
+      <div className="flex justify-between items-center">
+        <div className="flex items-center space-x-2">
+          <GmailAccountSearch />
+          <Button size="sm" icon={<HiOutlineRefresh />} onClick={clearFilter} />
+        </div>
+
+        <div className="flex gap-2">
+          <Button loading={isProcessing} size="sm" icon={<HiOutlineDownload />} onClick={handleImportClick}>
+            Nhập dữ liệu
+          </Button>
+          <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={handleAddNew}>
+            Thêm mới
+          </Button>
+        </div>
       </div>
-      <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={handleAddNew}>
-        Thêm mới
-      </Button>
+
+      {isProcessing && (
+        <div className="flex items-center gap-3">
+          <Progress showInfo percent={progress} width="w-full" />
+        </div>
+      )}
+
+      <input ref={inputRef} hidden type="file" multiple={false} accept=".xlsx, .xls" onChange={handleFileChange} />
     </div>
   )
 }
