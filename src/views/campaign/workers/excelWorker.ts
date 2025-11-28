@@ -8,7 +8,7 @@ interface WorkerMessage {
 }
 
 interface WorkerResponse {
-  type: 'success' | 'error' | 'progress'
+  type: 'success' | 'error' | 'progress' | 'debug'
   data?: Campaign[]
   error?: string
   progress?: number
@@ -50,18 +50,22 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
     const geographicViewYesterdaySheet = getSheetData(workbook, 'Geographic_View_Yesterday')
     const mccCustomerListSheet = getSheetData(workbook, 'MCC_Customer_List')
     const locationTableSheet = getSheetData(workbook, 'Location_Table')
+    const campaignBudgetSheet = getSheetData(workbook, 'Campaign_Budget')
+    const keywordPfmYesterdaySheet = getSheetData(workbook, 'Keyword_Performance_Yesterday')
 
     self.postMessage({ type: 'progress', progress: 50 } as WorkerResponse)
 
-    const campaignMap = new Map<any, any[]>()
-    const campaignPfmMap = new Map<any, any[]>()
-    const adGroupCriterionMap = new Map<any, any[]>()
-    const searchTermMap = new Map<any, any[]>()
-    const adGroupAdMap = new Map<any, any[]>()
-    const campaignCriterionMap = new Map<any, any[]>()
-    const geographicViewMap = new Map<any, any[]>()
-    const mccMap = new Map<any, any>()
-    const locationTableMap = new Map<any, any>()
+    const campaignMap = new Map<number, any[]>()
+    const campaignPfmMap = new Map<number, any[]>()
+    const adGroupCriterionMap = new Map<number, any[]>()
+    const searchTermMap = new Map<number, any[]>()
+    const adGroupAdMap = new Map<number, any[]>()
+    const campaignCriterionMap = new Map<number, any[]>()
+    const geographicViewMap = new Map<number, any[]>()
+    const mccMap = new Map<string, any>()
+    const locationTableMap = new Map<number, any>()
+    const campaignBudgetMap = new Map<number, any[]>()
+    const keywordPfmYesterdayMap = new Map<number, any[]>()
 
     campaignSheet.forEach((row) => {
       const id = row['Campaign ID']
@@ -117,6 +121,18 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
       locationTableMap.set(locationId, locationName)
     })
 
+    campaignBudgetSheet.forEach((row) => {
+      const id = row['Campaign ID']
+      if (!campaignBudgetMap.has(id)) campaignBudgetMap.set(id, [])
+      campaignBudgetMap.get(id)!.push(row)
+    })
+
+    keywordPfmYesterdaySheet.forEach((row) => {
+      const id = row['Campaign ID']
+      if (!keywordPfmYesterdayMap.has(id)) keywordPfmYesterdayMap.set(id, [])
+      keywordPfmYesterdayMap.get(id)!.push(row)
+    })
+
     self.postMessage({ type: 'progress', progress: 70 } as WorkerResponse)
 
     const campaignName = campaignSheet.map((item) => item['Name'])
@@ -136,6 +152,8 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
       const adGroupAdRows = adGroupAdMap.get(id) || []
       const campaignCriterionRows = campaignCriterionMap.get(id) || []
       const geographicViewYesterdayRows = geographicViewMap.get(id) || []
+      const campaignBudgetRows = campaignBudgetMap.get(id) || []
+      const keywordPfmYesterdayRows = keywordPfmYesterdayMap.get(id) || []
 
       const importAt = campaignPfmRows.map((row) => row['Date Pulled'])
       const date = campaignPfmRows.map((row) => row['Data Date'])
@@ -148,13 +166,38 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
 
       const finalUrlAds = adGroupAdRows.map((row) => row['Final URL'])
       const finalUrlKey = adGroupCriterionRows.map((row) => row['Final URL'])
-      const keywordsRaw = adGroupCriterionRows.map((row) => {
+      const keywordsRaw = keywordPfmYesterdayRows.map((row) => {
         return {
           keyword: row['Keyword Text'],
           match: row['Keyword Match Type'],
+          clicks: row['Clicks'],
+          ctr: row['CTR'],
+          cpc: row['CPC'],
+          cpm: row['CPM'],
+          cost: row['Cost'],
+          impression: row['Impressions'],
+          bid: row['CPC Bid Micros'] / 1000000,
         }
       })
       const keywords = Array.from(new Map(keywordsRaw.map((k) => [`${k.keyword}|${k.match}`, k])).values())
+      const negativeKeywordsRaw = adGroupCriterionRows
+        .filter((row) => row['Is Negative Keyword'] === 'Yes')
+        .map((row) => {
+          return {
+            keyword: row['Keyword Text'],
+            match: row['Keyword Match Type'],
+            clicks: row['Clicks'],
+            ctr: row['CTR'],
+            cpc: row['CPC'],
+            cpm: row['CPM'],
+            cost: row['Cost'],
+            impression: row['Impressions'],
+            bid: row['CPC Bid Micros'] / 1000000,
+          }
+        })
+      const negativeKeywords = Array.from(
+        new Map(negativeKeywordsRaw.map((k) => [`${k.keyword}|${k.match}`, k])).values(),
+      )
       const topSearchTermsRaw = searchTermRows.map((row) => {
         return {
           term: row['Search Term'],
@@ -165,23 +208,23 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
       const topSearchTerms = Array.from(
         new Map(topSearchTermsRaw.map((s) => [`${s.term}|${s.cpc}|${s.spent}`, s])).values(),
       )
-      const statusCampaign = campaignRows.map((item) => item['Status'])
-      const avgCpc = campaignPfmRows.map((item) => item['CPC'])
-      const targetCpc = campaignRows.map((item) => item['Target CPC (micros)'])
-      const cpcBidMicros = adGroupCriterionRows.map((item) => item['CPC Bid Micros'])
+      const statusCampaign = campaignRows.map((row) => row['Status'])
+      const avgCpc = campaignPfmRows.map((row) => row['CPC'])
+      const targetCpc = campaignRows.map((row) => row['Target CPC (micros)'])
+      const cpcBidMicros = adGroupCriterionRows.map((row) => row['CPC Bid Micros'])
       const microsCalc =
         (cpcBidMicros[cpcBidMicros.length - 1] ? cpcBidMicros[cpcBidMicros.length - 1] / 1000000 : null) ||
         (targetCpc[targetCpc.length - 1] ? targetCpc[targetCpc.length - 1] / 1000000 : null)
-      const clicks = campaignPfmRows.map((item) => item['Clicks'])
-      const ctr = campaignPfmRows.map((item) => item['CTR'])
-      const cpm = campaignPfmRows.map((item) => item['CPM'])
-      const budget = campaignPfmRows.map((item) => item['Cost'])
+      const clicks = campaignPfmRows.map((row) => row['Clicks'])
+      const ctr = campaignPfmRows.map((row) => row['CTR'])
+      const cpm = campaignPfmRows.map((row) => row['CPM'])
+      const cost = campaignPfmRows.map((row) => row['Cost'])
       const targetLocations = campaignCriterionRows
         .filter((row) => row['Negative (Excluded)'] === 'No')
         .map((row) => row['Location Geo Target Constant'])
         .filter(Boolean)
       const locationStatsRaw = geographicViewYesterdayRows.map((row) => ({
-        location: locationTableMap.get(row['Country ID']) || 'Unknown',
+        location: locationTableMap.get(row['Country ID']) || '',
         clicks: row['Clicks'],
         ctr: row['CTR'],
         cpc: row['CPC'],
@@ -192,10 +235,27 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
           locationStatsRaw.map((loc) => [`${loc.location}|${loc.clicks}|${loc.ctr}|${loc.cpc}|${loc.spent}`, loc]),
         ).values(),
       )
+      const locationExcluded = [
+        ...new Set(
+          campaignCriterionRows
+            .filter((row) => row['Negative (Excluded)'] === 'Yes')
+            .map((row) => row['Location Geo Target Constant'])
+            .filter(Boolean),
+        ),
+      ]
+      const campaignBudget = campaignBudgetRows.map((row) => row['Amount (Micros)'])
 
       return {
-        importAt: importAt[importAt.length - 1] ? excelDateToJSDate(importAt[importAt.length - 1]) : null,
-        date: date[date.length - 1] ? excelDateToJSDate(date[date.length - 1]) : null,
+        importAt: importAt[importAt.length - 1]
+          ? excelDateToJSDate(importAt[importAt.length - 1])
+          : new Date().toISOString().slice(0, 10),
+        date: date[date.length - 1]
+          ? excelDateToJSDate(date[date.length - 1])
+          : (() => {
+              const d = new Date()
+              d.setDate(d.getDate() - 1)
+              return d.toISOString().slice(0, 10)
+            })(),
         uid: uidString,
         mcc,
         name: campaignName[index] || null,
@@ -211,9 +271,12 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
         clicks: clicks[clicks.length - 1] ?? null,
         ctr: ctr[ctr.length - 1] ?? null,
         cpm: cpm[cpm.length - 1] ?? null,
-        budget: budget[budget.length - 1] ?? null,
+        cost: cost[cost.length - 1] ?? null,
         targetLocations,
         locationStats,
+        campaignBudget: campaignBudget[campaignBudget.length - 1] ?? null,
+        negativeKeywords,
+        locationExcluded,
       }
     })
 

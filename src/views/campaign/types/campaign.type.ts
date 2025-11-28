@@ -18,16 +18,26 @@ export type Campaign = {
   clicks: number | null
   ctr: number | null
   cpm: number | null
-  budget: number | null
+  cost: number | null
   targetLocations: string[]
   locationStats: LocationStat[]
   finalUrlImport: string | null
   finalUrlImportId: string | null
+  campaignBudget: number
+  negativeKeywords: KeywordMatch[]
+  locationExcluded: string[]
 }
 
 export type KeywordMatch = {
   keyword: string
   match: string
+  clicks: number
+  ctr: number
+  cpc: number
+  cpm: number
+  cost: number
+  impression: number
+  bid: number
 }
 
 export type SearchTerm = {
@@ -60,9 +70,12 @@ export type UpdateCampaignRequest = {
   clicks: number | null
   ctr: number | null
   cpm: number | null
-  budget: number | null
+  cost: number | null
   targetLocations: string[]
   locationStats: LocationStat[]
+  campaignBudget: number
+  negativeKeywords: KeywordMatch[]
+  locationExcluded: string[]
 }
 
 export type CreateCampaignResponse = {

@@ -29,6 +29,8 @@ export const useExcelWorker = (): UseExcelWorkerReturn => {
       worker.onmessage = (e: MessageEvent) => {
         const { type, data, error: workerError, progress: workerProgress } = e.data
 
+        console.log('data', data)
+
         if (type === 'progress') {
           setProgress(workerProgress || 0)
         } else if (type === 'success') {
@@ -43,6 +45,11 @@ export const useExcelWorker = (): UseExcelWorkerReturn => {
           worker.terminate()
           workerRef.current = null
           reject(new Error(workerError || 'Lỗi xử lý file'))
+        } else if (type === 'debug') {
+          console.log('debug', data)
+          setIsProcessing(false)
+          worker.terminate()
+          workerRef.current = null
         }
       }
 
