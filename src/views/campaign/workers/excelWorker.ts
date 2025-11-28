@@ -166,7 +166,14 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
 
       const finalUrlAds = adGroupAdRows.map((row) => row['Final URL'])
       const finalUrlKey = adGroupCriterionRows.map((row) => row['Final URL'])
+      const criterionMap = new Map(
+        adGroupCriterionRows.map((row) => [`${row['Keyword Text']}|${row['Keyword Match Type'].toLowerCase()}`, row]),
+      )
+
       const keywordsRaw = keywordPfmYesterdayRows.map((row) => {
+        const key = `${row['Keyword Text']}|${row['Keyword Match Type'].toLowerCase()}`
+        const criterion = criterionMap.get(key)
+
         return {
           keyword: row['Keyword Text'],
           match: row['Keyword Match Type'],
@@ -176,7 +183,7 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
           cpm: row['CPM'],
           cost: row['Cost'],
           impression: row['Impressions'],
-          bid: row['CPC Bid Micros'] / 1000000,
+          bid: criterion ? criterion['CPC Bid Micros'] / 1000000 : 0,
         }
       })
       const keywords = Array.from(new Map(keywordsRaw.map((k) => [`${k.keyword}|${k.match}`, k])).values())
@@ -192,7 +199,7 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
             cpm: row['CPM'],
             cost: row['Cost'],
             impression: row['Impressions'],
-            bid: row['CPC Bid Micros'] / 1000000,
+            bid: 0,
           }
         })
       const negativeKeywords = Array.from(

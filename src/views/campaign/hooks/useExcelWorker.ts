@@ -28,7 +28,6 @@ export const useExcelWorker = (): UseExcelWorkerReturn => {
 
       worker.onmessage = (e: MessageEvent) => {
         const { type, data, error: workerError, progress: workerProgress } = e.data
-
         console.log('data', data)
 
         if (type === 'progress') {
@@ -61,7 +60,6 @@ export const useExcelWorker = (): UseExcelWorkerReturn => {
         reject(err)
       }
 
-      // Read file and send to worker
       const reader = new FileReader()
       reader.onload = () => {
         worker.postMessage({

@@ -31,8 +31,9 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
       clicks: 100,
       ctr: 100,
       cpm: 100,
-      budget: 180,
+      cost: 180,
       keywords: 300,
+      negativeKeywords: 300,
       targetLocations: 300,
       topSearchTerms: 300,
       locationStats: 300,
@@ -149,17 +150,96 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
             {campaign.cpm}
           </div>
           <div
-            style={{ width: columnWidths.budget, minWidth: columnWidths.budget }}
+            style={{ width: columnWidths.cost, minWidth: columnWidths.cost }}
             className="flex items-center px-4 border-r"
           >
-            {campaign.budget}
+            {campaign.cost}
           </div>
           <div
             style={{ width: columnWidths.keywords, minWidth: columnWidths.keywords }}
             className="flex items-center px-4 border-r"
           >
             {campaign.keywords.length > 0 && (
-              <Tooltip title={campaign.keywords.map((k) => `${k.keyword} (${k.match})`).join(', ')}>
+              <Tooltip
+                scrollable
+                trigger="click"
+                maxHeight={700}
+                placement="left"
+                title={
+                  <div className="text-xs">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-gray-600 border-b">
+                          <th className="px-1 py-1 text-left whitespace-nowrap">Từ khóa</th>
+                          <th className="px-2 py-1 text-left whitespace-nowrap">Phù hợp</th>
+                          <th className="px-2 py-1 text-left whitespace-nowrap">CPC Bid</th>
+                          <th className="px-2 py-1 text-left whitespace-nowrap">Click</th>
+                          <th className="px-2 py-1 text-left whitespace-nowrap">Lượt hiển thị</th>
+                          <th className="px-2 py-1 text-left whitespace-nowrap">CTR</th>
+                          <th className="px-2 py-1 text-left whitespace-nowrap">CPC</th>
+                          <th className="px-2 py-1 text-left whitespace-nowrap">CPM</th>
+                          <th className="px-2 py-1 text-left whitespace-nowrap">Ngân sách chi tiêu</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {campaign.keywords
+                          .sort((a, b) => b.cost - a.cost)
+                          .map((k, i) => (
+                            <tr key={i} className="border-gray-700 last:border-0 border-b">
+                              <td className="px-1 py-1 text-left">{k.keyword}</td>
+                              <td className="px-2 py-1 text-left">{k.match}</td>
+                              <td className="px-2 py-1 text-left">{k.bid.toFixed(2)}</td>
+                              <td className="px-2 py-1 text-left">{k.clicks}</td>
+                              <td className="px-2 py-1 text-left">{k.impression}</td>
+                              <td className="px-2 py-1 text-left">{k.ctr.toFixed(2)}</td>
+                              <td className="px-2 py-1 text-left">{k.cpc.toFixed(2)}</td>
+                              <td className="px-2 py-1 text-left">{k.cpm.toFixed(2)}</td>
+                              <td className="px-2 py-1 text-left">{k.cost.toFixed(2)}</td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                }
+              >
+                <Badge
+                  content={`${campaign.keywords.length} từ khóa`}
+                  className="bg-blue-50 text-blue-700 cursor-help"
+                />
+              </Tooltip>
+            )}
+          </div>
+          <div
+            style={{ width: columnWidths.negativeKeywords, minWidth: columnWidths.negativeKeywords }}
+            className="flex items-center px-4 border-r"
+          >
+            {campaign.negativeKeywords.length > 0 && (
+              <Tooltip
+                scrollable
+                trigger="click"
+                maxHeight={700}
+                placement="left"
+                title={
+                  <div className="text-xs">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-gray-600 border-b">
+                          <th className="px-1 py-1 text-left whitespace-nowrap">Từ khóa</th>
+                          <th className="px-2 py-1 text-left whitespace-nowrap">Phù hợp</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {campaign.negativeKeywords.map((k, i) => (
+                          <tr key={i} className="border-gray-700 last:border-0 border-b">
+                            <td className="px-1 py-1 text-left">{k.keyword}</td>
+                            <td className="px-2 py-1 text-left">{k.match}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                }
+              >
                 <Badge
                   content={`${campaign.keywords.length} từ khóa`}
                   className="bg-blue-50 text-blue-700 cursor-help"
@@ -369,7 +449,7 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
                 CPM
               </div>
               <div
-                style={{ width: columnWidths.budget, minWidth: columnWidths.budget }}
+                style={{ width: columnWidths.cost, minWidth: columnWidths.cost }}
                 className="flex items-center px-4 border-r font-semibold"
               >
                 Ngân sách chi tiêu
@@ -379,6 +459,12 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
                 className="flex items-center px-4 border-r font-semibold"
               >
                 Từ khóa tìm kiếm
+              </div>
+              <div
+                style={{ width: columnWidths.negativeKeywords, minWidth: columnWidths.negativeKeywords }}
+                className="flex items-center px-4 border-r font-semibold"
+              >
+                Từ khóa không tìm kiếm
               </div>
               <div
                 style={{ width: columnWidths.targetLocations, minWidth: columnWidths.targetLocations }}
