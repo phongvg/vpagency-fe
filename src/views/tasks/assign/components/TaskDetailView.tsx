@@ -3,13 +3,17 @@ import { Avatar, Badge, Button, Progress } from '@/components/ui'
 import { TaskFrequency, TaskPriorityLabels, TaskStatusLabels, TaskType, TaskTypeLabels } from '@/enums/task.enum'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import { HiOutlineCalendar, HiOutlineClock, HiOutlineStar, HiUsers } from 'react-icons/hi'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import UpdateProgressModal from './UpdateProgressModal'
 import { getPriorityColor, getStatusColor } from '@/constants/task.constant'
 import { formatDate } from '@/helpers/formatDate'
 import { useAuthStore } from '@/store/auth/useAuthStore'
 import { isAdminOrManager } from '@/utils/checkRole'
 import BadgeStatus from '@/components/shared/BadgeStatus'
+import { formatUSD } from '@/helpers/formatUSD'
+import { ColumnDef } from '@tanstack/react-table'
+import { FinalUrl } from '@/views/projects/types/finalUrl.type'
+import { DataTable } from '@/components/shared'
 
 interface TaskDetailViewProps {
   task: Task
@@ -22,6 +26,65 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
   const { user } = useAuthStore()
 
   const [isProgressModalOpen, setIsProgressModalOpen] = useState(false)
+
+  const columns: ColumnDef<FinalUrl>[] = useMemo(
+    () => [
+      {
+        id: 'stt',
+        header: 'STT',
+        accessorKey: 'index',
+        cell: (props) => {
+          const row = props.row.index
+          return <span>{row + 1}</span>
+        },
+      },
+      {
+        id: 'name',
+        header: 'Tên URL',
+        accessorKey: 'name',
+        cell: (props) => <span className="font-medium">{props.row.original.name}</span>,
+      },
+      {
+        id: 'finalURL',
+        header: 'URL',
+        accessorKey: 'finalURL',
+        cell: (props) => {
+          const row = props.row.original
+          return (
+            <a
+              href={row.finalURL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block max-w-[250px] text-blue-600 hover:underline truncate"
+            >
+              {row.finalURL}
+            </a>
+          )
+        },
+      },
+      {
+        header: 'Mục tiêu Ref',
+        accessorKey: 'targetRef',
+      },
+      {
+        header: 'Mục tiêu chi phí Ref',
+        accessorKey: 'targetCostPerRef',
+      },
+      {
+        header: 'Mục tiêu FTD',
+        accessorKey: 'targetFtd',
+      },
+      {
+        header: 'Mục tiêu chi phí FTD',
+        accessorKey: 'targetCostPerFtd',
+      },
+      {
+        header: 'Mục tiêu CPC',
+        accessorKey: 'targetCpc',
+      },
+    ],
+    [],
+  )
 
   return (
     <div className="task-detail-view">
@@ -68,9 +131,6 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
               <Progress variant="circle" percent={task.progress} gapDegree={70} gapPosition="bottom" size="sm" />
             </div>
           </div>
-          <Button size="xs" variant="twoTone" onClick={() => setIsProgressModalOpen(true)}>
-            Cập nhật tiến độ
-          </Button>
         </div>
       </div>
 
@@ -163,7 +223,30 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
                 <BadgeStatus content={task.project?.status.name} />
               </span>
             </div>
+            <div>
+              <span>Tổng ngân sách:</span>
+              <span className="ml-1 font-medium">{formatUSD(task.project?.totalBudget)}</span>
+            </div>
+            <div>
+              <span>Ngân sách đã tiêu:</span>
+              <span className="ml-1 font-medium">{formatUSD(task.project?.spentBudget)}</span>
+            </div>
+            <div>
+              <span>CPC:</span>
+              <span className="ml-1 font-medium">{formatUSD(task.project?.cpc)}</span>
+            </div>
+            <div>
+              <span>Ngày bắt đầu dự án:</span>
+              <span className="ml-1 font-medium">{formatDate(task.project?.startedAt, 'DD/MM/YYYY')}</span>
+            </div>
           </div>
+        </div>
+      </div>
+
+      <div className="mb-6">
+        <div className="mb-6 p-4 border border-blue-100 rounded-lg">
+          <h5 className="mb-3">Thông tin URL cuối</h5>
+          <DataTable columns={columns} data={task.finalUrls || []} loading={false} pagingData={undefined} />
         </div>
       </div>
 
@@ -172,18 +255,22 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
           Đóng
         </Button>
 
-        {isAdminOrManager(user?.roles) && (
-          <>
-            <div className="flex gap-2">
+        <div className="flex gap-2">
+          {isAdminOrManager(user?.roles) && (
+            <>
               <Button size="sm" variant="twoTone" onClick={onDelete}>
                 Xóa
               </Button>
               <Button size="sm" variant="solid" onClick={onEdit}>
                 Chỉnh sửa
               </Button>
-            </div>
-          </>
-        )}
+            </>
+          )}
+
+          <Button size="sm" variant="solid" onClick={() => setIsProgressModalOpen(true)}>
+            Cập nhật tiến độ
+          </Button>
+        </div>
       </div>
 
       <UpdateProgressModal

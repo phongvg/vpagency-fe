@@ -53,9 +53,6 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
 
     self.postMessage({ type: 'progress', progress: 50 } as WorkerResponse)
 
-    // const importAt = excelDateToJSDate(campaignPfmYesterdaySheet[campaignPfmYesterdaySheet.length - 1]['Date Pulled'])
-    // const date = excelDateToJSDate(campaignPfmYesterdaySheet[campaignPfmYesterdaySheet.length - 1]['Data Date'])
-
     const campaignMap = new Map<any, any[]>()
     const campaignPfmMap = new Map<any, any[]>()
     const adGroupCriterionMap = new Map<any, any[]>()
