@@ -88,9 +88,12 @@ export default function CampaignForm() {
     clicks: campaign?.clicks || null,
     ctr: campaign?.ctr || null,
     cpm: campaign?.cpm || null,
-    budget: campaign?.budget || null,
+    cost: campaign?.cost || null,
     targetLocations: campaign?.targetLocations || [],
     locationStats: campaign?.locationStats || [],
+    campaignBudget: campaign?.campaignBudget || null,
+    locationExcluded: campaign?.locationExcluded || [],
+    negativeKeywords: campaign?.negativeKeywords || [],
   }
 
   const handleSubmit = async (values: UpdateCampaignRequest) => {
@@ -127,6 +130,7 @@ export default function CampaignForm() {
                 <TabList>
                   <TabNav value="basic">Thông tin cơ bản</TabNav>
                   <TabNav value="keywords">Từ khóa</TabNav>
+                  <TabNav value="negativeKeywords">Từ khóa loại trừ</TabNav>
                   <TabNav value="searchTerms">Thuật ngữ tìm kiếm</TabNav>
                   <TabNav value="locations">Thống kê quốc gia</TabNav>
                 </TabList>
@@ -218,7 +222,9 @@ export default function CampaignForm() {
                         name="avgCpc"
                         type="number"
                         component={Input}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('avgCpc', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setFieldValue('avgCpc', Number(e.target.value))
+                        }
                       />
                     </FormItem>
 
@@ -228,7 +234,7 @@ export default function CampaignForm() {
                         type="number"
                         component={Input}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          setFieldValue('targetCpc', e.target.value)
+                          setFieldValue('targetCpc', Number(e.target.value))
                         }
                       />
                     </FormItem>
@@ -238,7 +244,9 @@ export default function CampaignForm() {
                         name="clicks"
                         type="number"
                         component={Input}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('clicks', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setFieldValue('clicks', Number(e.target.value))
+                        }
                       />
                     </FormItem>
 
@@ -247,7 +255,9 @@ export default function CampaignForm() {
                         name="ctr"
                         type="number"
                         component={Input}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('ctr', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setFieldValue('ctr', Number(e.target.value))
+                        }
                       />
                     </FormItem>
 
@@ -256,16 +266,31 @@ export default function CampaignForm() {
                         name="cpm"
                         type="number"
                         component={Input}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('cpm', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setFieldValue('cpm', Number(e.target.value))
+                        }
                       />
                     </FormItem>
 
                     <FormItem label="Ngân sách chi tiêu">
                       <Field
-                        name="budget"
+                        name="cost"
                         type="number"
                         component={Input}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('budget', e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setFieldValue('cost', Number(e.target.value))
+                        }
+                      />
+                    </FormItem>
+
+                    <FormItem label="Ngân sách chiến dịch">
+                      <Field
+                        name="campaignBudget"
+                        type="number"
+                        component={Input}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setFieldValue('campaignBudget', Number(e.target.value))
+                        }
                       />
                     </FormItem>
 
@@ -288,7 +313,17 @@ export default function CampaignForm() {
                         size="sm"
                         icon={<PlusIcon />}
                         onClick={() => {
-                          const newKeyword: KeywordMatch = { keyword: '', match: '' }
+                          const newKeyword: KeywordMatch = {
+                            keyword: '',
+                            match: '',
+                            clicks: null,
+                            ctr: null,
+                            cpc: null,
+                            cpm: null,
+                            cost: null,
+                            impression: null,
+                            bid: null,
+                          }
                           setFieldValue('keywords', [...values.keywords, newKeyword])
                         }}
                       >
@@ -302,7 +337,7 @@ export default function CampaignForm() {
                       <div className="space-y-3">
                         {values.keywords.map((keyword, index) => (
                           <div key={index} className="flex items-start gap-3">
-                            <div className="flex-1 gap-3 grid grid-cols-2">
+                            <div className="flex-1 gap-3 grid grid-cols-5">
                               <FormItem label={index === 0 ? 'Từ khóa' : ''}>
                                 <Input
                                   value={keyword.keyword}
@@ -314,13 +349,105 @@ export default function CampaignForm() {
                                   }}
                                 />
                               </FormItem>
-                              <FormItem label={index === 0 ? 'Match Type' : ''}>
+
+                              <FormItem label={index === 0 ? 'Hình thức' : ''}>
                                 <Input
                                   value={keyword.match}
-                                  placeholder="exact, phrase, broad..."
+                                  placeholder="Exact, Phrase,..."
                                   onChange={(e) => {
                                     const updatedKeywords = [...values.keywords]
                                     updatedKeywords[index].match = e.target.value
+                                    setFieldValue('keywords', updatedKeywords)
+                                  }}
+                                />
+                              </FormItem>
+
+                              <FormItem label={index === 0 ? 'CPC thầu chung' : ''}>
+                                <Input
+                                  type="number"
+                                  value={keyword.bid || ''}
+                                  placeholder="CPC thầu chung..."
+                                  onChange={(e) => {
+                                    const updatedKeywords = [...values.keywords]
+                                    updatedKeywords[index].bid = Number(e.target.value)
+                                    setFieldValue('keywords', updatedKeywords)
+                                  }}
+                                />
+                              </FormItem>
+
+                              <FormItem label={index === 0 ? 'Click' : ''}>
+                                <Input
+                                  type="number"
+                                  value={keyword.clicks || ''}
+                                  placeholder="Click..."
+                                  onChange={(e) => {
+                                    const updatedKeywords = [...values.keywords]
+                                    updatedKeywords[index].clicks = Number(e.target.value)
+                                    setFieldValue('keywords', updatedKeywords)
+                                  }}
+                                />
+                              </FormItem>
+
+                              <FormItem label={index === 0 ? 'Lượt hiển thị' : ''}>
+                                <Input
+                                  type="number"
+                                  value={keyword.impression || ''}
+                                  placeholder="Lượt hiển thị..."
+                                  onChange={(e) => {
+                                    const updatedKeywords = [...values.keywords]
+                                    updatedKeywords[index].impression = Number(e.target.value)
+                                    setFieldValue('keywords', updatedKeywords)
+                                  }}
+                                />
+                              </FormItem>
+
+                              <FormItem label={index === 0 ? 'CTR' : ''}>
+                                <Input
+                                  type="number"
+                                  value={keyword.ctr || ''}
+                                  placeholder="CTR..."
+                                  onChange={(e) => {
+                                    const updatedKeywords = [...values.keywords]
+                                    updatedKeywords[index].ctr = Number(e.target.value)
+                                    setFieldValue('keywords', updatedKeywords)
+                                  }}
+                                />
+                              </FormItem>
+
+                              <FormItem label={index === 0 ? 'CPC' : ''}>
+                                <Input
+                                  type="number"
+                                  value={keyword.cpc || ''}
+                                  placeholder="CPC..."
+                                  onChange={(e) => {
+                                    const updatedKeywords = [...values.keywords]
+                                    updatedKeywords[index].cpc = Number(e.target.value)
+                                    setFieldValue('keywords', updatedKeywords)
+                                  }}
+                                />
+                              </FormItem>
+
+                              <FormItem label={index === 0 ? 'CPM' : ''}>
+                                <Input
+                                  type="number"
+                                  value={keyword.cpm || ''}
+                                  placeholder="CPM..."
+                                  onChange={(e) => {
+                                    const updatedKeywords = [...values.keywords]
+                                    updatedKeywords[index].cpm = Number(e.target.value)
+                                    setFieldValue('keywords', updatedKeywords)
+                                  }}
+                                />
+                              </FormItem>
+
+                              <FormItem label={index === 0 ? 'Chi phí' : ''}>
+                                <Input
+                                  type="number"
+                                  value={keyword.cost || ''}
+                                  placeholder="Chi phí..."
+                                  onChange={(e) => {
+                                    const updatedKeywords = [...values.keywords]
+                                    updatedKeywords[index].cost = Number(e.target.value)
                                     setFieldValue('keywords', updatedKeywords)
                                   }}
                                 />
@@ -345,21 +472,135 @@ export default function CampaignForm() {
                   </div>
                 </TabContent>
 
-                <TabContent value="searchTerms">
+                <TabContent value="negativeKeywords">
                   <div className="mt-4">
                     <div className="flex justify-between items-center mb-4">
-                      <h6 className="font-semibold">Danh sách thuật ngữ tìm kiếm</h6>
+                      <h6 className="font-semibold">Danh sách từ khóa loại trừ</h6>
                       <Button
                         type="button"
                         size="sm"
                         icon={<PlusIcon />}
                         onClick={() => {
-                          const newTerm: SearchTerm = { term: '', cpc: 0, spent: 0 }
-                          setFieldValue('topSearchTerms', [...values.topSearchTerms, newTerm])
+                          const newKeyword: KeywordMatch = {
+                            keyword: '',
+                            match: '',
+                            clicks: 0,
+                            ctr: 0,
+                            cpc: 0,
+                            cpm: 0,
+                            cost: 0,
+                            impression: 0,
+                            bid: 0,
+                          }
+                          setFieldValue('negativeKeywords', [...values.negativeKeywords, newKeyword])
                         }}
                       >
-                        Thêm thuật ngữ
+                        Thêm từ khóa
                       </Button>
+                    </div>
+
+                    {values.negativeKeywords.length === 0 ? (
+                      <div className="py-8 text-gray-500 text-center">Chưa có từ khóa loại trừ nào</div>
+                    ) : (
+                      <div className="space-y-3">
+                        {values.negativeKeywords.map((keyword, index) => (
+                          <div key={index} className="flex items-start gap-3">
+                            <div className="flex-1 gap-3 grid grid-cols-2">
+                              <FormItem label={index === 0 ? 'Từ khóa' : ''}>
+                                <Input
+                                  value={keyword.keyword}
+                                  placeholder="Nhập từ khóa..."
+                                  onChange={(e) => {
+                                    const updatedKeywords = [...values.negativeKeywords]
+                                    updatedKeywords[index].keyword = e.target.value
+                                    setFieldValue('negativeKeywords', updatedKeywords)
+                                  }}
+                                />
+                              </FormItem>
+                              <FormItem label={index === 0 ? 'Hình thức' : ''}>
+                                <Input
+                                  value={keyword.match}
+                                  placeholder="Exact, Phrase,..."
+                                  onChange={(e) => {
+                                    const updatedKeywords = [...values.negativeKeywords]
+                                    updatedKeywords[index].match = e.target.value
+                                    setFieldValue('negativeKeywords', updatedKeywords)
+                                  }}
+                                />
+                              </FormItem>
+                            </div>
+                            <div className={index === 0 ? 'mt-8' : ''}>
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant="plain"
+                                icon={<TrashIcon />}
+                                onClick={() => {
+                                  const updatedKeywords = values.negativeKeywords.filter((_, i) => i !== index)
+                                  setFieldValue('negativeKeywords', updatedKeywords)
+                                }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </TabContent>
+
+                <TabContent value="searchTerms">
+                  <div className="mt-4">
+                    <div className="flex justify-between items-center mb-4">
+                      <h6 className="font-semibold">Danh sách thuật ngữ tìm kiếm</h6>
+                      <div className="flex gap-2">
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant={sortOrder === 'asc' ? 'solid' : 'twoTone'}
+                          icon={<ArrowUpIcon />}
+                          onClick={() => {
+                            const sorted = [...values.topSearchTerms].sort((a, b) => (a.spent || 0) - (b.spent || 0))
+                            setFieldValue('topSearchTerms', sorted)
+                            setSortOrder('asc')
+                          }}
+                        >
+                          Tăng dần
+                        </Button>
+
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant={sortOrder === 'desc' ? 'solid' : 'twoTone'}
+                          icon={<ArrowDownIcon />}
+                          onClick={() => {
+                            const sorted = [...values.topSearchTerms].sort((a, b) => (b.spent || 0) - (a.spent || 0))
+                            setFieldValue('topSearchTerms', sorted)
+                            setSortOrder('desc')
+                          }}
+                        >
+                          Giảm dần
+                        </Button>
+
+                        <Button
+                          type="button"
+                          size="sm"
+                          icon={<PlusIcon />}
+                          onClick={() => {
+                            const newTerm: SearchTerm = {
+                              term: '',
+                              cpc: 0,
+                              spent: 0,
+                              clicks: 0,
+                              ctr: 0,
+                              cpm: 0,
+                              impression: 0,
+                            }
+                            setFieldValue('topSearchTerms', [...values.topSearchTerms, newTerm])
+                          }}
+                        >
+                          Thêm thuật ngữ
+                        </Button>
+                      </div>
                     </div>
 
                     {values.topSearchTerms.length === 0 ? (
@@ -380,10 +621,37 @@ export default function CampaignForm() {
                                   }}
                                 />
                               </FormItem>
+
+                              <FormItem label={index === 0 ? 'Click' : ''}>
+                                <Input
+                                  type="number"
+                                  value={term.clicks || ''}
+                                  placeholder="Click..."
+                                  onChange={(e) => {
+                                    const updatedTerms = [...values.topSearchTerms]
+                                    updatedTerms[index].clicks = parseFloat(e.target.value) || 0
+                                    setFieldValue('topSearchTerms', updatedTerms)
+                                  }}
+                                />
+                              </FormItem>
+
+                              <FormItem label={index === 0 ? 'CTR' : ''}>
+                                <Input
+                                  type="number"
+                                  value={term.ctr || ''}
+                                  placeholder="CTR..."
+                                  onChange={(e) => {
+                                    const updatedTerms = [...values.topSearchTerms]
+                                    updatedTerms[index].ctr = parseFloat(e.target.value) || 0
+                                    setFieldValue('topSearchTerms', updatedTerms)
+                                  }}
+                                />
+                              </FormItem>
+
                               <FormItem label={index === 0 ? 'CPC' : ''}>
                                 <Input
                                   type="number"
-                                  value={term.cpc}
+                                  value={term.cpc || ''}
                                   placeholder="CPC..."
                                   onChange={(e) => {
                                     const updatedTerms = [...values.topSearchTerms]
@@ -392,14 +660,41 @@ export default function CampaignForm() {
                                   }}
                                 />
                               </FormItem>
+
+                              <FormItem label={index === 0 ? 'CPM' : ''}>
+                                <Input
+                                  type="number"
+                                  value={term.cpm || ''}
+                                  placeholder="CPM..."
+                                  onChange={(e) => {
+                                    const updatedTerms = [...values.topSearchTerms]
+                                    updatedTerms[index].cpm = parseFloat(e.target.value) || 0
+                                    setFieldValue('topSearchTerms', updatedTerms)
+                                  }}
+                                />
+                              </FormItem>
+
                               <FormItem label={index === 0 ? 'Đã tiêu' : ''}>
                                 <Input
                                   type="number"
-                                  value={term.spent}
+                                  value={term.spent || ''}
                                   placeholder="Đã tiêu..."
                                   onChange={(e) => {
                                     const updatedTerms = [...values.topSearchTerms]
                                     updatedTerms[index].spent = parseFloat(e.target.value) || 0
+                                    setFieldValue('topSearchTerms', updatedTerms)
+                                  }}
+                                />
+                              </FormItem>
+
+                              <FormItem label={index === 0 ? 'Lượt hiển thị' : ''}>
+                                <Input
+                                  type="number"
+                                  value={term.impression || ''}
+                                  placeholder="Lượt hiển thị..."
+                                  onChange={(e) => {
+                                    const updatedTerms = [...values.topSearchTerms]
+                                    updatedTerms[index].impression = parseFloat(e.target.value) || 0
                                     setFieldValue('topSearchTerms', updatedTerms)
                                   }}
                                 />
@@ -435,32 +730,42 @@ export default function CampaignForm() {
                           variant={sortOrder === 'asc' ? 'solid' : 'twoTone'}
                           icon={<ArrowUpIcon />}
                           onClick={() => {
-                            const sorted = [...values.locationStats].sort((a, b) => a.spent - b.spent)
+                            const sorted = [...values.locationStats].sort((a, b) => (a.spent || 0) - (b.spent || 0))
                             setFieldValue('locationStats', sorted)
                             setSortOrder('asc')
                           }}
                         >
                           Tăng dần
                         </Button>
+
                         <Button
                           type="button"
                           size="sm"
                           variant={sortOrder === 'desc' ? 'solid' : 'twoTone'}
                           icon={<ArrowDownIcon />}
                           onClick={() => {
-                            const sorted = [...values.locationStats].sort((a, b) => b.spent - a.spent)
+                            const sorted = [...values.locationStats].sort((a, b) => (b.spent || 0) - (a.spent || 0))
                             setFieldValue('locationStats', sorted)
                             setSortOrder('desc')
                           }}
                         >
                           Giảm dần
                         </Button>
+
                         <Button
                           type="button"
                           size="sm"
                           icon={<PlusIcon />}
                           onClick={() => {
-                            const newLocation: LocationStat = { location: '', clicks: 0, ctr: 0, cpc: 0, spent: 0 }
+                            const newLocation: LocationStat = {
+                              location: '',
+                              clicks: 0,
+                              ctr: 0,
+                              cpc: 0,
+                              cpm: 0,
+                              spent: 0,
+                              impression: 0,
+                            }
                             setFieldValue('locationStats', [...values.locationStats, newLocation])
                           }}
                         >
@@ -475,7 +780,7 @@ export default function CampaignForm() {
                       <div className="space-y-3">
                         {values.locationStats.map((location, index) => (
                           <div key={index} className="flex items-start gap-3">
-                            <div className="flex-1 gap-3 grid grid-cols-5">
+                            <div className="flex-1 gap-3 grid grid-cols-3">
                               <FormItem label={index === 0 ? 'Quốc gia' : ''}>
                                 <Input
                                   value={location.location}
@@ -487,10 +792,11 @@ export default function CampaignForm() {
                                   }}
                                 />
                               </FormItem>
+
                               <FormItem label={index === 0 ? 'Click' : ''}>
                                 <Input
                                   type="number"
-                                  value={location.clicks}
+                                  value={location.clicks || ''}
                                   placeholder="Click..."
                                   onChange={(e) => {
                                     const updatedLocations = [...values.locationStats]
@@ -499,10 +805,11 @@ export default function CampaignForm() {
                                   }}
                                 />
                               </FormItem>
+
                               <FormItem label={index === 0 ? 'CTR' : ''}>
                                 <Input
                                   type="number"
-                                  value={location.ctr}
+                                  value={location.ctr || ''}
                                   placeholder="CTR..."
                                   onChange={(e) => {
                                     const updatedLocations = [...values.locationStats]
@@ -511,10 +818,11 @@ export default function CampaignForm() {
                                   }}
                                 />
                               </FormItem>
+
                               <FormItem label={index === 0 ? 'CPC' : ''}>
                                 <Input
                                   type="number"
-                                  value={location.cpc}
+                                  value={location.cpc || ''}
                                   placeholder="CPC..."
                                   onChange={(e) => {
                                     const updatedLocations = [...values.locationStats]
@@ -523,14 +831,41 @@ export default function CampaignForm() {
                                   }}
                                 />
                               </FormItem>
+
+                              <FormItem label={index === 0 ? 'CPM' : ''}>
+                                <Input
+                                  type="number"
+                                  value={location.cpm || ''}
+                                  placeholder="CPM..."
+                                  onChange={(e) => {
+                                    const updatedLocations = [...values.locationStats]
+                                    updatedLocations[index].cpm = parseFloat(e.target.value) || 0
+                                    setFieldValue('locationStats', updatedLocations)
+                                  }}
+                                />
+                              </FormItem>
+
                               <FormItem label={index === 0 ? 'Đã tiêu' : ''}>
                                 <Input
                                   type="number"
-                                  value={location.spent}
+                                  value={location.spent || ''}
                                   placeholder="Đã tiêu..."
                                   onChange={(e) => {
                                     const updatedLocations = [...values.locationStats]
                                     updatedLocations[index].spent = parseFloat(e.target.value) || 0
+                                    setFieldValue('locationStats', updatedLocations)
+                                  }}
+                                />
+                              </FormItem>
+
+                              <FormItem label={index === 0 ? 'Lượt hiển thị' : ''}>
+                                <Input
+                                  type="number"
+                                  value={location.impression || ''}
+                                  placeholder="Lượt hiển thị..."
+                                  onChange={(e) => {
+                                    const updatedLocations = [...values.locationStats]
+                                    updatedLocations[index].impression = parseFloat(e.target.value) || 0
                                     setFieldValue('locationStats', updatedLocations)
                                   }}
                                 />

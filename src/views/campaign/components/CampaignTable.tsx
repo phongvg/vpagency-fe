@@ -1,7 +1,9 @@
 import { DataTable } from '@/components/shared'
 import BadgeStatus from '@/components/shared/BadgeStatus'
-import { Badge, ConfirmDialog, Tooltip, Button, Checkbox, Dropdown } from '@/components/ui'
+import { TableTooltip } from '@/components/shared/TableTooltip'
+import { ConfirmDialog, Button, Checkbox, Dropdown } from '@/components/ui'
 import { addDash } from '@/helpers/addDash'
+import { fixedNumber } from '@/helpers/fixedNumber'
 import { formatDate } from '@/helpers/formatDate'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { toastError, toastSuccess } from '@/utils/toast'
@@ -116,6 +118,19 @@ export default function CampaignTable() {
         cell: (props) => <span>{formatDate(props.row.original.date, 'DD/MM/YYYY')}</span>,
       },
       {
+        id: 'uid',
+        header: 'UID',
+        accessorKey: 'uid',
+        cell: (props) => (
+          <div className="flex items-center gap-2">
+            {addDash(props.row.original.uid)}
+            <button type="button" title="Sao chép" onClick={() => handleCopyToClipboard(props.row.original.uid || '')}>
+              <HiOutlineDuplicate />
+            </button>
+          </div>
+        ),
+      },
+      {
         id: 'externalId',
         header: 'ID chiến dịch',
         accessorKey: 'externalId',
@@ -137,25 +152,6 @@ export default function CampaignTable() {
         header: 'Tên chiến dịch',
         accessorKey: 'name',
         cell: (props) => <span>{props.row.original.name}</span>,
-      },
-      {
-        id: 'uid',
-        header: 'UID',
-        accessorKey: 'uid',
-        cell: (props) => (
-          <div className="flex items-center gap-2">
-            {addDash(props.row.original.uid)}
-            <button type="button" title="Sao chép" onClick={() => handleCopyToClipboard(props.row.original.uid || '')}>
-              <HiOutlineDuplicate />
-            </button>
-          </div>
-        ),
-      },
-      {
-        id: 'mcc',
-        header: 'MCC',
-        accessorKey: 'mcc',
-        cell: (props) => <span>{addDash(props.row.original.mcc)}</span>,
       },
       {
         id: 'finalUrl',
@@ -180,22 +176,27 @@ export default function CampaignTable() {
         cell: (props) => <BadgeStatus content={props.row.original.status} />,
       },
       {
+        id: 'mcc',
+        header: 'MCC',
+        accessorKey: 'mcc',
+        cell: (props) => <span>{addDash(props.row.original.mcc)}</span>,
+      },
+      {
         id: 'avgCpc',
         header: 'CPC trung bình',
         accessorKey: 'avgCpc',
-        cell: (props) => <span>{props.row.original.avgCpc}</span>,
+        cell: (props) => <span>{fixedNumber(props.row.original.avgCpc)}</span>,
       },
       {
         id: 'targetCpc',
         header: 'Thầu chung',
         accessorKey: 'targetCpc',
-        cell: (props) => <span>{props.row.original.targetCpc}</span>,
+        cell: (props) => <span>{fixedNumber(props.row.original.targetCpc)}</span>,
       },
       {
         id: 'clicks',
         header: 'Click',
         accessorKey: 'clicks',
-        cell: (props) => <span>{props.row.original.clicks}</span>,
       },
       {
         id: 'ctr',
@@ -203,47 +204,66 @@ export default function CampaignTable() {
         accessorKey: 'ctr',
         cell: (props) => {
           const ctr = props.row.original.ctr
-          return <span>{ctr != null ? `${(ctr * 100).toFixed(2)}%` : ''}</span>
+          return <span>{ctr !== null ? `${(ctr * 100).toFixed(2)}%` : ''}</span>
         },
       },
       {
         id: 'cpm',
         header: 'CPM',
         accessorKey: 'cpm',
-        cell: (props) => <span>{props.row.original.cpm}</span>,
+        cell: (props) => <span>{fixedNumber(props.row.original.cpm)}</span>,
       },
       {
-        id: 'budget',
+        id: 'cost',
         header: 'Ngân sách chi tiêu',
-        accessorKey: 'budget',
-        cell: (props) => <span>{props.row.original.budget}</span>,
+        accessorKey: 'cost',
+        cell: (props) => <span>{fixedNumber(props.row.original.cost)}</span>,
+      },
+      {
+        id: 'campaignBudget',
+        header: 'Ngân sách chiến dịch',
+        accessorKey: 'campaignBudget',
       },
       {
         id: 'keywords',
         header: 'Từ khóa',
         cell: (props) => {
           const keywords = props.row.original.keywords || []
-          if (keywords.length === 0) return ''
+          if (keywords.length === 0) return null
 
           return (
-            <Tooltip title={keywords.map((k) => `${k.keyword} (${k.match})`).join(', ')}>
-              <Badge content={`${keywords.length} từ khóa`} className="bg-blue-50 text-blue-700 cursor-help" />
-            </Tooltip>
+            <TableTooltip
+              data={keywords.sort((a, b) => (b.cost || 0) - (a.cost || 0))}
+              columns={[
+                { key: 'keyword', label: 'Từ khóa' },
+                { key: 'match', label: 'Hình thức' },
+                { key: 'bid', label: 'Bid' },
+                { key: 'clicks', label: 'Click' },
+                { key: 'impression', label: 'Lượt hiển thị' },
+                { key: 'ctr', label: 'CTR' },
+                { key: 'cpc', label: 'CPC' },
+                { key: 'cpm', label: 'CPM' },
+                { key: 'cost', label: 'Chi phí' },
+              ]}
+            />
           )
         },
       },
       {
-        id: 'targetLocations',
-        header: 'Quốc gia mục tiêu',
-        accessorKey: 'targetLocations',
+        id: 'negativeKeywords',
+        header: 'Từ khóa không tìm kiếm',
         cell: (props) => {
-          const locations = props.row.original.targetLocations || []
-          if (locations.length === 0) return ''
+          const keywords = props.row.original.negativeKeywords || []
+          if (keywords.length === 0) return null
 
           return (
-            <Tooltip title={locations.join(', ')}>
-              <Badge content={`${locations.length} quốc gia`} className="bg-blue-50 text-blue-700 cursor-help" />
-            </Tooltip>
+            <TableTooltip
+              data={keywords.sort((a, b) => (b.cost || 0) - (a.cost || 0))}
+              columns={[
+                { key: 'keyword', label: 'Từ khóa' },
+                { key: 'match', label: 'Hình thức' },
+              ]}
+            />
           )
         },
       },
@@ -255,40 +275,40 @@ export default function CampaignTable() {
           if (terms.length === 0) return ''
 
           return (
-            <Tooltip
-              scrollable
-              trigger="click"
-              maxHeight={700}
-              placement="left"
-              title={
-                <div className="text-xs">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-gray-600 border-b">
-                        <th className="px-1 py-1 text-left whitespace-nowrap">Thuật ngữ</th>
-                        <th className="px-2 py-1 text-left whitespace-nowrap">CPC</th>
-                        <th className="px-2 py-1 text-left whitespace-nowrap">Đã tiêu</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {terms.map((term, i) => (
-                        <tr key={i} className="border-gray-700 last:border-0 border-b">
-                          <td className="px-1 py-1 text-left">{term.term}</td>
-                          <td className="px-2 py-1 text-left">{term.cpc.toFixed(2)}</td>
-                          <td className="px-2 py-1 text-left">{term.spent.toFixed(2)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              }
-            >
-              <div className="cursor-help" title="Click để xem chi tiết">
-                <div className="flex items-center gap-1">
-                  <Badge content={`+${terms.length - 1}`} className="bg-blue-50 text-blue-700 text-xs" />
-                </div>
-              </div>
-            </Tooltip>
+            <TableTooltip
+              data={terms.sort((a, b) => (b.spent || 0) - (a.spent || 0))}
+              columns={[
+                { key: 'term', label: 'Thuật ngữ' },
+                { key: 'cpc', label: 'CPC' },
+                { key: 'spent', label: 'Đã tiêu' },
+              ]}
+            />
+          )
+        },
+      },
+      {
+        id: 'targetLocations',
+        header: 'Quốc gia mục tiêu',
+        accessorKey: 'targetLocations',
+        cell: (props) => {
+          const locations = props.row.original.targetLocations || []
+          if (locations.length === 0) return null
+
+          return (
+            <TableTooltip data={locations.map((l) => ({ name: l }))} columns={[{ key: 'name', label: 'Quốc gia' }]} />
+          )
+        },
+      },
+      {
+        id: 'locationExcluded',
+        header: 'Quốc gia loại trừ',
+        accessorKey: 'locationExcluded',
+        cell: (props) => {
+          const locations = props.row.original.locationExcluded || []
+          if (locations.length === 0) return null
+
+          return (
+            <TableTooltip data={locations.map((l) => ({ name: l }))} columns={[{ key: 'name', label: 'Quốc gia' }]} />
           )
         },
       },
@@ -298,47 +318,19 @@ export default function CampaignTable() {
         accessorKey: 'locationStats',
         cell: (props) => {
           const stats = props.row.original.locationStats || []
-          if (stats.length === 0) return ''
+          if (stats.length === 0) return null
 
           return (
-            <Tooltip
-              scrollable
-              trigger="click"
-              maxHeight={700}
-              placement="left"
-              title={
-                <div className="text-xs">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-gray-600 border-b">
-                        <th className="px-1 py-1 text-left whitespace-nowrap">Quốc gia</th>
-                        <th className="px-1 py-1 text-left whitespace-nowrap">Click</th>
-                        <th className="px-1 py-1 text-left whitespace-nowrap">CTR</th>
-                        <th className="px-1 py-1 text-left whitespace-nowrap">CPC</th>
-                        <th className="px-1 py-1 text-left whitespace-nowrap">Đã tiêu</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {stats.map((stat, i) => (
-                        <tr key={i} className="border-gray-700 last:border-0 border-b">
-                          <td className="px-1 py-1 text-left">{stat.location}</td>
-                          <td className="px-1 py-1 text-left">{stat.clicks}</td>
-                          <td className="px-1 py-1 text-left">{stat.ctr}</td>
-                          <td className="px-1 py-1 text-left">{stat.cpc.toFixed(2)}</td>
-                          <td className="px-1 py-1 text-left">{stat.spent.toFixed(2)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              }
-            >
-              <div className="cursor-help">
-                <div className="flex items-center gap-1">
-                  <Badge content={`+${stats.length - 1}`} className="bg-blue-50 text-blue-700 text-xs" />
-                </div>
-              </div>
-            </Tooltip>
+            <TableTooltip
+              data={stats.sort((a, b) => (b.spent || 0) - (a.spent || 0))}
+              columns={[
+                { key: 'location', label: 'Quốc gia' },
+                { key: 'clicks', label: 'Click' },
+                { key: 'ctr', label: 'CTR' },
+                { key: 'cpc', label: 'CPC' },
+                { key: 'spent', label: 'Đã tiêu' },
+              ]}
+            />
           )
         },
       },

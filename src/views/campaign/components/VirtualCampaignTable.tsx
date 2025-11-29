@@ -1,8 +1,8 @@
 import { UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
 import { addDash } from '@/helpers/addDash'
-import { Badge, Tooltip } from '@/components/ui'
 import { FixedSizeList } from 'react-window'
 import { useCallback, useMemo } from 'react'
+import { TableTooltip } from '@/components/shared/TableTooltip'
 
 interface VirtualCampaignTableProps {
   campaigns: UpdateCampaignRequest[]
@@ -28,6 +28,7 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
       status: 200,
       avgCpc: 180,
       targetCpc: 120,
+      campaignBudget: 200,
       clicks: 100,
       ctr: 100,
       cpm: 100,
@@ -37,6 +38,7 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
       targetLocations: 300,
       topSearchTerms: 300,
       locationStats: 300,
+      locationExcluded: 300,
     }),
     [],
   )
@@ -132,6 +134,12 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
             {campaign.targetCpc}
           </div>
           <div
+            style={{ width: columnWidths.campaignBudget, minWidth: columnWidths.campaignBudget }}
+            className="flex items-center px-4 border-r"
+          >
+            {campaign.campaignBudget}
+          </div>
+          <div
             style={{ width: columnWidths.clicks, minWidth: columnWidths.clicks }}
             className="flex items-center px-4 border-r"
           >
@@ -160,53 +168,20 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
             className="flex items-center px-4 border-r"
           >
             {campaign.keywords.length > 0 && (
-              <Tooltip
-                scrollable
-                trigger="click"
-                maxHeight={700}
-                placement="left"
-                title={
-                  <div className="text-xs">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-gray-600 border-b">
-                          <th className="px-1 py-1 text-left whitespace-nowrap">Từ khóa</th>
-                          <th className="px-2 py-1 text-left whitespace-nowrap">Phù hợp</th>
-                          <th className="px-2 py-1 text-left whitespace-nowrap">CPC Bid</th>
-                          <th className="px-2 py-1 text-left whitespace-nowrap">Click</th>
-                          <th className="px-2 py-1 text-left whitespace-nowrap">Lượt hiển thị</th>
-                          <th className="px-2 py-1 text-left whitespace-nowrap">CTR</th>
-                          <th className="px-2 py-1 text-left whitespace-nowrap">CPC</th>
-                          <th className="px-2 py-1 text-left whitespace-nowrap">CPM</th>
-                          <th className="px-2 py-1 text-left whitespace-nowrap">Ngân sách chi tiêu</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {campaign.keywords
-                          .sort((a, b) => b.cost - a.cost)
-                          .map((k, i) => (
-                            <tr key={i} className="border-gray-700 last:border-0 border-b">
-                              <td className="px-1 py-1 text-left">{k.keyword}</td>
-                              <td className="px-2 py-1 text-left">{k.match}</td>
-                              <td className="px-2 py-1 text-left">{k.bid.toFixed(2)}</td>
-                              <td className="px-2 py-1 text-left">{k.clicks}</td>
-                              <td className="px-2 py-1 text-left">{k.impression}</td>
-                              <td className="px-2 py-1 text-left">{k.ctr.toFixed(2)}</td>
-                              <td className="px-2 py-1 text-left">{k.cpc.toFixed(2)}</td>
-                              <td className="px-2 py-1 text-left">{k.cpm.toFixed(2)}</td>
-                              <td className="px-2 py-1 text-left">{k.cost.toFixed(2)}</td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
-                  </div>
-                }
-              >
-                <Badge
-                  content={`${campaign.keywords.length} từ khóa`}
-                  className="bg-blue-50 text-blue-700 cursor-help"
-                />
-              </Tooltip>
+              <TableTooltip
+                data={campaign.keywords.sort((a, b) => (b.cost || 0) - (a.cost || 0))}
+                columns={[
+                  { key: 'keyword', label: 'Từ khóa' },
+                  { key: 'match', label: 'Hình thức' },
+                  { key: 'bid', label: 'Bid' },
+                  { key: 'clicks', label: 'Click' },
+                  { key: 'impression', label: 'Lượt hiển thị' },
+                  { key: 'ctr', label: 'CTR' },
+                  { key: 'cpc', label: 'CPC' },
+                  { key: 'cpm', label: 'CPM' },
+                  { key: 'cost', label: 'Chi phí' },
+                ]}
+              />
             )}
           </div>
           <div
@@ -214,37 +189,13 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
             className="flex items-center px-4 border-r"
           >
             {campaign.negativeKeywords.length > 0 && (
-              <Tooltip
-                scrollable
-                trigger="click"
-                maxHeight={700}
-                placement="left"
-                title={
-                  <div className="text-xs">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-gray-600 border-b">
-                          <th className="px-1 py-1 text-left whitespace-nowrap">Từ khóa</th>
-                          <th className="px-2 py-1 text-left whitespace-nowrap">Phù hợp</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {campaign.negativeKeywords.map((k, i) => (
-                          <tr key={i} className="border-gray-700 last:border-0 border-b">
-                            <td className="px-1 py-1 text-left">{k.keyword}</td>
-                            <td className="px-2 py-1 text-left">{k.match}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                }
-              >
-                <Badge
-                  content={`${campaign.keywords.length} từ khóa`}
-                  className="bg-blue-50 text-blue-700 cursor-help"
-                />
-              </Tooltip>
+              <TableTooltip
+                data={campaign.negativeKeywords}
+                columns={[
+                  { key: 'keyword', label: 'Từ khóa' },
+                  { key: 'match', label: 'Hình thức' },
+                ]}
+              />
             )}
           </div>
           <div
@@ -252,12 +203,21 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
             className="flex items-center px-4 border-r"
           >
             {campaign.targetLocations.length > 0 && (
-              <Tooltip title={campaign.targetLocations.join(', ')}>
-                <Badge
-                  content={`${campaign.targetLocations.length} quốc gia`}
-                  className="bg-blue-50 text-blue-700 cursor-help"
-                />
-              </Tooltip>
+              <TableTooltip
+                data={campaign.targetLocations.map((l) => ({ name: l }))}
+                columns={[{ key: 'name', label: 'Quốc gia' }]}
+              />
+            )}
+          </div>
+          <div
+            style={{ width: columnWidths.locationExcluded, minWidth: columnWidths.locationExcluded }}
+            className="flex items-center px-4 border-r"
+          >
+            {campaign.locationExcluded.length > 0 && (
+              <TableTooltip
+                data={campaign.locationExcluded.map((l) => ({ name: l }))}
+                columns={[{ key: 'name', label: 'Quốc gia' }]}
+              />
             )}
           </div>
           <div
@@ -265,43 +225,14 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
             className="flex items-center px-4 border-r"
           >
             {campaign.topSearchTerms.length > 0 && (
-              <Tooltip
-                scrollable
-                trigger="click"
-                maxHeight={700}
-                placement="left"
-                title={
-                  <div className="text-xs">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-gray-600 border-b">
-                          <th className="px-1 py-1 text-left whitespace-nowrap">Thuật ngữ</th>
-                          <th className="px-2 py-1 text-left whitespace-nowrap">CPC</th>
-                          <th className="px-2 py-1 text-left whitespace-nowrap">Đã tiêu</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {campaign.topSearchTerms.map((term, i) => (
-                          <tr key={i} className="border-gray-700 last:border-0 border-b">
-                            <td className="px-1 py-1 text-left">{term.term}</td>
-                            <td className="px-2 py-1 text-left">{term.cpc.toFixed(2)}</td>
-                            <td className="px-2 py-1 text-left">{term.spent.toFixed(2)}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                }
-              >
-                <div className="cursor-help" title="Click để xem chi tiết">
-                  <div className="flex items-center gap-1">
-                    <Badge
-                      content={`+${campaign.topSearchTerms.length - 1}`}
-                      className="bg-blue-50 text-blue-700 text-xs"
-                    />
-                  </div>
-                </div>
-              </Tooltip>
+              <TableTooltip
+                data={campaign.topSearchTerms.sort((a, b) => (b.spent || 0) - (a.spent || 0))}
+                columns={[
+                  { key: 'term', label: 'Thuật ngữ' },
+                  { key: 'cpc', label: 'CPC' },
+                  { key: 'spent', label: 'Đã tiêu' },
+                ]}
+              />
             )}
           </div>
           <div
@@ -309,47 +240,16 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
             className="flex items-center px-4 border-r"
           >
             {campaign.locationStats.length > 0 && (
-              <Tooltip
-                scrollable
-                trigger="click"
-                maxHeight={700}
-                placement="left"
-                title={
-                  <div className="text-xs">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-gray-600 border-b">
-                          <th className="px-1 py-1 text-left whitespace-nowrap">Quốc gia</th>
-                          <th className="px-1 py-1 text-left whitespace-nowrap">Click</th>
-                          <th className="px-1 py-1 text-left whitespace-nowrap">CTR</th>
-                          <th className="px-1 py-1 text-left whitespace-nowrap">CPC</th>
-                          <th className="px-1 py-1 text-left whitespace-nowrap">Đã tiêu</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {campaign.locationStats.map((stat, i) => (
-                          <tr key={i} className="border-gray-700 last:border-0 border-b">
-                            <td className="px-1 py-1 text-left">{stat.location}</td>
-                            <td className="px-1 py-1 text-left">{stat.clicks}</td>
-                            <td className="px-1 py-1 text-left">{stat.ctr}</td>
-                            <td className="px-1 py-1 text-left">{stat.cpc.toFixed(2)}</td>
-                            <td className="px-1 py-1 text-left">{stat.spent.toFixed(2)}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                }
-              >
-                <div className="cursor-help">
-                  <div className="flex items-center gap-1">
-                    <Badge
-                      content={`+${campaign.locationStats.length - 1}`}
-                      className="bg-blue-50 text-blue-700 text-xs"
-                    />
-                  </div>
-                </div>
-              </Tooltip>
+              <TableTooltip
+                data={campaign.locationStats.sort((a, b) => (b.spent || 0) - (a.spent || 0))}
+                columns={[
+                  { key: 'location', label: 'Quốc gia' },
+                  { key: 'clicks', label: 'Click' },
+                  { key: 'ctr', label: 'CTR' },
+                  { key: 'cpc', label: 'CPC' },
+                  { key: 'spent', label: 'Đã tiêu' },
+                ]}
+              />
             )}
           </div>
         </div>
@@ -431,6 +331,12 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
                 Thầu chung
               </div>
               <div
+                style={{ width: columnWidths.campaignBudget, minWidth: columnWidths.campaignBudget }}
+                className="flex items-center px-4 border-r font-semibold"
+              >
+                Ngân sách chiến dịch
+              </div>
+              <div
                 style={{ width: columnWidths.clicks, minWidth: columnWidths.clicks }}
                 className="flex items-center px-4 border-r font-semibold"
               >
@@ -471,6 +377,12 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
                 className="flex items-center px-4 border-r font-semibold"
               >
                 Quốc gia mục tiêu
+              </div>
+              <div
+                style={{ width: columnWidths.locationExcluded, minWidth: columnWidths.locationExcluded }}
+                className="flex items-center px-4 border-r font-semibold"
+              >
+                Loại trừ quốc gia
               </div>
               <div
                 style={{ width: columnWidths.topSearchTerms, minWidth: columnWidths.topSearchTerms }}

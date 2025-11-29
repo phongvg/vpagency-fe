@@ -10,9 +10,10 @@ export type Campaign = {
   externalId: string | null
   finalUrl: FinalUrl | null
   gmailId: string | null
-  keywords: KeywordMatch[]
-  topSearchTerms: SearchTerm[]
   status: string
+  keywords: KeywordMatch[]
+  negativeKeywords: KeywordMatch[]
+  topSearchTerms: SearchTerm[]
   avgCpc: number | null
   targetCpc: number | null
   clicks: number | null
@@ -24,34 +25,39 @@ export type Campaign = {
   finalUrlImport: string | null
   finalUrlImportId: string | null
   campaignBudget: number
-  negativeKeywords: KeywordMatch[]
   locationExcluded: string[]
 }
 
 export type KeywordMatch = {
   keyword: string
   match: string
-  clicks: number
-  ctr: number
-  cpc: number
-  cpm: number
-  cost: number
-  impression: number
-  bid: number
+  clicks?: number | null
+  ctr?: number | null
+  cpc?: number | null
+  cpm?: number | null
+  cost?: number | null
+  impression?: number | null
+  bid?: number | null
 }
 
 export type SearchTerm = {
   term: string
-  cpc: number
-  spent: number
+  cpc: number | null
+  spent: number | null
+  clicks: number | null
+  ctr: number | null
+  cpm: number | null
+  impression: number | null
 }
 
 export type LocationStat = {
   location: string
-  clicks: number
-  ctr: number
-  cpc: number
-  spent: number
+  clicks: number | null
+  ctr: number | null
+  cpc: number | null
+  spent: number | null
+  cpm: number | null
+  impression: number | null
 }
 
 export type UpdateCampaignRequest = {
@@ -73,7 +79,7 @@ export type UpdateCampaignRequest = {
   cost: number | null
   targetLocations: string[]
   locationStats: LocationStat[]
-  campaignBudget: number
+  campaignBudget: number | null
   negativeKeywords: KeywordMatch[]
   locationExcluded: string[]
 }
@@ -88,4 +94,10 @@ export type Summary = {
   total: number
   succeeded: number
   failed: number
+}
+
+export interface CurrencyRate {
+  uid: string
+  code: string
+  rateToUSD: number | null
 }

@@ -120,7 +120,7 @@ export function CampaignFilterPanel() {
 
 export default function CampaignFilter() {
   const { filter, setFilter } = useCampaignStore()
-  const [showFilters, setShowFilters] = useState(false)
+  const [showFilters, setShowFilters] = useState(true)
 
   const handleClearFilters = () => {
     setFilter({

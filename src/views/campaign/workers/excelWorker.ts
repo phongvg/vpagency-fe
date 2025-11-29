@@ -1,4 +1,4 @@
-import { Campaign, UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
+import { Campaign, CurrencyRate, UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
 import { removeDash } from '@/helpers/removeDash'
 import * as XLSX from 'xlsx'
 
@@ -10,6 +10,7 @@ interface WorkerMessage {
 interface WorkerResponse {
   type: 'success' | 'error' | 'progress' | 'debug'
   data?: Campaign[]
+  currencyRates?: CurrencyRate[]
   error?: string
   progress?: number
 }
@@ -67,6 +68,8 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
     const campaignBudgetMap = new Map<number, any[]>()
     const keywordPfmYesterdayMap = new Map<number, any[]>()
 
+    const currencyRates: CurrencyRate[] = []
+
     campaignSheet.forEach((row) => {
       const id = row['Campaign ID']
       if (!campaignMap.has(id)) campaignMap.set(id, [])
@@ -113,6 +116,11 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
       const customerId = removeDash(String(row['Customer ID']))
       const mccId = removeDash(String(row['MCC ID']))
       mccMap.set(customerId, mccId)
+
+      const currencyCode = row['Currency']
+      if (currencyCode && currencyCode !== 'USD') {
+        currencyRates.push({ uid: customerId, code: currencyCode, rateToUSD: null })
+      }
     })
 
     locationTableSheet.forEach((row) => {
@@ -157,19 +165,18 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
 
       const importAt = campaignPfmRows.map((row) => row['Date Pulled'])
       const date = campaignPfmRows.map((row) => row['Data Date'])
-      const uid = campaignRows.map((row) => row['Customer ID'])
-      const uidValue = uid[uid.length - 1]
+
+      const uids = campaignRows.map((row) => row['Customer ID'])
+      const lastUid = uids[uids.length - 1]
       let uidString =
-        typeof uidValue === 'string' && uidValue.startsWith('customers/') ? uidValue.split('/')[1] : String(uidValue)
+        typeof lastUid === 'string' && lastUid.startsWith('customers/') ? lastUid.split('/')[1] : String(lastUid)
       uidString = removeDash(uidString)
       const mcc = mccMap.get(uidString) || null
-
       const finalUrlAds = adGroupAdRows.map((row) => row['Final URL'])
       const finalUrlKey = adGroupCriterionRows.map((row) => row['Final URL'])
       const criterionMap = new Map(
         adGroupCriterionRows.map((row) => [`${row['Keyword Text']}|${row['Keyword Match Type'].toLowerCase()}`, row]),
       )
-
       const keywordsRaw = keywordPfmYesterdayRows.map((row) => {
         const key = `${row['Keyword Text']}|${row['Keyword Match Type'].toLowerCase()}`
         const criterion = criterionMap.get(key)
@@ -193,12 +200,12 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
           return {
             keyword: row['Keyword Text'],
             match: row['Keyword Match Type'],
-            clicks: row['Clicks'],
-            ctr: row['CTR'],
-            cpc: row['CPC'],
-            cpm: row['CPM'],
-            cost: row['Cost'],
-            impression: row['Impressions'],
+            clicks: 0,
+            ctr: 0,
+            cpc: 0,
+            cpm: 0,
+            cost: 0,
+            impression: 0,
             bid: 0,
           }
         })
@@ -210,10 +217,19 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
           term: row['Search Term'],
           cpc: row['CPC'],
           spent: row['Cost'],
+          clicks: row['Clicks'],
+          ctr: row['CTR'],
+          cpm: row['CPM'],
+          impression: row['Impressions'],
         }
       })
       const topSearchTerms = Array.from(
-        new Map(topSearchTermsRaw.map((s) => [`${s.term}|${s.cpc}|${s.spent}`, s])).values(),
+        new Map(
+          topSearchTermsRaw.map((s) => [
+            `${s.term}|${s.cpc}|${s.spent}|${s.clicks}|${s.ctr}|${s.cpm}|${s.impression}`,
+            s,
+          ]),
+        ).values(),
       )
       const statusCampaign = campaignRows.map((row) => row['Status'])
       const avgCpc = campaignPfmRows.map((row) => row['CPC'])
@@ -226,16 +242,22 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
       const ctr = campaignPfmRows.map((row) => row['CTR'])
       const cpm = campaignPfmRows.map((row) => row['CPM'])
       const cost = campaignPfmRows.map((row) => row['Cost'])
-      const targetLocations = campaignCriterionRows
-        .filter((row) => row['Negative (Excluded)'] === 'No')
-        .map((row) => row['Location Geo Target Constant'])
-        .filter(Boolean)
+      const targetLocations = [
+        ...new Set(
+          campaignCriterionRows
+            .filter((row) => row['Negative (Excluded)'] === 'No')
+            .map((row) => row['Location Geo Target Constant'])
+            .filter(Boolean),
+        ),
+      ]
       const locationStatsRaw = geographicViewYesterdayRows.map((row) => ({
         location: locationTableMap.get(row['Country ID']) || '',
         clicks: row['Clicks'],
         ctr: row['CTR'],
         cpc: row['CPC'],
         spent: row['Cost'],
+        cpm: row['CPM'],
+        impression: row['Impressions'],
       }))
       const locationStats = Array.from(
         new Map(
@@ -273,23 +295,25 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
         keywords,
         topSearchTerms,
         status: statusCampaign[statusCampaign.length - 1] ?? null,
-        avgCpc: avgCpc[avgCpc.length - 1] ?? null,
+        avgCpc: avgCpc[avgCpc.length - 1] ?? 0,
         targetCpc: microsCalc,
-        clicks: clicks[clicks.length - 1] ?? null,
-        ctr: ctr[ctr.length - 1] ?? null,
-        cpm: cpm[cpm.length - 1] ?? null,
-        cost: cost[cost.length - 1] ?? null,
+        clicks: clicks[clicks.length - 1] ?? 0,
+        ctr: ctr[ctr.length - 1] ?? 0,
+        cpm: cpm[cpm.length - 1] ?? 0,
+        cost: cost[cost.length - 1] ?? 0,
         targetLocations,
         locationStats,
-        campaignBudget: campaignBudget[campaignBudget.length - 1] ?? null,
+        campaignBudget: campaignBudget[campaignBudget.length - 1] ?? 0,
         negativeKeywords,
         locationExcluded,
       }
     })
 
+    const currencyRatesUnique = Array.from(new Map(currencyRates.map((c) => [c.uid, c])).values())
+
     self.postMessage({ type: 'progress', progress: 100 } as WorkerResponse)
 
-    self.postMessage({ type: 'success', data: campaigns } as WorkerResponse)
+    self.postMessage({ type: 'success', data: campaigns, currencyRates: currencyRatesUnique } as WorkerResponse)
   } catch (error) {
     self.postMessage({
       type: 'error',

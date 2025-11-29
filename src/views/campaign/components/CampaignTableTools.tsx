@@ -4,15 +4,35 @@ import CampaignSearch from '@/views/campaign/components/CampaignSearch'
 import CampaignFilter, { CampaignFilterPanel } from '@/views/campaign/components/CampaignFilter'
 import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
 import { useExcelWorker } from '@/views/campaign/hooks/useExcelWorker'
-import { useRef, ChangeEvent } from 'react'
+import { useRef, ChangeEvent, useState, useMemo } from 'react'
 import { HiOutlineDownload, HiOutlinePlus, HiOutlineRefresh } from 'react-icons/hi'
+import CurrencyRateDialog from '@/views/campaign/components/CurrencyRateDialog'
+import { CurrencyRate, UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
+import { applyExchangeRate } from '@/views/campaign/utils/applyExchangeRate'
+
+interface ImportData {
+  data: UpdateCampaignRequest[]
+  currencyRates: CurrencyRate[]
+}
 
 export default function CampaignTableTools() {
+  const [isOpenCurrencyRateDialog, setIsOpenCurrencyRateDialog] = useState(false)
+  const [importData, setImportData] = useState<ImportData>({
+    data: [],
+    currencyRates: [],
+  })
+
   const { openDialog, openPreviewDialog, setCampaigns, clearFilter } = useCampaignStore()
-  const { processFile, isProcessing, progress } = useExcelWorker()
   const { showFilters, filterButton } = CampaignFilter()
+  const { processFile, isProcessing, progress } = useExcelWorker()
 
   const inputRef = useRef<HTMLInputElement | null>(null)
+
+  const isInvalidForm = useMemo(
+    () =>
+      importData.currencyRates.some((currencyRate) => currencyRate.rateToUSD === null || currencyRate.rateToUSD <= 0),
+    [importData.currencyRates],
+  )
 
   const handleImportClick = () => {
     inputRef.current?.click()
@@ -23,11 +43,19 @@ export default function CampaignTableTools() {
     if (!file) return
 
     try {
-      const data = await processFile(file)
+      const { data, currencyRates } = await processFile(file)
 
-      setCampaigns(data)
-      openPreviewDialog()
-      toastSuccess(`Đã nhập ${data.length} chiến dịch thành công`)
+      console.log({ data, currencyRates })
+
+      setImportData({ data, currencyRates })
+
+      if (currencyRates.length > 0) {
+        setIsOpenCurrencyRateDialog(true)
+      } else {
+        setCampaigns(data)
+        openPreviewDialog()
+        toastSuccess(`Đã nhập ${data.length} chiến dịch thành công`)
+      }
     } catch (err) {
       toastError((err as Error).message ?? 'Lỗi nhập dữ liệu')
     } finally {
@@ -35,33 +63,80 @@ export default function CampaignTableTools() {
     }
   }
 
+  const closeCurrencyRateDialog = () => {
+    setImportData({ data: [], currencyRates: [] })
+    setIsOpenCurrencyRateDialog(false)
+  }
+
+  const handleCurrencyRateChange = (rate: number, code: string) => {
+    const currencyRates = importData.currencyRates.map((currencyRate) => {
+      if (currencyRate.code === code) {
+        currencyRate.rateToUSD = rate
+      }
+      return currencyRate
+    })
+    setImportData({ ...importData, currencyRates })
+  }
+
+  const handleCurrencyRateSubmit = () => {
+    const defaultRate = 1
+
+    const record: Record<string, number> = importData.currencyRates.reduce(
+      (acc, item) => {
+        const rate = item.rateToUSD ?? defaultRate
+        acc[item.uid] = rate
+        return acc
+      },
+      {} as Record<string, number>,
+    )
+
+    const data = applyExchangeRate(importData.data, record)
+
+    setCampaigns(data)
+    openPreviewDialog()
+    toastSuccess(`Đã nhập ${data.length} chiến dịch thành công`)
+    closeCurrencyRateDialog()
+  }
+
   return (
-    <div className="flex flex-col gap-2 mb-4">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-          <CampaignSearch />
-          {filterButton}
-          <Button size="sm" icon={<HiOutlineRefresh />} onClick={clearFilter} />
+    <>
+      <div className="flex flex-col gap-2 mb-4">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center space-x-2">
+            <CampaignSearch />
+            {filterButton}
+            <Button size="sm" icon={<HiOutlineRefresh />} onClick={clearFilter} />
+          </div>
+          <div className="flex gap-2">
+            <Button loading={isProcessing} size="sm" icon={<HiOutlineDownload />} onClick={handleImportClick}>
+              Nhập dữ liệu
+            </Button>
+            <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={() => openDialog()}>
+              Thêm mới
+            </Button>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Button loading={isProcessing} size="sm" icon={<HiOutlineDownload />} onClick={handleImportClick}>
-            Nhập dữ liệu
-          </Button>
-          <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={() => openDialog()}>
-            Thêm mới
-          </Button>
-        </div>
+
+        {showFilters && <CampaignFilterPanel />}
+
+        {isProcessing && (
+          <div className="flex items-center gap-3">
+            <Progress showInfo percent={progress} width="w-full" />
+          </div>
+        )}
+
+        <input ref={inputRef} hidden type="file" multiple={false} accept=".xlsx, .xls" onChange={handleFileChange} />
       </div>
 
-      {showFilters && <CampaignFilterPanel />}
-
-      {isProcessing && (
-        <div className="flex items-center gap-3">
-          <Progress showInfo percent={progress} width="w-full" />
-        </div>
-      )}
-
-      <input ref={inputRef} hidden type="file" multiple={false} accept=".xlsx, .xls" onChange={handleFileChange} />
-    </div>
+      <CurrencyRateDialog
+        isOpen={isOpenCurrencyRateDialog}
+        campaigns={importData.data}
+        currencyRates={importData.currencyRates}
+        isInvalidForm={isInvalidForm}
+        onChangeCurrencyRate={handleCurrencyRateChange}
+        onSubmit={handleCurrencyRateSubmit}
+        onClose={closeCurrencyRateDialog}
+      />
+    </>
   )
 }
