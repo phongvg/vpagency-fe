@@ -112,14 +112,12 @@ export default function FinanceStats({ data }: Props) {
             </h4>
           </div>
         </div>
-        {!isEmpty(data) && (
-          <Chart
-            series={fakeData?.series}
-            xAxis={fakeData?.timeRange}
-            height="350px"
-            customOptions={{ legend: { show: false } }}
-          />
-        )}
+        <Chart
+          series={fakeData?.series}
+          xAxis={fakeData?.timeRange}
+          height="350px"
+          customOptions={{ legend: { show: false } }}
+        />
       </Card>
     </>
   )

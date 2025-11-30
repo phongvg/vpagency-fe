@@ -1,6 +1,6 @@
 import { CommonFilterRequest } from '@/@types/common'
-import { Project } from '@/@types/project'
 import { User } from '@/@types/user'
+import { Project } from '@/views/projects/types/project.type'
 
 export type UserStatisticResponse = {
   total: number
