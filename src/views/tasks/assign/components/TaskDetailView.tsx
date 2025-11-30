@@ -71,6 +71,9 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
       {
         header: 'Mục tiêu chi phí Ref',
         accessorKey: 'targetCostPerRef',
+        cell: (props) => {
+          return <span>{formatUSD(props.row.original.targetCostPerRef)}</span>
+        },
       },
       {
         header: 'Mục tiêu FTD',
@@ -79,10 +82,16 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
       {
         header: 'Mục tiêu chi phí FTD',
         accessorKey: 'targetCostPerFtd',
+        cell: (props) => {
+          return <span>{formatUSD(props.row.original.targetCostPerFtd)}</span>
+        },
       },
       {
         header: 'Mục tiêu CPC',
         accessorKey: 'targetCpc',
+        cell: (props) => {
+          return <span>{formatUSD(props.row.original.targetCpc)}</span>
+        },
       },
     ],
     [],
