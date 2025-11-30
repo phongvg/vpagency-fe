@@ -24,7 +24,7 @@ export default function TaskFormContent() {
     closeDialog()
   }
 
-  const handleCancel = async () => {
+  const handleCancel = () => {
     closeDialog()
   }
 

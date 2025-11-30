@@ -14,6 +14,7 @@ export default function ProjectDetail() {
     <>
       <Loading loading={isLoading}>
         {!isEmpty(data) && <ProjectInformation data={data} />}
+
         {!isLoading && isEmpty(data) && (
           <div className="flex flex-col justify-center items-center h-full">
             <DoubleSidedImage src="/img/others/img-2.png" darkModeSrc="/img/others/img-2-dark.png" alt="" />

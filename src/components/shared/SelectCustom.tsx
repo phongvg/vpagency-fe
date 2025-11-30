@@ -36,6 +36,7 @@ export interface SelectCustomProps<IsMulti extends boolean = false>
   field?: FieldInputProps<any>
   form?: FormikProps<any>
   isCreatable?: boolean
+  isDisabled?: boolean
   fetchOptions?: (params: SelectParams) => Promise<ApiResponse>
   onValueChange?: (value: IsMulti extends true ? OptionType[] : OptionType | null) => void
   transformResponse?: (data: any) => OptionType[]
@@ -98,6 +99,7 @@ export default function SelectCustom<IsMulti extends boolean = false>({
   isCreatable = false,
   onCreateOption,
   formatCreateLabel,
+  isDisabled = false,
   ...restProps
 }: SelectCustomProps<IsMulti>) {
   const [options, setOptions] = useState<OptionType[]>(staticOptions || [])
@@ -351,6 +353,7 @@ export default function SelectCustom<IsMulti extends boolean = false>({
       noOptionsMessage={({ inputValue }) => (inputValue ? `Không tìm thấy "${inputValue}"` : 'Không có dữ liệu')}
       loadingMessage={() => 'Đang tải...'}
       formatCreateLabel={formatCreateLabel || ((inputValue) => `Tạo mới "${inputValue}"`)}
+      isDisabled={isDisabled}
       onChange={handleChange}
       onCreateOption={isCreatable ? handleCreateOption : undefined}
       onMenuOpen={handleMenuOpen}

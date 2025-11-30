@@ -66,37 +66,44 @@ export interface Series {
 export type Columns = Record<string, Task[]>
 
 export type UpdateTaskRequest = {
-  name: string
-  type: TaskType | null
-  frequency: TaskFrequency | null
-  priority: TaskPriority | null
-  deadline: Date | null
-  assignedUserIds: string[]
-  projectId: string | null
-  note: string
+  name?: string
+  type?: TaskType | null
+  frequency?: TaskFrequency | null
+  priority?: TaskPriority | null
+  deadline?: Date | null
+  assignedUserIds?: string[]
+  projectId?: string | null
+  note?: string
   numberOfCampaigns?: number
   numberOfBackupCampaigns?: number
   dailyBudget?: number
   numberOfAccounts?: number
   numberOfResultCampaigns?: number
-  finalUrlIds: string[]
-  gmailIds: string[]
-}
-
-export type UrlMapping = {
-  campaignId: string
-  finalUrlId: string
-  gmailId: string
+  finalUrlIds?: string[]
+  gmailIds?: string[]
 }
 
 export type TaskProgressRequest = {
   progress: number
-  urlMappings: UrlMapping[]
+  finalUrlGroups: FinalURLGroup[]
 }
 
-export type TaskProgressResponse = {
+export type FinalURLGroup = {
+  finalUrlId: string
+  finalUrlName?: string
+  finalURL?: string
+  date: string | null
+  items: Item[]
+}
+
+export type Item = {
+  uid: string
+  gmailId: string
+  campaignIds?: string[]
+}
+
+export type TaskProgressResponse = TaskProgressRequest & {
   id: string
   name: string
-  progress: number
-  finalUrls: FinalUrl[]
+  projectId: string
 }

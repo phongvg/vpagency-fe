@@ -8,16 +8,14 @@ export default function ProjectDailyReportTableTools() {
   const handleFromDateChange = (date: Date | null) => {
     setFilter({
       ...filter,
-      fromDate: date ? dayjs(date).format('YYYY-MM-DD') : undefined,
-      page: 1,
+      dateFrom: date ? dayjs(date).format('YYYY-MM-DD') : undefined,
     })
   }
 
   const handleToDateChange = (date: Date | null) => {
     setFilter({
       ...filter,
-      toDate: date ? dayjs(date).format('YYYY-MM-DD') : undefined,
-      page: 1,
+      dateTo: date ? dayjs(date).format('YYYY-MM-DD') : undefined,
     })
   }
 
@@ -27,7 +25,7 @@ export default function ProjectDailyReportTableTools() {
         <span className="font-medium text-sm">Lọc theo ngày:</span>
         <div className="flex items-center gap-2">
           <DatePicker
-            value={filter.fromDate ? new Date(filter.fromDate) : null}
+            value={filter.dateFrom ? new Date(filter.dateFrom) : null}
             placeholder="Từ ngày"
             inputFormat="DD/MM/YYYY"
             className="w-[150px]"
@@ -35,10 +33,10 @@ export default function ProjectDailyReportTableTools() {
           />
           <span>-</span>
           <DatePicker
-            value={filter.toDate ? new Date(filter.toDate) : null}
+            value={filter.dateTo ? new Date(filter.dateTo) : null}
             placeholder="Đến ngày"
             inputFormat="DD/MM/YYYY"
-            minDate={filter.fromDate ? new Date(filter.fromDate) : undefined}
+            minDate={filter.dateFrom ? new Date(filter.dateFrom) : undefined}
             className="w-[150px]"
             onChange={handleToDateChange}
           />

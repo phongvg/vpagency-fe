@@ -1,23 +1,15 @@
-import { ProjectDailyReport, ProjectDailyReportListFilterRequest } from '@/@types/projectDailyReport'
 import { create } from 'zustand'
+import { ProjectStatsFilterRequest } from '@/views/projects/pages/projectDetail/types/projectDetail.type'
 
 type ProjectDailyReportStore = {
-  filter: ProjectDailyReportListFilterRequest
-  setFilter: (filter: ProjectDailyReportListFilterRequest) => void
-  dialogOpen: boolean
-  setDialogOpen: (open: boolean) => void
-  selectedReport: ProjectDailyReport | null
-  setSelectedReport: (report: ProjectDailyReport | null) => void
+  filter: ProjectStatsFilterRequest
+  setFilter: (filter: ProjectStatsFilterRequest) => void
 }
 
 export const useProjectDailyReportStore = create<ProjectDailyReportStore>((set) => ({
   filter: {
-    page: 1,
-    limit: 10,
+    dateFrom: undefined,
+    dateTo: undefined,
   },
   setFilter: (filter) => set({ filter }),
-  dialogOpen: false,
-  setDialogOpen: (open) => set({ dialogOpen: open }),
-  selectedReport: null,
-  setSelectedReport: (report) => set({ selectedReport: report }),
 }))

@@ -48,7 +48,7 @@ export const useCreateFinalUrlMutation = () => {
     mutationFn: (payload: UpdateFinalUrlRequest) => apiCreateFinalUrl(payload),
     onSuccess: (response, variables) => {
       queryClient.invalidateQueries({ queryKey: [GET_FINAL_URL_LIST] })
-      // Invalidate the specific project's final URLs list
+
       if (variables.projectId) {
         queryClient.invalidateQueries({ queryKey: [GET_FINAL_URLS_BY_PROJECT_ID, variables.projectId] })
         queryClient.invalidateQueries({ queryKey: [GET_PROJECT_DETAIL, variables.projectId] })

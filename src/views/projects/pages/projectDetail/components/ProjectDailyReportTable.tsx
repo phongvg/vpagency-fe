@@ -1,150 +1,121 @@
-import { useMemo } from 'react'
-import { ColumnDef } from '@tanstack/react-table'
-import { ProjectDailyReport } from '@/@types/projectDailyReport'
-import { Avatar } from '@/components/ui'
-import { DataTable } from '@/components/shared'
+import { ColumnDef, DataTable } from '@/components/shared'
 import { useProjectDailyReportStore } from '@/views/projects/pages/projectDetail/store/useProjectDailyReportStore'
-import { HiOutlinePencilAlt } from 'react-icons/hi'
+import { useGetProjectStatisticQuery } from '@/views/projects/pages/projectDetail/hooks/useProjectDetail'
+import { FinalURLStat } from '@/views/projects/pages/projectDetail/types/projectDetail.type'
 import { formatUSD } from '@/helpers/formatUSD'
-import { formatDate } from '@/helpers/formatDate'
-import { useGetProjectDailyReportsQuery } from '@/views/projects/pages/projectDetail/hooks/useProjectDailyReport'
+import ProjectReportStatistics from '@/views/projects/pages/projectDetail/components/ProjectReportStatistics'
 
-type ProjectDailyReportTableProps = {
+type Props = {
   projectId: string
 }
 
-export default function ProjectDailyReportTable({ projectId }: ProjectDailyReportTableProps) {
-  const { filter, setFilter, setDialogOpen, setSelectedReport } = useProjectDailyReportStore()
-  const { data: getReportsResponse, isLoading } = useGetProjectDailyReportsQuery({
-    ...filter,
-    projectId,
-  })
+export default function ProjectDailyReportTable({ projectId }: Props) {
+  const { filter } = useProjectDailyReportStore()
+  const { data, isLoading } = useGetProjectStatisticQuery(projectId, filter)
 
-  const metaTableData = useMemo(() => getReportsResponse?.meta, [getReportsResponse])
+  const columns: ColumnDef<FinalURLStat>[] = [
+    {
+      header: 'STT',
+      cell: (props) => {
+        return <span>{props.row.index + 1}</span>
+      },
+    },
+    {
+      accessorKey: 'finalUrlName',
+      header: 'Tên URL',
+    },
+    {
+      accessorKey: 'finalURL',
+      header: 'URL',
+      cell: (props) => (
+        <a
+          href={props.row.original.finalURL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="max-w-[200px] text-blue-600 underline truncate"
+        >
+          {props.row.original.finalURL}
+        </a>
+      ),
+    },
+    {
+      accessorKey: 'totalSpent',
+      header: 'Chi phí',
+      cell: (props) => {
+        return <span>{formatUSD(props.row.original.totalSpent)}</span>
+      },
+    },
+    {
+      accessorKey: 'totalClicks',
+      header: 'Click',
+    },
+    {
+      accessorKey: 'totalImpressions',
+      header: 'Lượt hiển thị',
+    },
+    {
+      accessorKey: 'avgCpc',
+      header: 'CPC',
+      cell: (props) => {
+        return <span>{formatUSD(props.row.original.avgCpc)}</span>
+      },
+    },
+    {
+      accessorKey: 'avgCtr',
+      header: 'CTR',
+      cell: (props) => {
+        return <span>{props.row.original.avgCtr}</span>
+      },
+    },
+    {
+      accessorKey: 'totalCampaigns',
+      header: 'Số chiến dịch',
+    },
+    {
+      accessorKey: 'targets.targetRef',
+      header: 'Mục tiêu Ref',
+      cell: (props) => props.row.original.targets?.targetRef,
+    },
+    {
+      accessorKey: 'targets.targetCostPerRef',
+      header: 'Mục tiêu chi phí mỗi Ref',
+      cell: (props) => formatUSD(props.row.original.targets?.targetCostPerRef || 0),
+    },
+    {
+      accessorKey: 'targets.targetFtd',
+      header: 'Mục tiêu FTD',
+      cell: (props) => props.row.original.targets?.targetFtd,
+    },
+    {
+      accessorKey: 'targets.targetCostPerFtd',
+      header: 'Mục tiêu chi phí mỗi FTD',
+      cell: (props) => formatUSD(props.row.original.targets?.targetCostPerFtd || 0),
+    },
+    {
+      accessorKey: 'targets.budget',
+      header: 'Ngân sách',
+      cell: (props) => <span>{formatUSD(props.row.original.targets?.budget || 0)}</span>,
+    },
+    {
+      accessorKey: 'targets.targetCpc',
+      header: 'Mục tiêu CPC',
+      cell: (props) => <span>{formatUSD(props.row.original.targets?.targetCpc || 0)}</span>,
+    },
+  ]
 
-  const handleEdit = (row: ProjectDailyReport) => {
-    setSelectedReport(row)
-    setDialogOpen(true)
-  }
-
-  const columns: ColumnDef<ProjectDailyReport>[] = useMemo(
-    () => [
-      {
-        header: 'STT',
-        accessorKey: 'index',
-        cell: (props) => {
-          const row = props.row.index
-          return <span>{(filter.page! - 1) * filter.limit! + row + 1}</span>
-        },
-      },
-      {
-        header: 'Ngày',
-        accessorKey: 'date',
-        cell: (props) => {
-          const row = props.row.original
-          return <span className="font-medium">{formatDate(row.date, 'DD/MM/YYYY')}</span>
-        },
-      },
-      {
-        header: 'Người chạy',
-        accessorKey: 'runner',
-        cell: (props) => {
-          const row = props.row.original as any
-          if (!row.runner) {
-            return <span className="text-gray-400">Chưa có</span>
-          }
-          return (
-            <div className="flex items-center gap-2">
-              <Avatar size={28} shape="circle" src={row.runner.avatar ?? ''} />
-              <span className="text-sm">
-                {row.runner.firstName} {row.runner.lastName}
-              </span>
-            </div>
-          )
-        },
-      },
-      {
-        header: 'Chi tiêu',
-        accessorKey: 'totalSpent',
-        cell: (props) => {
-          const row = props.row.original
-          return <span className="font-semibold text-blue-600">{formatUSD(row.totalSpent)}</span>
-        },
-      },
-      {
-        header: 'Lượt click',
-        accessorKey: 'totalClicks',
-        cell: (props) => {
-          const row = props.row.original
-          return <span className="font-semibold text-green-600">{row.totalClicks}</span>
-        },
-      },
-      {
-        header: 'CPC',
-        accessorKey: 'totalCpc',
-        cell: (props) => {
-          const row = props.row.original
-          return <span className="font-semibold text-purple-600">{formatUSD(row.totalCpc)}</span>
-        },
-      },
-      {
-        header: 'REF',
-        accessorKey: 'totalRef',
-        cell: (props) => {
-          const row = props.row.original
-          return <span className="font-semibold text-yellow-600">{row.totalRef}</span>
-        },
-      },
-      {
-        header: 'FTD',
-        accessorKey: 'totalFtd',
-        cell: (props) => {
-          const row = props.row.original
-          return <span className="font-semibold text-red-600">{row.totalFtd}</span>
-        },
-      },
-      {
-        header: '',
-        accessorKey: 'action',
-        cell: (props) => {
-          const row = props.row.original
-          return (
-            <div className="flex justify-end items-center gap-4">
-              <button type="button" className="hover:text-blue-600" onClick={() => handleEdit(row)}>
-                <HiOutlinePencilAlt size={20} />
-              </button>
-            </div>
-          )
-        },
-      },
-    ],
-    [filter, handleEdit],
-  )
-
-  const onPaginationChange = (page: number) => {
-    setFilter({ ...filter, page })
-  }
-
-  const onSelectChange = (value: number) => {
-    setFilter({ ...filter, limit: value, page: 1 })
-  }
+  const tableData = data?.finalUrlStats || []
 
   return (
-    <>
+    <div className="space-y-6">
+      <ProjectReportStatistics totalStats={data?.totalStats} />
       <DataTable
         columns={columns}
-        data={getReportsResponse?.items ?? []}
+        data={tableData}
         skeletonAvatarColumns={[2]}
         skeletonAvatarProps={{ width: 28, height: 28 }}
         loading={isLoading}
-        pagingData={{
-          total: metaTableData?.total as number,
-          pageIndex: metaTableData?.page as number,
-          pageSize: metaTableData?.limit as number,
-        }}
-        onPaginationChange={onPaginationChange}
-        onSelectChange={onSelectChange}
+        pagingData={undefined}
       />
-    </>
+    </div>
   )
 }

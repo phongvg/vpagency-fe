@@ -43,6 +43,13 @@ export type BaseListResponse<T> = {
   }
 }
 
+export type BaseListResponseWithoutPagination<T> = {
+  success: boolean
+  code?: string
+  message?: string
+  data: T[]
+}
+
 export type SortOrder = 'asc' | 'desc' | ''
 
 export type CommonFilterRequest = {

@@ -6,6 +6,8 @@ import {
   apiDeleteCampaign,
   apiGetCampaignById,
   apiGetCampaignList,
+  apiGetCampaignsByDate,
+  apiGetCampaignsByDateAndUid,
   apiUpdateCampaign,
 } from '@/views/campaign/services/CampaignService'
 import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
@@ -80,5 +82,27 @@ export const useDeleteCampaignMutation = () => {
     onError: (error: ApiAxiosError) => {
       toastError(error.response?.data?.message)
     },
+  })
+}
+
+export const useGetCampaignByDate = (date: string, enabled = false) => {
+  return useQuery({
+    queryKey: ['GET_CAMPAIGNS_BY_DATE', date],
+    queryFn: async () => {
+      const response = await apiGetCampaignsByDate(date)
+      return response.data.data
+    },
+    enabled: enabled && !!date,
+  })
+}
+
+export const useGetCampaignByDateAndUid = (date: string, uid: string, enabled = false) => {
+  return useQuery({
+    queryKey: ['GET_CAMPAIGNS_BY_DATE_AND_UID', date, uid],
+    queryFn: async () => {
+      const response = await apiGetCampaignsByDateAndUid(date, uid)
+      return response.data.data
+    },
+    enabled: enabled && !!date && !!uid,
   })
 }

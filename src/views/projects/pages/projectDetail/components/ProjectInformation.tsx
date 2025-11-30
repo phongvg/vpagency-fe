@@ -70,6 +70,7 @@ export default function ProjectInformation({ data }: Props) {
             </div>
           </Card>
         </div>
+
         <ProjectDailyReportsSection projectId={data.id} />
       </div>
     </>

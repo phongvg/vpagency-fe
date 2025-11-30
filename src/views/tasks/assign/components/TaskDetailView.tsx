@@ -14,6 +14,7 @@ import { formatUSD } from '@/helpers/formatUSD'
 import { ColumnDef } from '@tanstack/react-table'
 import { FinalUrl } from '@/views/projects/types/finalUrl.type'
 import { DataTable } from '@/components/shared'
+import TaskProgressDetailModal from '@/views/tasks/assign/components/TaskProgressDetailModal'
 
 interface TaskDetailViewProps {
   task: Task
@@ -26,6 +27,7 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
   const { user } = useAuthStore()
 
   const [isProgressModalOpen, setIsProgressModalOpen] = useState(false)
+  const [isProgressDetailModalOpen, setIsProgressDetailModalOpen] = useState(false)
 
   const columns: ColumnDef<FinalUrl>[] = useMemo(
     () => [
@@ -90,7 +92,29 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
     <div className="task-detail-view">
       <div className="flex justify-between items-start mb-6">
         <div className="flex-1">
-          <h2 className="mb-2 font-semibold text-gray-900 text-xl line-clamp-4">{task.name}</h2>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="font-semibold text-gray-900 text-xl line-clamp-4">{task.name}</h2>
+            <div className="flex gap-2">
+              {isAdminOrManager(user?.roles) && (
+                <>
+                  <Button size="sm" variant="twoTone" onClick={onDelete}>
+                    Xóa
+                  </Button>
+                  <Button size="sm" variant="solid" onClick={onEdit}>
+                    Chỉnh sửa
+                  </Button>
+                </>
+              )}
+
+              <Button size="sm" variant="solid" onClick={() => setIsProgressDetailModalOpen(true)}>
+                Xem tiến độ
+              </Button>
+
+              <Button size="sm" variant="solid" onClick={() => setIsProgressModalOpen(true)}>
+                Cập nhật tiến độ
+              </Button>
+            </div>
+          </div>
           <div className="flex flex-wrap items-center gap-2">
             <Badge className={`px-2 py-1 text-xs font-medium rounded-md border ${getStatusColor(task.status)}`}>
               {TaskStatusLabels[task.status]}
@@ -185,6 +209,7 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
           </div>
         </div>
       )}
+
       {task.type === TaskType.LAUNCH_CAMPAIGN && (
         <div className="mb-6 p-4 border border-blue-100 rounded-lg">
           <h5 className="mb-3">Thông tin chi tiết</h5>
@@ -254,29 +279,18 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
         <Button size="sm" variant="default" onClick={closeDialog}>
           Đóng
         </Button>
-
-        <div className="flex gap-2">
-          {isAdminOrManager(user?.roles) && (
-            <>
-              <Button size="sm" variant="twoTone" onClick={onDelete}>
-                Xóa
-              </Button>
-              <Button size="sm" variant="solid" onClick={onEdit}>
-                Chỉnh sửa
-              </Button>
-            </>
-          )}
-
-          <Button size="sm" variant="solid" onClick={() => setIsProgressModalOpen(true)}>
-            Cập nhật tiến độ
-          </Button>
-        </div>
       </div>
 
       <UpdateProgressModal
         isOpen={isProgressModalOpen}
         taskId={task.id}
         onClose={() => setIsProgressModalOpen(false)}
+      />
+
+      <TaskProgressDetailModal
+        isOpen={isProgressDetailModalOpen}
+        finalUrls={task.finalUrls}
+        onClose={() => setIsProgressDetailModalOpen(false)}
       />
     </div>
   )

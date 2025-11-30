@@ -31,6 +31,7 @@ import BadgeStatus from '@/components/shared/BadgeStatus'
 import { FinalUrl } from '@/views/projects/types/finalUrl.type'
 import { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/shared'
+import TaskProgressDetailModal from '@/views/tasks/assign/components/TaskProgressDetailModal'
 
 type Props = {
   inSplitView?: boolean
@@ -43,6 +44,7 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
   const deleteTask = useDeleteTask()
 
   const [isProgressModalOpen, setIsProgressModalOpen] = useState(false)
+  const [isProgressDetailModalOpen, setIsProgressDetailModalOpen] = useState(false)
 
   const { showConfirm, confirmProps } = useConfirmDialog({
     title: 'Xác nhận xóa công việc',
@@ -84,6 +86,7 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
         task={displayTask}
         onEdit={handleEdit}
         onUpdateProgress={() => setIsProgressModalOpen(true)}
+        onViewProgressDetail={() => setIsProgressDetailModalOpen(true)}
         onDelete={handleDelete}
       />
 
@@ -131,6 +134,12 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
         taskId={displayTask.id}
         onClose={() => setIsProgressModalOpen(false)}
       />
+
+      <TaskProgressDetailModal
+        isOpen={isProgressDetailModalOpen}
+        finalUrls={displayTask.finalUrls}
+        onClose={() => setIsProgressDetailModalOpen(false)}
+      />
     </>
   )
 }
@@ -142,10 +151,11 @@ interface TaskPanelProps {
 interface TaskHeaderPanelProps extends TaskPanelProps {
   onEdit: () => void
   onUpdateProgress: () => void
+  onViewProgressDetail: () => void
   onDelete: () => void
 }
 
-function TaskHeaderPanel({ task, onEdit, onUpdateProgress, onDelete }: TaskHeaderPanelProps) {
+function TaskHeaderPanel({ task, onEdit, onUpdateProgress, onViewProgressDetail, onDelete }: TaskHeaderPanelProps) {
   const { user } = useAuthStore()
 
   return (
@@ -162,6 +172,9 @@ function TaskHeaderPanel({ task, onEdit, onUpdateProgress, onDelete }: TaskHeade
             </Button>
           </>
         )}
+        <Button variant="default" size="xs" onClick={onViewProgressDetail}>
+          Xem tiến độ
+        </Button>
         <Button variant="default" size="xs" onClick={onUpdateProgress}>
           Cập nhật tiến độ
         </Button>

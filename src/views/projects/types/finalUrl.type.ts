@@ -25,6 +25,26 @@ export type FinalUrl = {
   updatedAt: string | Date
   campaign: Campaign
   project: Project
+  campaigns?: CampaignStat[]
 }
 
 export type UpdateFinalUrlRequest = Partial<FinalUrl>
+
+export type CampaignStat = {
+  id: string
+  name: string
+  externalId: string
+  uid: string
+  status: string
+  gmailId: string
+  latestStat: LatestStat
+}
+
+export type LatestStat = {
+  date: string
+  clicks: number
+  spent: number
+  impression: number
+  ctr: number
+  cpc: number
+}

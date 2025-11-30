@@ -135,8 +135,6 @@ export const useUpdateTaskProgress = () => {
       return response.data
     },
     onSuccess: (response) => {
-      queryClient.invalidateQueries({ queryKey: [GET_TASK_LIST] })
-      queryClient.invalidateQueries({ queryKey: [GET_TASKS_GROUPED_BY_STATUS] })
       queryClient.invalidateQueries({ queryKey: [GET_TASK_DETAIL] })
       toastSuccess(response.message)
     },

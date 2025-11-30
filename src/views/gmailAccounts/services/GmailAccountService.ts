@@ -1,4 +1,4 @@
-import { BaseListResponse, BaseResponse, CommonFilterRequest } from '@/@types/common'
+import { BaseListResponse, BaseListResponseWithoutPagination, BaseResponse, CommonFilterRequest } from '@/@types/common'
 import ApiService from '@/services/ApiService'
 import { GmailAccount, UpdateGmailAccountRequest } from '@/views/gmailAccounts/types/gmailAccount.type'
 
@@ -48,7 +48,7 @@ export async function apiAssignGmailAccountToSelf(id: string) {
 }
 
 export async function apiGetMyGmails(params: CommonFilterRequest) {
-  return ApiService.fetchData<BaseListResponse<GmailAccount>>({
+  return ApiService.fetchData<BaseListResponseWithoutPagination<GmailAccount>>({
     url: '/gmails/my-gmails',
     method: 'post',
     params,

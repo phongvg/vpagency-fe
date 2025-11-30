@@ -1,5 +1,4 @@
 import { Task, UpdateTaskRequest } from '@/views/tasks/assign/types/task.type'
-import FormCurrencyInput from '@/components/shared/FormCurrencyInput'
 import SelectCustom, { SelectParams } from '@/components/shared/SelectCustom'
 import { Button, Checkbox, DatePicker, FormItem, Input, Select, Textarea, UserSelect } from '@/components/ui'
 import { UserOption } from '@/components/ui/UserSelect/UserSelect'
@@ -39,7 +38,7 @@ const validationSchema = Yup.object().shape({
 
 export default function TaskForm({ task, isEdit = false, loading = false, onSubmit, onCancel }: Props) {
   const [selectedUsers, setSelectedUsers] = useState<UserOption[]>([])
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(task?.project?.id || null)
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
   const [selectedFinalUrlIds, setSelectedFinalUrlIds] = useState<string[]>([])
   const [isAddingUrl, setIsAddingUrl] = useState(false)
   const [newUrlName, setNewUrlName] = useState('')
@@ -91,6 +90,12 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
       setSelectedFinalUrlIds(task.finalUrlIds)
     } else {
       setSelectedFinalUrlIds([])
+    }
+
+    if (task?.project?.id) {
+      setSelectedProjectId(task.project.id)
+    } else {
+      setSelectedProjectId(null)
     }
   }, [task])
 
@@ -347,6 +352,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                               Hủy
                             </Button>
                             <Button
+                              type="button"
                               disabled={!newUrlName || !newUrlFinalURL}
                               loading={createFinalUrlMutation.isPending}
                               size="sm"
@@ -447,6 +453,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                           placeholder="Nhập số lượng..."
                           type="number"
                           value={values.numberOfCampaigns || ''}
+                          min={0}
                           onChange={handleChange}
                         />
                       </FormItem>
@@ -457,6 +464,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                           placeholder="Nhập số lượng..."
                           type="number"
                           value={values.numberOfResultCampaigns || ''}
+                          min={0}
                           onChange={handleChange}
                         />
                       </FormItem>
@@ -470,11 +478,14 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
 
                     <div className="gap-x-4 grid grid-cols-1 lg:grid-cols-2">
                       <FormItem label="Ngân sách hàng ngày">
-                        <Field name="dailyBudget">
-                          {({ field, form }: FieldProps) => (
-                            <FormCurrencyInput form={form} field={field} placeholder="Nhập ngân sách hàng ngày..." />
-                          )}
-                        </Field>
+                        <Input
+                          name="dailyBudget"
+                          placeholder="Nhập ngân sách hàng ngày..."
+                          type="number"
+                          value={values.dailyBudget || ''}
+                          min={0}
+                          onChange={handleChange}
+                        />
                       </FormItem>
 
                       <FormItem label="Số lượng tài khoản dự phòng">
@@ -483,6 +494,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                           placeholder="Nhập số lượng tài khoản dự phòng..."
                           type="number"
                           value={values.numberOfBackupCampaigns || ''}
+                          min={0}
                           onChange={handleChange}
                         />
                       </FormItem>
@@ -492,10 +504,10 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
               </div>
 
               <div className="flex justify-end gap-3 mt-6 pt-4 border-t">
-                <Button size="sm" variant="plain" onClick={onCancel}>
+                <Button variant="plain" onClick={onCancel}>
                   Hủy
                 </Button>
-                <Button loading={loading} size="sm" type="submit" variant="solid">
+                <Button loading={loading} type="submit" variant="solid">
                   {isEdit ? 'Cập nhật' : 'Tạo mới'}
                 </Button>
               </div>

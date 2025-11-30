@@ -40,3 +40,24 @@ export async function apiDeleteCampaign(campaignId: string) {
     method: 'delete',
   })
 }
+
+export async function apiGetCampaignsByDate(date: string) {
+  return ApiService.fetchData<BaseListResponse<string>>({
+    url: '/campaigns/by-date',
+    method: 'get',
+    params: {
+      date,
+    },
+  })
+}
+
+export async function apiGetCampaignsByDateAndUid(date: string, uid: string) {
+  return ApiService.fetchData<BaseListResponse<{ id: string; name: string }>>({
+    url: '/campaigns/by-date-and-uid',
+    method: 'get',
+    params: {
+      date,
+      uid,
+    },
+  })
+}

@@ -14,7 +14,6 @@ import { formatDate } from '@/helpers/formatDate'
 import { useDebounce } from '@/hooks/useDebounce'
 import { apiGetProjectList } from '@/views/projects/services/ProjectService'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
-import 'dayjs/locale/vi'
 import { useEffect, useMemo, useState } from 'react'
 import { HiOutlineSearch } from 'react-icons/hi'
 import AsyncSelect from 'react-select/async'
@@ -58,6 +57,7 @@ export default function TaskFilters() {
       ...filters,
       search: debouncedSearchValue,
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearchValue])
 
   const isFiltered = useMemo(() => {
@@ -138,7 +138,7 @@ export default function TaskFilters() {
 
   return (
     <>
-      <div className="gap-4 grid grid-cols-2 lg:grid-cols-6">
+      <div className="gap-4 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
         <Input
           prefix={<HiOutlineSearch className="w-4 h-4 text-gray-400" />}
           placeholder="Tìm kiếm theo tên..."
@@ -174,9 +174,7 @@ export default function TaskFilters() {
         <UserSelect value={assignedUsers} placeholder="Người nhận việc" size="sm" onChange={handleAssignedUserChange} />
 
         <UserSelect value={creators} placeholder="Người tạo" size="sm" onChange={handleCreatorChange} />
-      </div>
 
-      <div className="gap-4 grid grid-cols-2 lg:grid-cols-6">
         <Select
           defaultOptions
           cacheOptions
@@ -189,7 +187,6 @@ export default function TaskFilters() {
         />
 
         <DatePicker
-          locale="vi"
           size="sm"
           placeholder="Từ ngày"
           value={filters.fromDate ? new Date(filters.fromDate) : null}
@@ -197,7 +194,6 @@ export default function TaskFilters() {
         />
 
         <DatePicker
-          locale="vi"
           size="sm"
           placeholder="Đến ngày"
           value={filters.toDate ? new Date(filters.toDate) : null}

@@ -1,5 +1,9 @@
 import { BaseListResponse, BaseResponse, CommonFilterRequest } from '@/@types/common'
 import ApiService from '@/services/ApiService'
+import {
+  ProjectStatsFilterRequest,
+  ProjectStatsResponse,
+} from '@/views/projects/pages/projectDetail/types/projectDetail.type'
 import { Project, UpdateProjectRequest } from '@/views/projects/types/project.type'
 
 export async function apiGetProjectList(params: CommonFilterRequest) {
@@ -37,5 +41,13 @@ export async function apiDeleteProject(projectId: string) {
   return ApiService.fetchData<BaseResponse<null>>({
     url: `/projects/${projectId}`,
     method: 'delete',
+  })
+}
+
+export async function apiGetProjectStatistic(projectId: string, filters: ProjectStatsFilterRequest) {
+  return ApiService.fetchData<BaseResponse<ProjectStatsResponse>>({
+    url: `/projects/${projectId}/stats`,
+    method: 'get',
+    params: filters,
   })
 }

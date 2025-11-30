@@ -96,7 +96,7 @@ export type Summary = {
   failed: number
 }
 
-export interface CurrencyRate {
+export type CurrencyRate = {
   uid: string
   code: string
   rateToUSD: number | null

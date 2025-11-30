@@ -2,7 +2,7 @@ import { MasterData } from '@/@types/masterData'
 import { User } from '@/@types/user'
 import { FinalUrl } from '@/views/projects/types/finalUrl.type'
 
-export interface Project {
+export type Project = {
   id: string
   name: string
   typeId: string

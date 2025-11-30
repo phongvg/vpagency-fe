@@ -8,14 +8,9 @@ import { formatDate } from '@/helpers/formatDate'
 import { Avatar, Card } from '@/components/ui'
 import { formatUSD } from '@/helpers/formatUSD'
 import { DataTable } from '@/components/shared'
-import { HiOutlinePencilAlt } from 'react-icons/hi'
-import { useProjectDailyReportStore } from '@/views/projects/pages/projectDetail/store/useProjectDailyReportStore'
-import { ProjectDailyReport } from '@/@types/projectDailyReport'
-import ProjectDailyReportFormDialog from '@/views/projects/pages/projectDetail/components/ProjectDailyReportFormDialog'
 
 export default function ProjectDailyReports() {
   const { user } = useAuthStore()
-  const { setDialogOpen, setSelectedReport } = useProjectDailyReportStore()
 
   const [filters, setFilters] = useState<ProjectReportsFilterRequest>({
     search: '',
@@ -33,11 +28,6 @@ export default function ProjectDailyReports() {
 
   const onSelectChange = (value: number) => {
     setFilters({ ...filters, limit: value, page: 1 })
-  }
-
-  const handleEdit = (row: ProjectDailyReport) => {
-    setSelectedReport(row)
-    setDialogOpen(true)
   }
 
   const columns: ColumnDef<ProjectReports>[] = useMemo(
@@ -152,22 +142,8 @@ export default function ProjectDailyReports() {
           return <span>{row.totalFtd}</span>
         },
       },
-      {
-        header: '',
-        accessorKey: 'action',
-        cell: (props) => {
-          const row = props.row.original
-          return (
-            <div className="flex justify-end items-center gap-4">
-              <button type="button" className="hover:text-blue-600" onClick={() => handleEdit(row)}>
-                <HiOutlinePencilAlt size={20} />
-              </button>
-            </div>
-          )
-        },
-      },
     ],
-    [filters, handleEdit],
+    [filters],
   )
 
   return (
@@ -188,8 +164,6 @@ export default function ProjectDailyReports() {
           onSelectChange={onSelectChange}
         />
       </Card>
-
-      <ProjectDailyReportFormDialog />
     </>
   )
 }

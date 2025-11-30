@@ -31,9 +31,10 @@ export default function AssignTask() {
     <AdaptableCard className="h-full" bodyClass="h-full flex flex-col">
       <BoardHeader activeView={activeView} onViewChange={handleViewChange} />
       <div className="flex-1 min-h-0">{renderContent()}</div>
+
       <Dialog
         isOpen={dialogOpen}
-        width={dialogView === 'VIEW' ? 800 : 700}
+        width={dialogView === 'VIEW' ? 800 : 900}
         closable={false}
         onClose={closeDialog}
         onRequestClose={closeDialog}
@@ -43,6 +44,12 @@ export default function AssignTask() {
           {(dialogView === 'CREATE' || dialogView === 'EDIT') && <TaskFormContent />}
         </Suspense>
       </Dialog>
+
+      {/* <Dialog isOpen={dialogOpen} width={800} closable={false} onClose={closeDialog} onRequestClose={closeDialog}>
+        <Suspense fallback={<></>}>
+          <TaskDetailContent />
+        </Suspense>
+      </Dialog> */}
     </AdaptableCard>
   )
 }
