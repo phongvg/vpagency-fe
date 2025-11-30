@@ -24,6 +24,7 @@ import {
   HiChevronDown,
   HiMenu,
   HiMenuAlt4,
+  HiOutlineExternalLink,
   HiOutlinePencilAlt,
   HiOutlineTrash,
 } from 'react-icons/hi'
@@ -32,6 +33,8 @@ import { FinalUrl } from '@/views/projects/types/finalUrl.type'
 import { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/shared'
 import TaskProgressDetailModal from '@/views/tasks/assign/components/TaskProgressDetailModal'
+import { Link } from 'react-router-dom'
+import { urlConfig } from '@/configs/urls.config'
 
 type Props = {
   inSplitView?: boolean
@@ -229,7 +232,16 @@ function TaskProjectSection({ task }: TaskPanelProps) {
     <ul className="space-y-2">
       <li className="flex justify-between items-center">
         <span>Dự án:</span>
-        <span>{task.project?.name || 'N/A'}</span>
+        <Link
+          to={urlConfig.projectDetail.replace(':id', task.project?.id || '')}
+          title="Xem chi tiết dự án"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 hover:text-indigo-600 cursor-pointer"
+        >
+          {task.project?.name || 'N/A'}
+          <HiOutlineExternalLink size={18} />
+        </Link>
       </li>
       <li className="flex justify-between items-center">
         <span>Loại dự án:</span>
