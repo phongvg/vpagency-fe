@@ -37,14 +37,14 @@ export const applyExchangeRate = (
         campaign.topSearchTerms?.map((term) => ({
           ...term,
           cpc: safeChangeValue(term.cpc, rate),
-          spent: safeChangeValue(term.spent, rate),
+          cost: safeChangeValue(term.cost, rate),
         })) || [],
 
       locationStats:
         campaign.locationStats?.map((stat) => ({
           ...stat,
           cpc: safeChangeValue(stat.cpc, rate),
-          spent: safeChangeValue(stat.spent, rate),
+          cost: safeChangeValue(stat.cost, rate),
         })) || [],
     }
   })

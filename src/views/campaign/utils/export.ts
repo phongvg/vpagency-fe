@@ -28,10 +28,10 @@ export const exportCampaigns = (
       'Quốc gia mục tiêu': campaign.targetLocations?.join(', ') || '',
       'Từ khóa': campaign.keywords?.map((k) => `${k.keyword} (${k.match})`).join(', ') || '',
       'Thuật ngữ tìm kiếm':
-        campaign.topSearchTerms?.map((t) => `${t.term} - CPC: ${t.cpc}, Spent: ${t.spent}`).join('; ') || '',
+        campaign.topSearchTerms?.map((t) => `${t.term} - CPC: ${t.cpc}, Spent: ${t.cost}`).join('; ') || '',
       'Thống kê quốc gia':
         campaign.locationStats
-          ?.map((l) => `${l.location} - Clicks: ${l.clicks}, CTR: ${l.ctr}, CPC: ${l.cpc}, Spent: ${l.spent}`)
+          ?.map((l) => `${l.location} - Clicks: ${l.clicks}, CTR: ${l.ctr}, CPC: ${l.cpc}, Spent: ${l.cost}`)
           .join('; ') || '',
     }))
 
@@ -65,10 +65,10 @@ export const exportCampaigns = (
       'Quốc gia mục tiêu': item.campaign.targetLocations?.join(', ') || '',
       'Từ khóa': item.campaign.keywords?.map((k) => `${k.keyword} (${k.match})`).join(', ') || '',
       'Thuật ngữ tìm kiếm':
-        item.campaign.topSearchTerms?.map((t) => `${t.term} - CPC: ${t.cpc}, Spent: ${t.spent}`).join('; ') || '',
+        item.campaign.topSearchTerms?.map((t) => `${t.term} - CPC: ${t.cpc}, Spent: ${t.cost}`).join('; ') || '',
       'Thống kê quốc gia':
         item.campaign.locationStats
-          ?.map((l) => `${l.location} - Clicks: ${l.clicks}, CTR: ${l.ctr}, CPC: ${l.cpc}, Spent: ${l.spent}`)
+          ?.map((l) => `${l.location} - Clicks: ${l.clicks}, CTR: ${l.ctr}, CPC: ${l.cpc}, Spent: ${l.cost}`)
           .join('; ') || '',
       Lỗi: item.error,
     }))

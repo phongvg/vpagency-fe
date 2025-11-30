@@ -43,7 +43,7 @@ export type CampaignStat = {
 export type LatestStat = {
   date: string
   clicks: number
-  spent: number
+  cost: number
   impression: number
   ctr: number
   cpc: number

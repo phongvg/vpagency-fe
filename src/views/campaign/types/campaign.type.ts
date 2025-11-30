@@ -43,7 +43,7 @@ export type KeywordMatch = {
 export type SearchTerm = {
   term: string
   cpc: number | null
-  spent: number | null
+  cost: number | null
   clicks: number | null
   ctr: number | null
   cpm: number | null
@@ -55,7 +55,7 @@ export type LocationStat = {
   clicks: number | null
   ctr: number | null
   cpc: number | null
-  spent: number | null
+  cost: number | null
   cpm: number | null
   impression: number | null
 }

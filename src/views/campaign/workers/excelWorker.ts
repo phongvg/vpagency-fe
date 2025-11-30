@@ -216,7 +216,7 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
         return {
           term: row['Search Term'],
           cpc: row['CPC'],
-          spent: row['Cost'],
+          cost: row['Cost'],
           clicks: row['Clicks'],
           ctr: row['CTR'],
           cpm: row['CPM'],
@@ -226,7 +226,7 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
       const topSearchTerms = Array.from(
         new Map(
           topSearchTermsRaw.map((s) => [
-            `${s.term}|${s.cpc}|${s.spent}|${s.clicks}|${s.ctr}|${s.cpm}|${s.impression}`,
+            `${s.term}|${s.cpc}|${s.cost}|${s.clicks}|${s.ctr}|${s.cpm}|${s.impression}`,
             s,
           ]),
         ).values(),
@@ -255,13 +255,13 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
         clicks: row['Clicks'],
         ctr: row['CTR'],
         cpc: row['CPC'],
-        spent: row['Cost'],
+        cost: row['Cost'],
         cpm: row['CPM'],
         impression: row['Impressions'],
       }))
       const locationStats = Array.from(
         new Map(
-          locationStatsRaw.map((loc) => [`${loc.location}|${loc.clicks}|${loc.ctr}|${loc.cpc}|${loc.spent}`, loc]),
+          locationStatsRaw.map((loc) => [`${loc.location}|${loc.clicks}|${loc.ctr}|${loc.cpc}|${loc.cost}`, loc]),
         ).values(),
       )
       const locationExcluded = [

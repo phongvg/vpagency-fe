@@ -53,7 +53,7 @@ export default function TaskProgressDetailModal({ isOpen, finalUrls, onClose }: 
       },
       {
         header: 'Ngân sách đã tiêu',
-        accessorKey: 'latestStat.spent',
+        accessorKey: 'latestStat.cost',
       },
       {
         header: 'Lượt hiển thị',

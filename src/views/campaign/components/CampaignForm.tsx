@@ -33,7 +33,7 @@ const validationSchema = Yup.object().shape({
     Yup.object().shape({
       term: Yup.string().required(),
       cpc: Yup.number().required(),
-      spent: Yup.number().required(),
+      cost: Yup.number().required(),
     }),
   ),
   status: Yup.string(),
@@ -50,7 +50,7 @@ const validationSchema = Yup.object().shape({
       clicks: Yup.number().required(),
       ctr: Yup.number().required(),
       cpc: Yup.number().required(),
-      spent: Yup.number().required(),
+      cost: Yup.number().required(),
     }),
   ),
 })
@@ -559,7 +559,7 @@ export default function CampaignForm() {
                           variant={sortOrder === 'asc' ? 'solid' : 'twoTone'}
                           icon={<ArrowUpIcon />}
                           onClick={() => {
-                            const sorted = [...values.topSearchTerms].sort((a, b) => (a.spent || 0) - (b.spent || 0))
+                            const sorted = [...values.topSearchTerms].sort((a, b) => (a.cost || 0) - (b.cost || 0))
                             setFieldValue('topSearchTerms', sorted)
                             setSortOrder('asc')
                           }}
@@ -573,7 +573,7 @@ export default function CampaignForm() {
                           variant={sortOrder === 'desc' ? 'solid' : 'twoTone'}
                           icon={<ArrowDownIcon />}
                           onClick={() => {
-                            const sorted = [...values.topSearchTerms].sort((a, b) => (b.spent || 0) - (a.spent || 0))
+                            const sorted = [...values.topSearchTerms].sort((a, b) => (b.cost || 0) - (a.cost || 0))
                             setFieldValue('topSearchTerms', sorted)
                             setSortOrder('desc')
                           }}
@@ -589,7 +589,7 @@ export default function CampaignForm() {
                             const newTerm: SearchTerm = {
                               term: '',
                               cpc: 0,
-                              spent: 0,
+                              cost: 0,
                               clicks: 0,
                               ctr: 0,
                               cpm: 0,
@@ -677,11 +677,11 @@ export default function CampaignForm() {
                               <FormItem label={index === 0 ? 'Đã tiêu' : ''}>
                                 <Input
                                   type="number"
-                                  value={term.spent || ''}
+                                  value={term.cost || ''}
                                   placeholder="Đã tiêu..."
                                   onChange={(e) => {
                                     const updatedTerms = [...values.topSearchTerms]
-                                    updatedTerms[index].spent = parseFloat(e.target.value) || 0
+                                    updatedTerms[index].cost = parseFloat(e.target.value) || 0
                                     setFieldValue('topSearchTerms', updatedTerms)
                                   }}
                                 />
@@ -730,7 +730,7 @@ export default function CampaignForm() {
                           variant={sortOrder === 'asc' ? 'solid' : 'twoTone'}
                           icon={<ArrowUpIcon />}
                           onClick={() => {
-                            const sorted = [...values.locationStats].sort((a, b) => (a.spent || 0) - (b.spent || 0))
+                            const sorted = [...values.locationStats].sort((a, b) => (a.cost || 0) - (b.cost || 0))
                             setFieldValue('locationStats', sorted)
                             setSortOrder('asc')
                           }}
@@ -744,7 +744,7 @@ export default function CampaignForm() {
                           variant={sortOrder === 'desc' ? 'solid' : 'twoTone'}
                           icon={<ArrowDownIcon />}
                           onClick={() => {
-                            const sorted = [...values.locationStats].sort((a, b) => (b.spent || 0) - (a.spent || 0))
+                            const sorted = [...values.locationStats].sort((a, b) => (b.cost || 0) - (a.cost || 0))
                             setFieldValue('locationStats', sorted)
                             setSortOrder('desc')
                           }}
@@ -763,7 +763,7 @@ export default function CampaignForm() {
                               ctr: 0,
                               cpc: 0,
                               cpm: 0,
-                              spent: 0,
+                              cost: 0,
                               impression: 0,
                             }
                             setFieldValue('locationStats', [...values.locationStats, newLocation])
@@ -848,11 +848,11 @@ export default function CampaignForm() {
                               <FormItem label={index === 0 ? 'Đã tiêu' : ''}>
                                 <Input
                                   type="number"
-                                  value={location.spent || ''}
+                                  value={location.cost || ''}
                                   placeholder="Đã tiêu..."
                                   onChange={(e) => {
                                     const updatedLocations = [...values.locationStats]
-                                    updatedLocations[index].spent = parseFloat(e.target.value) || 0
+                                    updatedLocations[index].cost = parseFloat(e.target.value) || 0
                                     setFieldValue('locationStats', updatedLocations)
                                   }}
                                 />

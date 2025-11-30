@@ -226,11 +226,11 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
           >
             {campaign.topSearchTerms.length > 0 && (
               <TableTooltip
-                data={campaign.topSearchTerms.sort((a, b) => (b.spent || 0) - (a.spent || 0))}
+                data={campaign.topSearchTerms.sort((a, b) => (b.cost || 0) - (a.cost || 0))}
                 columns={[
                   { key: 'term', label: 'Thuật ngữ' },
                   { key: 'cpc', label: 'CPC' },
-                  { key: 'spent', label: 'Đã tiêu' },
+                  { key: 'cost', label: 'Đã tiêu' },
                 ]}
               />
             )}
@@ -241,13 +241,13 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
           >
             {campaign.locationStats.length > 0 && (
               <TableTooltip
-                data={campaign.locationStats.sort((a, b) => (b.spent || 0) - (a.spent || 0))}
+                data={campaign.locationStats.sort((a, b) => (b.cost || 0) - (a.cost || 0))}
                 columns={[
                   { key: 'location', label: 'Quốc gia' },
                   { key: 'clicks', label: 'Click' },
                   { key: 'ctr', label: 'CTR' },
                   { key: 'cpc', label: 'CPC' },
-                  { key: 'spent', label: 'Đã tiêu' },
+                  { key: 'cost', label: 'Đã tiêu' },
                 ]}
               />
             )}
