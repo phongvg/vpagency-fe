@@ -18,12 +18,13 @@ import UpdateProgressModal from '@/views/tasks/assign/components/UpdateProgressM
 import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
 import { useDeleteTask } from '@/views/tasks/assign/hooks/useTask'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   HiChevronDoubleUp,
   HiChevronDown,
   HiMenu,
   HiMenuAlt4,
+  HiOutlineDuplicate,
   HiOutlineExternalLink,
   HiOutlinePencilAlt,
   HiOutlineTrash,
@@ -35,6 +36,8 @@ import { DataTable } from '@/components/shared'
 import TaskProgressDetailModal from '@/views/tasks/assign/components/TaskProgressDetailModal'
 import { Link } from 'react-router-dom'
 import { urlConfig } from '@/configs/urls.config'
+import { TableTooltip } from '@/components/shared/TableTooltip'
+import { toastError, toastSuccess } from '@/utils/toast'
 
 type Props = {
   inSplitView?: boolean
@@ -329,6 +332,17 @@ function TaskCampaignSection({ task }: TaskPanelProps) {
 }
 
 function TaskFinalUrlSection({ finalUrls }: { finalUrls: FinalUrl[] }) {
+  const handleCopyToClipboard = useCallback((text: string) => {
+    navigator.clipboard.writeText(text).then(
+      () => {
+        toastSuccess('Đã sao chép vào clipboard')
+      },
+      () => {
+        toastError('Sao chép thất bại')
+      },
+    )
+  }, [])
+
   const columns: ColumnDef<FinalUrl>[] = useMemo(
     () => [
       {
@@ -361,6 +375,42 @@ function TaskFinalUrlSection({ finalUrls }: { finalUrls: FinalUrl[] }) {
             >
               {row.finalURL}
             </a>
+          )
+        },
+      },
+      {
+        id: 'countries',
+        header: 'Quốc gia',
+        accessorKey: 'countries',
+        cell: (props) => {
+          const row = props.row.original.countries || []
+          if (row.length === 0) return null
+
+          return (
+            <div className="flex items-center gap-2">
+              <TableTooltip data={row.map((l) => ({ name: l }))} columns={[{ key: 'name', label: 'Quốc gia' }]} />
+              <button type="button" title="Sao chép" onClick={() => handleCopyToClipboard(row.join('\n'))}>
+                <HiOutlineDuplicate />
+              </button>
+            </div>
+          )
+        },
+      },
+      {
+        id: 'excludeCountries',
+        header: 'Quốc gia loại trừ',
+        accessorKey: 'excludeCountries',
+        cell: (props) => {
+          const row = props.row.original.excludeCountries || []
+          if (row.length === 0) return null
+
+          return (
+            <div className="flex items-center gap-2">
+              <TableTooltip data={row.map((l) => ({ name: l }))} columns={[{ key: 'name', label: 'Quốc gia' }]} />
+              <button type="button" title="Sao chép" onClick={() => handleCopyToClipboard(row.join('\n'))}>
+                <HiOutlineDuplicate />
+              </button>
+            </div>
           )
         },
       },
