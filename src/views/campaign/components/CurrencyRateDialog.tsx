@@ -13,7 +13,6 @@ type Props = {
 
 export default function CurrencyRateDialog({
   isOpen,
-  campaigns,
   currencyRates,
   isInvalidForm,
   onChangeCurrencyRate,
@@ -27,19 +26,18 @@ export default function CurrencyRateDialog({
   return (
     <Dialog isOpen={isOpen} width={550} onClose={onClose} onRequestClose={onClose}>
       <h5 className="mb-4">Cập nhật tỷ giá quy đổi sang USD</h5>
-      <div className="mb-6 space-y-3">
+      <div className="space-y-3 mb-6">
         {uniqueCodes.map((item) => (
-          <div className="flex items-center gap-3" key={item.code}>
+          <div key={item.code} className="flex items-center gap-3">
             <label htmlFor={item.code} className="form-label">
               {item.code}:
             </label>
             <Input
               type="number"
               id={item.code}
-              value={item.rateToUSD || ''}
-              onChange={(e) => onChangeCurrencyRate(Number(e.target.value), item.code)}
-              min={0}
+              value={item.rateToUSD ?? ''}
               placeholder="Nhập tỷ giá quy đổi sang USD"
+              onChange={(e) => onChangeCurrencyRate(Number(e.target.value), item.code)}
             />
           </div>
         ))}
@@ -48,7 +46,7 @@ export default function CurrencyRateDialog({
         <Button type="button" size="sm" onClick={onClose}>
           Hủy
         </Button>
-        <Button type="button" size="sm" variant="solid" onClick={onSubmit} disabled={isInvalidForm}>
+        <Button type="button" size="sm" variant="solid" disabled={isInvalidForm} onClick={onSubmit}>
           Cập nhật
         </Button>
       </div>
