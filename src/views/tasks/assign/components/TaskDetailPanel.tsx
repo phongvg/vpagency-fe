@@ -444,7 +444,7 @@ function TaskFinalUrlSection({ finalUrls }: { finalUrls: FinalUrl[] }) {
         },
       },
     ],
-    [],
+    [handleCopyToClipboard],
   )
 
   return <DataTable columns={columns} data={finalUrls} loading={false} pagingData={undefined} />

@@ -2,8 +2,8 @@ import { Task } from '@/views/tasks/assign/types/task.type'
 import { Avatar, Badge, Button, Progress } from '@/components/ui'
 import { TaskFrequency, TaskPriorityLabels, TaskStatusLabels, TaskType, TaskTypeLabels } from '@/enums/task.enum'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
-import { HiOutlineCalendar, HiOutlineClock, HiOutlineStar, HiUsers } from 'react-icons/hi'
-import { useMemo, useState } from 'react'
+import { HiOutlineCalendar, HiOutlineClock, HiOutlineDuplicate, HiOutlineStar, HiUsers } from 'react-icons/hi'
+import { useCallback, useMemo, useState } from 'react'
 import UpdateProgressModal from './UpdateProgressModal'
 import { getPriorityColor, getStatusColor } from '@/constants/task.constant'
 import { formatDate } from '@/helpers/formatDate'
@@ -15,6 +15,8 @@ import { ColumnDef } from '@tanstack/react-table'
 import { FinalUrl } from '@/views/projects/types/finalUrl.type'
 import { DataTable } from '@/components/shared'
 import TaskProgressDetailModal from '@/views/tasks/assign/components/TaskProgressDetailModal'
+import { TableTooltip } from '@/components/shared/TableTooltip'
+import { toastError, toastSuccess } from '@/utils/toast'
 
 interface TaskDetailViewProps {
   task: Task
@@ -28,6 +30,17 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
 
   const [isProgressModalOpen, setIsProgressModalOpen] = useState(false)
   const [isProgressDetailModalOpen, setIsProgressDetailModalOpen] = useState(false)
+
+  const handleCopyToClipboard = useCallback((text: string) => {
+    navigator.clipboard.writeText(text).then(
+      () => {
+        toastSuccess('Đã sao chép vào clipboard')
+      },
+      () => {
+        toastError('Sao chép thất bại')
+      },
+    )
+  }, [])
 
   const columns: ColumnDef<FinalUrl>[] = useMemo(
     () => [
@@ -65,6 +78,42 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
         },
       },
       {
+        id: 'countries',
+        header: 'Quốc gia',
+        accessorKey: 'countries',
+        cell: (props) => {
+          const row = props.row.original.countries || []
+          if (row.length === 0) return null
+
+          return (
+            <div className="flex items-center gap-2">
+              <TableTooltip data={row.map((l) => ({ name: l }))} columns={[{ key: 'name', label: 'Quốc gia' }]} />
+              <button type="button" title="Sao chép" onClick={() => handleCopyToClipboard(row.join('\n'))}>
+                <HiOutlineDuplicate />
+              </button>
+            </div>
+          )
+        },
+      },
+      {
+        id: 'excludeCountries',
+        header: 'Quốc gia loại trừ',
+        accessorKey: 'excludeCountries',
+        cell: (props) => {
+          const row = props.row.original.excludeCountries || []
+          if (row.length === 0) return null
+
+          return (
+            <div className="flex items-center gap-2">
+              <TableTooltip data={row.map((l) => ({ name: l }))} columns={[{ key: 'name', label: 'Quốc gia' }]} />
+              <button type="button" title="Sao chép" onClick={() => handleCopyToClipboard(row.join('\n'))}>
+                <HiOutlineDuplicate />
+              </button>
+            </div>
+          )
+        },
+      },
+      {
         header: 'Mục tiêu Ref',
         accessorKey: 'targetRef',
       },
@@ -94,7 +143,7 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
         },
       },
     ],
-    [],
+    [handleCopyToClipboard],
   )
 
   return (
