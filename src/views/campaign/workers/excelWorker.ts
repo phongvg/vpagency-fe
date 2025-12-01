@@ -303,7 +303,9 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
         cost: cost[cost.length - 1] ?? 0,
         targetLocations,
         locationStats,
-        campaignBudget: campaignBudget[campaignBudget.length - 1] ?? 0,
+        campaignBudget: campaignBudget[campaignBudget.length - 1]
+          ? campaignBudget[campaignBudget.length - 1] / 1000000
+          : 0,
         negativeKeywords,
         locationExcluded,
       }
