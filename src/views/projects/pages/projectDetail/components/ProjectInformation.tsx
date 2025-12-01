@@ -1,4 +1,5 @@
 import { Breadcrumb, BreadcrumbItem } from '@/components/shared'
+import BadgeStatus from '@/components/shared/BadgeStatus'
 import { Avatar, Button, Card } from '@/components/ui'
 import { urlConfig } from '@/configs/urls.config'
 import { formatDate } from '@/helpers/formatDate'
@@ -46,7 +47,12 @@ export default function ProjectInformation({ data }: Props) {
                 <ProjectInfoField title="Ghi chú" value={data.note} />
                 <ProjectInfoField title="Nội dung" value={data.content} />
                 <ProjectInfoField title="Giới tính" value={genderMap[data.gender || '']} />
-                <ProjectInfoField title="Độ tuổi" value={data.age} />
+                <ProjectInfoListField
+                  title="Độ tuổi"
+                  value={data.ageRange.map((age) => (
+                    <BadgeStatus key={age} content={age} />
+                  ))}
+                />
                 <ProjectInfoField title="Ngày bắt đầu dự án" value={formatDate(data.startedAt, 'DD/MM/YYYY')} />
                 <ProjectInfoField title="Ngày tạo dự án" value={formatDate(data.createdAt, 'DD/MM/YYYY HH:mm')} />
                 <ProjectInfoField title="Ngày cập nhật" value={formatDate(data.updatedAt, 'DD/MM/YYYY HH:mm')} />
@@ -82,6 +88,15 @@ function ProjectInfoField({ title, value }: { title: string; value: string | num
     <div>
       <span>{title}</span>
       <p className="font-semibold text-gray-700 break-words">{value || `<${title}>`}</p>
+    </div>
+  )
+}
+
+function ProjectInfoListField({ title, value }: { title: string; value: React.ReactNode }) {
+  return (
+    <div>
+      <span>{title}</span>
+      <div className="flex flex-wrap gap-2 mt-1">{value}</div>
     </div>
   )
 }

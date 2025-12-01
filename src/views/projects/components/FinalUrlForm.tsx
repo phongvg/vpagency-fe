@@ -9,6 +9,7 @@ const validationSchema = Yup.object().shape({
   name: Yup.string().required('Tên là bắt buộc'),
   finalURL: Yup.string().url('URL không hợp lệ').required('URL là bắt buộc'),
   countries: Yup.array().of(Yup.string()),
+  excludeCountries: Yup.array().of(Yup.string()),
   title: Yup.string().nullable(),
   content: Yup.string().nullable(),
   targetRef: Yup.number().min(0, 'Giá trị phải >= 0').nullable(),
@@ -38,6 +39,7 @@ export default function FinalUrlForm({ projectId, finalUrlId, isEdit, onClose }:
     name: finalUrl?.name || '',
     finalURL: finalUrl?.finalURL || '',
     countries: finalUrl?.countries || [],
+    excludeCountries: finalUrl?.excludeCountries || [],
     projectId: finalUrl?.projectId || projectId,
     title: finalUrl?.title || '',
     content: finalUrl?.content || '',
@@ -93,7 +95,6 @@ export default function FinalUrlForm({ projectId, finalUrlId, isEdit, onClose }:
 
                   <FormItem
                     label="Quốc gia"
-                    className="col-span-2"
                     invalid={!!(errors.countries && touched.countries)}
                     errorMessage={errors.countries}
                   >
@@ -101,6 +102,18 @@ export default function FinalUrlForm({ projectId, finalUrlId, isEdit, onClose }:
                       value={values.countries || []}
                       placeholder="Nhập quốc gia..."
                       onChange={(tags) => setFieldValue('countries', tags)}
+                    />
+                  </FormItem>
+
+                  <FormItem
+                    label="Quốc gia loại trừ"
+                    invalid={!!(errors.excludeCountries && touched.excludeCountries)}
+                    errorMessage={errors.excludeCountries}
+                  >
+                    <TagInput
+                      value={values.excludeCountries || []}
+                      placeholder="Nhập quốc gia..."
+                      onChange={(tags) => setFieldValue('excludeCountries', tags)}
                     />
                   </FormItem>
                 </div>

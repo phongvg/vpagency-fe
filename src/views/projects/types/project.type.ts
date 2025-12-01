@@ -25,7 +25,7 @@ export type Project = {
   rejectedCountries: string[]
   startedAt: Date | null
   devices: string[]
-  age: number | null
+  ageRange: string[]
   gender: string | null
   content: string | null
   title: string | null

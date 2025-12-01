@@ -299,7 +299,12 @@ export default function CampaignTable() {
           if (locations.length === 0) return null
 
           return (
-            <TableTooltip data={locations.map((l) => ({ name: l }))} columns={[{ key: 'name', label: 'Quốc gia' }]} />
+            <div className="flex items-center gap-2">
+              <TableTooltip data={locations.map((l) => ({ name: l }))} columns={[{ key: 'name', label: 'Quốc gia' }]} />
+              <button type="button" title="Sao chép" onClick={() => handleCopyToClipboard(locations.join('\n'))}>
+                <HiOutlineDuplicate />
+              </button>
+            </div>
           )
         },
       },
@@ -312,7 +317,12 @@ export default function CampaignTable() {
           if (locations.length === 0) return null
 
           return (
-            <TableTooltip data={locations.map((l) => ({ name: l }))} columns={[{ key: 'name', label: 'Quốc gia' }]} />
+            <div className="flex items-center gap-2">
+              <TableTooltip data={locations.map((l) => ({ name: l }))} columns={[{ key: 'name', label: 'Quốc gia' }]} />
+              <button type="button" title="Sao chép" onClick={() => handleCopyToClipboard(locations.join('\n'))}>
+                <HiOutlineDuplicate />
+              </button>
+            </div>
           )
         },
       },

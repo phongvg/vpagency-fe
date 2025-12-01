@@ -17,7 +17,6 @@ import { UpdateProjectRequest } from '@/views/projects/types/project.type'
 import ProjectFinalUrlTable from './ProjectFinalUrlTable'
 import FinalUrlEditDialog from '@/views/projects/components/FinalUrlEditDialog'
 import { SelectOption } from '@/@types/common'
-import NumberInput from '@/components/shared/NumberInput'
 
 const { TabNav, TabList, TabContent } = Tabs
 
@@ -32,7 +31,7 @@ const validationSchema = Yup.object().shape({
   typeId: Yup.string().required('Loại dự án là bắt buộc'),
   statusId: Yup.string().required('Trạng thái là bắt buộc'),
   totalBudget: Yup.number().nullable(),
-  age: Yup.number().nullable(),
+  ageRange: Yup.array().of(Yup.string()),
   gender: Yup.string(),
   title: Yup.string(),
   description: Yup.string(),
@@ -47,6 +46,16 @@ const gendersOptions: SelectOption[] = [
   { value: 'male', label: 'Nam' },
   { value: 'female', label: 'Nữ' },
   { value: 'both', label: 'Nam và Nữ' },
+]
+
+const ageRangeOptions: SelectOption[] = [
+  { value: '18-24', label: '18-24' },
+  { value: '25-34', label: '25-34' },
+  { value: '35-44', label: '35-44' },
+  { value: '45-54', label: '45-54' },
+  { value: '55-64', label: '55-64' },
+  { value: '65+', label: '65+' },
+  { value: 'unknown', label: 'Khác' },
 ]
 
 export default function ProjectForm() {
@@ -95,7 +104,7 @@ export default function ProjectForm() {
     typeId: project?.typeId || '',
     statusId: project?.statusId || '',
     totalBudget: project?.totalBudget || null,
-    age: project?.age || null,
+    ageRange: project?.ageRange || [],
     gender: project?.gender || '',
     title: project?.title || '',
     description: project?.description || '',
@@ -110,6 +119,7 @@ export default function ProjectForm() {
             name: fu.name || '',
             finalURL: fu.finalURL || '',
             countries: fu.countries || [],
+            excludeCountries: fu.excludeCountries || [],
           }))
         : [],
   }
@@ -318,14 +328,23 @@ export default function ProjectForm() {
                       </Field>
                     </FormItem>
 
-                    <FormItem label="Độ tuổi" invalid={errors.age && touched.age} errorMessage={errors.age}>
-                      <NumberInput
-                        value={values.age}
-                        min={1}
-                        max={100}
-                        placeholder="Nhập độ tuổi"
-                        onChange={(value) => setFieldValue('age', value)}
-                      />
+                    <FormItem
+                      label="Độ tuổi"
+                      invalid={errors.ageRange && touched.ageRange}
+                      errorMessage={errors.ageRange}
+                    >
+                      <Field name="ageRange">
+                        {({ field, form }: FieldProps) => (
+                          <SelectCustom
+                            isMulti
+                            isCreatable
+                            field={field}
+                            form={form}
+                            options={ageRangeOptions}
+                            placeholder="Chọn độ tuổi..."
+                          />
+                        )}
+                      </Field>
                     </FormItem>
                   </div>
                 </TabContent>

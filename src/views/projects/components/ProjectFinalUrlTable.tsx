@@ -2,11 +2,13 @@ import { useCallback, useMemo } from 'react'
 import { DataTable } from '@/components/shared'
 import { ColumnDef } from '@tanstack/react-table'
 import { FinalUrl } from '@/views/projects/types/finalUrl.type'
-import { HiOutlinePencilAlt, HiOutlineTrash, HiOutlinePlus } from 'react-icons/hi'
+import { HiOutlinePencilAlt, HiOutlineTrash, HiOutlinePlus, HiOutlineDuplicate } from 'react-icons/hi'
 import { Button, ConfirmDialog } from '@/components/ui'
 import { useFinalUrlStore } from '@/views/projects/store/useFinalUrlStore'
 import { useDeleteFinalUrlMutation, useGetFinalUrlsByProjectId } from '@/views/projects/hooks/useFinalUrl'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
+import { TableTooltip } from '@/components/shared/TableTooltip'
+import { toastError, toastSuccess } from '@/utils/toast'
 
 interface ProjectFinalUrlTableProps {
   projectId?: string
@@ -47,6 +49,17 @@ export default function ProjectFinalUrlTable({ projectId, active = false }: Proj
     [deleteMutation, showConfirm],
   )
 
+  const handleCopyToClipboard = useCallback((text: string) => {
+    navigator.clipboard.writeText(text).then(
+      () => {
+        toastSuccess('Đã sao chép vào clipboard')
+      },
+      () => {
+        toastError('Sao chép thất bại')
+      },
+    )
+  }, [])
+
   const columns: ColumnDef<FinalUrl>[] = useMemo(
     () => [
       {
@@ -83,6 +96,42 @@ export default function ProjectFinalUrlTable({ projectId, active = false }: Proj
         },
       },
       {
+        id: 'countries',
+        header: 'Quốc gia',
+        accessorKey: 'countries',
+        cell: (props) => {
+          const row = props.row.original.countries || []
+          if (row.length === 0) return null
+
+          return (
+            <div className="flex items-center gap-2">
+              <TableTooltip data={row.map((l) => ({ name: l }))} columns={[{ key: 'name', label: 'Quốc gia' }]} />
+              <button type="button" title="Sao chép" onClick={() => handleCopyToClipboard(row.join('\n'))}>
+                <HiOutlineDuplicate />
+              </button>
+            </div>
+          )
+        },
+      },
+      {
+        id: 'excludeCountries',
+        header: 'Quốc gia loại trừ',
+        accessorKey: 'excludeCountries',
+        cell: (props) => {
+          const row = props.row.original.excludeCountries || []
+          if (row.length === 0) return null
+
+          return (
+            <div className="flex items-center gap-2">
+              <TableTooltip data={row.map((l) => ({ name: l }))} columns={[{ key: 'name', label: 'Quốc gia' }]} />
+              <button type="button" title="Sao chép" onClick={() => handleCopyToClipboard(row.join('\n'))}>
+                <HiOutlineDuplicate />
+              </button>
+            </div>
+          )
+        },
+      },
+      {
         header: 'Mục tiêu Ref',
         accessorKey: 'targetRef',
       },
@@ -115,12 +164,6 @@ export default function ProjectFinalUrlTable({ projectId, active = false }: Proj
         accessorKey: 'suggestedBid',
       },
       {
-        id: 'countries',
-        header: 'Quốc gia',
-        accessorKey: 'countries',
-        cell: (props) => <span>{props.row.original.countries.join(', ')}</span>,
-      },
-      {
         id: 'actions',
         header: '',
         cell: (props) => {
@@ -138,7 +181,7 @@ export default function ProjectFinalUrlTable({ projectId, active = false }: Proj
         },
       },
     ],
-    [handleDelete, handleEdit],
+    [handleDelete, handleEdit, handleCopyToClipboard],
   )
 
   return (
