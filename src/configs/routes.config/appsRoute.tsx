@@ -154,6 +154,15 @@ const appsRoute: Routes = [
       header: 'Chiến dịch',
     },
   },
+  {
+    key: 'financeReports',
+    path: urlConfig.financeReports,
+    component: lazy(() => import('@/views/finance/reports')),
+    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.ACCOUNTING],
+    meta: {
+      header: 'Báo cáo tài chính',
+    },
+  },
 ]
 
 export default appsRoute

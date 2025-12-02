@@ -31,6 +31,27 @@ const appsNavigationConfig: NavigationTree[] = [
         subMenu: [],
       },
       {
+        key: 'financeManagement',
+        path: '',
+        title: 'Quản lý tài chính',
+        translateKey: '',
+        icon: 'graph',
+        type: NAV_ITEM_TYPE_COLLAPSE,
+        authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.ACCOUNTING],
+        subMenu: [
+          {
+            key: 'reports',
+            path: urlConfig.financeReports,
+            title: 'Báo cáo tài chính',
+            translateKey: '',
+            icon: '',
+            type: NAV_ITEM_TYPE_ITEM,
+            authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.ACCOUNTING],
+            subMenu: [],
+          },
+        ],
+      },
+      {
         key: 'taskManagement',
         path: '',
         title: 'Quản lý công việc',

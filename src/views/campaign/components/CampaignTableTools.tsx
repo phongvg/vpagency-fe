@@ -45,8 +45,6 @@ export default function CampaignTableTools() {
     try {
       const { data, currencyRates } = await processFile(file)
 
-      console.log({ data, currencyRates })
-
       setImportData({ data, currencyRates })
 
       if (currencyRates.length > 0) {
