@@ -55,7 +55,7 @@ export type SortOrder = 'asc' | 'desc' | ''
 export type CommonFilterRequest = {
   page: number
   limit: number
-  search: string
+  search?: string
   sortBy?: string
   sortOrder?: SortOrder
 }

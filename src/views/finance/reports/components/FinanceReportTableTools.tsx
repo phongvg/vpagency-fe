@@ -1,37 +1,55 @@
-import SelectCustom from '@/components/shared/SelectCustom'
 import { Button, DatePicker } from '@/components/ui'
 import { useState } from 'react'
 import { HiOutlinePlus } from 'react-icons/hi'
-import FinanceReportFormModal from './FinanceReportFormModal'
+import { useProjectDailyStatStore } from '@/views/finance/reports/store/useProjectDailyStatStore'
+import { formatDate } from '@/helpers/formatDate'
+import FinanceReportEditDialog from '@/views/finance/reports/components/FinanceReportEditDialog'
 
 export default function FinanceReportTableTools() {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const handleSubmitReport = (data: any) => {
-    console.log('Report data:', data)
-    // TODO: Handle submit report data
+  const { filters, setFilters } = useProjectDailyStatStore()
+
+  const handleFromDateChange = (date: Date | null) => {
+    setFilters({
+      ...filters,
+      fromDate: date ? formatDate(date, 'YYYY-MM-DD') : undefined,
+    })
+  }
+
+  const handleToDateChange = (date: Date | null) => {
+    setFilters({
+      ...filters,
+      toDate: date ? formatDate(date, 'YYYY-MM-DD') : undefined,
+    })
   }
 
   return (
     <>
       <div className="flex md:flex-row flex-col md:justify-between md:items-center gap-4 mb-4">
-        <div className="gap-2 grid grid-cols-4 mb-4">
-          <DatePicker placeholder="Chọn ngày" />
-          <SelectCustom placeholder="Chọn dự án" />
-          <SelectCustom placeholder="Chọn URL cuối" />
-          <SelectCustom placeholder="Chọn người chạy" />
+        <div className="items-center gap-4 grid grid-cols-3">
+          <DatePicker
+            size="sm"
+            placeholder="Từ ngày"
+            inputFormat="DD/MM/YYYY"
+            value={filters.fromDate ? new Date(filters.fromDate) : null}
+            onChange={handleFromDateChange}
+          />
+          <DatePicker
+            size="sm"
+            placeholder="Đến ngày"
+            inputFormat="DD/MM/YYYY"
+            value={filters.toDate ? new Date(filters.toDate) : null}
+            onChange={handleToDateChange}
+          />
         </div>
 
         <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={() => setIsModalOpen(true)}>
-          Thêm mới
+          Tạo báo cáo
         </Button>
       </div>
 
-      <FinanceReportFormModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleSubmitReport}
-      />
+      <FinanceReportEditDialog isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </>
   )
 }
