@@ -100,12 +100,6 @@ export default function FinanceReportFormStep1({ onSuccess, onCancel }: Props) {
                 <strong>Lưu ý:</strong> Hệ thống sẽ tự động tính toán các chỉ số báo cáo dựa trên dữ liệu chiến dịch và
                 dự án đã có.
               </p>
-              <ul className="mt-2 text-blue-700 text-sm list-disc list-inside">
-                <li>Tổng chi tiêu, click, CPC từ dữ liệu chiến dịch</li>
-                <li>Quốc gia đang cắn từ thống kê location</li>
-                <li>Volume key, dự tính Ref từ thông tin dự án</li>
-                <li>Các chỉ số khác sẽ được tính toán tự động</li>
-              </ul>
             </div>
 
             <div className="flex justify-end gap-2">
