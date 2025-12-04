@@ -301,6 +301,14 @@ export default function CampaignForm() {
                         onChange={(tags) => setFieldValue('targetLocations', tags)}
                       />
                     </FormItem>
+
+                    <FormItem label="Quốc gia loại trừ" className="col-span-3">
+                      <TagInput
+                        value={values.locationExcluded || []}
+                        placeholder="Nhập quốc gia..."
+                        onChange={(tags) => setFieldValue('locationExcluded', tags)}
+                      />
+                    </FormItem>
                   </div>
                 </TabContent>
 

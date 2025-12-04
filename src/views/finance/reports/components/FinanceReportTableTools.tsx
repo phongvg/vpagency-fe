@@ -4,11 +4,15 @@ import { HiOutlinePlus } from 'react-icons/hi'
 import { useProjectDailyStatStore } from '@/views/finance/reports/store/useProjectDailyStatStore'
 import { formatDate } from '@/helpers/formatDate'
 import FinanceReportEditDialog from '@/views/finance/reports/components/FinanceReportEditDialog'
+import { useAuthStore } from '@/store/auth/useAuthStore'
+import { isAdminOrAccounting } from '@/utils/checkRole'
 
 export default function FinanceReportTableTools() {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const { filters, setFilters } = useProjectDailyStatStore()
+
+  const { user } = useAuthStore()
 
   const handleFromDateChange = (date: Date | null) => {
     setFilters({
@@ -44,9 +48,11 @@ export default function FinanceReportTableTools() {
           />
         </div>
 
-        <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={() => setIsModalOpen(true)}>
-          Tạo báo cáo
-        </Button>
+        {isAdminOrAccounting(user?.roles) && (
+          <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={() => setIsModalOpen(true)}>
+            Tạo báo cáo
+          </Button>
+        )}
       </div>
 
       <FinanceReportEditDialog isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />

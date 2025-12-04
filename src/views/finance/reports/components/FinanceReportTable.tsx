@@ -10,9 +10,12 @@ import { formatDate } from '@/helpers/formatDate'
 import { TableTooltip } from '@/components/shared/TableTooltip'
 import { HiOutlineDuplicate } from 'react-icons/hi'
 import { toastError, toastSuccess } from '@/utils/toast'
+import { isAdminOrAccounting } from '@/utils/checkRole'
+import { useAuthStore } from '@/store/auth/useAuthStore'
 
 export default function FinanceReportTable() {
   const { filters, setFilters } = useProjectDailyStatStore()
+  const { user } = useAuthStore()
 
   const { data, isLoading } = useProjectDailyStat(filters)
 
@@ -47,30 +50,86 @@ export default function FinanceReportTable() {
           return <span>{formatDate(value, 'DD/MM/YYYY')}</span>
         },
       },
-      {
-        header: 'Lợi nhuận',
-        accessorKey: 'profit',
-        cell: (props) => {
-          const value = props.getValue() as number
-          return <span>{formatUSD(value)}</span>
-        },
-      },
-      {
-        header: 'ROI',
-        accessorKey: 'roi',
-        cell: (props) => {
-          const value = props.getValue() as number
-          return <span>{value.toFixed(2)}%</span>
-        },
-      },
-      // {
-      //   header: 'Dự án',
-      //   accessorKey: 'project',
-      //   cell: (props) => {
-      //     const project = props.getValue() as any
-      //     return <span>{project?.name || '-'}</span>
-      //   },
-      // },
+      ...(isAdminOrAccounting(user?.roles)
+        ? ([
+            {
+              header: 'Lợi nhuận',
+              accessorKey: 'profit',
+              cell: (props) => {
+                const value = props.getValue() as number
+                return <span>{formatUSD(value)}</span>
+              },
+            },
+            {
+              header: 'Tổng Ref',
+              accessorKey: 'totalRef',
+            },
+            {
+              header: 'Chi phí mỗi Ref',
+              accessorKey: 'costPerRef',
+              cell: (props) => {
+                const value = props.getValue() as number
+                return <span>{formatUSD(value)}</span>
+              },
+            },
+            {
+              header: 'Tỷ lệ Ref/Click (%)',
+              accessorKey: 'rateRefPerClick',
+              cell: (props) => {
+                const value = props.getValue() as number
+                return <span>{value?.toFixed(2)}%</span>
+              },
+            },
+            {
+              header: 'Số FTD',
+              accessorKey: 'totalFtd',
+            },
+            {
+              header: 'Chi phí mỗi FTD',
+              accessorKey: 'costPerFtd',
+              cell: (props) => {
+                const value = props.getValue() as number
+                return <span>{formatUSD(value)}</span>
+              },
+            },
+            {
+              header: 'Tỷ lệ FTD/Ref (%)',
+              accessorKey: 'costFtdPerRef',
+              cell: (props) => {
+                const value = props.getValue() as number
+                return <span>{value?.toFixed(2)}%</span>
+              },
+            },
+            {
+              header: 'Volume key/ngày',
+              accessorKey: 'totalTargetDailyKeyVolume',
+            },
+            {
+              header: 'Dự tính Ref/ngày',
+              accessorKey: 'totalTargetRef',
+              cell: (props) => {
+                const value = props.getValue() as number
+                return <span>{value?.toLocaleString('vi-VN')}</span>
+              },
+            },
+            {
+              header: '% click đạt được',
+              accessorKey: 'totalClickPerVolume',
+              cell: (props) => {
+                const value = props.getValue() as number
+                return <span>{value?.toFixed(2)}%</span>
+              },
+            },
+            {
+              header: '% Ref đạt được',
+              accessorKey: 'totalRefPerVolume',
+              cell: (props) => {
+                const value = props.getValue() as number
+                return <span>{value?.toFixed(2)}%</span>
+              },
+            },
+          ] as ColumnDef<ProjectDailyStat>[])
+        : []),
       {
         header: 'Tổng chi tiêu',
         accessorKey: 'totalCost',
@@ -116,76 +175,8 @@ export default function FinanceReportTable() {
           )
         },
       },
-      {
-        header: 'Tổng Ref',
-        accessorKey: 'totalRef',
-      },
-      {
-        header: 'Chi phí mỗi Ref',
-        accessorKey: 'costPerRef',
-        cell: (props) => {
-          const value = props.getValue() as number
-          return <span>{formatUSD(value)}</span>
-        },
-      },
-      {
-        header: 'Tỷ lệ Ref/Click (%)',
-        accessorKey: 'rateRefPerClick',
-        cell: (props) => {
-          const value = props.getValue() as number
-          return <span>{value?.toFixed(2)}%</span>
-        },
-      },
-      {
-        header: 'Số FTD',
-        accessorKey: 'totalFtd',
-      },
-      {
-        header: 'Chi phí mỗi FTD',
-        accessorKey: 'costPerFtd',
-        cell: (props) => {
-          const value = props.getValue() as number
-          return <span>{formatUSD(value)}</span>
-        },
-      },
-      {
-        header: 'Tỷ lệ FTD/Ref (%)',
-        accessorKey: 'costFtdPerRef',
-        cell: (props) => {
-          const value = props.getValue() as number
-          return <span>{value?.toFixed(2)}%</span>
-        },
-      },
-      {
-        header: 'Volume key/ngày',
-        accessorKey: 'totalTargetDailyKeyVolume',
-      },
-      {
-        header: 'Dự tính Ref/ngày',
-        accessorKey: 'totalTargetRef',
-        cell: (props) => {
-          const value = props.getValue() as number
-          return <span>{value?.toLocaleString('vi-VN')}</span>
-        },
-      },
-      {
-        header: '% click đạt được',
-        accessorKey: 'totalClickPerVolume',
-        cell: (props) => {
-          const value = props.getValue() as number
-          return <span>{value?.toFixed(2)}%</span>
-        },
-      },
-      {
-        header: '% Ref đạt được',
-        accessorKey: 'totalRefPerVolume',
-        cell: (props) => {
-          const value = props.getValue() as number
-          return <span>{value?.toFixed(2)}%</span>
-        },
-      },
     ],
-    [handleCopyToClipboard],
+    [handleCopyToClipboard, user?.roles],
   )
 
   const onPaginationChange = (page: number) => {

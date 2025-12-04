@@ -7,8 +7,6 @@ import { formatUSD } from '@/helpers/formatUSD'
 const validationSchema = Yup.object().shape({
   totalRef: Yup.number().required('Vui lòng nhập số REF').min(0, 'Số REF phải lớn hơn 0'),
   totalFtd: Yup.number().required('Vui lòng nhập số FTD').min(0, 'Số FTD phải lớn hơn 0'),
-  receivedRevenue: Yup.number().required('Vui lòng nhập doanh thu đã nhận').min(0, 'Doanh thu phải lớn hơn 0'),
-  holdRevenue: Yup.number().required('Vui lòng nhập doanh thu tạm giữ').min(0, 'Doanh thu phải lớn hơn 0'),
 })
 
 type Props = {
@@ -174,34 +172,6 @@ export default function FinanceReportFormStep2({ generatedData, onSubmit, onCanc
                         placeholder="Nhập số FTD..."
                         value={values.totalFtd}
                         onChange={(e) => setFieldValue('totalFtd', e.target.value)}
-                      />
-                    </FormItem>
-
-                    <FormItem
-                      asterisk
-                      label="Doanh thu đã nhận"
-                      invalid={!!(errors.receivedRevenue && touched.receivedRevenue)}
-                      errorMessage={errors.receivedRevenue as string}
-                    >
-                      <Input
-                        type="number"
-                        placeholder="Nhập doanh thu đã nhận..."
-                        value={values.receivedRevenue}
-                        onChange={(e) => setFieldValue('receivedRevenue', e.target.value)}
-                      />
-                    </FormItem>
-
-                    <FormItem
-                      asterisk
-                      label="Doanh thu tạm giữ"
-                      invalid={!!(errors.holdRevenue && touched.holdRevenue)}
-                      errorMessage={errors.holdRevenue as string}
-                    >
-                      <Input
-                        type="number"
-                        placeholder="Nhập doanh thu tạm giữ..."
-                        value={values.holdRevenue}
-                        onChange={(e) => setFieldValue('holdRevenue', e.target.value)}
                       />
                     </FormItem>
                   </div>

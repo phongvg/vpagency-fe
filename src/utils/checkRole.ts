@@ -18,6 +18,12 @@ export const isAccounting = (role: Role[] | undefined) => {
   return role.includes(Role.ACCOUNTING)
 }
 
+export const isAdminOrAccounting = (role: Role[] | undefined) => {
+  if (!role) return false
+
+  return [Role.ADMIN, Role.ACCOUNTING].some((r) => role.includes(r))
+}
+
 export const isManager = (role: Role[] | undefined) => {
   if (!role) return false
 
