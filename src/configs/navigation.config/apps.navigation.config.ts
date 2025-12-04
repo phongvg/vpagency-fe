@@ -109,7 +109,14 @@ const appsNavigationConfig: NavigationTree[] = [
             translateKey: '',
             icon: '',
             type: NAV_ITEM_TYPE_ITEM,
-            authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.ACCOUNTING],
+            authority: [
+              Role.ADMIN,
+              Role.MANAGER_AFF,
+              Role.MANAGER_AGENCY,
+              Role.MEMBER_AFF,
+              Role.MEMBER_AGENCY,
+              Role.ACCOUNTING,
+            ],
             subMenu: [],
           },
           {

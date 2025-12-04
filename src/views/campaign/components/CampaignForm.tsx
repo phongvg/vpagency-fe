@@ -17,8 +17,8 @@ const { TabNav, TabList, TabContent } = Tabs
 
 const validationSchema = Yup.object().shape({
   importAt: Yup.string().nullable(),
-  date: Yup.string().nullable(),
-  uid: Yup.string().nullable(),
+  date: Yup.string().required('Vui lòng nhập ngày'),
+  uid: Yup.string().required('Vui lòng nhập UID'),
   mcc: Yup.string().nullable(),
   name: Yup.string().required('Vui lòng nhập tên chiến dịch'),
   externalId: Yup.string().required('Vui lòng nhập ID chiến dịch'),
@@ -104,7 +104,7 @@ export default function CampaignForm() {
 
       if (confirmed) {
         await updateMutation.mutateAsync({
-          campaignId: campaignId!,
+          campaignId,
           payload: values,
         })
       }
@@ -167,7 +167,7 @@ export default function CampaignForm() {
                       />
                     </FormItem>
 
-                    <FormItem label="UID" invalid={errors.uid && touched.uid} errorMessage={errors.uid}>
+                    <FormItem asterisk label="UID" invalid={errors.uid && touched.uid} errorMessage={errors.uid}>
                       <Field type="text" autoComplete="off" name="uid" placeholder="Nhập UID..." component={Input} />
                     </FormItem>
 
@@ -198,7 +198,7 @@ export default function CampaignForm() {
                       />
                     </FormItem>
 
-                    <FormItem label="Ngày">
+                    <FormItem asterisk label="Ngày">
                       <DatePicker
                         value={values.date ? new Date(values.date) : null}
                         placeholder="dd/mm/yyyy"

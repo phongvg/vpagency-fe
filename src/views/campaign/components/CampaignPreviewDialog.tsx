@@ -4,12 +4,16 @@ import { useCreateCampaignMutation } from '@/views/campaign/hooks/useCampaign'
 import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
 
 export default function CampaignPreviewDialog() {
-  const { dialogPreviewOpen, campaigns, closePreviewDialog } = useCampaignStore()
+  const { dialogPreviewOpen, campaigns, openCampaignSummaryDialog, closePreviewDialog } = useCampaignStore()
 
   const createMutation = useCreateCampaignMutation()
 
   const handleSubmit = async () => {
-    await createMutation.mutateAsync(campaigns)
+    await createMutation.mutateAsync(campaigns, {
+      onSuccess: (response) => {
+        openCampaignSummaryDialog(response.data.data)
+      },
+    })
   }
 
   return (

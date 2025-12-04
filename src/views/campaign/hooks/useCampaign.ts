@@ -40,13 +40,11 @@ export const useGetCampaignDetailQuery = (id: string, enabled = false) => {
 
 export const useCreateCampaignMutation = () => {
   const queryClient = useQueryClient()
-  const { openCampaignSummaryDialog } = useCampaignStore()
 
   return useMutation({
     mutationFn: (payload: UpdateCampaignRequest | UpdateCampaignRequest[]) => apiCreateCampaign(payload),
-    onSuccess: (response) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [GET_CAMPAIGN_LIST] })
-      openCampaignSummaryDialog(response.data.data)
     },
     onError: (error: ApiAxiosError) => {
       toastError(error.response?.data?.message)

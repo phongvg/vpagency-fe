@@ -9,6 +9,8 @@ import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { Link, useNavigate } from 'react-router-dom'
 import { urlConfig } from '@/configs/urls.config'
 import { Project } from '@/views/projects/types/project.type'
+import { useAuthStore } from '@/store/auth/useAuthStore'
+import { isAdminOrManager } from '@/utils/checkRole'
 
 const OwnerColumn = ({ row }: { row: Project }) => {
   const ownerName = row.owner
@@ -25,6 +27,7 @@ const OwnerColumn = ({ row }: { row: Project }) => {
 
 export default function ProjectTable() {
   const { filter, openDialog, setFilter } = useProjectStore()
+  const { user } = useAuthStore()
 
   const navigate = useNavigate()
 
@@ -119,9 +122,11 @@ export default function ProjectTable() {
               <button type="button" onClick={() => navigate(urlConfig.projectDetail.replace(':id', row.id))}>
                 <HiOutlineEye size={24} />
               </button>
-              <button type="button" onClick={() => handleEdit(row)}>
-                <HiOutlinePencilAlt size={24} />
-              </button>
+              {isAdminOrManager(user?.roles) && (
+                <button type="button" onClick={() => handleEdit(row)}>
+                  <HiOutlinePencilAlt size={24} />
+                </button>
+              )}
               <button type="button" onClick={() => handleDelete(row)}>
                 <HiOutlineTrash size={24} />
               </button>
@@ -130,7 +135,7 @@ export default function ProjectTable() {
         },
       },
     ],
-    [filter, handleDelete, handleEdit, navigate],
+    [filter, handleDelete, handleEdit, navigate, user],
   )
 
   const onPaginationChange = (page: number) => {
