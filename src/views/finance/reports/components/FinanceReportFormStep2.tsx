@@ -97,21 +97,7 @@ export default function FinanceReportFormStep2({ generatedData, onSubmit, onCanc
                     </FormItem>
 
                     <FormItem label="Tổng lượt click">
-                      <Input
-                        disabled
-                        value={generatedData.totalClicks.toLocaleString('vi-VN')}
-                        className="bg-gray-50"
-                      />
-                    </FormItem>
-
-                    <FormItem label="CPC trung bình">
-                      <Input
-                        disabled
-                        value={formatUSD(
-                          generatedData.totalClicks > 0 ? generatedData.totalCost / generatedData.totalClicks : 0,
-                        )}
-                        className="bg-gray-50"
-                      />
+                      <Input disabled value={generatedData.totalClicks} className="bg-gray-50" />
                     </FormItem>
 
                     <FormItem label="Thầu">
@@ -127,19 +113,11 @@ export default function FinanceReportFormStep2({ generatedData, onSubmit, onCanc
                     </FormItem>
 
                     <FormItem label="Volume key/ngày">
-                      <Input
-                        disabled
-                        value={generatedData.totalTargetDailyKeyVolume.toLocaleString('vi-VN')}
-                        className="bg-gray-50"
-                      />
+                      <Input disabled value={generatedData.totalTargetDailyKeyVolume} className="bg-gray-50" />
                     </FormItem>
 
                     <FormItem label="Dự tính Ref/ngày">
-                      <Input
-                        disabled
-                        value={generatedData.totalTargetRef.toLocaleString('vi-VN')}
-                        className="bg-gray-50"
-                      />
+                      <Input disabled value={generatedData.totalTargetRef} className="bg-gray-50" />
                     </FormItem>
                   </div>
                 </Card>

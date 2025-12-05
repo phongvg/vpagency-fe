@@ -220,6 +220,11 @@ export default function CampaignTable() {
         cell: (props) => <span>{fixedNumber(props.row.original.cost)}</span>,
       },
       {
+        id: 'impression',
+        header: 'Lượt hiển thị',
+        accessorKey: 'impression',
+      },
+      {
         id: 'campaignBudget',
         header: 'Ngân sách chiến dịch',
         accessorKey: 'campaignBudget',

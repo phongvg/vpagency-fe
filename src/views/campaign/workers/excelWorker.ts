@@ -273,6 +273,7 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
         ),
       ]
       const campaignBudget = campaignBudgetRows.map((row) => row['Amount (Micros)'])
+      const impression = campaignPfmRows.map((row) => row['Impressions'])
 
       return {
         importAt: importAt[importAt.length - 1]
@@ -308,6 +309,7 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
           : 0,
         negativeKeywords,
         locationExcluded,
+        impression: impression[impression.length - 1] ?? 0,
       }
     })
 

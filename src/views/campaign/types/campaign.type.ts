@@ -20,6 +20,7 @@ export type Campaign = {
   ctr: number | null
   cpm: number | null
   cost: number | null
+  impression: number | null
   targetLocations: string[]
   locationStats: LocationStat[]
   finalUrlImport: string | null
@@ -77,6 +78,7 @@ export type UpdateCampaignRequest = {
   ctr: number | null
   cpm: number | null
   cost: number | null
+  impression: number | null
   targetLocations: string[]
   locationStats: LocationStat[]
   campaignBudget: number | null

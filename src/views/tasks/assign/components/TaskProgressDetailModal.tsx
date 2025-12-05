@@ -1,6 +1,7 @@
 import { DataTable } from '@/components/shared'
 import { Button, Card, Dialog } from '@/components/ui'
 import { formatDate } from '@/helpers/formatDate'
+import { formatUSD } from '@/helpers/formatUSD'
 import { CampaignStat, FinalUrl } from '@/views/projects/types/finalUrl.type'
 import { ColumnDef } from '@tanstack/react-table'
 import { useMemo } from 'react'
@@ -54,6 +55,10 @@ export default function TaskProgressDetailModal({ isOpen, finalUrls, onClose }: 
       {
         header: 'Ngân sách đã tiêu',
         accessorKey: 'latestStat.cost',
+        cell: (props) => {
+          const row = props.row.original
+          return <span>{formatUSD(row.latestStat.cost)}</span>
+        },
       },
       {
         header: 'Lượt hiển thị',
@@ -64,8 +69,12 @@ export default function TaskProgressDetailModal({ isOpen, finalUrls, onClose }: 
         accessorKey: 'latestStat.ctr',
       },
       {
-        header: 'CPC',
-        accessorKey: 'latestStat.cpc',
+        header: 'CPC trung bình',
+        accessorKey: 'latestStat.avgCpc',
+        cell: (props) => {
+          const row = props.row.original
+          return <span>{formatUSD(row.latestStat.avgCpc)}</span>
+        },
       },
     ],
     [],

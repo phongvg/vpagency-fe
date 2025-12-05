@@ -47,5 +47,5 @@ export type LatestStat = {
   cost: number
   impression: number
   ctr: number
-  cpc: number
+  avgCpc: number
 }

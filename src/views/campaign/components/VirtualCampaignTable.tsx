@@ -33,6 +33,7 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
       ctr: 100,
       cpm: 100,
       cost: 180,
+      impression: 180,
       keywords: 300,
       negativeKeywords: 300,
       targetLocations: 300,
@@ -162,6 +163,12 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
             className="flex items-center px-4 border-r"
           >
             {campaign.cost}
+          </div>
+          <div
+            style={{ width: columnWidths.impression, minWidth: columnWidths.impression }}
+            className="flex items-center px-4 border-r"
+          >
+            {campaign.impression}
           </div>
           <div
             style={{ width: columnWidths.keywords, minWidth: columnWidths.keywords }}
@@ -365,6 +372,12 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
                 className="flex items-center px-4 border-r font-semibold"
               >
                 Ngân sách chi tiêu
+              </div>
+              <div
+                style={{ width: columnWidths.impression, minWidth: columnWidths.impression }}
+                className="flex items-center px-4 border-r font-semibold"
+              >
+                Lượt hiển thị
               </div>
               <div
                 style={{ width: columnWidths.keywords, minWidth: columnWidths.keywords }}

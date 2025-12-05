@@ -89,6 +89,7 @@ export default function CampaignForm() {
     ctr: campaign?.ctr || null,
     cpm: campaign?.cpm || null,
     cost: campaign?.cost || null,
+    impression: campaign?.impression || null,
     targetLocations: campaign?.targetLocations || [],
     locationStats: campaign?.locationStats || [],
     campaignBudget: campaign?.campaignBudget || null,
@@ -136,7 +137,7 @@ export default function CampaignForm() {
                 </TabList>
 
                 <TabContent value="basic">
-                  <div className="gap-4 grid grid-cols-3 mt-4">
+                  <div className="gap-4 grid grid-cols-4 mt-4">
                     <FormItem
                       asterisk
                       label="ID chiến dịch"
@@ -198,7 +199,12 @@ export default function CampaignForm() {
                       />
                     </FormItem>
 
-                    <FormItem asterisk label="Ngày">
+                    <FormItem
+                      asterisk
+                      label="Ngày dữ liệu"
+                      invalid={errors.date && touched.date}
+                      errorMessage={errors.date}
+                    >
                       <DatePicker
                         value={values.date ? new Date(values.date) : null}
                         placeholder="dd/mm/yyyy"
@@ -272,6 +278,17 @@ export default function CampaignForm() {
                       />
                     </FormItem>
 
+                    <FormItem label="Lượt hiển thị">
+                      <Field
+                        name="impression"
+                        type="number"
+                        component={Input}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setFieldValue('impression', Number(e.target.value))
+                        }
+                      />
+                    </FormItem>
+
                     <FormItem label="Ngân sách chi tiêu">
                       <Field
                         name="cost"
@@ -294,7 +311,7 @@ export default function CampaignForm() {
                       />
                     </FormItem>
 
-                    <FormItem label="Quốc gia mục tiêu" className="col-span-3">
+                    <FormItem label="Quốc gia mục tiêu" className="col-span-2">
                       <TagInput
                         value={values.targetLocations || []}
                         placeholder="Nhập quốc gia..."
@@ -302,7 +319,7 @@ export default function CampaignForm() {
                       />
                     </FormItem>
 
-                    <FormItem label="Quốc gia loại trừ" className="col-span-3">
+                    <FormItem label="Quốc gia loại trừ" className="col-span-2">
                       <TagInput
                         value={values.locationExcluded || []}
                         placeholder="Nhập quốc gia..."
@@ -314,7 +331,7 @@ export default function CampaignForm() {
 
                 <TabContent value="keywords">
                   <div className="mt-4">
-                    <div className="flex justify-between items-center mb-4">
+                    <div className="flex justify-between items-center">
                       <h6 className="font-semibold">Danh sách từ khóa</h6>
                       <Button
                         type="button"
@@ -342,11 +359,11 @@ export default function CampaignForm() {
                     {values.keywords.length === 0 ? (
                       <div className="py-8 text-gray-500 text-center">Chưa có từ khóa nào</div>
                     ) : (
-                      <div className="space-y-3">
+                      <div className="space-y-6 divide-y">
                         {values.keywords.map((keyword, index) => (
-                          <div key={index} className="flex items-start gap-3">
-                            <div className="flex-1 gap-3 grid grid-cols-5">
-                              <FormItem label={index === 0 ? 'Từ khóa' : ''}>
+                          <div key={index} className="flex items-start gap-3 pt-3">
+                            <div className="flex-1 gap-3 grid grid-cols-6">
+                              <FormItem label="Từ khóa">
                                 <Input
                                   value={keyword.keyword}
                                   placeholder="Nhập từ khóa..."
@@ -358,7 +375,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
 
-                              <FormItem label={index === 0 ? 'Hình thức' : ''}>
+                              <FormItem label="Hình thức">
                                 <Input
                                   value={keyword.match}
                                   placeholder="Exact, Phrase,..."
@@ -370,7 +387,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
 
-                              <FormItem label={index === 0 ? 'CPC thầu chung' : ''}>
+                              <FormItem label="CPC thầu chung">
                                 <Input
                                   type="number"
                                   value={keyword.bid || ''}
@@ -383,7 +400,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
 
-                              <FormItem label={index === 0 ? 'Click' : ''}>
+                              <FormItem label="Click">
                                 <Input
                                   type="number"
                                   value={keyword.clicks || ''}
@@ -396,7 +413,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
 
-                              <FormItem label={index === 0 ? 'Lượt hiển thị' : ''}>
+                              <FormItem label="Lượt hiển thị">
                                 <Input
                                   type="number"
                                   value={keyword.impression || ''}
@@ -409,7 +426,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
 
-                              <FormItem label={index === 0 ? 'CTR' : ''}>
+                              <FormItem label="CTR">
                                 <Input
                                   type="number"
                                   value={keyword.ctr || ''}
@@ -422,7 +439,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
 
-                              <FormItem label={index === 0 ? 'CPC' : ''}>
+                              <FormItem label="CPC">
                                 <Input
                                   type="number"
                                   value={keyword.cpc || ''}
@@ -435,7 +452,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
 
-                              <FormItem label={index === 0 ? 'CPM' : ''}>
+                              <FormItem label="CPM">
                                 <Input
                                   type="number"
                                   value={keyword.cpm || ''}
@@ -448,7 +465,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
 
-                              <FormItem label={index === 0 ? 'Chi phí' : ''}>
+                              <FormItem label="Chi phí">
                                 <Input
                                   type="number"
                                   value={keyword.cost || ''}
@@ -461,7 +478,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
                             </div>
-                            <div className={index === 0 ? 'mt-8' : ''}>
+                            <div className="mt-8">
                               <Button
                                 type="button"
                                 size="sm"
@@ -482,7 +499,7 @@ export default function CampaignForm() {
 
                 <TabContent value="negativeKeywords">
                   <div className="mt-4">
-                    <div className="flex justify-between items-center mb-4">
+                    <div className="flex justify-between items-center">
                       <h6 className="font-semibold">Danh sách từ khóa loại trừ</h6>
                       <Button
                         type="button"
@@ -510,11 +527,11 @@ export default function CampaignForm() {
                     {values.negativeKeywords.length === 0 ? (
                       <div className="py-8 text-gray-500 text-center">Chưa có từ khóa loại trừ nào</div>
                     ) : (
-                      <div className="space-y-3">
+                      <div className="space-y-6 divide-y">
                         {values.negativeKeywords.map((keyword, index) => (
-                          <div key={index} className="flex items-start gap-3">
+                          <div key={index} className="flex items-start gap-3 pt-3">
                             <div className="flex-1 gap-3 grid grid-cols-2">
-                              <FormItem label={index === 0 ? 'Từ khóa' : ''}>
+                              <FormItem label="Từ khóa">
                                 <Input
                                   value={keyword.keyword}
                                   placeholder="Nhập từ khóa..."
@@ -525,7 +542,7 @@ export default function CampaignForm() {
                                   }}
                                 />
                               </FormItem>
-                              <FormItem label={index === 0 ? 'Hình thức' : ''}>
+                              <FormItem label="Hình thức">
                                 <Input
                                   value={keyword.match}
                                   placeholder="Exact, Phrase,..."
@@ -537,7 +554,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
                             </div>
-                            <div className={index === 0 ? 'mt-8' : ''}>
+                            <div className="mt-8">
                               <Button
                                 type="button"
                                 size="sm"
@@ -614,11 +631,11 @@ export default function CampaignForm() {
                     {values.topSearchTerms.length === 0 ? (
                       <div className="py-8 text-gray-500 text-center">Chưa có thuật ngữ tìm kiếm nào</div>
                     ) : (
-                      <div className="space-y-3">
+                      <div className="space-y-6 divide-y">
                         {values.topSearchTerms.map((term, index) => (
-                          <div key={index} className="flex items-start gap-3">
-                            <div className="flex-1 gap-3 grid grid-cols-3">
-                              <FormItem label={index === 0 ? 'Thuật ngữ' : ''}>
+                          <div key={index} className="flex items-start gap-3 pt-3">
+                            <div className="flex-1 gap-3 grid grid-cols-7">
+                              <FormItem label="Thuật ngữ">
                                 <Input
                                   value={term.term}
                                   placeholder="Thuật ngữ..."
@@ -630,7 +647,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
 
-                              <FormItem label={index === 0 ? 'Click' : ''}>
+                              <FormItem label="Click">
                                 <Input
                                   type="number"
                                   value={term.clicks || ''}
@@ -643,7 +660,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
 
-                              <FormItem label={index === 0 ? 'CTR' : ''}>
+                              <FormItem label="CTR">
                                 <Input
                                   type="number"
                                   value={term.ctr || ''}
@@ -656,7 +673,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
 
-                              <FormItem label={index === 0 ? 'CPC' : ''}>
+                              <FormItem label="CPC">
                                 <Input
                                   type="number"
                                   value={term.cpc || ''}
@@ -669,7 +686,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
 
-                              <FormItem label={index === 0 ? 'CPM' : ''}>
+                              <FormItem label="CPM">
                                 <Input
                                   type="number"
                                   value={term.cpm || ''}
@@ -682,20 +699,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
 
-                              <FormItem label={index === 0 ? 'Đã tiêu' : ''}>
-                                <Input
-                                  type="number"
-                                  value={term.cost || ''}
-                                  placeholder="Đã tiêu..."
-                                  onChange={(e) => {
-                                    const updatedTerms = [...values.topSearchTerms]
-                                    updatedTerms[index].cost = parseFloat(e.target.value) || 0
-                                    setFieldValue('topSearchTerms', updatedTerms)
-                                  }}
-                                />
-                              </FormItem>
-
-                              <FormItem label={index === 0 ? 'Lượt hiển thị' : ''}>
+                              <FormItem label="Lượt hiển thị">
                                 <Input
                                   type="number"
                                   value={term.impression || ''}
@@ -707,8 +711,21 @@ export default function CampaignForm() {
                                   }}
                                 />
                               </FormItem>
+
+                              <FormItem label="Đã tiêu">
+                                <Input
+                                  type="number"
+                                  value={term.cost || ''}
+                                  placeholder="Đã tiêu..."
+                                  onChange={(e) => {
+                                    const updatedTerms = [...values.topSearchTerms]
+                                    updatedTerms[index].cost = parseFloat(e.target.value) || 0
+                                    setFieldValue('topSearchTerms', updatedTerms)
+                                  }}
+                                />
+                              </FormItem>
                             </div>
-                            <div className={index === 0 ? 'mt-8' : ''}>
+                            <div className="mt-8">
                               <Button
                                 type="button"
                                 size="sm"
@@ -785,11 +802,11 @@ export default function CampaignForm() {
                     {values.locationStats.length === 0 ? (
                       <div className="py-8 text-gray-500 text-center">Chưa có thống kê quốc gia nào</div>
                     ) : (
-                      <div className="space-y-3">
+                      <div className="space-y-6 divide-y">
                         {values.locationStats.map((location, index) => (
-                          <div key={index} className="flex items-start gap-3">
-                            <div className="flex-1 gap-3 grid grid-cols-3">
-                              <FormItem label={index === 0 ? 'Quốc gia' : ''}>
+                          <div key={index} className="flex items-start gap-3 pt-3">
+                            <div className="flex-1 gap-3 grid grid-cols-7">
+                              <FormItem label="Quốc gia">
                                 <Input
                                   value={location.location}
                                   placeholder="US, UK..."
@@ -801,7 +818,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
 
-                              <FormItem label={index === 0 ? 'Click' : ''}>
+                              <FormItem label="Click">
                                 <Input
                                   type="number"
                                   value={location.clicks || ''}
@@ -814,7 +831,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
 
-                              <FormItem label={index === 0 ? 'CTR' : ''}>
+                              <FormItem label="CTR">
                                 <Input
                                   type="number"
                                   value={location.ctr || ''}
@@ -827,7 +844,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
 
-                              <FormItem label={index === 0 ? 'CPC' : ''}>
+                              <FormItem label="CPC">
                                 <Input
                                   type="number"
                                   value={location.cpc || ''}
@@ -840,7 +857,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
 
-                              <FormItem label={index === 0 ? 'CPM' : ''}>
+                              <FormItem label="CPM">
                                 <Input
                                   type="number"
                                   value={location.cpm || ''}
@@ -853,20 +870,7 @@ export default function CampaignForm() {
                                 />
                               </FormItem>
 
-                              <FormItem label={index === 0 ? 'Đã tiêu' : ''}>
-                                <Input
-                                  type="number"
-                                  value={location.cost || ''}
-                                  placeholder="Đã tiêu..."
-                                  onChange={(e) => {
-                                    const updatedLocations = [...values.locationStats]
-                                    updatedLocations[index].cost = parseFloat(e.target.value) || 0
-                                    setFieldValue('locationStats', updatedLocations)
-                                  }}
-                                />
-                              </FormItem>
-
-                              <FormItem label={index === 0 ? 'Lượt hiển thị' : ''}>
+                              <FormItem label="Lượt hiển thị">
                                 <Input
                                   type="number"
                                   value={location.impression || ''}
@@ -878,8 +882,21 @@ export default function CampaignForm() {
                                   }}
                                 />
                               </FormItem>
+
+                              <FormItem label="Đã tiêu">
+                                <Input
+                                  type="number"
+                                  value={location.cost || ''}
+                                  placeholder="Đã tiêu..."
+                                  onChange={(e) => {
+                                    const updatedLocations = [...values.locationStats]
+                                    updatedLocations[index].cost = parseFloat(e.target.value) || 0
+                                    setFieldValue('locationStats', updatedLocations)
+                                  }}
+                                />
+                              </FormItem>
                             </div>
-                            <div className={index === 0 ? 'mt-8' : ''}>
+                            <div className="mt-8">
                               <Button
                                 type="button"
                                 size="sm"

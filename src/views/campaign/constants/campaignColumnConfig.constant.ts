@@ -14,6 +14,7 @@ export const COLUMN_CONFIG = [
   { id: 'ctr', label: 'CTR', visible: false, required: false },
   { id: 'cpm', label: 'CPM', visible: false, required: false },
   { id: 'cost', label: 'Ngân sách chi tiêu', visible: false, required: false },
+  { id: 'impression', label: 'Lượt hiển thị', visible: false, required: false },
   { id: 'campaignBudget', label: 'Ngân sách chiến dịch', visible: false, required: false },
   { id: 'keywords', label: 'Từ khóa', visible: false, required: false },
   { id: 'negativeKeywords', label: 'Từ khóa không tìm kiếm', visible: false, required: false },
