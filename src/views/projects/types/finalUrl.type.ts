@@ -38,7 +38,7 @@ export type CampaignStat = {
   uid: string
   status: string
   gmailId: string
-  latestStat: LatestStat
+  stat: LatestStat
 }
 
 export type LatestStat = {
