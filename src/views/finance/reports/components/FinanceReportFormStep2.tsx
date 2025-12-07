@@ -112,7 +112,7 @@ export default function FinanceReportFormStep2({ generatedData, onSubmit, onCanc
                       />
                     </FormItem>
 
-                    <FormItem label="Volume key/ngày">
+                    <FormItem label="Mục tiêu Volume key/ngày">
                       <Input disabled value={generatedData.totalTargetDailyKeyVolume} className="bg-gray-50" />
                     </FormItem>
 
