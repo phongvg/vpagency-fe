@@ -1,6 +1,12 @@
 import { Button, DatePicker, Dialog, Input } from '@/components/ui'
 import SelectCustom, { OptionType, SelectParams } from '@/components/shared/SelectCustom'
-import { useGetTaskProgress, useUpdateTaskProgress, useUpdateTask } from '@/views/tasks/assign/hooks/useTask'
+import {
+  useGetTaskProgress,
+  useUpdateTaskProgress,
+  useUpdateTask,
+  useAssignCampaignsToFinalUrlMutation,
+  useRemoveCampaignsFromFinalUrlMutation,
+} from '@/views/tasks/assign/hooks/useTask'
 import { useEffect, useState } from 'react'
 import { HiOutlineCheckCircle, HiOutlineMinus, HiOutlinePlus } from 'react-icons/hi'
 import { FinalURLGroup } from '@/views/tasks/assign/types/task.type'
@@ -9,10 +15,6 @@ import { apiGetMyGmails } from '@/views/gmailAccounts/services/GmailAccountServi
 import { useCreateFinalUrlMutation } from '@/views/projects/hooks/useFinalUrl'
 import { apiGetCampaignsByDate, apiGetCampaignsByDateAndUid } from '@/views/campaign/services/CampaignService'
 import { formatDate } from '@/helpers/formatDate'
-import {
-  useAssignCampaignsToFinalUrlMutation,
-  useRemoveCampaignsFromFinalUrlMutation,
-} from '@/views/campaign/hooks/useCampaign'
 import { toastWarning } from '@/utils/toast'
 
 type Props = {
@@ -56,7 +58,10 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
       if (currentProgress.finalUrls && currentProgress.finalUrls.length > 0) {
         const normalizedGroups = currentProgress.finalUrls.map((group) => ({
           ...group,
-          items: group.items && group.items.length > 0 ? group.items : [{ uid: '', campaignIds: [], gmailId: '' }],
+          items:
+            group.groups && group.groups.length > 0
+              ? group.groups
+              : [{ date: '', uid: '', campaignIds: [], gmailId: '' }],
         }))
         setFinalUrlGroups(normalizedGroups)
         setFinalUrlIds(currentProgress.finalUrls.map((group) => group.finalUrlId))
@@ -65,7 +70,7 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
         normalizedGroups.forEach((group) => {
           initialRowStates[group.finalUrlId] = {
             items: group.items.map((item) => ({
-              date: group.date ? new Date(group.date) : null,
+              date: item.date ? new Date(item.date) : null,
               uid: item.uid || '',
               campaignIds: item.campaignIds || [],
               gmailId: item.gmailId || '',
@@ -142,7 +147,7 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
       ...(item.campaignIds && item.campaignIds.length > 0 && { campaignIds: item.campaignIds }),
     }
 
-    await assignMutation.mutateAsync(payload)
+    await assignMutation.mutateAsync({ id: currentProgress!.id, payload })
   }
 
   const handleUpdateProgress = async () => {
@@ -298,7 +303,7 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
     if (!currentProgress?.finalUrls) return false
 
     const progressGroup = currentProgress.finalUrls.find((g) => g.finalUrlId === finalUrlId)
-    if (!progressGroup || !progressGroup.items || progressGroup.items.length === 0) return false
+    if (!progressGroup || !progressGroup.groups || progressGroup.groups.length === 0) return false
 
     const rowState = rowStates[finalUrlId]
     if (!rowState) return false
@@ -306,7 +311,7 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
     const item = rowState.items[itemIndex]
     if (!item || !item.uid || !item.gmailId) return false
 
-    return progressGroup.items.some(
+    return progressGroup.groups.some(
       (progressItem) => progressItem.uid === item.uid && progressItem.gmailId === item.gmailId,
     )
   }
@@ -331,7 +336,7 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
       ...(item.campaignIds && item.campaignIds.length > 0 && { campaignIds: item.campaignIds }),
     }
 
-    await removeMutation.mutateAsync(payload)
+    await removeMutation.mutateAsync({ id: currentProgress!.id, payload })
   }
 
   const removeItemFromState = (finalUrlId: string, itemIndex: number) => {

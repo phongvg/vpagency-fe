@@ -1,11 +1,13 @@
 import { ApiAxiosError } from '@/@types/apiError'
 import {
+  apiAssignCampaignsToFinalUrl,
   apiCreateTask,
   apiDeleteTask,
   apiGetTaskDetail,
   apiGetTaskProgress,
   apiGetTasks,
   apiGetTasksGroupedByStatus,
+  apiRemoveCampaignsFromFinalUrl,
   apiUpdateTask,
   apiUpdateTaskProgress,
   apiUpdateTaskStatus,
@@ -15,6 +17,7 @@ import { toastError, toastSuccess } from '@/utils/toast'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import { TaskProgressRequest, UpdateTaskRequest } from '@/views/tasks/assign/types/task.type'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { AssignToFinalUrlRequest, RemoveFromFinalUrlRequest } from '@/views/campaign/types/campaign.type'
 
 export const useGetTasksWithFilters = (enabled: boolean = false) => {
   const { filters, activeView } = useBoardStore()
@@ -152,5 +155,37 @@ export const useGetTaskProgress = (taskId: string | null, enabled = false) => {
       return response.data.data
     },
     enabled: !!taskId && enabled,
+  })
+}
+
+export const useAssignCampaignsToFinalUrlMutation = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: string; payload: AssignToFinalUrlRequest }) =>
+      apiAssignCampaignsToFinalUrl(id, payload),
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: [GET_TASK_PROGRESS] })
+      toastSuccess(response.data.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
+    },
+  })
+}
+
+export const useRemoveCampaignsFromFinalUrlMutation = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: string; payload: RemoveFromFinalUrlRequest }) =>
+      apiRemoveCampaignsFromFinalUrl(id, payload),
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: [GET_TASK_PROGRESS] })
+      toastSuccess(response.data.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
+    },
   })
 }

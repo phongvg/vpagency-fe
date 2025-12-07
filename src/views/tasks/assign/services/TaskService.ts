@@ -9,6 +9,7 @@ import {
   TaskProgressRequest,
 } from '@/views/tasks/assign/types/task.type'
 import ApiService from '@/services/ApiService'
+import { AssignToFinalUrlRequest, RemoveFromFinalUrlRequest } from '@/views/campaign/types/campaign.type'
 
 export async function apiGetTasks(params: TasksFilterRequest) {
   return ApiService.fetchData<BaseListResponse<Task>>({
@@ -82,5 +83,21 @@ export async function apiGetTaskProgress(taskId: string) {
   return ApiService.fetchData<BaseResponse<TaskProgressResponse>>({
     url: `/tasks/${taskId}/progress`,
     method: 'get',
+  })
+}
+
+export async function apiAssignCampaignsToFinalUrl(id: string, payload: AssignToFinalUrlRequest) {
+  return ApiService.fetchData<BaseResponse<null>>({
+    url: `/tasks/${id}/campaigns/assign`,
+    method: 'post',
+    data: payload,
+  })
+}
+
+export async function apiRemoveCampaignsFromFinalUrl(id: string, payload: RemoveFromFinalUrlRequest) {
+  return ApiService.fetchData<BaseResponse<null>>({
+    url: `/tasks/${id}/campaigns/remove`,
+    method: 'post',
+    data: payload,
   })
 }

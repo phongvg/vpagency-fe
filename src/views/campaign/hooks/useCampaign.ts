@@ -1,23 +1,17 @@
 import { ApiAxiosError } from '@/@types/apiError'
-import { GET_CAMPAIGN_DETAIL, GET_CAMPAIGN_LIST, GET_TASK_PROGRESS } from '@/utils/queryKey'
+import { GET_CAMPAIGN_DETAIL, GET_CAMPAIGN_LIST } from '@/utils/queryKey'
 import { toastError, toastSuccess } from '@/utils/toast'
 import {
-  apiAssignCampaignsToFinalUrl,
   apiCreateCampaign,
   apiDeleteCampaign,
   apiGetCampaignById,
   apiGetCampaignList,
   apiGetCampaignsByDate,
   apiGetCampaignsByDateAndUid,
-  apiRemoveCampaignsFromFinalUrl,
   apiUpdateCampaign,
 } from '@/views/campaign/services/CampaignService'
 import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
-import {
-  AssignToFinalUrlRequest,
-  RemoveFromFinalUrlRequest,
-  UpdateCampaignRequest,
-} from '@/views/campaign/types/campaign.type'
+import { UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 export const useGetCampaignsQuery = (enabled = true) => {
@@ -108,35 +102,5 @@ export const useGetCampaignByDateAndUid = (date: string, uid: string, enabled = 
       return response.data.data
     },
     enabled: enabled && !!date && !!uid,
-  })
-}
-
-export const useAssignCampaignsToFinalUrlMutation = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: (payload: AssignToFinalUrlRequest) => apiAssignCampaignsToFinalUrl(payload),
-    onSuccess: (response) => {
-      queryClient.invalidateQueries({ queryKey: [GET_TASK_PROGRESS] })
-      toastSuccess(response.data.message)
-    },
-    onError: (error: ApiAxiosError) => {
-      toastError(error.response?.data?.message)
-    },
-  })
-}
-
-export const useRemoveCampaignsFromFinalUrlMutation = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: (payload: RemoveFromFinalUrlRequest) => apiRemoveCampaignsFromFinalUrl(payload),
-    onSuccess: (response) => {
-      queryClient.invalidateQueries({ queryKey: [GET_TASK_PROGRESS] })
-      toastSuccess(response.data.message)
-    },
-    onError: (error: ApiAxiosError) => {
-      toastError(error.response?.data?.message)
-    },
   })
 }

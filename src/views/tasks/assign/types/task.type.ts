@@ -92,24 +92,24 @@ export type UpdateSingleFinalUrlProgressRequest = {
   finalUrlGroup: FinalURLGroup
 }
 
-export type FinalURLGroup = {
-  finalUrlId: string
-  finalUrlName?: string
-  finalURL?: string
-  date: string | null
-  items: Item[]
-}
-
-export type Item = {
-  uid: string
-  gmailId: string
-  campaignIds?: string[]
-}
-
 export type TaskProgressResponse = TaskProgressRequest & {
   id: string
   name: string
   projectId: string
   progress: number
   finalUrls: FinalURLGroup[]
+}
+
+export type FinalURLGroup = {
+  finalUrlId: string
+  finalUrlName: string
+  finalURL: string
+  groups: Item[]
+}
+
+export type Item = {
+  date: string
+  uid: string
+  gmailId: string
+  campaignIds?: string[]
 }
