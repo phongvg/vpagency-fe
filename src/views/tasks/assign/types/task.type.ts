@@ -85,7 +85,11 @@ export type UpdateTaskRequest = {
 
 export type TaskProgressRequest = {
   progress: number
-  finalUrlGroups: FinalURLGroup[]
+}
+
+export type UpdateSingleFinalUrlProgressRequest = {
+  progress: number
+  finalUrlGroup: FinalURLGroup
 }
 
 export type FinalURLGroup = {
@@ -106,4 +110,6 @@ export type TaskProgressResponse = TaskProgressRequest & {
   id: string
   name: string
   projectId: string
+  progress: number
+  finalUrls: FinalURLGroup[]
 }

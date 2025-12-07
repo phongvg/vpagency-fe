@@ -1,4 +1,10 @@
-import { Campaign, CreateCampaignResponse, UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
+import {
+  AssignToFinalUrlRequest,
+  Campaign,
+  CreateCampaignResponse,
+  RemoveFromFinalUrlRequest,
+  UpdateCampaignRequest,
+} from '@/views/campaign/types/campaign.type'
 import { BaseListResponse, BaseResponse } from '@/@types/common'
 import { CampaignFilterRequest } from '@/views/campaign/store/useCampaignStore'
 import ApiService from '@/services/ApiService'
@@ -59,5 +65,21 @@ export async function apiGetCampaignsByDateAndUid(date: string, uid: string) {
       date,
       uid,
     },
+  })
+}
+
+export async function apiAssignCampaignsToFinalUrl(payload: AssignToFinalUrlRequest) {
+  return ApiService.fetchData<BaseResponse<null>>({
+    url: '/campaigns/assign-to-final-url',
+    method: 'post',
+    data: payload,
+  })
+}
+
+export async function apiRemoveCampaignsFromFinalUrl(payload: RemoveFromFinalUrlRequest) {
+  return ApiService.fetchData<BaseResponse<null>>({
+    url: '/campaigns/remove-from-final-url',
+    method: 'post',
+    data: payload,
   })
 }

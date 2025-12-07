@@ -103,3 +103,18 @@ export type CurrencyRate = {
   code: string
   rateToUSD: number | null
 }
+
+export type AssignToFinalUrlRequest = {
+  finalUrlId: string
+  gmailId: string
+  date: string
+  uid: string
+  campaignIds?: string[]
+}
+
+export type RemoveFromFinalUrlRequest = {
+  finalUrlId: string
+  date: string
+  uid: string
+  campaignIds?: string[]
+}

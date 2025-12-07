@@ -1,7 +1,7 @@
 import { ProjectReportsFilterRequest } from '@/@types/statistic'
 import { apiGetFinanceStats, apiGetProjectReportsStats } from '@/services/FinanceService'
 import { apiGetUserStatistic } from '@/services/StatisticService'
-import { apiGetUserTaskStats } from '@/services/TaskService'
+import { apiGetUserTaskStats } from '@/views/tasks/assign/services/TaskService'
 import {
   GET_FINANCE_STATS,
   GET_PROJECT_REPORT_STATISTIC,

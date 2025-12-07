@@ -9,7 +9,7 @@ import {
   apiUpdateTask,
   apiUpdateTaskProgress,
   apiUpdateTaskStatus,
-} from '@/services/TaskService'
+} from '@/views/tasks/assign/services/TaskService'
 import { GET_TASK_DETAIL, GET_TASK_LIST, GET_TASK_PROGRESS, GET_TASKS_GROUPED_BY_STATUS } from '@/utils/queryKey'
 import { toastError, toastSuccess } from '@/utils/toast'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
