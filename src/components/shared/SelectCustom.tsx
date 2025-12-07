@@ -337,7 +337,7 @@ export default function SelectCustom<IsMulti extends boolean = false>({
       cacheOptions
       {...restProps}
       isClearable
-      componentAs={isCreatable ? CreatableSelect : undefined}
+      componentAs={isCreatable && onCreateOption ? CreatableSelect : undefined}
       isMulti={isMulti}
       options={options}
       value={selectedValue}
@@ -355,7 +355,7 @@ export default function SelectCustom<IsMulti extends boolean = false>({
       formatCreateLabel={formatCreateLabel || ((inputValue) => `Tạo mới "${inputValue}"`)}
       isDisabled={isDisabled}
       onChange={handleChange}
-      onCreateOption={isCreatable ? handleCreateOption : undefined}
+      onCreateOption={isCreatable && onCreateOption ? handleCreateOption : undefined}
       onMenuOpen={handleMenuOpen}
       onMenuClose={handleMenuClose}
       onInputChange={handleInputChange}
