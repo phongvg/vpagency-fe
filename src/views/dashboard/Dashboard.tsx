@@ -34,17 +34,17 @@ export default function Dashboard() {
       <>
         <DashboardHeader data={taskStats} />
 
-        <div className="flex xl:flex-row flex-col gap-4">
-          <div className="flex flex-col flex-auto gap-4">
+        <div className="flex-1 gap-4 grid grid-cols-3">
+          <div className="col-span-2">
             <TaskOverview data={taskStats} />
-            <MyTasks />
           </div>
-          <div className="flex flex-col gap-4">
-            <div className="xl:w-[380px]">
-              <Schedule />
-            </div>
+
+          <div className="col-span-1">
+            <Schedule />
           </div>
         </div>
+
+        <MyTasks />
       </>
     )
   }
