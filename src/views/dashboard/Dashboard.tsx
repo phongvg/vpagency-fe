@@ -1,65 +1,57 @@
 import { Loading } from '@/components/shared'
+import { Card } from '@/components/ui'
 import { useAuthStore } from '@/store/auth/useAuthStore'
-import { isAccounting, isAdmin, isMember } from '@/utils/checkRole'
+import { isAdminOrAccounting, isMember } from '@/utils/checkRole'
 import DashboardHeader from '@/views/dashboard/components/DashboardHeader'
 import FinanceStats from '@/views/dashboard/components/FinanceStats'
 import MyTasks from '@/views/dashboard/components/MyTasks'
-import ProjectDailyReports from '@/views/dashboard/components/ProjectDailyReports'
 import Schedule from '@/views/dashboard/components/Schedule'
 import Statistic from '@/views/dashboard/components/Statistic'
 import TaskOverview from '@/views/dashboard/components/TaskOverview'
-import {
-  useFinanceStatsQuery,
-  useTaskStatisticQuery,
-  useUserStatisticQuery,
-} from '@/views/dashboard/hooks/useStatisticQueries'
+import { useTaskStatisticQuery, useUserStatisticQuery } from '@/views/dashboard/hooks/useStatisticQueries'
+import FinanceReportTable from '@/views/finance/reports/components/FinanceReportTable'
 
 export default function Dashboard() {
   const { user } = useAuthStore()
 
-  const { data: userStats, isLoading: isLoadingUserStats } = useUserStatisticQuery(
-    isAdmin(user?.roles) || isAccounting(user?.roles),
-  )
-  const { data: financeStats, isLoading: isLoadingFinanceStats } = useFinanceStatsQuery(
-    isAdmin(user?.roles) || isAccounting(user?.roles),
-  )
+  const { data: userStats, isLoading: isLoadingUserStats } = useUserStatisticQuery(isAdminOrAccounting(user?.roles))
   const { data: taskStats, isLoading: isLoadingTaskStats } = useTaskStatisticQuery(isMember(user?.roles))
 
   const renderDashboardContent = () => {
-    if (isAdmin(user?.roles)) {
+    if (isAdminOrAccounting(user?.roles)) {
       return (
         <>
           <Statistic data={userStats} />
-          <ProjectDailyReports />
-          <FinanceStats data={financeStats} />
-        </>
-      )
-    } else {
-      return (
-        <>
-          <DashboardHeader data={taskStats} />
-
-          <div className="flex xl:flex-row flex-col gap-4">
-            <div className="flex flex-col flex-auto gap-4">
-              <TaskOverview data={taskStats} />
-              <MyTasks />
-            </div>
-            <div className="flex flex-col gap-4">
-              <div className="xl:w-[380px]">
-                <Schedule />
-              </div>
-            </div>
-          </div>
+          <Card header="Báo cáo tiến độ hàng ngày của dự án">
+            <FinanceReportTable />
+          </Card>
+          <FinanceStats />
         </>
       )
     }
+
+    return (
+      <>
+        <DashboardHeader data={taskStats} />
+
+        <div className="flex xl:flex-row flex-col gap-4">
+          <div className="flex flex-col flex-auto gap-4">
+            <TaskOverview data={taskStats} />
+            <MyTasks />
+          </div>
+          <div className="flex flex-col gap-4">
+            <div className="xl:w-[380px]">
+              <Schedule />
+            </div>
+          </div>
+        </div>
+      </>
+    )
   }
 
   return (
     <div className="flex flex-col gap-4 h-full">
-      <Loading loading={isLoadingUserStats || isLoadingTaskStats || isLoadingFinanceStats}>
-        {renderDashboardContent()}
-      </Loading>
+      <Loading loading={isLoadingUserStats || isLoadingTaskStats}>{renderDashboardContent()}</Loading>
     </div>
   )
 }

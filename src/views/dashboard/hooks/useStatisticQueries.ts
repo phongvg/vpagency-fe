@@ -1,14 +1,16 @@
 import { ProjectReportsFilterRequest } from '@/@types/statistic'
-import { apiGetFinanceStats, apiGetProjectReportsStats } from '@/services/FinanceService'
+import { apiGetProjectReportsStats } from '@/services/FinanceService'
 import { apiGetUserStatistic } from '@/services/StatisticService'
 import { apiGetUserTaskStats } from '@/views/tasks/assign/services/TaskService'
 import {
-  GET_FINANCE_STATS,
+  GET_DASHBOARD_PROJECT_STAT,
+  GET_MONTHLY_SPENDING_STAT,
   GET_PROJECT_REPORT_STATISTIC,
   GET_TASK_STATISTIC,
   GET_USER_STATISTIC,
 } from '@/utils/queryKey'
 import { useQuery } from '@tanstack/react-query'
+import { apiGetMonthlySpendingStat, apiGetProjectStat } from '@/views/dashboard/services/StatisticsService'
 
 export const useUserStatisticQuery = (enabled: boolean = false) => {
   return useQuery({
@@ -43,11 +45,24 @@ export const useProjectReportStatisticQuery = (params: ProjectReportsFilterReque
   })
 }
 
-export const useFinanceStatsQuery = (enabled: boolean = false) => {
+// new
+
+export const useProjectStatQuery = (enabled: boolean = false) => {
   return useQuery({
-    queryKey: [GET_FINANCE_STATS],
+    queryKey: [GET_DASHBOARD_PROJECT_STAT],
     queryFn: async () => {
-      const response = await apiGetFinanceStats()
+      const response = await apiGetProjectStat()
+      return response.data.data
+    },
+    enabled,
+  })
+}
+
+export const useGetMonthlySpendingStat = (enabled: boolean = false) => {
+  return useQuery({
+    queryKey: [GET_MONTHLY_SPENDING_STAT],
+    queryFn: async () => {
+      const response = await apiGetMonthlySpendingStat()
       return response.data.data
     },
     enabled,

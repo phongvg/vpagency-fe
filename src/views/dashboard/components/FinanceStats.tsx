@@ -1,13 +1,12 @@
-import { FinanceStats as FinanceStatsType } from '@/@types/statistic'
 import Chart from '@/components/shared/Chart'
 import { Card, Progress } from '@/components/ui'
 import { formatUSD } from '@/helpers/formatUSD'
-import { isEmpty } from 'lodash'
+import { getDaysArrayInMonth, getDaysInMonth } from '@/helpers/getDaysArrayInMonth'
+import { useAuthStore } from '@/store/auth/useAuthStore'
+import { isAdminOrAccounting } from '@/utils/checkRole'
+import { useGetMonthlySpendingStat, useProjectStatQuery } from '@/views/dashboard/hooks/useStatisticQueries'
+import { useMemo } from 'react'
 import { NumericFormat } from 'react-number-format'
-
-type Props = {
-  data: FinanceStatsType | undefined
-}
 
 const FinanceStatsCard = ({ title, value }: { title: string; value: string | number | undefined }) => {
   return (
@@ -28,76 +27,71 @@ const ProgressInfo = ({ precent }: { precent?: number }) => {
   )
 }
 
-export default function FinanceStats({ data }: Props) {
-  const fakeData = {
-    series: [
-      {
-        name: 'Tổng chi tiêu',
-        data: [
-          14576.39, 23895.12, 19473.64, 26454.96, 24741.98, 33153.32, 30218.32, 37645.11, 35556.15, 38886.34, 36135.95,
-          45966.12,
-        ],
-      },
-    ],
-    timeRange: [
-      '2 Tháng 11',
-      '5 Tháng 11',
-      '7 Tháng 11',
-      '10 Tháng 11',
-      '12 Tháng 11',
-      '15 Tháng 11',
-      '17 Tháng 11',
-      '20 Tháng 11',
-      '22 Tháng 11',
-      '25 Tháng 11',
-      '27 Tháng 11',
-      '30 Tháng 11',
-    ],
+export default function FinanceStats() {
+  const { user } = useAuthStore()
+  const { data: projectStat } = useProjectStatQuery(isAdminOrAccounting(user?.roles))
+  const { data: monthlySpendingStat } = useGetMonthlySpendingStat(isAdminOrAccounting(user?.roles))
+
+  const getPerformanceLabel = (active?: number, total?: number) => {
+    if (!active || !total) return 'Chưa có dữ liệu'
+
+    const percent = Math.round((active / total) * 100)
+
+    if (active === total) return 'Xuất sắc'
+    if (percent >= 70) return 'Tốt'
+    if (percent >= 50) return 'Trung bình'
+    return 'Cần cải thiện'
   }
+
+  const constructedData = useMemo(() => {
+    return {
+      series: [
+        {
+          name: 'Tổng chi tiêu',
+          data: [
+            ...(monthlySpendingStat?.data ?? []),
+            ...Array(getDaysInMonth(monthlySpendingStat?.month) - (monthlySpendingStat?.data?.length ?? 0)).fill(0),
+          ],
+        },
+      ],
+      timeRange: getDaysArrayInMonth(monthlySpendingStat?.month),
+    }
+  }, [monthlySpendingStat])
+
+  const totalSpentMonth = useMemo(() => {
+    return monthlySpendingStat?.data?.reduce((acc, curr) => acc + curr, 0) || 0
+  }, [monthlySpendingStat])
 
   return (
     <>
       <div className="gap-4 grid grid-cols-1 lg:grid-cols-3">
         <div className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 col-span-2">
-          <FinanceStatsCard title="Tổng dự án" value={data?.totalProjects} />
-          <FinanceStatsCard title="Dự án đang hoạt động" value={data?.activeProjects} />
-          <FinanceStatsCard title="Công việc" value={data?.totalTasks} />
-          <FinanceStatsCard title="Công việc hoàn thành hôm nay" value={data?.completedTasksToday} />
-          <FinanceStatsCard title="Tổng chi tiêu hôm nay" value={formatUSD(data?.todaySpent)} />
-          <FinanceStatsCard title="Tổng chi tiêu" value={formatUSD(data?.totalSpent)} />
+          <FinanceStatsCard title="Tổng dự án" value={projectStat?.totalProjects} />
+          <FinanceStatsCard title="Dự án đang hoạt động" value={projectStat?.activeProjects} />
+          <FinanceStatsCard title="Công việc được giao hôm nay" value={projectStat?.totalTasksAssignedToday} />
+          <FinanceStatsCard title="Công việc hoàn thành hôm nay" value={projectStat?.totalTasksCompletedToday} />
+          <FinanceStatsCard title="Tổng chi tiêu hôm nay" value={formatUSD(projectStat?.totalSpentToday)} />
         </div>
 
         <Card>
           <h4 className="mb-2">Tỷ lệ dự án hoạt động</h4>
           <p className="text-gray-500 text-sm">
-            {data?.activeProjects || 0} / {data?.totalProjects || 0} dự án đang chạy
+            {projectStat?.activeProjects || 0} / {projectStat?.totalProjects || 0} dự án đang chạy
           </p>
           <div className="mt-6">
             <Progress
               variant="circle"
-              percent={data?.activeProjects ? Math.round((data.activeProjects / data?.totalProjects) * 100) : 0}
+              percent={projectStat?.activeProjectsRate || 0}
               width={200}
               className="flex justify-center"
               strokeWidth={4}
-              customInfo={
-                <ProgressInfo
-                  precent={data?.activeProjects ? Math.round((data.activeProjects / data?.totalProjects) * 100) : 0}
-                />
-              }
+              customInfo={<ProgressInfo precent={projectStat?.activeProjectsRate || 0} />}
             />
           </div>
           <div className="mt-6 text-center">
             <p className="font-semibold text-gray-600">Hiệu suất dự án</p>
             <h4 className="font-bold text-gray-700">
-              {data?.activeProjects && data?.totalProjects
-                ? data.activeProjects === data.totalProjects
-                  ? 'Xuất sắc'
-                  : Math.round((data.activeProjects / data.totalProjects) * 100) >= 70
-                    ? 'Tốt'
-                    : Math.round((data.activeProjects / data.totalProjects) * 100) >= 50
-                      ? 'Trung bình'
-                      : 'Cần cải thiện'
-                : 'Chưa có dữ liệu'}
+              {getPerformanceLabel(projectStat?.activeProjects, projectStat?.totalProjects)}
             </h4>
           </div>
         </Card>
@@ -106,15 +100,15 @@ export default function FinanceStats({ data }: Props) {
       <Card>
         <div className="flex sm:flex-row flex-col justify-between items-center gap-4 mb-6">
           <div>
-            <p>Tổng chi tiêu tháng 11</p>
+            <p>Tổng chi tiêu tháng {monthlySpendingStat?.month}</p>
             <h4 className="font-bold">
-              {!isEmpty(data) && <NumericFormat thousandSeparator displayType="text" value={1000000} suffix="₫" />}
+              <NumericFormat thousandSeparator displayType="text" value={totalSpentMonth} prefix="$" />
             </h4>
           </div>
         </div>
         <Chart
-          series={fakeData?.series}
-          xAxis={fakeData?.timeRange}
+          series={constructedData.series}
+          xAxis={constructedData.timeRange}
           height="350px"
           customOptions={{ legend: { show: false } }}
         />
