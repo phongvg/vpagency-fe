@@ -7,7 +7,7 @@ export const getDaysArrayInMonth = (month: number | undefined) => {
 
   return Array.from({ length: daysInMonth }, (_, i) => {
     const day = i + 1
-    return `${pad(day)}/${pad(month)}`
+    return `${pad(day)}`
   })
 }
 
