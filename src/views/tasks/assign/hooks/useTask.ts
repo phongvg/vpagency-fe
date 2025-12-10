@@ -33,12 +33,12 @@ export const useGetTasksWithFilters = (enabled: boolean = false) => {
 }
 
 export const useGetTasksGroupedByStatus = () => {
-  const { activeView } = useBoardStore()
+  const { activeView, filterByCurrentUser } = useBoardStore()
 
   return useQuery({
-    queryKey: [GET_TASKS_GROUPED_BY_STATUS, activeView],
+    queryKey: [GET_TASKS_GROUPED_BY_STATUS, activeView, filterByCurrentUser],
     queryFn: async () => {
-      const response = await apiGetTasksGroupedByStatus()
+      const response = await apiGetTasksGroupedByStatus(filterByCurrentUser)
       return response.data.data
     },
   })

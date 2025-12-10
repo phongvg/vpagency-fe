@@ -3,6 +3,7 @@ import BadgeStatus from '@/components/shared/BadgeStatus'
 import { TableTooltip } from '@/components/shared/TableTooltip'
 import { ConfirmDialog, Button, Checkbox, Dropdown } from '@/components/ui'
 import { addDash } from '@/helpers/addDash'
+import { convertNumberToPercent } from '@/helpers/convertNumberToPercent'
 import { fixedNumber } from '@/helpers/fixedNumber'
 import { formatDate } from '@/helpers/formatDate'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
@@ -185,13 +186,13 @@ export default function CampaignTable() {
         id: 'avgCpc',
         header: 'CPC trung bình',
         accessorKey: 'avgCpc',
-        cell: (props) => <span>{fixedNumber(props.row.original.avgCpc)}</span>,
+        cell: (props) => <span>${fixedNumber(props.row.original.avgCpc)}</span>,
       },
       {
         id: 'targetCpc',
         header: 'Thầu chung',
         accessorKey: 'targetCpc',
-        cell: (props) => <span>{fixedNumber(props.row.original.targetCpc)}</span>,
+        cell: (props) => <span>${fixedNumber(props.row.original.targetCpc)}</span>,
       },
       {
         id: 'clicks',
@@ -203,8 +204,8 @@ export default function CampaignTable() {
         header: 'CTR',
         accessorKey: 'ctr',
         cell: (props) => {
-          const ctr = props.row.original.ctr
-          return <span>{ctr !== null ? `${(ctr * 100).toFixed(2)}%` : ''}</span>
+          const row = props.row.original.ctr
+          return <span>{convertNumberToPercent(row)}</span>
         },
       },
       {
@@ -217,7 +218,7 @@ export default function CampaignTable() {
         id: 'cost',
         header: 'Ngân sách chi tiêu',
         accessorKey: 'cost',
-        cell: (props) => <span>{fixedNumber(props.row.original.cost)}</span>,
+        cell: (props) => <span>${fixedNumber(props.row.original.cost)}</span>,
       },
       {
         id: 'impression',
@@ -228,6 +229,7 @@ export default function CampaignTable() {
         id: 'campaignBudget',
         header: 'Ngân sách chiến dịch',
         accessorKey: 'campaignBudget',
+        cell: (props) => <span>${fixedNumber(props.row.original.campaignBudget)}</span>,
       },
       {
         id: 'keywords',

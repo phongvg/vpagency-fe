@@ -44,12 +44,6 @@ export default function AssignTask() {
           {(dialogView === 'CREATE' || dialogView === 'EDIT') && <TaskFormContent />}
         </Suspense>
       </Dialog>
-
-      {/* <Dialog isOpen={dialogOpen} width={800} closable={false} onClose={closeDialog} onRequestClose={closeDialog}>
-        <Suspense fallback={<></>}>
-          <TaskDetailContent />
-        </Suspense>
-      </Dialog> */}
     </AdaptableCard>
   )
 }

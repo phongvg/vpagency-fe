@@ -147,7 +147,7 @@ export default function UpdateInfoForm() {
                 invalid={(errors.email && touched.email) as boolean}
                 errorMessage={errors.email}
               >
-                <Field type="email" autoComplete="off" name="email" placeholder="Tên" component={Input} />
+                <Field autoComplete="off" name="email" placeholder="Email" component={Input} />
               </FormItem>
 
               <FormItem

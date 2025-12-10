@@ -13,6 +13,7 @@ type BoardState = {
   selectedTask: Task | null
   activeView: TaskViewType
   filters: TasksFilterRequest
+  filterByCurrentUser: boolean
 
   setBoard: (board: Columns | ((prev: Columns) => Columns)) => void
   clearBoard: () => void
@@ -23,6 +24,7 @@ type BoardState = {
   setActiveView: (view: TaskViewType) => void
   setFilters: (filters: TasksFilterRequest) => void
   clearFilters: () => void
+  setFilterByCurrentUser: (value: boolean) => void
 }
 
 const initialBoardState: Partial<BoardState> = {
@@ -37,6 +39,7 @@ const initialBoardState: Partial<BoardState> = {
   taskId: null,
   selectedTask: null,
   activeView: TaskViewType.SPLIT,
+  filterByCurrentUser: false,
   filters: {
     page: 1,
     limit: 10,
@@ -71,5 +74,6 @@ export const useBoardStore = create<BoardState>()(
       set(() => ({
         filters: initialBoardState.filters,
       })),
+    setFilterByCurrentUser: (value) => set(() => ({ filterByCurrentUser: value })),
   })),
 )

@@ -13,12 +13,16 @@ interface BoardHeaderProps {
 }
 
 export default function BoardHeader({ activeView, onViewChange }: BoardHeaderProps) {
-  const { openDialog, setSelectedTask } = useBoardStore()
+  const { openDialog, setSelectedTask, filterByCurrentUser, setFilterByCurrentUser } = useBoardStore()
   const { user } = useAuthStore()
 
   const handleCreateTask = () => {
     setSelectedTask(null)
     openDialog('CREATE')
+  }
+
+  const toggleFilter = () => {
+    setFilterByCurrentUser(!filterByCurrentUser)
   }
 
   return (
@@ -27,9 +31,16 @@ export default function BoardHeader({ activeView, onViewChange }: BoardHeaderPro
         <TaskViewTabs activeView={activeView} onViewChange={onViewChange} />
 
         {isAdminOrManager(user?.roles) && (
-          <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={handleCreateTask}>
-            Thêm mới
-          </Button>
+          <div className="flex items-center gap-2">
+            {activeView === TaskViewType.KANBAN && (
+              <Button size="sm" variant={filterByCurrentUser ? 'solid' : 'default'} onClick={toggleFilter}>
+                {filterByCurrentUser ? 'Tất cả công việc' : 'Công việc của tôi'}
+              </Button>
+            )}
+            <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={handleCreateTask}>
+              Thêm mới
+            </Button>
+          </div>
         )}
       </div>
 

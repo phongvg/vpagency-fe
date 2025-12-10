@@ -59,10 +59,10 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
     const campaignMap = new Map<number, any[]>()
     const campaignPfmMap = new Map<number, any[]>()
     const adGroupCriterionMap = new Map<number, any[]>()
-    const searchTermMap = new Map<number, any[]>()
+    const searchTermMap = new Map<string, any[]>()
     const adGroupAdMap = new Map<number, any[]>()
     const campaignCriterionMap = new Map<number, any[]>()
-    const geographicViewMap = new Map<number, any[]>()
+    const geographicViewMap = new Map<string, any[]>()
     const mccMap = new Map<string, any>()
     const locationTableMap = new Map<number, any>()
     const campaignBudgetMap = new Map<number, any[]>()
@@ -90,8 +90,10 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
 
     searchTermYesterdaySheet.forEach((row) => {
       const id = row['Campaign ID']
-      if (!searchTermMap.has(id)) searchTermMap.set(id, [])
-      searchTermMap.get(id)!.push(row)
+      const dataDate = row['Data Date']
+      const key = `${id}|${dataDate}`
+      if (!searchTermMap.has(key)) searchTermMap.set(key, [])
+      searchTermMap.get(key)!.push(row)
     })
 
     adGroupAdSheet.forEach((row) => {
@@ -108,8 +110,10 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
 
     geographicViewYesterdaySheet.forEach((row) => {
       const id = row['Campaign ID']
-      if (!geographicViewMap.has(id)) geographicViewMap.set(id, [])
-      geographicViewMap.get(id)!.push(row)
+      const dataDate = row['Data Date']
+      const key = `${id}|${dataDate}`
+      if (!geographicViewMap.has(key)) geographicViewMap.set(key, [])
+      geographicViewMap.get(key)!.push(row)
     })
 
     mccCustomerListSheet.forEach((row) => {
@@ -154,17 +158,19 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
       }
 
       const adGroupCriterionRows = adGroupCriterionMap.get(id) || []
-      const searchTermRows = searchTermMap.get(id) || []
       const campaignRows = campaignMap.get(id) || []
       const campaignPfmRows = campaignPfmMap.get(id) || []
       const adGroupAdRows = adGroupAdMap.get(id) || []
       const campaignCriterionRows = campaignCriterionMap.get(id) || []
-      const geographicViewYesterdayRows = geographicViewMap.get(id) || []
       const campaignBudgetRows = campaignBudgetMap.get(id) || []
       const keywordPfmYesterdayRows = keywordPfmYesterdayMap.get(id) || []
 
       const importAt = campaignPfmRows.map((row) => row['Date Pulled'])
       const date = campaignPfmRows.map((row) => row['Data Date'])
+      const currentDataDate = date[date.length - 1]
+
+      const searchTermRows = searchTermMap.get(`${id}|${currentDataDate}`) || []
+      const geographicViewYesterdayRows = geographicViewMap.get(`${id}|${currentDataDate}`) || []
 
       const uids = campaignRows.map((row) => row['Customer ID'])
       const lastUid = uids[uids.length - 1]

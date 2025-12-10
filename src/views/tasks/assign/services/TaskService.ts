@@ -19,10 +19,11 @@ export async function apiGetTasks(params: TasksFilterRequest) {
   })
 }
 
-export async function apiGetTasksGroupedByStatus() {
+export async function apiGetTasksGroupedByStatus(filterByCurrentUser?: boolean) {
   return ApiService.fetchData<BaseResponse<TasksGroupedByStatus>>({
     url: '/tasks/by-status',
     method: 'get',
+    params: filterByCurrentUser ? { filterByCurrentUser: 'true' } : undefined,
   })
 }
 
