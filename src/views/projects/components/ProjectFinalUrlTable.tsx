@@ -200,7 +200,7 @@ export default function ProjectFinalUrlTable({ projectId, active = false }: Proj
           Thêm URL
         </Button>
       </div>
-      <DataTable columns={columns} data={items} loading={isLoading} pagingData={undefined} />
+      <DataTable columns={columns} data={items} loading={isLoading} maxHeight={500} />
       <ConfirmDialog {...confirmProps} loading={deleteMutation.isPending} />
     </div>
   )

@@ -45,6 +45,7 @@ type DataTableProps<T> = {
   emptyContent?: ReactNode
   emptyTitle?: string
   emptyDescription?: string
+  maxHeight?: string | number
 }
 
 type CheckBoxChangeEvent = ChangeEvent<HTMLInputElement>
@@ -140,17 +141,16 @@ function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableRese
     pageSizes = [10, 25, 50, 100],
     selectable = false,
     skeletonAvatarProps,
-    pagingData = {
-      total: 0,
-      pageIndex: 1,
-      pageSize: 10,
-    },
+    pagingData,
     emptyContent,
     emptyTitle,
     emptyDescription,
+    maxHeight,
   } = props
 
-  const { pageSize, pageIndex, total } = pagingData
+  const pageSize = pagingData?.pageSize ?? data.length
+  const pageIndex = pagingData?.pageIndex ?? 1
+  const total = pagingData?.total ?? data.length
 
   const [sorting, setSorting] = useState<ColumnSort[] | null>(null)
 
@@ -263,81 +263,88 @@ function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableRese
 
   return (
     <Loading loading={loading && data.length !== 0} type="cover">
-      <Table>
-        <THead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <Tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                const canSort = header.column.getCanSort()
-                const sortDirection = header.column.getIsSorted()
+      <div
+        className="overflow-y-auto"
+        style={maxHeight ? { maxHeight: typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight } : undefined}
+      >
+        <Table>
+          <THead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <Tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  const canSort = header.column.getCanSort()
+                  const sortDirection = header.column.getIsSorted()
 
-                return (
-                  <Th key={header.id} colSpan={header.colSpan} index={header.index}>
-                    {header.isPlaceholder ? null : (
-                      <div
-                        className={classNames('flex items-center gap-2', canSort && 'cursor-pointer select-none')}
-                        onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
-                      >
-                        <div className="flex-1">{flexRender(header.column.columnDef.header, header.getContext())}</div>
-                        {canSort && (
-                          <div className="flex flex-col">
-                            <span
-                              className={classNames(
-                                'text-xs leading-none',
-                                sortDirection === 'asc' ? 'text-blue-600' : 'text-gray-400',
-                              )}
-                            >
-                              ▲
-                            </span>
-                            <span
-                              className={classNames(
-                                'text-xs leading-none',
-                                sortDirection === 'desc' ? 'text-blue-600' : 'text-gray-400',
-                              )}
-                            >
-                              ▼
-                            </span>
+                  return (
+                    <Th key={header.id} colSpan={header.colSpan} index={header.index}>
+                      {header.isPlaceholder ? null : (
+                        <div
+                          className={classNames('flex items-center gap-2', canSort && 'cursor-pointer select-none')}
+                          onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
+                        >
+                          <div className="flex-1">
+                            {flexRender(header.column.columnDef.header, header.getContext())}
                           </div>
-                        )}
-                      </div>
-                    )}
-                  </Th>
-                )
-              })}
-            </Tr>
-          ))}
-        </THead>
-        {loading && data.length === 0 ? (
-          <TableRowSkeleton
-            // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-            columns={(finalColumns as Array<T>).length}
-            rows={pagingData.pageSize}
-            avatarInColumns={skeletonAvatarColumns}
-            avatarProps={skeletonAvatarProps}
-          />
-        ) : data.length === 0 ? (
-          <EmptyState title={emptyTitle} description={emptyDescription} colSpan={(finalColumns as Array<T>).length}>
-            {emptyContent}
-          </EmptyState>
-        ) : (
-          <TBody>
-            {table
-              .getRowModel()
-              .rows.slice(0, pageSize)
-              .map((row) => {
-                return (
-                  <Tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => {
-                      return <Td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Td>
-                    })}
-                  </Tr>
-                )
-              })}
-          </TBody>
-        )}
-      </Table>
+                          {canSort && (
+                            <div className="flex flex-col">
+                              <span
+                                className={classNames(
+                                  'text-xs leading-none',
+                                  sortDirection === 'asc' ? 'text-blue-600' : 'text-gray-400',
+                                )}
+                              >
+                                ▲
+                              </span>
+                              <span
+                                className={classNames(
+                                  'text-xs leading-none',
+                                  sortDirection === 'desc' ? 'text-blue-600' : 'text-gray-400',
+                                )}
+                              >
+                                ▼
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </Th>
+                  )
+                })}
+              </Tr>
+            ))}
+          </THead>
+          {loading && data.length === 0 ? (
+            <TableRowSkeleton
+              // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+              columns={(finalColumns as Array<T>).length}
+              rows={pageSize}
+              avatarInColumns={skeletonAvatarColumns}
+              avatarProps={skeletonAvatarProps}
+            />
+          ) : data.length === 0 ? (
+            <EmptyState title={emptyTitle} description={emptyDescription} colSpan={(finalColumns as Array<T>).length}>
+              {emptyContent}
+            </EmptyState>
+          ) : (
+            <TBody>
+              {table
+                .getRowModel()
+                .rows.slice(0, pageSize)
+                .map((row) => {
+                  return (
+                    <Tr key={row.id}>
+                      {row.getVisibleCells().map((cell) => {
+                        return <Td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Td>
+                      })}
+                    </Tr>
+                  )
+                })}
+            </TBody>
+          )}
+        </Table>
+      </div>
 
-      {(data.length > 0 || loading) && (onPaginationChange || onSelectChange) && (
+      {pagingData && (data.length > 0 || loading) && (onPaginationChange || onSelectChange) && (
         <div className="flex justify-between items-center mt-4">
           <Pagination pageSize={pageSize} currentPage={pageIndex} total={total} onChange={handlePaginationChange} />
           <div style={{ minWidth: 130 }}>

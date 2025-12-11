@@ -1,4 +1,5 @@
 import { Card } from '@/components/ui'
+import { convertNumberToPercent } from '@/helpers/convertNumberToPercent'
 import { formatUSD } from '@/helpers/formatUSD'
 import { TotalStats } from '@/views/projects/pages/projectDetail/types/projectDetail.type'
 
@@ -40,7 +41,7 @@ export default function ProjectReportStatistics({ totalStats }: Props) {
       <Card>
         <div className="flex flex-col">
           <span className="mb-2 font-semibold text-gray-600 text-sm">CTR trung bình</span>
-          <span className="font-bold text-gray-700 text-2xl">{formatUSD(totalStats?.avgCtr || 0)}</span>
+          <span className="font-bold text-gray-700 text-2xl">{convertNumberToPercent(totalStats?.avgCtr || 0)}</span>
         </div>
       </Card>
 

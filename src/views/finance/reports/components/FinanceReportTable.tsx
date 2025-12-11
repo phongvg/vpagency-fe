@@ -10,14 +10,18 @@ import { TableTooltip } from '@/components/shared/TableTooltip'
 import { isAdminOrAccounting } from '@/utils/checkRole'
 import { useAuthStore } from '@/store/auth/useAuthStore'
 import { Button, Checkbox, Dropdown } from '@/components/ui'
-import { HiOutlineViewList } from 'react-icons/hi'
+import { HiOutlineViewList, HiOutlinePencilAlt } from 'react-icons/hi'
 import { COLUMN_CONFIG } from '@/views/finance/reports/constants/financeReportColumnConfig.constant'
+import FinanceReportEditDialog from './FinanceReportEditDialog'
 
 export default function FinanceReportTable() {
   const { filters, setFilters } = useProjectDailyStatStore()
   const { user } = useAuthStore()
 
   const { data, isLoading } = useProjectDailyStat(filters)
+
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [selectedProjectDailyStatId, setSelectedProjectDailyStatId] = useState<string | null>(null)
 
   const availableColumns = useMemo(() => {
     if (isAdminOrAccounting(user?.roles)) {
@@ -36,6 +40,7 @@ export default function FinanceReportTable() {
       'totalTargetRef',
       'totalClickPerVolume',
       'totalRefPerVolume',
+      'actions',
     ]
     return COLUMN_CONFIG.filter((col) => !restrictedColumns.includes(col.id))
   }, [user?.roles])
@@ -74,6 +79,16 @@ export default function FinanceReportTable() {
   const isAllColumnsVisible = useMemo(() => {
     return availableColumns.every((col) => col.required || columnVisibility[col.id])
   }, [columnVisibility, availableColumns])
+
+  const handleEditClick = useCallback((id: string) => {
+    setSelectedProjectDailyStatId(id)
+    setIsEditDialogOpen(true)
+  }, [])
+
+  const handleCloseEditDialog = useCallback(() => {
+    setIsEditDialogOpen(false)
+    setSelectedProjectDailyStatId(null)
+  }, [])
 
   const allColumns: ColumnDef<ProjectDailyStat>[] = useMemo(
     () => [
@@ -237,8 +252,26 @@ export default function FinanceReportTable() {
           )
         },
       },
+      ...(isAdminOrAccounting(user?.roles)
+        ? ([
+            {
+              id: 'actions',
+              header: '',
+              cell: (props) => {
+                const row = props.row.original
+                return (
+                  <div className="flex justify-center">
+                    <button type="button" onClick={() => handleEditClick(row.id)}>
+                      <HiOutlinePencilAlt size={24} />
+                    </button>
+                  </div>
+                )
+              },
+            },
+          ] as ColumnDef<ProjectDailyStat>[])
+        : []),
     ],
-    [user?.roles, filters],
+    [user?.roles, filters, handleEditClick],
   )
 
   const visibleColumns = useMemo(() => {
@@ -295,6 +328,12 @@ export default function FinanceReportTable() {
         }}
         onPaginationChange={onPaginationChange}
         onSelectChange={onSelectChange}
+      />
+
+      <FinanceReportEditDialog
+        isOpen={isEditDialogOpen}
+        projectDailyStatId={selectedProjectDailyStatId}
+        onClose={handleCloseEditDialog}
       />
     </>
   )

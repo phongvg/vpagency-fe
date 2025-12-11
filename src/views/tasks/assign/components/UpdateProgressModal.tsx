@@ -7,6 +7,7 @@ import {
   useAssignCampaignsToFinalUrlMutation,
   useRemoveCampaignsFromFinalUrlMutation,
 } from '@/views/tasks/assign/hooks/useTask'
+import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { HiOutlineCheckCircle, HiOutlineMinus, HiOutlinePlus } from 'react-icons/hi'
 import { FinalURLGroup } from '@/views/tasks/assign/types/task.type'
@@ -46,7 +47,8 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
   const [newUrlFinalURL, setNewUrlFinalURL] = useState('')
   const [finalUrlIds, setFinalUrlIds] = useState<string[]>([])
 
-  const { data: currentProgress } = useGetTaskProgress(taskId, isOpen)
+  const queryClient = useQueryClient()
+  const { data: currentProgress, refetch: refetchProgress } = useGetTaskProgress(taskId, isOpen)
   const updateProgressMutation = useUpdateTaskProgress()
   const updateTaskMutation = useUpdateTask()
   const createFinalUrlMutation = useCreateFinalUrlMutation()
@@ -108,6 +110,8 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
       setIsAddingUrl(false)
       setNewUrlName('')
       setNewUrlFinalURL('')
+
+      await refetchProgress()
     }
   }
 
@@ -161,6 +165,8 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
     }
 
     await assignMutation.mutateAsync({ id: currentProgress!.id, payload })
+
+    await refetchProgress()
   }
 
   const handleUpdateProgress = async () => {
@@ -175,6 +181,10 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
     setProgress(0)
     setFinalUrlGroups([])
     setRowStates({})
+
+    queryClient.invalidateQueries({ queryKey: ['task-progress'] })
+    queryClient.invalidateQueries({ queryKey: ['task-detail'] })
+
     onClose()
   }
 
@@ -350,6 +360,9 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
     }
 
     await removeMutation.mutateAsync({ id: currentProgress!.id, payload })
+
+    // Refetch để cập nhật trạng thái
+    await refetchProgress()
   }
 
   const removeItemFromState = (finalUrlId: string, itemIndex: number) => {
@@ -575,7 +588,10 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
                                 size="xs"
                                 variant="solid"
                                 loading={assignMutation.isPending}
-                                onClick={() => handleAssignItem(group.finalUrlId, itemIndex)}
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleAssignItem(group.finalUrlId, itemIndex)
+                                }}
                               >
                                 Lưu
                               </Button>

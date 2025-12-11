@@ -38,12 +38,15 @@ import { Link } from 'react-router-dom'
 import { urlConfig } from '@/configs/urls.config'
 import { TableTooltip } from '@/components/shared/TableTooltip'
 import { toastError, toastSuccess } from '@/utils/toast'
+import { useQueryClient } from '@tanstack/react-query'
+import { GET_TASK_DETAIL } from '@/utils/queryKey'
 
 type Props = {
   inSplitView?: boolean
 }
 
 export default function TaskDetailPanel({ inSplitView = false }: Props) {
+  const queryClient = useQueryClient()
   const { selectedTask, openDialog, setSelectedTask: setStoreSelectedTask } = useBoardStore()
   const [displayTask, setDisplayTask] = useState<Task | null>(selectedTask)
 
@@ -138,7 +141,10 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
       <UpdateProgressModal
         isOpen={isProgressModalOpen}
         taskId={displayTask.id}
-        onClose={() => setIsProgressModalOpen(false)}
+        onClose={() => {
+          setIsProgressModalOpen(false)
+          queryClient.invalidateQueries({ queryKey: [GET_TASK_DETAIL] })
+        }}
       />
 
       <TaskProgressDetailModal
@@ -447,5 +453,5 @@ function TaskFinalUrlSection({ finalUrls }: { finalUrls: FinalUrl[] }) {
     [handleCopyToClipboard],
   )
 
-  return <DataTable columns={columns} data={finalUrls} loading={false} pagingData={undefined} />
+  return <DataTable columns={columns} data={finalUrls} maxHeight={500} />
 }

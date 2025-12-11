@@ -17,6 +17,8 @@ import { DataTable } from '@/components/shared'
 import TaskProgressDetailModal from '@/views/tasks/assign/components/TaskProgressDetailModal'
 import { TableTooltip } from '@/components/shared/TableTooltip'
 import { toastError, toastSuccess } from '@/utils/toast'
+import { useQueryClient } from '@tanstack/react-query'
+import { GET_TASK_DETAIL } from '@/utils/queryKey'
 
 interface TaskDetailViewProps {
   task: Task
@@ -25,6 +27,7 @@ interface TaskDetailViewProps {
 }
 
 export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailViewProps) {
+  const queryClient = useQueryClient()
   const { closeDialog } = useBoardStore()
   const { user } = useAuthStore()
 
@@ -342,7 +345,10 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
       <UpdateProgressModal
         isOpen={isProgressModalOpen}
         taskId={task.id}
-        onClose={() => setIsProgressModalOpen(false)}
+        onClose={() => {
+          setIsProgressModalOpen(false)
+          queryClient.invalidateQueries({ queryKey: [GET_TASK_DETAIL] })
+        }}
       />
 
       <TaskProgressDetailModal

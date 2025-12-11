@@ -68,11 +68,12 @@ export default function ConfirmDialog({
         <p className="mb-6 text-gray-500 text-sm">{message}</p>
 
         <div className="flex gap-3">
-          <Button block variant="default" disabled={loading} onClick={onCancel}>
+          <Button block type="button" variant="default" disabled={loading} onClick={onCancel}>
             {cancelText}
           </Button>
           <Button
             block
+            type="button"
             variant={typeStyles.confirmVariant}
             loading={loading}
             className="bg-red-600 hover:bg-red-700"

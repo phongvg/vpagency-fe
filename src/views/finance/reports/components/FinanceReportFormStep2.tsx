@@ -1,7 +1,7 @@
 import { Button, FormItem, FormContainer, Input, Card } from '@/components/ui'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
-import { ProjectDailyStat } from '@/views/finance/reports/types/ProjectDailyStat.type'
+import { UpdateProjectDailyStatRequest } from '@/views/finance/reports/types/ProjectDailyStat.type'
 import { formatUSD } from '@/helpers/formatUSD'
 
 const validationSchema = Yup.object().shape({
@@ -10,10 +10,10 @@ const validationSchema = Yup.object().shape({
 })
 
 type Props = {
-  generatedData: ProjectDailyStat
+  generatedData: UpdateProjectDailyStatRequest
   onSubmit: (values: ManualInputData) => void
   onCancel: () => void
-  onBack: () => void
+  onBack?: () => void
 }
 
 export type ManualInputData = {
@@ -25,10 +25,10 @@ export type ManualInputData = {
 
 export default function FinanceReportFormStep2({ generatedData, onSubmit, onCancel, onBack }: Props) {
   const initialValues: ManualInputData = {
-    totalRef: 0,
-    totalFtd: 0,
-    receivedRevenue: 0,
-    holdRevenue: 0,
+    totalRef: generatedData.totalRef || 0,
+    totalFtd: generatedData.totalFtd || 0,
+    receivedRevenue: generatedData.receivedRevenue || 0,
+    holdRevenue: generatedData.holdRevenue || 0,
   }
 
   const calculateFields = (values: ManualInputData) => {
@@ -107,7 +107,7 @@ export default function FinanceReportFormStep2({ generatedData, onSubmit, onCanc
                     <FormItem label="Quốc gia đang cắn">
                       <Input
                         disabled
-                        value={generatedData.activeCountries.map((c) => c.location).join(', ')}
+                        value={generatedData.activeCountries?.map((c) => c.location).join(', ')}
                         className="bg-gray-50"
                       />
                     </FormItem>

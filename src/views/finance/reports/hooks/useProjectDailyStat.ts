@@ -1,7 +1,8 @@
-import { GET_PROJECT_DAILY_STAT_LIST } from '@/utils/queryKey'
+import { GET_PROJECT_DAILY_STAT_LIST, GET_PROJECT_DAILY_STAT_DETAIL } from '@/utils/queryKey'
 import {
   apiGenerateProjectDailyReport,
   apiGetProjectDailyReports,
+  apiGetProjectDailyStatById,
   apiUpdateProjectDailyStat,
 } from '@/views/finance/reports/services/ProjectDailyStatService'
 import {
@@ -21,6 +22,19 @@ export const useProjectDailyStat = (params: ProjectDailyStatFilterRequest) => {
   })
 }
 
+export const useGetProjectDailyStatById = (id: string | null) => {
+  return useQuery({
+    queryKey: [GET_PROJECT_DAILY_STAT_DETAIL, id],
+    queryFn: async () => {
+      const response = await apiGetProjectDailyStatById(id!)
+      return response.data.data
+    },
+    enabled: !!id,
+    staleTime: 0,
+    refetchOnMount: true,
+  })
+}
+
 export const useGenerateProjectDailyReportMutation = () => {
   return useMutation({
     mutationFn: async (payload: GenerateProjectDailyStatRequest) => apiGenerateProjectDailyReport(payload),
@@ -33,8 +47,9 @@ export const useUpdateProjectDailyStatMutation = () => {
   return useMutation({
     mutationFn: async ({ id, payload }: { id: string; payload: UpdateProjectDailyStatRequest }) =>
       apiUpdateProjectDailyStat(id, payload),
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: [GET_PROJECT_DAILY_STAT_LIST] })
+      queryClient.invalidateQueries({ queryKey: [GET_PROJECT_DAILY_STAT_DETAIL, variables.id] })
     },
   })
 }

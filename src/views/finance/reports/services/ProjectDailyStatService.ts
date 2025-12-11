@@ -30,3 +30,10 @@ export async function apiUpdateProjectDailyStat(id: string, payload: UpdateProje
     data: payload,
   })
 }
+
+export async function apiGetProjectDailyStatById(id: string) {
+  return ApiService.fetchData<BaseResponse<ProjectDailyStat>>({
+    url: `/project-daily-stats/${id}`,
+    method: 'get',
+  })
+}

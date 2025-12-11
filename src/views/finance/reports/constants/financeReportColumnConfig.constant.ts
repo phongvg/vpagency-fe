@@ -17,4 +17,5 @@ export const COLUMN_CONFIG = [
   { id: 'totalClicks', label: 'Tổng lượt click', visible: true, required: false },
   { id: 'totalTargetCpc', label: 'Thầu', visible: true, required: false },
   { id: 'activeCountries', label: 'Quốc gia đang cắn', visible: true, required: false },
+  { id: 'actions', label: 'Hành động', visible: true, required: true },
 ]
