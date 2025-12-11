@@ -94,6 +94,11 @@ export default function FinanceReportTable() {
           return <span>{formatDate(row.date, 'DD/MM/YYYY')}</span>
         },
       },
+      {
+        id: 'projectName',
+        header: 'Tên dự án',
+        accessorKey: 'projectName',
+      },
       ...(isAdminOrAccounting(user?.roles)
         ? ([
             {

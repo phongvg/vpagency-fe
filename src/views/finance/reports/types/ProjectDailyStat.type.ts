@@ -9,6 +9,7 @@ export type ProjectDailyStatFilterRequest = CommonFilterRequest & {
 export type ProjectDailyStat = {
   id: string
   projectId: string
+  projectName: string
   date: Date
   totalClicks: number
   totalCost: number

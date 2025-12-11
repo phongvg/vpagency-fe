@@ -1,6 +1,7 @@
 export const COLUMN_CONFIG = [
   { id: 'stt', label: 'STT', visible: true, required: true },
   { id: 'date', label: 'Ngày', visible: true, required: true },
+  { id: 'projectName', label: 'Tên dự án', visible: true, required: true },
   { id: 'profit', label: 'Lợi nhuận', visible: true, required: false },
   { id: 'totalRef', label: 'Tổng Ref', visible: true, required: false },
   { id: 'costPerRef', label: 'Chi phí mỗi Ref', visible: true, required: false },
