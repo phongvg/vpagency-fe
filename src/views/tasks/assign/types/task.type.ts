@@ -110,6 +110,11 @@ export type FinalURLGroup = {
 export type Item = {
   date: string
   uid: string
-  gmailId: string
-  campaignIds?: string[]
+  gmail: ItemOption
+  campaigns: ItemOption[]
+}
+
+export type ItemOption = {
+  id: string
+  name: string
 }

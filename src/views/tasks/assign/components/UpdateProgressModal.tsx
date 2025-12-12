@@ -62,7 +62,7 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
   })
 
   useEffect(() => {
-    if (currentProgress !== undefined && isOpen) {
+    if (currentProgress && isOpen) {
       setProgress(currentProgress.progress || 0)
       if (currentProgress.finalUrls && currentProgress.finalUrls.length > 0) {
         const normalizedGroups = currentProgress.finalUrls.map((group) => ({
@@ -70,7 +70,7 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
           items:
             group.groups && group.groups.length > 0
               ? group.groups
-              : [{ date: '', uid: '', campaignIds: [], gmailId: '' }],
+              : [{ date: '', uid: '', campaigns: [], gmail: { id: '', name: '' } }],
         }))
         setFinalUrlGroups(normalizedGroups)
         setFinalUrlIds(currentProgress.finalUrls.map((group) => group.finalUrlId))
@@ -81,10 +81,15 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
             items: group.items.map((item) => ({
               date: item.date ? new Date(item.date) : null,
               uid: item.uid || '',
-              campaignIds: item.campaignIds || [],
-              gmailId: item.gmailId || '',
+              campaignIds: item.campaigns ? item.campaigns.map((c) => c.id) : [],
+              gmailId: item.gmail?.id || '',
               uidOptions: [],
-              campaignOptions: [],
+              campaignOptions: item.campaigns
+                ? item.campaigns.map((c) => ({
+                    value: c.id,
+                    label: c.name,
+                  }))
+                : [],
             })),
           }
         })
@@ -328,15 +333,7 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
     const progressGroup = currentProgress.finalUrls.find((g) => g.finalUrlId === finalUrlId)
     if (!progressGroup || !progressGroup.groups || progressGroup.groups.length === 0) return false
 
-    const rowState = rowStates[finalUrlId]
-    if (!rowState) return false
-
-    const item = rowState.items[itemIndex]
-    if (!item || !item.uid || !item.gmailId) return false
-
-    return progressGroup.groups.some(
-      (progressItem) => progressItem.uid === item.uid && progressItem.gmailId === item.gmailId,
-    )
+    return itemIndex < progressGroup.groups.length
   }
 
   const handleRemoveItem = async (finalUrlId: string, itemIndex: number) => {
