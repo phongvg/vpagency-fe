@@ -147,7 +147,6 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
 
     self.postMessage({ type: 'progress', progress: 70 } as WorkerResponse)
 
-    const campaignName = campaignSheet.map((item) => item['Name'])
     const campaignId = campaignSheet.map((item) => item['Campaign ID'])
     const uniqueCampaignIds = [...new Set(campaignId)]
 
@@ -294,7 +293,7 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
             })(),
         uid: uidString,
         mcc,
-        name: campaignName[index] || null,
+        name: campaignRows[campaignRows.length - 1]?.['Name'] || null,
         externalId: id ? String(id) : null,
         finalUrl: finalUrlKey[finalUrlKey.length - 1]
           ? finalUrlKey[finalUrlKey.length - 1]
