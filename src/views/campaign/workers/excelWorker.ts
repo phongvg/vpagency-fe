@@ -281,9 +281,11 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
       const impression = campaignPfmRows.map((row) => row['Impressions'])
 
       return {
+        // Nếu không có dữ liệu ngày nhập hoặc ngày dữ liệu thì gán ngày hiện tại
         importAt: importAt[importAt.length - 1]
           ? excelDateToJSDate(importAt[importAt.length - 1])
           : new Date().toISOString().slice(0, 10),
+        // Nếu không có dữ liệu ngày thì gán ngày hôm qua
         date: date[date.length - 1]
           ? excelDateToJSDate(date[date.length - 1])
           : (() => {
