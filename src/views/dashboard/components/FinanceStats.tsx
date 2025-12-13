@@ -3,7 +3,7 @@ import { Card, Progress } from '@/components/ui'
 import { formatUSD } from '@/helpers/formatUSD'
 import { getDaysArrayInMonth, getDaysInMonth } from '@/helpers/getDaysArrayInMonth'
 import { useAuthStore } from '@/store/auth/useAuthStore'
-import { isAdminOrAccounting } from '@/utils/checkRole'
+import { isAdminOrManagerOrAccounting } from '@/utils/checkRole'
 import { useGetMonthlySpendingStat, useProjectStatQuery } from '@/views/dashboard/hooks/useStatisticQueries'
 import { useMemo } from 'react'
 import { NumericFormat } from 'react-number-format'
@@ -29,8 +29,8 @@ const ProgressInfo = ({ precent }: { precent?: number }) => {
 
 export default function FinanceStats() {
   const { user } = useAuthStore()
-  const { data: projectStat } = useProjectStatQuery(isAdminOrAccounting(user?.roles))
-  const { data: monthlySpendingStat } = useGetMonthlySpendingStat(isAdminOrAccounting(user?.roles))
+  const { data: projectStat } = useProjectStatQuery(isAdminOrManagerOrAccounting(user?.roles))
+  const { data: monthlySpendingStat } = useGetMonthlySpendingStat(isAdminOrManagerOrAccounting(user?.roles))
 
   const getPerformanceLabel = (active?: number, total?: number) => {
     if (!active || !total) return 'Chưa có dữ liệu'
