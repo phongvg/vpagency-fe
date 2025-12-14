@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui'
+import AddUrlModal from '@/views/tasks/assign/components/AddUrlModal'
 import CampaignStatsModal from '@/views/tasks/assign/components/CampaignStatsModal'
 import { FinalURLGroup } from '@/views/tasks/assign/types/task.type'
 import { useState } from 'react'
@@ -7,11 +8,13 @@ import { HiOutlinePlus } from 'react-icons/hi'
 type Props = {
   taskId: string
   finalUrls: FinalURLGroup[]
+  projectId: string | undefined
 }
 
-export default function UpdateFinalUrlMetric({ taskId, finalUrls }: Props) {
+export default function UpdateFinalUrlMetric({ taskId, finalUrls, projectId }: Props) {
   const [isCampaignStatsModalOpen, setIsCampaignStatsModalOpen] = useState(false)
   const [selectedFinalUrlId, setSelectedFinalUrlId] = useState<string | null>(null)
+  const [isAddUrlModalOpen, setIsAddUrlModalOpen] = useState(false)
 
   const handleOpenCampaignStatsModal = (finalUrlId: string) => {
     setSelectedFinalUrlId(finalUrlId)
@@ -28,7 +31,13 @@ export default function UpdateFinalUrlMetric({ taskId, finalUrls }: Props) {
       <div className="flex justify-between items-center mb-4">
         <h4 className="font-semibold">Danh sách URL ({finalUrls.length})</h4>
         <div className="flex gap-2">
-          <Button type="button" variant="solid" size="sm" icon={<HiOutlinePlus />}>
+          <Button
+            type="button"
+            variant="solid"
+            size="sm"
+            icon={<HiOutlinePlus />}
+            onClick={() => setIsAddUrlModalOpen(true)}
+          >
             Thêm URL
           </Button>
         </div>
@@ -70,6 +79,14 @@ export default function UpdateFinalUrlMetric({ taskId, finalUrls }: Props) {
         taskId={taskId}
         finalUrlId={selectedFinalUrlId}
         onClose={onCloseCampaignStatsModal}
+      />
+
+      <AddUrlModal
+        isOpen={isAddUrlModalOpen}
+        taskId={taskId}
+        projectId={projectId}
+        finalUrlIds={finalUrls.map((url) => url.finalUrlId)}
+        onClose={() => setIsAddUrlModalOpen(false)}
       />
     </>
   )

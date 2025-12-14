@@ -75,7 +75,7 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
         </div>
 
         <div className="mb-6">
-          <UpdateFinalUrlMetric taskId={taskId} finalUrls={finalUrls} />
+          <UpdateFinalUrlMetric taskId={taskId} finalUrls={finalUrls} projectId={taskProgressData?.projectId} />
         </div>
 
         <div className="flex justify-end gap-3">

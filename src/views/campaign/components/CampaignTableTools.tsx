@@ -107,6 +107,9 @@ export default function CampaignTableTools() {
             <Button loading={isProcessing} size="sm" icon={<HiOutlineDownload />} onClick={handleImportClick}>
               Nhập dữ liệu
             </Button>
+            <Button size="sm" icon={<HiOutlineDownload />}>
+              Gán Email
+            </Button>
             <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={() => openDialog()}>
               Thêm mới
             </Button>

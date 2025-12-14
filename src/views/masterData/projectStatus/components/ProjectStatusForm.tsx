@@ -5,7 +5,7 @@ import {
   useUpdateProjectStatusMutation,
 } from '@/views/masterData/projectStatus/hooks/useProjectStatus'
 import { useProjectStatusStore } from '@/views/masterData/projectStatus/store/useProjectStatusStore'
-import type { CreateProjectStatusRequest } from '@/views/masterData/projectStatus/types/projectStatus.type'
+import { UpdateProjectStatusRequest } from '@/views/masterData/projectStatus/types/projectStatus.type'
 import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
@@ -22,12 +22,12 @@ export default function ProjectStatusForm() {
   const createMutation = useCreateProjectStatusMutation()
   const updateMutation = useUpdateProjectStatusMutation()
 
-  const initialValues: CreateProjectStatusRequest = {
+  const initialValues: UpdateProjectStatusRequest = {
     name: projectStatus?.name || '',
     description: projectStatus?.description || '',
   }
 
-  const handleSubmit = async (values: CreateProjectStatusRequest) => {
+  const handleSubmit = async (values: UpdateProjectStatusRequest) => {
     if (isEdit) {
       await updateMutation.mutateAsync({
         id: projectStatusId!,
