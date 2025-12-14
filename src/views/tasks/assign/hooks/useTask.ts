@@ -1,8 +1,19 @@
 import { ApiAxiosError } from '@/@types/apiError'
 import {
+  GET_CAMPAIGN_STATS_BY_FINAL_URL,
+  GET_TASK_DETAIL,
+  GET_TASK_LIST,
+  GET_TASK_PROGRESS,
+  GET_TASKS_GROUPED_BY_STATUS,
+} from '@/utils/queryKey'
+import { toastError, toastSuccess } from '@/utils/toast'
+import { CampaignFilterRequest } from '@/views/campaign/store/useCampaignStore'
+import { AssignToFinalUrlRequest, RemoveFromFinalUrlRequest } from '@/views/campaign/types/campaign.type'
+import {
   apiAssignCampaignsToFinalUrl,
   apiCreateTask,
   apiDeleteTask,
+  apiGetCampaignStatsByFinalUrl,
   apiGetTaskDetail,
   apiGetTaskProgress,
   apiGetTasks,
@@ -12,12 +23,9 @@ import {
   apiUpdateTaskProgress,
   apiUpdateTaskStatus,
 } from '@/views/tasks/assign/services/TaskService'
-import { GET_TASK_DETAIL, GET_TASK_LIST, GET_TASK_PROGRESS, GET_TASKS_GROUPED_BY_STATUS } from '@/utils/queryKey'
-import { toastError, toastSuccess } from '@/utils/toast'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import { TaskProgressRequest, UpdateTaskRequest } from '@/views/tasks/assign/types/task.type'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { AssignToFinalUrlRequest, RemoveFromFinalUrlRequest } from '@/views/campaign/types/campaign.type'
 
 export const useGetTasksWithFilters = (enabled: boolean = false) => {
   const { filters, activeView } = useBoardStore()
@@ -117,10 +125,10 @@ export const useDeleteTask = () => {
       return response.data
     },
     onSuccess: (response) => {
-      toastSuccess(response.message)
       queryClient.invalidateQueries({ queryKey: [GET_TASK_LIST] })
       queryClient.invalidateQueries({ queryKey: [GET_TASKS_GROUPED_BY_STATUS] })
       queryClient.invalidateQueries({ queryKey: [GET_TASK_DETAIL] })
+      toastSuccess(response.message)
     },
     onError: (error: ApiAxiosError) => {
       toastError(error.response?.data?.message)
@@ -154,17 +162,17 @@ export const useGetTaskProgress = (taskId: string | null, enabled = false) => {
       return response.data.data
     },
     enabled: !!taskId && enabled,
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
   })
 }
 
 export const useAssignCampaignsToFinalUrlMutation = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: AssignToFinalUrlRequest }) =>
       apiAssignCampaignsToFinalUrl(id, payload),
     onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: [GET_TASK_PROGRESS] })
       toastSuccess(response.data.message)
     },
     onError: (error: ApiAxiosError) => {
@@ -183,5 +191,21 @@ export const useRemoveCampaignsFromFinalUrlMutation = () => {
     onError: (error: ApiAxiosError) => {
       toastError(error.response?.data?.message)
     },
+  })
+}
+
+export const useGetCampaignStatsByFinalUrl = (
+  taskId: string | null,
+  finalUrlId: string | null,
+  params: CampaignFilterRequest,
+  enabled = false,
+) => {
+  return useQuery({
+    queryKey: [GET_CAMPAIGN_STATS_BY_FINAL_URL, taskId, finalUrlId, params],
+    queryFn: async () => {
+      const response = await apiGetCampaignStatsByFinalUrl(taskId!, finalUrlId!, params)
+      return response.data.data
+    },
+    enabled: !!taskId && !!finalUrlId && enabled,
   })
 }

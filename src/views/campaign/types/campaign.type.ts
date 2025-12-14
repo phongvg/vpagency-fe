@@ -106,15 +106,10 @@ export type CurrencyRate = {
 
 export type AssignToFinalUrlRequest = {
   finalUrlId: string
-  gmailId: string
-  date: string
-  uid: string
-  campaignIds?: string[]
+  campaignDailyStatIds: string[]
 }
 
 export type RemoveFromFinalUrlRequest = {
   finalUrlId: string
-  date: string
-  uid: string
-  campaignIds?: string[]
+  campaignDailyStatId: string
 }

@@ -1,22 +1,22 @@
-import { GmailAccount } from '@/views/gmailAccounts/types/gmailAccount.type'
 import { DataTable, DataTableResetHandle } from '@/components/shared'
-import { Avatar, Button, ConfirmDialog, Checkbox, Dropdown } from '@/components/ui'
-import { COLUMN_CONFIG } from '@/views/gmailAccounts/constants/gmailAccountColumnConfig.constant'
+import BadgeStatus from '@/components/shared/BadgeStatus'
+import { Avatar, Button, Checkbox, ConfirmDialog, Dropdown } from '@/components/ui'
 import { formatUSD } from '@/helpers/formatUSD'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import GmailAccountEditDialog from '@/views/gmailAccounts/components/GmailAccountEditDialog'
 import GmailAccountPreviewDialog from '@/views/gmailAccounts/components/GmailAccountPreviewDialog'
+import { COLUMN_CONFIG } from '@/views/gmailAccounts/constants/gmailAccountColumnConfig.constant'
 import {
   useAssignGmailAccountToSelfMutation,
   useDeleteGmailAccountMutation,
   useGetGmailAccountsQuery,
 } from '@/views/gmailAccounts/hooks/useGmailAccount'
 import { useGmailAccountStore } from '@/views/gmailAccounts/store/useGmailAccountStore'
+import { GmailAccount } from '@/views/gmailAccounts/types/gmailAccount.type'
+import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
 import { ColumnDef, Row } from '@tanstack/react-table'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { HiOutlinePencilAlt, HiOutlineTrash, HiOutlineViewList } from 'react-icons/hi'
-import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
-import BadgeStatus from '@/components/shared/BadgeStatus'
 
 const CreatorColumn = ({ row }: { row: GmailAccount }) => {
   if (!row.creator) {
@@ -226,6 +226,8 @@ export default function GmailAccountTable() {
   const onPaginationChange = (page: number) => {
     const newFilter = { ...filter, page }
     setFilter(newFilter)
+    tableRef.current?.resetSelected()
+    setSelectedRows([])
   }
 
   const onSelectChange = (value: number) => {
