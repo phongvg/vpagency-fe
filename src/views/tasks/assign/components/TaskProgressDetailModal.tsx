@@ -42,38 +42,38 @@ export default function TaskProgressDetailModal({ isOpen, finalUrls, onClose }: 
       },
       {
         header: 'Ngày dữ liệu',
-        accessorKey: 'stat.date',
+        accessorKey: 'latestStat.date',
         cell: (props) => {
           const row = props.row.original
-          return <span>{formatDate(row.stat.date, 'DD/MM/YYYY')}</span>
+          return <span>{formatDate(row.latestStat.date, 'DD/MM/YYYY')}</span>
         },
       },
       {
         header: 'Click',
-        accessorKey: 'stat.clicks',
+        accessorKey: 'latestStat.clicks',
       },
       {
         header: 'Ngân sách đã tiêu',
-        accessorKey: 'stat.cost',
+        accessorKey: 'latestStat.cost',
         cell: (props) => {
           const row = props.row.original
-          return <span>{formatUSD(row.stat.cost)}</span>
+          return <span>{formatUSD(row.latestStat.cost)}</span>
         },
       },
       {
         header: 'Lượt hiển thị',
-        accessorKey: 'stat.impression',
+        accessorKey: 'latestStat.impression',
       },
       {
         header: 'CTR',
-        accessorKey: 'stat.ctr',
+        accessorKey: 'latestStat.ctr',
       },
       {
         header: 'CPC trung bình',
-        accessorKey: 'stat.avgCpc',
+        accessorKey: 'latestStat.avgCpc',
         cell: (props) => {
           const row = props.row.original
-          return <span>{formatUSD(row.stat.avgCpc)}</span>
+          return <span>{formatUSD(row.latestStat.avgCpc)}</span>
         },
       },
     ],
