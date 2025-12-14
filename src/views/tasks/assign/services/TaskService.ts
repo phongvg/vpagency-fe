@@ -1,15 +1,16 @@
 import { BaseListResponse, BaseResponse } from '@/@types/common'
+import ApiService from '@/services/ApiService'
+import { CampaignFilterRequest } from '@/views/campaign/store/useCampaignStore'
+import { AssignToFinalUrlRequest, Campaign, RemoveFromFinalUrlRequest } from '@/views/campaign/types/campaign.type'
 import {
   Task,
-  TasksGroupedByStatus,
+  TaskProgressRequest,
+  TaskProgressResponse,
   TasksFilterRequest,
+  TasksGroupedByStatus,
   TaskStatisticResponse,
   UpdateTaskRequest,
-  TaskProgressResponse,
-  TaskProgressRequest,
 } from '@/views/tasks/assign/types/task.type'
-import ApiService from '@/services/ApiService'
-import { AssignToFinalUrlRequest, RemoveFromFinalUrlRequest } from '@/views/campaign/types/campaign.type'
 
 export async function apiGetTasks(params: TasksFilterRequest) {
   return ApiService.fetchData<BaseListResponse<Task>>({
@@ -100,5 +101,13 @@ export async function apiRemoveCampaignsFromFinalUrl(id: string, payload: Remove
     url: `/tasks/${id}/campaigns/remove`,
     method: 'post',
     data: payload,
+  })
+}
+
+export async function apiGetCampaignStatsByFinalUrl(taskId: string, finalUrlId: string, params: CampaignFilterRequest) {
+  return ApiService.fetchData<BaseListResponse<Campaign>>({
+    url: `/tasks/${taskId}/final-urls/${finalUrlId}/campaign-stats`,
+    method: 'get',
+    params,
   })
 }

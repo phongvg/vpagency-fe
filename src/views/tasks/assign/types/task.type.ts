@@ -97,6 +97,7 @@ export type TaskProgressResponse = TaskProgressRequest & {
   name: string
   projectId: string
   progress: number
+  totalFinalUrls: number
   finalUrls: FinalURLGroup[]
 }
 
@@ -104,17 +105,5 @@ export type FinalURLGroup = {
   finalUrlId: string
   finalUrlName: string
   finalURL: string
-  groups: Item[]
-}
-
-export type Item = {
-  date: string
-  uid: string
-  gmail: ItemOption
-  campaigns: ItemOption[]
-}
-
-export type ItemOption = {
-  id: string
-  name: string
+  totalCampaignDailyStats: number
 }

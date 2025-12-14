@@ -1,32 +1,32 @@
-import { forwardRef, useMemo, useRef, useEffect, useState, useImperativeHandle } from 'react'
-import Table from '@/components/ui/Table'
+import type { CheckboxProps } from '@/components/ui/Checkbox'
+import Checkbox from '@/components/ui/Checkbox'
 import Pagination from '@/components/ui/Pagination'
 import Select from '@/components/ui/Select'
-import Checkbox from '@/components/ui/Checkbox'
-import TableRowSkeleton from './loaders/TableRowSkeleton'
-import Loading from './Loading'
-import classNames from 'classnames'
+import type { SkeletonProps } from '@/components/ui/Skeleton'
+import Table from '@/components/ui/Table'
 import {
-  useReactTable,
+  CellContext,
+  ColumnDef,
+  ColumnSort,
+  flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  flexRender,
-  ColumnDef,
-  ColumnSort,
   Row,
-  CellContext,
+  useReactTable,
 } from '@tanstack/react-table'
-import type { SkeletonProps } from '@/components/ui/Skeleton'
-import type { ForwardedRef, ChangeEvent, ReactNode } from 'react'
-import type { CheckboxProps } from '@/components/ui/Checkbox'
+import classNames from 'classnames'
+import type { ChangeEvent, ForwardedRef, ReactNode } from 'react'
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import TableRowSkeleton from './loaders/TableRowSkeleton'
+import Loading from './Loading'
 
 export type OnSortParam = { order: 'asc' | 'desc' | ''; key: string | number }
 
 type DataTableProps<T> = {
   columns: ColumnDef<T>[]
-  data?: unknown[]
+  data?: T[]
   loading?: boolean
   onCheckBoxChange?: (checked: boolean, row: T) => void
   onIndeterminateCheckBoxChange?: (checked: boolean, rows: Row<T>[]) => void
@@ -46,6 +46,7 @@ type DataTableProps<T> = {
   emptyTitle?: string
   emptyDescription?: string
   maxHeight?: string | number
+  getRowId?: (originalRow: T, index: number) => string
 }
 
 type CheckBoxChangeEvent = ChangeEvent<HTMLInputElement>
@@ -146,6 +147,7 @@ function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableRese
     emptyTitle,
     emptyDescription,
     maxHeight,
+    getRowId,
   } = props
 
   const pageSize = pagingData?.pageSize ?? data.length
@@ -153,6 +155,7 @@ function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableRese
   const total = pagingData?.total ?? data.length
 
   const [sorting, setSorting] = useState<ColumnSort[] | null>(null)
+  const [rowSelection, setRowSelection] = useState({})
 
   const pageSizeOption = useMemo(
     () =>
@@ -163,17 +166,23 @@ function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableRese
     [pageSizes],
   )
 
-  const handleCheckBoxChange = (checked: boolean, row: T) => {
-    if (!loading) {
-      onCheckBoxChange?.(checked, row)
-    }
-  }
+  const handleCheckBoxChange = useCallback(
+    (checked: boolean, row: T) => {
+      if (!loading) {
+        onCheckBoxChange?.(checked, row)
+      }
+    },
+    [loading, onCheckBoxChange],
+  )
 
-  const handleIndeterminateCheckBoxChange = (checked: boolean, rows: Row<T>[]) => {
-    if (!loading) {
-      onIndeterminateCheckBoxChange?.(checked, rows)
-    }
-  }
+  const handleIndeterminateCheckBoxChange = useCallback(
+    (checked: boolean, rows: Row<T>[]) => {
+      if (!loading) {
+        onIndeterminateCheckBoxChange?.(checked, rows)
+      }
+    },
+    [loading, onIndeterminateCheckBoxChange],
+  )
 
   const handlePaginationChange = (page: number) => {
     if (!loading) {
@@ -227,24 +236,25 @@ function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableRese
       ]
     }
     return columns
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [columnsProp, selectable])
+  }, [columnsProp, selectable, handleCheckBoxChange, handleIndeterminateCheckBoxChange])
 
-  const table = useReactTable({
-    data,
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    columns: finalColumns as ColumnDef<unknown | object | any[], any>[],
+  const table = useReactTable<T>({
+    data: data as T[],
+    columns: finalColumns as ColumnDef<T, any>[],
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     manualPagination: true,
     manualSorting: onSort ? true : false,
+    getRowId,
     onSortingChange: (sorter) => {
       setSorting(sorter as ColumnSort[])
     },
+    onRowSelectionChange: setRowSelection,
     state: {
       sorting: sorting as ColumnSort[],
+      rowSelection,
     },
   })
 
@@ -254,6 +264,7 @@ function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableRese
 
   const resetSelected = () => {
     table.toggleAllRowsSelected(false)
+    setRowSelection({})
   }
 
   useImperativeHandle(ref, () => ({
@@ -369,5 +380,5 @@ const DataTable = forwardRef(_DataTable) as <T>(
   },
 ) => ReturnType<typeof _DataTable>
 
-export type { ColumnDef, Row, CellContext }
+export type { CellContext, ColumnDef, Row }
 export default DataTable
