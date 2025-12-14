@@ -47,6 +47,8 @@ type DataTableProps<T> = {
   emptyDescription?: string
   maxHeight?: string | number
   getRowId?: (originalRow: T, index: number) => string
+  getRowClassName?: (row: T) => string
+  enableRowSelection?: (row: T) => boolean
 }
 
 type CheckBoxChangeEvent = ChangeEvent<HTMLInputElement>
@@ -148,6 +150,8 @@ function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableRese
     emptyDescription,
     maxHeight,
     getRowId,
+    getRowClassName,
+    enableRowSelection,
   } = props
 
   const pageSize = pagingData?.pageSize ?? data.length
@@ -248,6 +252,7 @@ function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableRese
     manualPagination: true,
     manualSorting: onSort ? true : false,
     getRowId,
+    enableRowSelection: enableRowSelection ? (row) => enableRowSelection(row.original) : true,
     onSortingChange: (sorter) => {
       setSorting(sorter as ColumnSort[])
     },
@@ -342,8 +347,9 @@ function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableRese
                 .getRowModel()
                 .rows.slice(0, pageSize)
                 .map((row) => {
+                  const rowClassName = getRowClassName ? getRowClassName(row.original) : ''
                   return (
-                    <Tr key={row.id}>
+                    <Tr key={row.id} className={rowClassName}>
                       {row.getVisibleCells().map((cell) => {
                         return <Td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Td>
                       })}

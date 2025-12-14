@@ -1,6 +1,8 @@
 import { DatePicker, Input } from '@/components/ui'
 import { formatDate } from '@/helpers/formatDate'
+import { useDebounce } from '@/hooks/useDebounce'
 import { CampaignFilterRequest } from '@/views/campaign/store/useCampaignStore'
+import { useEffect, useState } from 'react'
 
 type Props = {
   filter: CampaignFilterRequest
@@ -8,6 +10,30 @@ type Props = {
 }
 
 export default function CampaignStatsFilter({ filter, onFilterChange }: Props) {
+  const [uid, setUid] = useState(filter.uid || '')
+  const [externalId, setExternalId] = useState(filter.externalId || '')
+
+  const debouncedUid = useDebounce(uid, 500)
+  const debouncedExternalId = useDebounce(externalId, 500)
+
+  useEffect(() => {
+    onFilterChange({
+      ...filter,
+      uid: debouncedUid || undefined,
+      page: 1,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedUid])
+
+  useEffect(() => {
+    onFilterChange({
+      ...filter,
+      externalId: debouncedExternalId || undefined,
+      page: 1,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedExternalId])
+
   const handleImportAtFromChange = (date: Date | null) => {
     onFilterChange({
       ...filter,
@@ -41,19 +67,11 @@ export default function CampaignStatsFilter({ filter, onFilterChange }: Props) {
   }
 
   const handleUidChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onFilterChange({
-      ...filter,
-      uid: e.target.value || undefined,
-      page: 1,
-    })
+    setUid(e.target.value)
   }
 
   const handleExternalIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onFilterChange({
-      ...filter,
-      externalId: e.target.value || undefined,
-      page: 1,
-    })
+    setExternalId(e.target.value)
   }
 
   return (
@@ -103,16 +121,11 @@ export default function CampaignStatsFilter({ filter, onFilterChange }: Props) {
 
         <div>
           <label className="block mb-1 font-semibold text-sm">UID</label>
-          <Input size="sm" placeholder="Nhập UID" value={filter.uid || ''} onChange={handleUidChange} />
+          <Input size="sm" placeholder="Nhập UID" value={uid} onChange={handleUidChange} />
         </div>
         <div>
           <label className="block mb-1 font-semibold text-sm">ID chiến dịch</label>
-          <Input
-            size="sm"
-            placeholder="Nhập ID chiến dịch"
-            value={filter.externalId || ''}
-            onChange={handleExternalIdChange}
-          />
+          <Input size="sm" placeholder="Nhập ID chiến dịch" value={externalId} onChange={handleExternalIdChange} />
         </div>
       </div>
     </div>

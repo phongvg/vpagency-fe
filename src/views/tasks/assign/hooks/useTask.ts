@@ -183,10 +183,13 @@ export const useAssignCampaignsToFinalUrlMutation = () => {
 }
 
 export const useRemoveCampaignsFromFinalUrlMutation = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: RemoveFromFinalUrlRequest }) =>
       apiRemoveCampaignsFromFinalUrl(id, payload),
     onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: [GET_TASK_PROGRESS] })
       toastSuccess(response.data.message)
     },
     onError: (error: ApiAxiosError) => {

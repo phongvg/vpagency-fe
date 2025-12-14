@@ -12,9 +12,13 @@ import { COLUMN_CONFIG } from '@/views/campaign/constants/campaignColumnConfig.c
 import { CampaignFilterRequest } from '@/views/campaign/store/useCampaignStore'
 import { Campaign } from '@/views/campaign/types/campaign.type'
 import CampaignStatsFilter from '@/views/tasks/assign/components/CampaignStatsFilter'
-import { useAssignCampaignsToFinalUrlMutation, useGetCampaignStatsByFinalUrl } from '@/views/tasks/assign/hooks/useTask'
+import {
+  useAssignCampaignsToFinalUrlMutation,
+  useGetCampaignStatsByFinalUrl,
+  useRemoveCampaignsFromFinalUrlMutation,
+} from '@/views/tasks/assign/hooks/useTask'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { HiOutlineDuplicate, HiOutlineViewList } from 'react-icons/hi'
+import { HiOutlineDuplicate, HiOutlineMinusSm, HiOutlineViewList } from 'react-icons/hi'
 
 type Props = {
   isOpen: boolean
@@ -41,13 +45,20 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
 
   const { data, isLoading } = useGetCampaignStatsByFinalUrl(taskId, finalUrlId, filter, isOpen)
   const assignMutation = useAssignCampaignsToFinalUrlMutation()
-  // const removeMutation = useRemoveCampaignsFromFinalUrlMutation()
+  const removeMutation = useRemoveCampaignsFromFinalUrlMutation()
 
   const metaTableData = useMemo(() => data?.meta, [data])
 
   const tableRef = useRef<DataTableResetHandle>(null)
 
   const { showConfirm: showBatchConfirm, confirmProps: batchConfirmProps } = useConfirmDialog({
+    title: 'Xác nhận',
+    type: 'warning',
+    confirmText: 'Xác nhận',
+    cancelText: 'Hủy',
+  })
+
+  const { showConfirm: showDeleteConfirm, confirmProps: deleteConfirmProps } = useConfirmDialog({
     title: 'Xác nhận',
     type: 'warning',
     confirmText: 'Xác nhận',
@@ -90,6 +101,33 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
       },
     )
   }, [])
+
+  const handleRemoveAssign = useCallback(
+    async (id: string) => {
+      const confirmed = await showDeleteConfirm({
+        message: `Bạn có chắc chắn muốn loại bỏ chỉ số của chiến dịch này không?`,
+      })
+
+      if (confirmed) {
+        await removeMutation.mutateAsync(
+          {
+            id: taskId,
+            payload: {
+              finalUrlId: finalUrlId!,
+              campaignDailyStatId: id,
+            },
+          },
+          {
+            onSuccess: () => {
+              onClose()
+              handleResetSelection()
+            },
+          },
+        )
+      }
+    },
+    [finalUrlId, onClose, removeMutation, showDeleteConfirm, taskId],
+  )
 
   const allColumns: ColumnDef<Campaign>[] = useMemo(
     () => [
@@ -357,8 +395,24 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
           )
         },
       },
+      {
+        id: 'actions',
+        header: '',
+        cell: (props) => {
+          const row = props.row.original
+          if (!row.finalUrlId) return null
+
+          return (
+            <div className="flex justify-end items-center gap-4">
+              <button type="button" title="Loại bỏ chỉ số" onClick={() => handleRemoveAssign(row.id)}>
+                <HiOutlineMinusSm size={24} />
+              </button>
+            </div>
+          )
+        },
+      },
     ],
-    [filter, handleCopyToClipboard],
+    [filter, handleCopyToClipboard, handleRemoveAssign],
   )
 
   const isAllColumnsVisible = useMemo(() => {
@@ -381,8 +435,6 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
   }
 
   const handleCheckBoxChange = (checked: boolean, row: Campaign) => {
-    console.log('row :>> ', row)
-
     if (checked) {
       setSelectedRows((prevData) => {
         if (!prevData.includes(row.id)) {
@@ -405,7 +457,9 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
       const originalRows = rows.map((row) => row.original)
       const selectedIds: string[] = []
       originalRows.forEach((row) => {
-        selectedIds.push(row.id)
+        if (!row.finalUrlId) {
+          selectedIds.push(row.id)
+        }
       })
       setSelectedRows(selectedIds)
     } else {
@@ -421,7 +475,6 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
     })
 
     if (confirmed) {
-      console.log('selectedRows :>> ', selectedRows)
       await assignMutation.mutateAsync(
         {
           id: taskId,
@@ -495,6 +548,8 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
         data={data?.items || []}
         loading={isLoading}
         getRowId={(row) => row.id}
+        getRowClassName={(row) => (row.finalUrlId ? 'bg-gray-200' : '')}
+        enableRowSelection={(row) => !row.finalUrlId}
         pagingData={{
           total: metaTableData?.total as number,
           pageIndex: metaTableData?.page as number,
@@ -506,7 +561,8 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
         onSelectChange={onSelectChange}
       />
 
-      <ConfirmDialog {...batchConfirmProps} />
+      <ConfirmDialog {...batchConfirmProps} loading={assignMutation.isPending} />
+      <ConfirmDialog {...deleteConfirmProps} loading={removeMutation.isPending} />
     </Dialog>
   )
 }
