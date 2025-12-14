@@ -1,4 +1,4 @@
-import { ColumnDef, DataTable, Row } from '@/components/shared'
+import { ColumnDef, DataTable, DataTableResetHandle, Row } from '@/components/shared'
 import BadgeStatus from '@/components/shared/BadgeStatus'
 import { TableTooltip } from '@/components/shared/TableTooltip'
 import { Button, Checkbox, ConfirmDialog, Dialog, Dropdown } from '@/components/ui'
@@ -12,7 +12,7 @@ import { COLUMN_CONFIG } from '@/views/campaign/constants/campaignColumnConfig.c
 import { CampaignFilterRequest } from '@/views/campaign/store/useCampaignStore'
 import { Campaign } from '@/views/campaign/types/campaign.type'
 import { useAssignCampaignsToFinalUrlMutation, useGetCampaignStatsByFinalUrl } from '@/views/tasks/assign/hooks/useTask'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { HiOutlineDuplicate, HiOutlineViewList } from 'react-icons/hi'
 
 type Props = {
@@ -44,6 +44,8 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
 
   const metaTableData = useMemo(() => data?.meta, [data])
 
+  const tableRef = useRef<DataTableResetHandle>(null)
+
   const { showConfirm: showBatchConfirm, confirmProps: batchConfirmProps } = useConfirmDialog({
     title: 'Xác nhận',
     type: 'warning',
@@ -53,6 +55,7 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
 
   const handleResetSelection = () => {
     setSelectedRows([])
+    tableRef.current?.resetSelected()
   }
 
   const toggleColumnVisibility = useCallback((columnId: string) => {
@@ -480,11 +483,12 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
       )}
 
       <DataTable
+        ref={tableRef}
         selectable
         columns={visibleColumns}
         data={data?.items || []}
         loading={isLoading}
-        getRowId={(row) => (row as Campaign).id}
+        getRowId={(row) => row.id}
         pagingData={{
           total: metaTableData?.total as number,
           pageIndex: metaTableData?.page as number,

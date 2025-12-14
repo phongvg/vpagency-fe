@@ -324,6 +324,7 @@ export default function GmailAccountTable() {
         data={getGmailAccountsResponse?.items ?? []}
         skeletonAvatarColumns={[3]}
         skeletonAvatarProps={{ width: 32, height: 32 }}
+        getRowId={(row) => row.id}
         loading={isLoading}
         pagingData={{
           total: metaTableData?.total as number,
