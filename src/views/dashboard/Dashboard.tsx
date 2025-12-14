@@ -1,7 +1,7 @@
 import { Loading } from '@/components/shared'
 import { Card } from '@/components/ui'
 import { useAuthStore } from '@/store/auth/useAuthStore'
-import { isAdminOrAccounting, isMember } from '@/utils/checkRole'
+import { isAdminOrManagerOrAccounting, isMember } from '@/utils/checkRole'
 import DashboardHeader from '@/views/dashboard/components/DashboardHeader'
 import FinanceStats from '@/views/dashboard/components/FinanceStats'
 import MyTasks from '@/views/dashboard/components/MyTasks'
@@ -14,11 +14,13 @@ import FinanceReportTable from '@/views/finance/reports/components/FinanceReport
 export default function Dashboard() {
   const { user } = useAuthStore()
 
-  const { data: userStats, isLoading: isLoadingUserStats } = useUserStatisticQuery(isAdminOrAccounting(user?.roles))
+  const { data: userStats, isLoading: isLoadingUserStats } = useUserStatisticQuery(
+    isAdminOrManagerOrAccounting(user?.roles),
+  )
   const { data: taskStats, isLoading: isLoadingTaskStats } = useTaskStatisticQuery(isMember(user?.roles))
 
   const renderDashboardContent = () => {
-    if (isAdminOrAccounting(user?.roles)) {
+    if (isAdminOrManagerOrAccounting(user?.roles)) {
       return (
         <>
           <Statistic data={userStats} />
