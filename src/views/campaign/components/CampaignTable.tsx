@@ -1,7 +1,7 @@
 import { DataTable } from '@/components/shared'
 import BadgeStatus from '@/components/shared/BadgeStatus'
 import { TableTooltip } from '@/components/shared/TableTooltip'
-import { ConfirmDialog, Button, Checkbox, Dropdown } from '@/components/ui'
+import { Button, Checkbox, ConfirmDialog, Dropdown } from '@/components/ui'
 import { addDash } from '@/helpers/addDash'
 import { convertNumberToPercent } from '@/helpers/convertNumberToPercent'
 import { fixedNumber } from '@/helpers/fixedNumber'
@@ -125,7 +125,11 @@ export default function CampaignTable() {
         cell: (props) => (
           <div className="flex items-center gap-2">
             {addDash(props.row.original.uid)}
-            <button type="button" title="Sao chép" onClick={() => handleCopyToClipboard(props.row.original.uid || '')}>
+            <button
+              type="button"
+              title="Sao chép"
+              onClick={() => handleCopyToClipboard(addDash(props.row.original.uid) || '')}
+            >
               <HiOutlineDuplicate />
             </button>
           </div>

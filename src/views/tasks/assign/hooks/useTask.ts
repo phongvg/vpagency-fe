@@ -1,4 +1,5 @@
 import { ApiAxiosError } from '@/@types/apiError'
+import { removeDash } from '@/helpers/removeDash'
 import {
   GET_CAMPAIGN_STATS_BY_FINAL_URL,
   GET_TASK_DETAIL,
@@ -203,7 +204,10 @@ export const useGetCampaignStatsByFinalUrl = (
   return useQuery({
     queryKey: [GET_CAMPAIGN_STATS_BY_FINAL_URL, taskId, finalUrlId, params],
     queryFn: async () => {
-      const response = await apiGetCampaignStatsByFinalUrl(taskId!, finalUrlId!, params)
+      const response = await apiGetCampaignStatsByFinalUrl(taskId!, finalUrlId!, {
+        ...params,
+        uid: removeDash(params.uid ?? ''),
+      })
       return response.data.data
     },
     enabled: !!taskId && !!finalUrlId && enabled,

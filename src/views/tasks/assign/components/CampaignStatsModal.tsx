@@ -11,6 +11,7 @@ import { toastError, toastSuccess } from '@/utils/toast'
 import { COLUMN_CONFIG } from '@/views/campaign/constants/campaignColumnConfig.constant'
 import { CampaignFilterRequest } from '@/views/campaign/store/useCampaignStore'
 import { Campaign } from '@/views/campaign/types/campaign.type'
+import CampaignStatsFilter from '@/views/tasks/assign/components/CampaignStatsFilter'
 import { useAssignCampaignsToFinalUrlMutation, useGetCampaignStatsByFinalUrl } from '@/views/tasks/assign/hooks/useTask'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { HiOutlineDuplicate, HiOutlineViewList } from 'react-icons/hi'
@@ -120,7 +121,11 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
         cell: (props) => (
           <div className="flex items-center gap-2">
             {addDash(props.row.original.uid)}
-            <button type="button" title="Sao chép" onClick={() => handleCopyToClipboard(props.row.original.uid || '')}>
+            <button
+              type="button"
+              title="Sao chép"
+              onClick={() => handleCopyToClipboard(addDash(props.row.original.uid) || '')}
+            >
               <HiOutlineDuplicate />
             </button>
           </div>
@@ -443,6 +448,7 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
   return (
     <Dialog isOpen={isOpen} width={1200} onClose={onCloseModal} onRequestClose={onCloseModal}>
       <h5 className="mb-4">Danh sách chiến dịch</h5>
+      <CampaignStatsFilter filter={filter} onFilterChange={setFilter} />
       <div className="flex justify-between items-center mb-4">
         <Dropdown
           renderTitle={

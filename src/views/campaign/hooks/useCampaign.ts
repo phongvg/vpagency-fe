@@ -1,4 +1,5 @@
 import { ApiAxiosError } from '@/@types/apiError'
+import { removeDash } from '@/helpers/removeDash'
 import { GET_CAMPAIGN_DETAIL, GET_CAMPAIGN_LIST } from '@/utils/queryKey'
 import { toastError, toastSuccess } from '@/utils/toast'
 import {
@@ -20,7 +21,10 @@ export const useGetCampaignsQuery = (enabled = true) => {
   return useQuery({
     queryKey: [GET_CAMPAIGN_LIST, filter],
     queryFn: async () => {
-      const response = await apiGetCampaignList(filter)
+      const response = await apiGetCampaignList({
+        ...filter,
+        uid: removeDash(filter.uid ?? ''),
+      })
       return response.data.data
     },
     enabled,

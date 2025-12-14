@@ -1,14 +1,13 @@
 import { Button, Progress } from '@/components/ui'
 import { toastError, toastSuccess } from '@/utils/toast'
-import CampaignSearch from '@/views/campaign/components/CampaignSearch'
 import CampaignFilter, { CampaignFilterPanel } from '@/views/campaign/components/CampaignFilter'
-import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
-import { useExcelWorker } from '@/views/campaign/hooks/useExcelWorker'
-import { useRef, ChangeEvent, useState, useMemo } from 'react'
-import { HiOutlineDownload, HiOutlinePlus, HiOutlineRefresh } from 'react-icons/hi'
 import CurrencyRateDialog from '@/views/campaign/components/CurrencyRateDialog'
+import { useExcelWorker } from '@/views/campaign/hooks/useExcelWorker'
+import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
 import { CurrencyRate, UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
 import { applyExchangeRate } from '@/views/campaign/utils/applyExchangeRate'
+import { ChangeEvent, useMemo, useRef, useState } from 'react'
+import { HiOutlineDownload, HiOutlinePlus, HiOutlineRefresh } from 'react-icons/hi'
 
 interface ImportData {
   data: UpdateCampaignRequest[]
@@ -99,9 +98,8 @@ export default function CampaignTableTools() {
   return (
     <>
       <div className="flex flex-col gap-2 mb-4">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mb-4">
           <div className="flex items-center space-x-2">
-            <CampaignSearch />
             {filterButton}
             <Button size="sm" icon={<HiOutlineRefresh />} onClick={clearFilter} />
           </div>

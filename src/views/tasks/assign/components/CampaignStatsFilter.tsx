@@ -1,14 +1,15 @@
-import { Button, DatePicker, Input } from '@/components/ui'
+import { DatePicker, Input } from '@/components/ui'
 import { formatDate } from '@/helpers/formatDate'
-import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
-import { useState } from 'react'
-import { HiOutlineFilter, HiOutlineX } from 'react-icons/hi'
+import { CampaignFilterRequest } from '@/views/campaign/store/useCampaignStore'
 
-export function CampaignFilterPanel() {
-  const { filter, setFilter } = useCampaignStore()
+type Props = {
+  filter: CampaignFilterRequest
+  onFilterChange: (filter: CampaignFilterRequest) => void
+}
 
+export default function CampaignStatsFilter({ filter, onFilterChange }: Props) {
   const handleImportAtFromChange = (date: Date | null) => {
-    setFilter({
+    onFilterChange({
       ...filter,
       importAtFrom: date ? formatDate(date, 'YYYY-MM-DD') : undefined,
       page: 1,
@@ -16,7 +17,7 @@ export function CampaignFilterPanel() {
   }
 
   const handleImportAtToChange = (date: Date | null) => {
-    setFilter({
+    onFilterChange({
       ...filter,
       importAtTo: date ? formatDate(date, 'YYYY-MM-DD') : undefined,
       page: 1,
@@ -24,7 +25,7 @@ export function CampaignFilterPanel() {
   }
 
   const handleDateFromChange = (date: Date | null) => {
-    setFilter({
+    onFilterChange({
       ...filter,
       dateFrom: date ? formatDate(date, 'YYYY-MM-DD') : undefined,
       page: 1,
@@ -32,7 +33,7 @@ export function CampaignFilterPanel() {
   }
 
   const handleDateToChange = (date: Date | null) => {
-    setFilter({
+    onFilterChange({
       ...filter,
       dateTo: date ? formatDate(date, 'YYYY-MM-DD') : undefined,
       page: 1,
@@ -40,7 +41,7 @@ export function CampaignFilterPanel() {
   }
 
   const handleUidChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilter({
+    onFilterChange({
       ...filter,
       uid: e.target.value || undefined,
       page: 1,
@@ -48,7 +49,7 @@ export function CampaignFilterPanel() {
   }
 
   const handleExternalIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilter({
+    onFilterChange({
       ...filter,
       externalId: e.target.value || undefined,
       page: 1,
@@ -56,7 +57,7 @@ export function CampaignFilterPanel() {
   }
 
   return (
-    <div className="space-y-3 rounded-lg">
+    <div className="space-y-3 mb-4 rounded-lg">
       <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6">
         <div>
           <label className="block mb-1 font-semibold text-sm">Ngày nhập từ</label>
@@ -102,13 +103,13 @@ export function CampaignFilterPanel() {
 
         <div>
           <label className="block mb-1 font-semibold text-sm">UID</label>
-          <Input size="sm" placeholder="Nhập UID..." value={filter.uid || ''} onChange={handleUidChange} />
+          <Input size="sm" placeholder="Nhập UID" value={filter.uid || ''} onChange={handleUidChange} />
         </div>
         <div>
           <label className="block mb-1 font-semibold text-sm">ID chiến dịch</label>
           <Input
             size="sm"
-            placeholder="Nhập ID chiến dịch..."
+            placeholder="Nhập ID chiến dịch"
             value={filter.externalId || ''}
             onChange={handleExternalIdChange}
           />
@@ -116,50 +117,4 @@ export function CampaignFilterPanel() {
       </div>
     </div>
   )
-}
-
-export default function CampaignFilter() {
-  const { filter, setFilter } = useCampaignStore()
-  const [showFilters, setShowFilters] = useState(true)
-
-  const handleClearFilters = () => {
-    setFilter({
-      ...filter,
-      importAtFrom: undefined,
-      importAtTo: undefined,
-      dateFrom: undefined,
-      dateTo: undefined,
-      uid: undefined,
-      externalId: undefined,
-      page: 1,
-    })
-  }
-
-  const hasActiveFilters =
-    filter.importAtFrom || filter.importAtTo || filter.dateFrom || filter.dateTo || filter.uid || filter.externalId
-
-  return {
-    showFilters,
-    setShowFilters,
-    hasActiveFilters,
-    filterButton: (
-      <>
-        <Button
-          size="sm"
-          variant={showFilters ? 'solid' : 'twoTone'}
-          icon={<HiOutlineFilter />}
-          onClick={() => setShowFilters(!showFilters)}
-        >
-          Bộ lọc{' '}
-          {hasActiveFilters &&
-            `(${Object.values(filter).filter((v) => v && typeof v === 'string' && v !== filter.search).length})`}
-        </Button>
-        {hasActiveFilters && (
-          <Button size="sm" icon={<HiOutlineX />} onClick={handleClearFilters}>
-            Xóa bộ lọc
-          </Button>
-        )}
-      </>
-    ),
-  }
 }
