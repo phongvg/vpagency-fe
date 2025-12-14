@@ -4,6 +4,7 @@ import CampaignPreviewDialog from '@/views/campaign/components/CampaignPreviewDi
 import CampaignSummaryDialog from '@/views/campaign/components/CampaignSummaryDialog'
 import CampaignTable from '@/views/campaign/components/CampaignTable'
 import CampaignTableTools from '@/views/campaign/components/CampaignTableTools'
+import EmailAssignmentPreviewDialog from '@/views/campaign/components/EmailAssignmentPreviewDialog'
 
 export default function Campaign() {
   return (
@@ -11,6 +12,7 @@ export default function Campaign() {
       <CampaignTableTools />
       <CampaignTable />
       <CampaignPreviewDialog />
+      <EmailAssignmentPreviewDialog />
       <CampaignEditDialog />
       <CampaignSummaryDialog />
     </AdaptableCard>

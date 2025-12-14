@@ -6,6 +6,7 @@ export const COLUMN_CONFIG = [
   { id: 'externalId', label: 'ID chiến dịch', visible: true, required: true },
   { id: 'name', label: 'Tên chiến dịch', visible: true, required: true },
   { id: 'finalUrl', label: 'URL', visible: true, required: false },
+  { id: 'gmail', label: 'Gmail', visible: true, required: false },
   { id: 'statusCampaign', label: 'Trạng thái chiến dịch', visible: true, required: false },
   { id: 'mcc', label: 'MCC', visible: false, required: false },
   { id: 'avgCpc', label: 'CPC trung bình', visible: false, required: false },

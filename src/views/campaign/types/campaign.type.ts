@@ -10,7 +10,7 @@ export type Campaign = {
   externalId: string | null
   finalUrl: FinalUrl | null
   finalUrlId: string | null
-  gmailId: string | null
+  gmail: string | null
   status: string
   keywords: KeywordMatch[]
   negativeKeywords: KeywordMatch[]
@@ -113,4 +113,13 @@ export type AssignToFinalUrlRequest = {
 export type RemoveFromFinalUrlRequest = {
   finalUrlId: string
   campaignDailyStatId: string
+}
+
+export type GmailUIDMapping = {
+  gmail: string
+  uid: string
+}
+
+export type AssignToEmailRequest = {
+  mappings: GmailUIDMapping[]
 }

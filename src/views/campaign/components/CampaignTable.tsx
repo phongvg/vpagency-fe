@@ -156,7 +156,6 @@ export default function CampaignTable() {
         id: 'name',
         header: 'Tên chiến dịch',
         accessorKey: 'name',
-        cell: (props) => <span>{props.row.original.name}</span>,
       },
       {
         id: 'finalUrl',
@@ -173,6 +172,11 @@ export default function CampaignTable() {
             {props.row.original.finalUrlImport}
           </a>
         ),
+      },
+      {
+        id: 'gmail',
+        header: 'Gmail',
+        accessorKey: 'gmail',
       },
       {
         id: 'statusCampaign',

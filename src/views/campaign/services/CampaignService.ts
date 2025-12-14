@@ -1,7 +1,12 @@
-import { Campaign, CreateCampaignResponse, UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
 import { BaseListResponse, BaseResponse } from '@/@types/common'
-import { CampaignFilterRequest } from '@/views/campaign/store/useCampaignStore'
 import ApiService from '@/services/ApiService'
+import { CampaignFilterRequest } from '@/views/campaign/store/useCampaignStore'
+import {
+  AssignToEmailRequest,
+  Campaign,
+  CreateCampaignResponse,
+  UpdateCampaignRequest,
+} from '@/views/campaign/types/campaign.type'
 
 export async function apiGetCampaignList(params: CampaignFilterRequest) {
   return ApiService.fetchData<BaseListResponse<Campaign>>({
@@ -59,5 +64,13 @@ export async function apiGetCampaignsByDateAndUid(date: string, uid: string) {
       date,
       uid,
     },
+  })
+}
+
+export async function apiImportEmailToCampaign(payload: AssignToEmailRequest) {
+  return ApiService.fetchData<BaseResponse<null>>({
+    url: '/campaigns/import-gmail',
+    method: 'post',
+    data: payload,
   })
 }

@@ -9,10 +9,11 @@ import {
   apiGetCampaignList,
   apiGetCampaignsByDate,
   apiGetCampaignsByDateAndUid,
+  apiImportEmailToCampaign,
   apiUpdateCampaign,
 } from '@/views/campaign/services/CampaignService'
 import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
-import { UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
+import { AssignToEmailRequest, UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 export const useGetCampaignsQuery = (enabled = true) => {
@@ -106,5 +107,20 @@ export const useGetCampaignByDateAndUid = (date: string, uid: string, enabled = 
       return response.data.data
     },
     enabled: enabled && !!date && !!uid,
+  })
+}
+
+export const useImportEmailToCampaign = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (payload: AssignToEmailRequest) => apiImportEmailToCampaign(payload),
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: [GET_CAMPAIGN_LIST] })
+      toastSuccess(response.data.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
+    },
   })
 }

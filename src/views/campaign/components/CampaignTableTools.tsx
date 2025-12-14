@@ -2,6 +2,7 @@ import { Button, Progress } from '@/components/ui'
 import { toastError, toastSuccess } from '@/utils/toast'
 import CampaignFilter, { CampaignFilterPanel } from '@/views/campaign/components/CampaignFilter'
 import CurrencyRateDialog from '@/views/campaign/components/CurrencyRateDialog'
+import { useEmailExcelWorker } from '@/views/campaign/hooks/useEmailExcelWorker'
 import { useExcelWorker } from '@/views/campaign/hooks/useExcelWorker'
 import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
 import { CurrencyRate, UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
@@ -21,11 +22,18 @@ export default function CampaignTableTools() {
     currencyRates: [],
   })
 
-  const { openDialog, openPreviewDialog, setCampaigns, clearFilter } = useCampaignStore()
+  const { openDialog, openPreviewDialog, openEmailPreviewDialog, setCampaigns, setEmailAssignments, clearFilter } =
+    useCampaignStore()
   const { showFilters, filterButton } = CampaignFilter()
   const { processFile, isProcessing, progress } = useExcelWorker()
+  const {
+    processFile: processEmailFile,
+    isProcessing: isEmailProcessing,
+    progress: emailProgress,
+  } = useEmailExcelWorker()
 
-  const inputRef = useRef<HTMLInputElement | null>(null)
+  const inputCampaignRef = useRef<HTMLInputElement | null>(null)
+  const inputEmailRef = useRef<HTMLInputElement | null>(null)
 
   const isInvalidForm = useMemo(
     () =>
@@ -34,10 +42,14 @@ export default function CampaignTableTools() {
   )
 
   const handleImportClick = () => {
-    inputRef.current?.click()
+    inputCampaignRef.current?.click()
   }
 
-  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+  const handleEmailClick = () => {
+    inputEmailRef.current?.click()
+  }
+
+  const handleCampaignFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
@@ -53,6 +65,23 @@ export default function CampaignTableTools() {
         openPreviewDialog()
         toastSuccess(`Đã nhập ${data.length} chiến dịch thành công`)
       }
+    } catch (err) {
+      toastError((err as Error).message ?? 'Lỗi nhập dữ liệu')
+    } finally {
+      e.target.value = ''
+    }
+  }
+
+  const handleEmailFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    try {
+      const { data } = await processEmailFile(file)
+
+      setEmailAssignments(data)
+      toastSuccess(`Đã nhập ${data.length} email thành công`)
+      openEmailPreviewDialog()
     } catch (err) {
       toastError((err as Error).message ?? 'Lỗi nhập dữ liệu')
     } finally {
@@ -107,8 +136,8 @@ export default function CampaignTableTools() {
             <Button loading={isProcessing} size="sm" icon={<HiOutlineDownload />} onClick={handleImportClick}>
               Nhập dữ liệu
             </Button>
-            <Button size="sm" icon={<HiOutlineDownload />}>
-              Gán Email
+            <Button size="sm" icon={<HiOutlineDownload />} onClick={handleEmailClick}>
+              Nhập Email
             </Button>
             <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={() => openDialog()}>
               Thêm mới
@@ -118,13 +147,29 @@ export default function CampaignTableTools() {
 
         {showFilters && <CampaignFilterPanel />}
 
-        {isProcessing && (
+        {(isProcessing || isEmailProcessing) && (
           <div className="flex items-center gap-3">
-            <Progress showInfo percent={progress} width="w-full" />
+            <Progress showInfo percent={isProcessing ? progress : emailProgress} width="w-full" />
           </div>
         )}
 
-        <input ref={inputRef} hidden type="file" multiple={false} accept=".xlsx, .xls" onChange={handleFileChange} />
+        <input
+          ref={inputCampaignRef}
+          hidden
+          type="file"
+          multiple={false}
+          accept=".xlsx, .xls"
+          onChange={handleCampaignFileChange}
+        />
+
+        <input
+          ref={inputEmailRef}
+          hidden
+          type="file"
+          multiple={false}
+          accept=".xlsx, .xls"
+          onChange={handleEmailFileChange}
+        />
       </div>
 
       <CurrencyRateDialog
