@@ -12,9 +12,11 @@ type Props = {
 export default function CampaignStatsFilter({ filter, onFilterChange }: Props) {
   const [uid, setUid] = useState(filter.uid || '')
   const [externalId, setExternalId] = useState(filter.externalId || '')
+  const [gmail, setGmail] = useState(filter.gmail || '')
 
   const debouncedUid = useDebounce(uid, 500)
   const debouncedExternalId = useDebounce(externalId, 500)
+  const debouncedGmail = useDebounce(gmail, 500)
 
   useEffect(() => {
     onFilterChange({
@@ -33,6 +35,15 @@ export default function CampaignStatsFilter({ filter, onFilterChange }: Props) {
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedExternalId])
+
+  useEffect(() => {
+    onFilterChange({
+      ...filter,
+      gmail: debouncedGmail || undefined,
+      page: 1,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedGmail])
 
   const handleImportAtFromChange = (date: Date | null) => {
     onFilterChange({
@@ -74,9 +85,13 @@ export default function CampaignStatsFilter({ filter, onFilterChange }: Props) {
     setExternalId(e.target.value)
   }
 
+  const handleGmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGmail(e.target.value)
+  }
+
   return (
     <div className="space-y-3 mb-4 rounded-lg">
-      <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6">
+      <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         <div>
           <label className="block mb-1 font-semibold text-sm">Ngày nhập từ</label>
           <DatePicker
@@ -126,6 +141,10 @@ export default function CampaignStatsFilter({ filter, onFilterChange }: Props) {
         <div>
           <label className="block mb-1 font-semibold text-sm">ID chiến dịch</label>
           <Input size="sm" placeholder="Nhập ID chiến dịch" value={externalId} onChange={handleExternalIdChange} />
+        </div>
+        <div>
+          <label className="block mb-1 font-semibold text-sm">Gmail</label>
+          <Input size="sm" placeholder="Nhập Gmail" value={gmail} onChange={handleGmailChange} />
         </div>
       </div>
     </div>

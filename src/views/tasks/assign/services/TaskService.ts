@@ -4,6 +4,7 @@ import { CampaignFilterRequest } from '@/views/campaign/store/useCampaignStore'
 import { AssignToFinalUrlRequest, Campaign, RemoveFromFinalUrlRequest } from '@/views/campaign/types/campaign.type'
 import {
   Task,
+  TaskProgressDetailResponse,
   TaskProgressRequest,
   TaskProgressResponse,
   TasksFilterRequest,
@@ -109,5 +110,12 @@ export async function apiGetCampaignStatsByFinalUrl(taskId: string, finalUrlId: 
     url: `/tasks/${taskId}/final-urls/${finalUrlId}/campaign-stats`,
     method: 'get',
     params,
+  })
+}
+
+export async function apiGetProgressDetail(taskId: string) {
+  return ApiService.fetchData<BaseResponse<TaskProgressDetailResponse>>({
+    url: `/tasks/${taskId}/progress/detail`,
+    method: 'get',
   })
 }

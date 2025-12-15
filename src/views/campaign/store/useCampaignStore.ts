@@ -10,6 +10,7 @@ export type CampaignFilterRequest = CommonFilterRequest & {
   dateTo?: string
   uid?: string
   externalId?: string
+  gmail?: string
 }
 
 type CampaignState = {

@@ -1,11 +1,46 @@
 import { Button, DatePicker, Input } from '@/components/ui'
 import { formatDate } from '@/helpers/formatDate'
+import { useDebounce } from '@/hooks/useDebounce'
 import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { HiOutlineFilter, HiOutlineX } from 'react-icons/hi'
 
 export function CampaignFilterPanel() {
   const { filter, setFilter } = useCampaignStore()
+  const [uid, setUid] = useState(filter.uid || '')
+  const [externalId, setExternalId] = useState(filter.externalId || '')
+  const [gmail, setGmail] = useState(filter.gmail || '')
+
+  const debouncedUid = useDebounce(uid, 500)
+  const debouncedExternalId = useDebounce(externalId, 500)
+  const debouncedGmail = useDebounce(gmail, 500)
+
+  useEffect(() => {
+    setFilter({
+      ...filter,
+      uid: debouncedUid || undefined,
+      page: 1,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedUid])
+
+  useEffect(() => {
+    setFilter({
+      ...filter,
+      externalId: debouncedExternalId || undefined,
+      page: 1,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedExternalId])
+
+  useEffect(() => {
+    setFilter({
+      ...filter,
+      gmail: debouncedGmail || undefined,
+      page: 1,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedGmail])
 
   const handleImportAtFromChange = (date: Date | null) => {
     setFilter({
@@ -40,24 +75,20 @@ export function CampaignFilterPanel() {
   }
 
   const handleUidChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilter({
-      ...filter,
-      uid: e.target.value || undefined,
-      page: 1,
-    })
+    setUid(e.target.value)
   }
 
   const handleExternalIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilter({
-      ...filter,
-      externalId: e.target.value || undefined,
-      page: 1,
-    })
+    setExternalId(e.target.value)
+  }
+
+  const handleGmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGmail(e.target.value)
   }
 
   return (
     <div className="space-y-3 rounded-lg">
-      <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6">
+      <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         <div>
           <label className="block mb-1 font-semibold text-sm">Ngày nhập từ</label>
           <DatePicker
@@ -102,16 +133,17 @@ export function CampaignFilterPanel() {
 
         <div>
           <label className="block mb-1 font-semibold text-sm">UID</label>
-          <Input size="sm" placeholder="Nhập UID..." value={filter.uid || ''} onChange={handleUidChange} />
+          <Input size="sm" placeholder="Nhập UID..." value={uid} onChange={handleUidChange} />
         </div>
+
         <div>
           <label className="block mb-1 font-semibold text-sm">ID chiến dịch</label>
-          <Input
-            size="sm"
-            placeholder="Nhập ID chiến dịch..."
-            value={filter.externalId || ''}
-            onChange={handleExternalIdChange}
-          />
+          <Input size="sm" placeholder="Nhập ID chiến dịch..." value={externalId} onChange={handleExternalIdChange} />
+        </div>
+
+        <div>
+          <label className="block mb-1 font-semibold text-sm">Gmail</label>
+          <Input size="sm" placeholder="Nhập Gmail..." value={gmail} onChange={handleGmailChange} />
         </div>
       </div>
     </div>

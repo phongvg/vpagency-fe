@@ -107,3 +107,56 @@ export type FinalURLGroup = {
   finalURL: string
   totalCampaignDailyStats: number
 }
+
+export type TaskProgressDetailResponse = {
+  taskId: string
+  taskName: string
+  finalUrls: FinalURL[]
+}
+
+export type FinalURL = {
+  id: string
+  name: string
+  finalURL: string
+  targetRef: null
+  targetCostPerRef: null
+  targetFtd: null
+  targetCostPerFtd: null
+  targetDailyKeyVolume: null
+  targetCpc: null
+  budget: null
+  userStats: UserStat[]
+  campaignStats: CampaignStat[]
+}
+
+export type CampaignStat = {
+  id: string
+  campaignId: string
+  campaignName: string
+  externalId: string
+  uid: string
+  date: Date
+  gmail: null
+  ownerId: string
+  ownerUsername: string
+  clicks: number
+  cost: number
+  impression: number
+  ctr: number
+  cpm: number
+  avgCpc: number
+  targetCpc: number
+  campaignBudget: number
+}
+
+export type UserStat = {
+  userId: string
+  username: string
+  firstName: string
+  lastName: string
+  totalClicks: number
+  totalCost: number
+  totalImpression: number
+  avgCpc: number
+  campaignCount: number
+}

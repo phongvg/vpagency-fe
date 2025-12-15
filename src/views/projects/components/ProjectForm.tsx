@@ -1,22 +1,22 @@
+import { SelectOption } from '@/@types/common'
+import SelectCustom, { SelectParams } from '@/components/shared/SelectCustom'
 import { Button, DatePicker, FormContainer, FormItem, Input, Tabs, Textarea } from '@/components/ui'
-import { Field, FieldProps, Form, Formik } from 'formik'
-import * as Yup from 'yup'
-import { useProjectStore } from '@/views/projects/store/useProjectStore'
+import { apiGetProjectTypeList } from '@/services/ProjectTypeService'
+import { useCreateProjectStatusMutation } from '@/views/masterData/projectStatus/hooks/useProjectStatus'
+import { apiGetProjectStatusList } from '@/views/masterData/projectStatus/services/ProjectStatusService'
+import { useCreateProjectTypeMutation } from '@/views/masterData/projectType/hooks/useProjectType'
+import FinalUrlEditDialog from '@/views/projects/components/FinalUrlEditDialog'
 import {
   useCreateProjectMutation,
   useGetProjectDetailQuery,
   useUpdateProjectMutation,
 } from '@/views/projects/hooks/useProject'
-import SelectCustom, { SelectParams } from '@/components/shared/SelectCustom'
-import { apiGetProjectTypeList } from '@/services/ProjectTypeService'
-import { apiGetProjectStatusList } from '@/views/masterData/projectStatus/services/ProjectStatusService'
-import { useCreateProjectTypeMutation } from '@/views/masterData/projectType/hooks/useProjectType'
-import { useCreateProjectStatusMutation } from '@/views/masterData/projectStatus/hooks/useProjectStatus'
-import { useState } from 'react'
+import { useProjectStore } from '@/views/projects/store/useProjectStore'
 import { UpdateProjectRequest } from '@/views/projects/types/project.type'
+import { Field, FieldProps, Form, Formik } from 'formik'
+import { useState } from 'react'
+import * as Yup from 'yup'
 import ProjectFinalUrlTable from './ProjectFinalUrlTable'
-import FinalUrlEditDialog from '@/views/projects/components/FinalUrlEditDialog'
-import { SelectOption } from '@/@types/common'
 
 const { TabNav, TabList, TabContent } = Tabs
 
@@ -118,7 +118,9 @@ export default function ProjectForm() {
             id: fu.id,
             name: fu.name || '',
             finalURL: fu.finalURL || '',
-            countries: fu.countries || [],
+            countriesTier1: fu.countriesTier1 || [],
+            countriesTier2: fu.countriesTier2 || [],
+            countriesTier3: fu.countriesTier3 || [],
             excludeCountries: fu.excludeCountries || [],
           }))
         : [],

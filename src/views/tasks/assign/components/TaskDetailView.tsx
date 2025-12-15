@@ -1,24 +1,24 @@
-import { Task } from '@/views/tasks/assign/types/task.type'
+import { DataTable } from '@/components/shared'
+import BadgeStatus from '@/components/shared/BadgeStatus'
+import { TableTooltip } from '@/components/shared/TableTooltip'
 import { Avatar, Badge, Button, Progress } from '@/components/ui'
-import { TaskFrequency, TaskPriorityLabels, TaskStatusLabels, TaskType, TaskTypeLabels } from '@/enums/task.enum'
-import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
-import { HiOutlineCalendar, HiOutlineClock, HiOutlineDuplicate, HiOutlineStar, HiUsers } from 'react-icons/hi'
-import { useCallback, useMemo, useState } from 'react'
-import UpdateProgressModal from './UpdateProgressModal'
 import { getPriorityColor, getStatusColor } from '@/constants/task.constant'
+import { TaskFrequency, TaskPriorityLabels, TaskStatusLabels, TaskType, TaskTypeLabels } from '@/enums/task.enum'
 import { formatDate } from '@/helpers/formatDate'
+import { formatUSD } from '@/helpers/formatUSD'
 import { useAuthStore } from '@/store/auth/useAuthStore'
 import { isAdminOrManager } from '@/utils/checkRole'
-import BadgeStatus from '@/components/shared/BadgeStatus'
-import { formatUSD } from '@/helpers/formatUSD'
-import { ColumnDef } from '@tanstack/react-table'
-import { FinalUrl } from '@/views/projects/types/finalUrl.type'
-import { DataTable } from '@/components/shared'
-import TaskProgressDetailModal from '@/views/tasks/assign/components/TaskProgressDetailModal'
-import { TableTooltip } from '@/components/shared/TableTooltip'
-import { toastError, toastSuccess } from '@/utils/toast'
-import { useQueryClient } from '@tanstack/react-query'
 import { GET_TASK_DETAIL } from '@/utils/queryKey'
+import { toastError, toastSuccess } from '@/utils/toast'
+import { FinalUrl } from '@/views/projects/types/finalUrl.type'
+import TaskProgressDetailModal from '@/views/tasks/assign/components/TaskProgressDetailModal'
+import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
+import { Task } from '@/views/tasks/assign/types/task.type'
+import { useQueryClient } from '@tanstack/react-query'
+import { ColumnDef } from '@tanstack/react-table'
+import { useCallback, useMemo, useState } from 'react'
+import { HiOutlineCalendar, HiOutlineClock, HiOutlineDuplicate, HiOutlineStar, HiUsers } from 'react-icons/hi'
+import UpdateProgressModal from './UpdateProgressModal'
 
 interface TaskDetailViewProps {
   task: Task
@@ -81,11 +81,47 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
         },
       },
       {
-        id: 'countries',
-        header: 'Quốc gia',
-        accessorKey: 'countries',
+        id: 'countriesTier1',
+        header: 'Quốc gia hạng 1',
+        accessorKey: 'countriesTier1',
         cell: (props) => {
-          const row = props.row.original.countries || []
+          const row = props.row.original.countriesTier1 || []
+          if (row.length === 0) return null
+
+          return (
+            <div className="flex items-center gap-2">
+              <TableTooltip data={row.map((l) => ({ name: l }))} columns={[{ key: 'name', label: 'Quốc gia' }]} />
+              <button type="button" title="Sao chép" onClick={() => handleCopyToClipboard(row.join('\n'))}>
+                <HiOutlineDuplicate />
+              </button>
+            </div>
+          )
+        },
+      },
+      {
+        id: 'countriesTier2',
+        header: 'Quốc gia hạng 2',
+        accessorKey: 'countriesTier2',
+        cell: (props) => {
+          const row = props.row.original.countriesTier2 || []
+          if (row.length === 0) return null
+
+          return (
+            <div className="flex items-center gap-2">
+              <TableTooltip data={row.map((l) => ({ name: l }))} columns={[{ key: 'name', label: 'Quốc gia' }]} />
+              <button type="button" title="Sao chép" onClick={() => handleCopyToClipboard(row.join('\n'))}>
+                <HiOutlineDuplicate />
+              </button>
+            </div>
+          )
+        },
+      },
+      {
+        id: 'countriesTier3',
+        header: 'Quốc gia hạng 3',
+        accessorKey: 'countriesTier3',
+        cell: (props) => {
+          const row = props.row.original.countriesTier3 || []
           if (row.length === 0) return null
 
           return (
@@ -353,7 +389,7 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
 
       <TaskProgressDetailModal
         isOpen={isProgressDetailModalOpen}
-        finalUrls={task.finalUrls}
+        taskId={task.id}
         onClose={() => setIsProgressDetailModalOpen(false)}
       />
     </div>

@@ -1,19 +1,24 @@
 import { DataTable } from '@/components/shared'
 import { Button, Card, Dialog } from '@/components/ui'
+import { addDash } from '@/helpers/addDash'
+import { convertNumberToPercent } from '@/helpers/convertNumberToPercent'
 import { formatDate } from '@/helpers/formatDate'
 import { formatUSD } from '@/helpers/formatUSD'
-import { CampaignStat, FinalUrl } from '@/views/projects/types/finalUrl.type'
+import { useGetProgressDetail } from '@/views/tasks/assign/hooks/useTask'
+import { CampaignStat, UserStat } from '@/views/tasks/assign/types/task.type'
 import { ColumnDef } from '@tanstack/react-table'
 import { useMemo } from 'react'
 
 type Props = {
   isOpen: boolean
-  finalUrls: FinalUrl[]
+  taskId: string | null
   onClose: () => void
 }
 
-export default function TaskProgressDetailModal({ isOpen, finalUrls, onClose }: Props) {
-  const columns: ColumnDef<CampaignStat>[] = useMemo(
+export default function TaskProgressDetailModal({ isOpen, taskId, onClose }: Props) {
+  const { data } = useGetProgressDetail(taskId, isOpen)
+
+  const userColumns: ColumnDef<UserStat>[] = useMemo(
     () => [
       {
         id: 'stt',
@@ -25,55 +30,150 @@ export default function TaskProgressDetailModal({ isOpen, finalUrls, onClose }: 
         },
       },
       {
+        header: 'Tên đăng nhập',
+        accessorKey: 'username',
+      },
+      {
+        header: 'Họ và tên',
+        accessorKey: 'firstName',
+        cell: (props) => {
+          const row = props.row.original
+          return (
+            <span>
+              {row.firstName} {row.lastName}
+            </span>
+          )
+        },
+      },
+      {
+        header: 'Tổng lượt click',
+        accessorKey: 'totalClicks',
+      },
+      {
+        header: 'Tổng chi tiêu',
+        accessorKey: 'totalCost',
+        cell: (props) => {
+          const row = props.row.original
+          return <span>{formatUSD(row.totalCost)}</span>
+        },
+      },
+      {
+        header: 'Tổng lượt hiển thị',
+        accessorKey: 'totalImpression',
+      },
+      {
+        header: 'CPC trung bình',
+        accessorKey: 'avgCpc',
+        cell: (props) => {
+          const row = props.row.original
+          return <span>{formatUSD(row.avgCpc)}</span>
+        },
+      },
+      {
+        header: 'Tổng chiến dịch',
+        accessorKey: 'campaignCount',
+      },
+    ],
+    [],
+  )
+
+  const campaignColumns: ColumnDef<CampaignStat>[] = useMemo(
+    () => [
+      {
+        id: 'stt',
+        header: 'STT',
+        accessorKey: 'index',
+        cell: (props) => {
+          const row = props.row.index
+          return <span>{row + 1}</span>
+        },
+      },
+      {
+        header: 'UID',
+        accessorKey: 'uid',
+        cell: (props) => {
+          const row = props.row.original
+          return <span>{addDash(row.uid)}</span>
+        },
+      },
+      {
         header: 'Chiến dịch',
-        accessorKey: 'name',
+        accessorKey: 'campaignName',
       },
       {
         header: 'ID chiến dịch',
         accessorKey: 'externalId',
       },
       {
-        header: 'UID',
-        accessorKey: 'uid',
+        header: 'Người phụ trách (Tên đăng nhập)',
+        accessorKey: 'ownerUsername',
       },
       {
-        header: 'Gmail ID',
-        accessorKey: 'gmailId',
+        header: 'Gmail',
+        accessorKey: 'gmail',
       },
       {
         header: 'Ngày dữ liệu',
-        accessorKey: 'latestStat.date',
+        accessorKey: 'date',
         cell: (props) => {
           const row = props.row.original
-          return <span>{formatDate(row.latestStat.date, 'DD/MM/YYYY')}</span>
+          return <span>{formatDate(row.date, 'DD/MM/YYYY')}</span>
         },
       },
       {
         header: 'Click',
-        accessorKey: 'latestStat.clicks',
+        accessorKey: 'clicks',
       },
       {
         header: 'Ngân sách đã tiêu',
-        accessorKey: 'latestStat.cost',
+        accessorKey: 'cost',
         cell: (props) => {
           const row = props.row.original
-          return <span>{formatUSD(row.latestStat.cost)}</span>
+          return <span>{formatUSD(row.cost)}</span>
         },
       },
       {
         header: 'Lượt hiển thị',
-        accessorKey: 'latestStat.impression',
+        accessorKey: 'impression',
       },
       {
         header: 'CTR',
-        accessorKey: 'latestStat.ctr',
+        accessorKey: 'ctr',
+        cell: (props) => {
+          const row = props.row.original
+          return <span>{convertNumberToPercent(row.ctr)}</span>
+        },
+      },
+      {
+        header: 'CPM',
+        accessorKey: 'cpm',
+        cell: (props) => {
+          const row = props.row.original
+          return <span>{row.cpm}</span>
+        },
       },
       {
         header: 'CPC trung bình',
-        accessorKey: 'latestStat.avgCpc',
+        accessorKey: 'avgCpc',
         cell: (props) => {
           const row = props.row.original
-          return <span>{formatUSD(row.latestStat.avgCpc)}</span>
+          return <span>{formatUSD(row.avgCpc)}</span>
+        },
+      },
+      {
+        header: 'Mục tiêu CPC',
+        accessorKey: 'targetCpc',
+        cell: (props) => {
+          const row = props.row.original
+          return <span>{formatUSD(row.targetCpc)}</span>
+        },
+      },
+      {
+        header: 'Ngân sách chiến dịch',
+        accessorKey: 'campaignBudget',
+        cell: (props) => {
+          const row = props.row.original
+          return <span>{formatUSD(row.campaignBudget)}</span>
         },
       },
     ],
@@ -84,9 +184,9 @@ export default function TaskProgressDetailModal({ isOpen, finalUrls, onClose }: 
     <Dialog isOpen={isOpen} width={1400} className="max-w-[1400px]" onClose={onClose} onRequestClose={onClose}>
       <h3 className="mb-6 font-semibold text-gray-900 text-lg">Chi tiết tiến độ công việc</h3>
       <div className="space-y-6">
-        {finalUrls.map((finalUrl) => (
+        {data?.finalUrls.map((finalUrl) => (
           <div key={finalUrl.id} className="gap-4 grid grid-cols-3">
-            <Card className="col-span-1">
+            <Card className="col-span-1 min-h-[320px] max-h-[320px]" header="Thông tin URL">
               <h5>{finalUrl.name}</h5>
               <a
                 href={finalUrl.finalURL}
@@ -126,8 +226,11 @@ export default function TaskProgressDetailModal({ isOpen, finalUrls, onClose }: 
                 </div>
               </div>
             </Card>
-            <Card className="col-span-2">
-              <DataTable columns={columns} data={finalUrl.campaigns} loading={false} pagingData={undefined} />
+            <Card className="col-span-2 min-h-[320px] max-h-[320px]" header="Thống kê người dùng">
+              <DataTable columns={userColumns} data={finalUrl.userStats} maxHeight={320} />
+            </Card>
+            <Card className="col-span-3" header="Thống kê chiến dịch">
+              <DataTable columns={campaignColumns} data={finalUrl.campaignStats} />
             </Card>
           </div>
         ))}

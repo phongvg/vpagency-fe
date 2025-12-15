@@ -7,8 +7,10 @@ export type Project = {
   name: string
   typeId: string
   type: MasterData
+  typeName: string
   statusId: string
   status: MasterData
+  statusName: string
   ownerId: string
   owner: User
   totalBudget: number | null

@@ -5,6 +5,7 @@ import {
   GET_TASK_DETAIL,
   GET_TASK_LIST,
   GET_TASK_PROGRESS,
+  GET_TASK_PROGRESS_DETAIL,
   GET_TASKS_GROUPED_BY_STATUS,
 } from '@/utils/queryKey'
 import { toastError, toastSuccess } from '@/utils/toast'
@@ -15,6 +16,7 @@ import {
   apiCreateTask,
   apiDeleteTask,
   apiGetCampaignStatsByFinalUrl,
+  apiGetProgressDetail,
   apiGetTaskDetail,
   apiGetTaskProgress,
   apiGetTasks,
@@ -214,5 +216,16 @@ export const useGetCampaignStatsByFinalUrl = (
       return response.data.data
     },
     enabled: !!taskId && !!finalUrlId && enabled,
+  })
+}
+
+export const useGetProgressDetail = (taskId: string | null, enabled = false) => {
+  return useQuery({
+    queryKey: [GET_TASK_PROGRESS_DETAIL, taskId],
+    queryFn: async () => {
+      const response = await apiGetProgressDetail(taskId!)
+      return response.data.data
+    },
+    enabled: !!taskId && enabled,
   })
 }

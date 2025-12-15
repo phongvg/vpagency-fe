@@ -1,14 +1,16 @@
-import { useCreateFinalUrlMutation, useGetFinalUrlDetailQuery, useUpdateFinalUrlMutation } from '../hooks/useFinalUrl'
-import { Formik, Form, Field } from 'formik'
-import * as Yup from 'yup'
-import { FormContainer, FormItem, Button, Input } from '@/components/ui'
-import { UpdateFinalUrlRequest } from '../types/finalUrl.type'
 import TagInput from '@/components/shared/TagInput'
+import { Button, FormContainer, FormItem, Input } from '@/components/ui'
+import { Field, Form, Formik } from 'formik'
+import * as Yup from 'yup'
+import { useCreateFinalUrlMutation, useGetFinalUrlDetailQuery, useUpdateFinalUrlMutation } from '../hooks/useFinalUrl'
+import { UpdateFinalUrlRequest } from '../types/finalUrl.type'
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Tên là bắt buộc'),
   finalURL: Yup.string().url('URL không hợp lệ').required('URL là bắt buộc'),
-  countries: Yup.array().of(Yup.string()),
+  countriesTier1: Yup.array().of(Yup.string()),
+  countriesTier2: Yup.array().of(Yup.string()),
+  countriesTier3: Yup.array().of(Yup.string()),
   excludeCountries: Yup.array().of(Yup.string()),
   title: Yup.string().nullable(),
   content: Yup.string().nullable(),
@@ -38,7 +40,9 @@ export default function FinalUrlForm({ projectId, finalUrlId, isEdit, onClose }:
   const initialValues: UpdateFinalUrlRequest = {
     name: finalUrl?.name || '',
     finalURL: finalUrl?.finalURL || '',
-    countries: finalUrl?.countries || [],
+    countriesTier1: finalUrl?.countriesTier1 || [],
+    countriesTier2: finalUrl?.countriesTier2 || [],
+    countriesTier3: finalUrl?.countriesTier3 || [],
     excludeCountries: finalUrl?.excludeCountries || [],
     projectId: finalUrl?.projectId || projectId,
     title: finalUrl?.title || '',
@@ -94,14 +98,38 @@ export default function FinalUrlForm({ projectId, finalUrlId, isEdit, onClose }:
                   </FormItem>
 
                   <FormItem
-                    label="Quốc gia"
-                    invalid={!!(errors.countries && touched.countries)}
-                    errorMessage={errors.countries}
+                    label="Quốc gia hạng 1"
+                    invalid={!!(errors.countriesTier1 && touched.countriesTier1)}
+                    errorMessage={errors.countriesTier1}
                   >
                     <TagInput
-                      value={values.countries || []}
+                      value={values.countriesTier1 || []}
                       placeholder="Nhập quốc gia..."
-                      onChange={(tags) => setFieldValue('countries', tags)}
+                      onChange={(tags) => setFieldValue('countriesTier1', tags)}
+                    />
+                  </FormItem>
+
+                  <FormItem
+                    label="Quốc gia hạng 2"
+                    invalid={!!(errors.countriesTier2 && touched.countriesTier2)}
+                    errorMessage={errors.countriesTier2}
+                  >
+                    <TagInput
+                      value={values.countriesTier2 || []}
+                      placeholder="Nhập quốc gia..."
+                      onChange={(tags) => setFieldValue('countriesTier2', tags)}
+                    />
+                  </FormItem>
+
+                  <FormItem
+                    label="Quốc gia hạng 3"
+                    invalid={!!(errors.countriesTier3 && touched.countriesTier3)}
+                    errorMessage={errors.countriesTier3}
+                  >
+                    <TagInput
+                      value={values.countriesTier3 || []}
+                      placeholder="Nhập quốc gia..."
+                      onChange={(tags) => setFieldValue('countriesTier3', tags)}
                     />
                   </FormItem>
 

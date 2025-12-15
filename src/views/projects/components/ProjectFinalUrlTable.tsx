@@ -1,14 +1,14 @@
-import { useCallback, useMemo } from 'react'
 import { DataTable } from '@/components/shared'
-import { ColumnDef } from '@tanstack/react-table'
-import { FinalUrl } from '@/views/projects/types/finalUrl.type'
-import { HiOutlinePencilAlt, HiOutlineTrash, HiOutlinePlus, HiOutlineDuplicate } from 'react-icons/hi'
-import { Button, ConfirmDialog } from '@/components/ui'
-import { useFinalUrlStore } from '@/views/projects/store/useFinalUrlStore'
-import { useDeleteFinalUrlMutation, useGetFinalUrlsByProjectId } from '@/views/projects/hooks/useFinalUrl'
-import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { TableTooltip } from '@/components/shared/TableTooltip'
+import { Button, ConfirmDialog } from '@/components/ui'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { toastError, toastSuccess } from '@/utils/toast'
+import { useDeleteFinalUrlMutation, useGetFinalUrlsByProjectId } from '@/views/projects/hooks/useFinalUrl'
+import { useFinalUrlStore } from '@/views/projects/store/useFinalUrlStore'
+import { FinalUrl } from '@/views/projects/types/finalUrl.type'
+import { ColumnDef } from '@tanstack/react-table'
+import { useCallback, useMemo } from 'react'
+import { HiOutlineDuplicate, HiOutlinePencilAlt, HiOutlinePlus, HiOutlineTrash } from 'react-icons/hi'
 
 interface ProjectFinalUrlTableProps {
   projectId?: string
@@ -96,11 +96,47 @@ export default function ProjectFinalUrlTable({ projectId, active = false }: Proj
         },
       },
       {
-        id: 'countries',
-        header: 'Quốc gia',
-        accessorKey: 'countries',
+        id: 'countriesTier1',
+        header: 'Quốc gia hạng 1',
+        accessorKey: 'countriesTier1',
         cell: (props) => {
-          const row = props.row.original.countries || []
+          const row = props.row.original.countriesTier1 || []
+          if (row.length === 0) return null
+
+          return (
+            <div className="flex items-center gap-2">
+              <TableTooltip data={row.map((l) => ({ name: l }))} columns={[{ key: 'name', label: 'Quốc gia' }]} />
+              <button type="button" title="Sao chép" onClick={() => handleCopyToClipboard(row.join('\n'))}>
+                <HiOutlineDuplicate />
+              </button>
+            </div>
+          )
+        },
+      },
+      {
+        id: 'countriesTier2',
+        header: 'Quốc gia hạng 2',
+        accessorKey: 'countriesTier2',
+        cell: (props) => {
+          const row = props.row.original.countriesTier2 || []
+          if (row.length === 0) return null
+
+          return (
+            <div className="flex items-center gap-2">
+              <TableTooltip data={row.map((l) => ({ name: l }))} columns={[{ key: 'name', label: 'Quốc gia' }]} />
+              <button type="button" title="Sao chép" onClick={() => handleCopyToClipboard(row.join('\n'))}>
+                <HiOutlineDuplicate />
+              </button>
+            </div>
+          )
+        },
+      },
+      {
+        id: 'countriesTier3',
+        header: 'Quốc gia hạng 3',
+        accessorKey: 'countriesTier3',
+        cell: (props) => {
+          const row = props.row.original.countriesTier3 || []
           if (row.length === 0) return null
 
           return (

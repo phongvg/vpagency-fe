@@ -1,5 +1,8 @@
-import { Task } from '@/views/tasks/assign/types/task.type'
+import { DataTable } from '@/components/shared'
+import BadgeStatus from '@/components/shared/BadgeStatus'
+import { TableTooltip } from '@/components/shared/TableTooltip'
 import { Accordion, Badge, Button, ConfirmDialog } from '@/components/ui'
+import { urlConfig } from '@/configs/urls.config'
 import { getStatusColor } from '@/constants/task.constant'
 import {
   TaskFrequency,
@@ -14,10 +17,17 @@ import { formatUSD } from '@/helpers/formatUSD'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { useAuthStore } from '@/store/auth/useAuthStore'
 import { isAdminOrManager } from '@/utils/checkRole'
+import { GET_TASK_DETAIL } from '@/utils/queryKey'
+import { toastError, toastSuccess } from '@/utils/toast'
+import { FinalUrl } from '@/views/projects/types/finalUrl.type'
+import TaskProgressDetailModal from '@/views/tasks/assign/components/TaskProgressDetailModal'
 import UpdateProgressModal from '@/views/tasks/assign/components/UpdateProgressModal'
 import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
 import { useDeleteTask } from '@/views/tasks/assign/hooks/useTask'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
+import { Task } from '@/views/tasks/assign/types/task.type'
+import { useQueryClient } from '@tanstack/react-query'
+import { ColumnDef } from '@tanstack/react-table'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   HiChevronDoubleUp,
@@ -29,17 +39,7 @@ import {
   HiOutlinePencilAlt,
   HiOutlineTrash,
 } from 'react-icons/hi'
-import BadgeStatus from '@/components/shared/BadgeStatus'
-import { FinalUrl } from '@/views/projects/types/finalUrl.type'
-import { ColumnDef } from '@tanstack/react-table'
-import { DataTable } from '@/components/shared'
-import TaskProgressDetailModal from '@/views/tasks/assign/components/TaskProgressDetailModal'
 import { Link } from 'react-router-dom'
-import { urlConfig } from '@/configs/urls.config'
-import { TableTooltip } from '@/components/shared/TableTooltip'
-import { toastError, toastSuccess } from '@/utils/toast'
-import { useQueryClient } from '@tanstack/react-query'
-import { GET_TASK_DETAIL } from '@/utils/queryKey'
 
 type Props = {
   inSplitView?: boolean
@@ -149,7 +149,7 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
 
       <TaskProgressDetailModal
         isOpen={isProgressDetailModalOpen}
-        finalUrls={displayTask.finalUrls}
+        taskId={displayTask?.id}
         onClose={() => setIsProgressDetailModalOpen(false)}
       />
     </>
@@ -254,23 +254,15 @@ function TaskProjectSection({ task }: TaskPanelProps) {
       </li>
       <li className="flex justify-between items-center">
         <span>Loại dự án:</span>
-        <span>{task.project?.type.name || 'N/A'}</span>
+        <span>{task.project?.typeName || 'N/A'}</span>
       </li>
       <li className="flex justify-between items-center">
         <span>Trạng thái:</span>
-        <BadgeStatus content={task.project?.status.name} />
+        <BadgeStatus content={task.project?.statusName} />
       </li>
       <li className="flex justify-between items-center">
         <span>Tổng ngân sách:</span>
         <span>{formatUSD(task.project?.totalBudget)}</span>
-      </li>
-      <li className="flex justify-between items-center">
-        <span>Ngân sách đã tiêu:</span>
-        <span>{formatUSD(task.project?.spentBudget)}</span>
-      </li>
-      <li className="flex justify-between items-center">
-        <span>CPC:</span>
-        <span>{formatUSD(task.project?.cpc)}</span>
       </li>
       <li className="flex justify-between items-center">
         <span>Ngày bắt đầu dự án:</span>
@@ -385,11 +377,47 @@ function TaskFinalUrlSection({ finalUrls }: { finalUrls: FinalUrl[] }) {
         },
       },
       {
-        id: 'countries',
-        header: 'Quốc gia',
-        accessorKey: 'countries',
+        id: 'countriesTier1',
+        header: 'Quốc gia hạng 1',
+        accessorKey: 'countriesTier1',
         cell: (props) => {
-          const row = props.row.original.countries || []
+          const row = props.row.original.countriesTier1 || []
+          if (row.length === 0) return null
+
+          return (
+            <div className="flex items-center gap-2">
+              <TableTooltip data={row.map((l) => ({ name: l }))} columns={[{ key: 'name', label: 'Quốc gia' }]} />
+              <button type="button" title="Sao chép" onClick={() => handleCopyToClipboard(row.join('\n'))}>
+                <HiOutlineDuplicate />
+              </button>
+            </div>
+          )
+        },
+      },
+      {
+        id: 'countriesTier2',
+        header: 'Quốc gia hạng 2',
+        accessorKey: 'countriesTier2',
+        cell: (props) => {
+          const row = props.row.original.countriesTier2 || []
+          if (row.length === 0) return null
+
+          return (
+            <div className="flex items-center gap-2">
+              <TableTooltip data={row.map((l) => ({ name: l }))} columns={[{ key: 'name', label: 'Quốc gia' }]} />
+              <button type="button" title="Sao chép" onClick={() => handleCopyToClipboard(row.join('\n'))}>
+                <HiOutlineDuplicate />
+              </button>
+            </div>
+          )
+        },
+      },
+      {
+        id: 'countriesTier3',
+        header: 'Quốc gia hạng 3',
+        accessorKey: 'countriesTier3',
+        cell: (props) => {
+          const row = props.row.original.countriesTier3 || []
           if (row.length === 0) return null
 
           return (

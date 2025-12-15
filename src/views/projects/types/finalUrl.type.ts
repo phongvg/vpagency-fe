@@ -5,7 +5,9 @@ export type FinalUrl = {
   id: string
   name: string
   finalURL: string
-  countries: string[]
+  countriesTier1: string[]
+  countriesTier2: string[]
+  countriesTier3: string[]
   excludeCountries: string[]
   projectId: string
   title: string | null
