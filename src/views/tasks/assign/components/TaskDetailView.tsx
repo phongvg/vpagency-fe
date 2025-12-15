@@ -337,12 +337,12 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
             </div>
             <div>
               <span>Loại dự án:</span>
-              <span className="ml-1 font-medium">{task.project?.type.name}</span>
+              <span className="ml-1 font-medium">{task.project?.typeName}</span>
             </div>
             <div>
               <span>Trạng thái:</span>
               <span className="ml-2">
-                <BadgeStatus content={task.project?.status.name} />
+                <BadgeStatus content={task.project?.statusName} />
               </span>
             </div>
             <div>
@@ -351,15 +351,11 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
             </div>
             <div>
               <span>Ngân sách đã tiêu:</span>
-              <span className="ml-1 font-medium">{formatUSD(task.project?.spentBudget)}</span>
+              <span className="ml-1 font-medium">{formatUSD(task.totalCost)}</span>
             </div>
             <div>
-              <span>CPC:</span>
-              <span className="ml-1 font-medium">{formatUSD(task.project?.cpc)}</span>
-            </div>
-            <div>
-              <span>Ngày bắt đầu dự án:</span>
-              <span className="ml-1 font-medium">{formatDate(task.project?.startedAt, 'DD/MM/YYYY')}</span>
+              <span>CPC trung bình:</span>
+              <span className="ml-1 font-medium">{formatUSD(task.avgCpc)}</span>
             </div>
           </div>
         </div>
