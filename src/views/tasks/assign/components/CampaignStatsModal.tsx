@@ -133,7 +133,7 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
     () => [
       {
         id: 'actions',
-        header: '',
+        header: 'Hành động',
         cell: (props) => {
           const row = props.row.original
           if (!row.finalUrlId) return null
