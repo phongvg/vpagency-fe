@@ -1,17 +1,17 @@
-import { useMemo, useState, useCallback } from 'react'
-import { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/shared'
+import { TableTooltip } from '@/components/shared/TableTooltip'
+import { Button, Checkbox, Dropdown } from '@/components/ui'
+import { formatDate } from '@/helpers/formatDate'
 import { formatUSD } from '@/helpers/formatUSD'
-import { ProjectDailyStat } from '@/views/finance/reports/types/ProjectDailyStat.type'
+import { useAuthStore } from '@/store/auth/useAuthStore'
+import { isAdminOrAccounting } from '@/utils/checkRole'
+import { COLUMN_CONFIG } from '@/views/finance/reports/constants/financeReportColumnConfig.constant'
 import { useProjectDailyStat } from '@/views/finance/reports/hooks/useProjectDailyStat'
 import { useProjectDailyStatStore } from '@/views/finance/reports/store/useProjectDailyStatStore'
-import { formatDate } from '@/helpers/formatDate'
-import { TableTooltip } from '@/components/shared/TableTooltip'
-import { isAdminOrAccounting } from '@/utils/checkRole'
-import { useAuthStore } from '@/store/auth/useAuthStore'
-import { Button, Checkbox, Dropdown } from '@/components/ui'
-import { HiOutlineViewList, HiOutlinePencilAlt } from 'react-icons/hi'
-import { COLUMN_CONFIG } from '@/views/finance/reports/constants/financeReportColumnConfig.constant'
+import { ProjectDailyStat } from '@/views/finance/reports/types/ProjectDailyStat.type'
+import { ColumnDef } from '@tanstack/react-table'
+import { useCallback, useMemo, useState } from 'react'
+import { HiOutlinePencilAlt, HiOutlineViewList } from 'react-icons/hi'
 import FinanceReportEditDialog from './FinanceReportEditDialog'
 
 export default function FinanceReportTable() {
@@ -30,6 +30,9 @@ export default function FinanceReportTable() {
 
     const restrictedColumns = [
       'profit',
+      'roi',
+      'holdRevenue',
+      'receivedRevenue',
       'totalRef',
       'costPerRef',
       'rateRefPerClick',
@@ -123,6 +126,33 @@ export default function FinanceReportTable() {
               cell: (props) => {
                 const row = props.row.original
                 return <span>{formatUSD(row.profit)}</span>
+              },
+            },
+            {
+              id: 'roi',
+              header: 'ROI (%)',
+              accessorKey: 'roi',
+              cell: (props) => {
+                const row = props.row.original
+                return <span>{row.roi?.toFixed(2)}%</span>
+              },
+            },
+            {
+              id: 'holdRevenue',
+              header: 'Doanh thu giữ lại',
+              accessorKey: 'holdRevenue',
+              cell: (props) => {
+                const row = props.row.original
+                return <span>{formatUSD(row.holdRevenue)}</span>
+              },
+            },
+            {
+              id: 'receivedRevenue',
+              header: 'Doanh thu nhận được',
+              accessorKey: 'receivedRevenue',
+              cell: (props) => {
+                const row = props.row.original
+                return <span>{formatUSD(row.receivedRevenue)}</span>
               },
             },
             {

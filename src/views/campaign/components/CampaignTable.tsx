@@ -123,7 +123,7 @@ export default function CampaignTable() {
         header: 'UID',
         accessorKey: 'uid',
         cell: (props) => (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 whitespace-nowrap">
             {addDash(props.row.original.uid)}
             <button
               type="button"
@@ -188,7 +188,7 @@ export default function CampaignTable() {
         id: 'mcc',
         header: 'MCC',
         accessorKey: 'mcc',
-        cell: (props) => <span>{addDash(props.row.original.mcc)}</span>,
+        cell: (props) => <span className="whitespace-nowrap">{addDash(props.row.original.mcc)}</span>,
       },
       {
         id: 'avgCpc',

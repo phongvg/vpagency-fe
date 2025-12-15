@@ -93,7 +93,7 @@ export default function TaskProgressDetailModal({ isOpen, taskId, onClose }: Pro
         accessorKey: 'uid',
         cell: (props) => {
           const row = props.row.original
-          return <span>{addDash(row.uid)}</span>
+          return <span className="whitespace-nowrap">{addDash(row.uid)}</span>
         },
       },
       {

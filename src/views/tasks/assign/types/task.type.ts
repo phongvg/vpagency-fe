@@ -29,6 +29,8 @@ export type Task = {
   finalUrlIds: string[]
   gmailIds: string[]
   finalUrls: FinalUrl[]
+  totalCost: number
+  avgCpc: number
 }
 
 export type TasksGroupedByStatus = {

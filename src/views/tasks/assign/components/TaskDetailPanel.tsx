@@ -265,8 +265,12 @@ function TaskProjectSection({ task }: TaskPanelProps) {
         <span>{formatUSD(task.project?.totalBudget)}</span>
       </li>
       <li className="flex justify-between items-center">
-        <span>Ngày bắt đầu dự án:</span>
-        <span>{formatDate(task.project?.startedAt, 'DD/MM/YYYY')}</span>
+        <span>Tổng ngân sách chi tiêu:</span>
+        <span>{formatUSD(task.totalCost)}</span>
+      </li>
+      <li className="flex justify-between items-center">
+        <span>CPC trung bình:</span>
+        <span>{formatUSD(task.avgCpc)}</span>
       </li>
     </ul>
   )

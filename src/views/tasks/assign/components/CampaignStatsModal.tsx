@@ -18,7 +18,7 @@ import {
   useRemoveCampaignsFromFinalUrlMutation,
 } from '@/views/tasks/assign/hooks/useTask'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { HiOutlineDuplicate, HiOutlineMinusSm, HiOutlineViewList } from 'react-icons/hi'
+import { HiOutlineDuplicate, HiOutlineTrash, HiOutlineViewList } from 'react-icons/hi'
 
 type Props = {
   isOpen: boolean
@@ -132,6 +132,22 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
   const allColumns: ColumnDef<Campaign>[] = useMemo(
     () => [
       {
+        id: 'actions',
+        header: '',
+        cell: (props) => {
+          const row = props.row.original
+          if (!row.finalUrlId) return null
+
+          return (
+            <div className="flex justify-center">
+              <button type="button" title="Loại bỏ chỉ số" onClick={() => handleRemoveAssign(row.id)}>
+                <HiOutlineTrash size={24} />
+              </button>
+            </div>
+          )
+        },
+      },
+      {
         id: 'stt',
         header: 'STT',
         accessorKey: 'index',
@@ -157,7 +173,7 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
         header: 'UID',
         accessorKey: 'uid',
         cell: (props) => (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 whitespace-nowrap">
             {addDash(props.row.original.uid)}
             <button
               type="button"
@@ -222,7 +238,7 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
         id: 'mcc',
         header: 'MCC',
         accessorKey: 'mcc',
-        cell: (props) => <span>{addDash(props.row.original.mcc)}</span>,
+        cell: (props) => <span className="whitespace-nowrap">{addDash(props.row.original.mcc)}</span>,
       },
       {
         id: 'avgCpc',
@@ -396,22 +412,6 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
                 { key: 'cost', label: 'Chi phí' },
               ]}
             />
-          )
-        },
-      },
-      {
-        id: 'actions',
-        header: '',
-        cell: (props) => {
-          const row = props.row.original
-          if (!row.finalUrlId) return null
-
-          return (
-            <div className="flex justify-end items-center gap-4">
-              <button type="button" title="Loại bỏ chỉ số" onClick={() => handleRemoveAssign(row.id)}>
-                <HiOutlineMinusSm size={24} />
-              </button>
-            </div>
           )
         },
       },
