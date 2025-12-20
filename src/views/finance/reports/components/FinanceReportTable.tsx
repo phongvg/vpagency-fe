@@ -1,6 +1,7 @@
 import { DataTable } from '@/components/shared'
 import { TableTooltip } from '@/components/shared/TableTooltip'
 import { Button, Checkbox, Dropdown } from '@/components/ui'
+import { convertNumberToPercent } from '@/helpers/convertNumberToPercent'
 import { formatDate } from '@/helpers/formatDate'
 import { formatUSD } from '@/helpers/formatUSD'
 import { useAuthStore } from '@/store/auth/useAuthStore'
@@ -134,7 +135,7 @@ export default function FinanceReportTable() {
               accessorKey: 'roi',
               cell: (props) => {
                 const row = props.row.original
-                return <span>{row.roi?.toFixed(2)}%</span>
+                return <span>{convertNumberToPercent(row.roi)}</span>
               },
             },
             {
@@ -175,7 +176,7 @@ export default function FinanceReportTable() {
               accessorKey: 'rateRefPerClick',
               cell: (props) => {
                 const row = props.row.original
-                return <span>{row.rateRefPerClick?.toFixed(2)}%</span>
+                return <span>{convertNumberToPercent(row.rateRefPerClick)}</span>
               },
             },
             {
@@ -198,7 +199,7 @@ export default function FinanceReportTable() {
               accessorKey: 'costFtdPerRef',
               cell: (props) => {
                 const row = props.row.original
-                return <span>{row.costFtdPerRef?.toFixed(2)}%</span>
+                return <span>{convertNumberToPercent(row.costFtdPerRef)}</span>
               },
             },
             {
@@ -221,7 +222,7 @@ export default function FinanceReportTable() {
               accessorKey: 'totalClickPerVolume',
               cell: (props) => {
                 const row = props.row.original
-                return <span>{row.totalClickPerVolume?.toFixed(2)}%</span>
+                return <span>{convertNumberToPercent(row.totalClickPerVolume)}</span>
               },
             },
             {
@@ -230,7 +231,7 @@ export default function FinanceReportTable() {
               accessorKey: 'totalRefPerVolume',
               cell: (props) => {
                 const row = props.row.original
-                return <span>{row.totalRefPerVolume?.toFixed(2)}%</span>
+                return <span>{convertNumberToPercent(row.totalRefPerVolume)}</span>
               },
             },
           ] as ColumnDef<ProjectDailyStat>[])

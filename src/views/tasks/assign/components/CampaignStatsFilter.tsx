@@ -13,10 +13,12 @@ export default function CampaignStatsFilter({ filter, onFilterChange }: Props) {
   const [uid, setUid] = useState(filter.uid || '')
   const [externalId, setExternalId] = useState(filter.externalId || '')
   const [gmail, setGmail] = useState(filter.gmail || '')
+  const [campaignName, setCampaignName] = useState(filter.campaignName || '')
 
   const debouncedUid = useDebounce(uid, 500)
   const debouncedExternalId = useDebounce(externalId, 500)
   const debouncedGmail = useDebounce(gmail, 500)
+  const debouncedCampaignName = useDebounce(campaignName, 500)
 
   useEffect(() => {
     onFilterChange({
@@ -44,6 +46,15 @@ export default function CampaignStatsFilter({ filter, onFilterChange }: Props) {
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedGmail])
+
+  useEffect(() => {
+    onFilterChange({
+      ...filter,
+      campaignName: debouncedCampaignName || undefined,
+      page: 1,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedCampaignName])
 
   const handleImportAtFromChange = (date: Date | null) => {
     onFilterChange({
@@ -87,6 +98,10 @@ export default function CampaignStatsFilter({ filter, onFilterChange }: Props) {
 
   const handleGmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGmail(e.target.value)
+  }
+
+  const handleCampaignNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCampaignName(e.target.value)
   }
 
   return (
@@ -135,13 +150,18 @@ export default function CampaignStatsFilter({ filter, onFilterChange }: Props) {
         </div>
 
         <div>
-          <label className="block mb-1 font-semibold text-sm">UID</label>
-          <Input size="sm" placeholder="Nhập UID" value={uid} onChange={handleUidChange} />
-        </div>
-        <div>
           <label className="block mb-1 font-semibold text-sm">ID chiến dịch</label>
           <Input size="sm" placeholder="Nhập ID chiến dịch" value={externalId} onChange={handleExternalIdChange} />
         </div>
+        <div>
+          <label className="block mb-1 font-semibold text-sm">Tên chiến dịch</label>
+          <Input size="sm" placeholder="Nhập tên chiến dịch" value={campaignName} onChange={handleCampaignNameChange} />
+        </div>
+        <div>
+          <label className="block mb-1 font-semibold text-sm">UID</label>
+          <Input size="sm" placeholder="Nhập UID" value={uid} onChange={handleUidChange} />
+        </div>
+
         <div>
           <label className="block mb-1 font-semibold text-sm">Gmail</label>
           <Input size="sm" placeholder="Nhập Gmail" value={gmail} onChange={handleGmailChange} />
