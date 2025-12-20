@@ -182,7 +182,11 @@ export default function CampaignTable() {
         id: 'statusCampaign',
         header: 'Trạng thái chiến dịch',
         accessorKey: 'status',
-        cell: (props) => <BadgeStatus content={props.row.original.status} />,
+        cell: (props) => {
+          if (!props.row.original.status) return null
+
+          return <BadgeStatus content={props.row.original.status} />
+        },
       },
       {
         id: 'mcc',

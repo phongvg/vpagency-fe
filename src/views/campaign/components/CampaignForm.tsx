@@ -1,4 +1,6 @@
+import TagInput from '@/components/shared/TagInput'
 import { Button, ConfirmDialog, DatePicker, FormContainer, FormItem, Input, Tabs } from '@/components/ui'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import {
   useCreateCampaignMutation,
   useGetCampaignDetailQuery,
@@ -6,12 +8,10 @@ import {
 } from '@/views/campaign/hooks/useCampaign'
 import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
 import { KeywordMatch, LocationStat, SearchTerm, UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
-import { Field, Form, Formik } from 'formik'
-import * as Yup from 'yup'
-import TagInput from '@/components/shared/TagInput'
-import { useState } from 'react'
-import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { ArrowDownIcon, ArrowUpIcon, PlusIcon, TrashIcon } from '@phosphor-icons/react'
+import { Field, Form, Formik } from 'formik'
+import { useState } from 'react'
+import * as Yup from 'yup'
 
 const { TabNav, TabList, TabContent } = Tabs
 
@@ -20,9 +20,10 @@ const validationSchema = Yup.object().shape({
   date: Yup.string().required('Vui lòng nhập ngày'),
   uid: Yup.string().required('Vui lòng nhập UID'),
   mcc: Yup.string().nullable(),
+  gmail: Yup.string().email('Vui lòng nhập đúng định dạng email').nullable(),
   name: Yup.string().required('Vui lòng nhập tên chiến dịch'),
   externalId: Yup.string().required('Vui lòng nhập ID chiến dịch'),
-  finalUrl: Yup.string().url('URL không hợp lệ').nullable(),
+  finalUrl: Yup.string().nullable(),
   keywords: Yup.array().of(
     Yup.object().shape({
       keyword: Yup.string().required(),
@@ -77,6 +78,7 @@ export default function CampaignForm() {
     date: campaign?.date || null,
     uid: campaign?.uid || null,
     mcc: campaign?.mcc || null,
+    gmail: campaign?.gmail || null,
     name: campaign?.name || null,
     externalId: campaign?.externalId || null,
     finalUrl: campaign?.finalUrlImport || null,
@@ -190,14 +192,24 @@ export default function CampaignForm() {
                       />
                     </FormItem>
 
-                    <FormItem label="Thời gian nhập">
+                    <FormItem label="Gmail" invalid={errors.gmail && touched.gmail} errorMessage={errors.gmail}>
+                      <Field
+                        type="text"
+                        autoComplete="off"
+                        name="gmail"
+                        placeholder="Nhập Gmail..."
+                        component={Input}
+                      />
+                    </FormItem>
+
+                    {/* <FormItem label="Ngày nhập">
                       <DatePicker
                         value={values.importAt ? new Date(values.importAt) : null}
                         placeholder="dd/mm/yyyy"
                         inputFormat="DD/MM/YYYY"
                         onChange={(date) => setFieldValue('importAt', date)}
                       />
-                    </FormItem>
+                    </FormItem> */}
 
                     <FormItem
                       asterisk
