@@ -22,6 +22,13 @@ import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRe
 import TableRowSkeleton from './loaders/TableRowSkeleton'
 import Loading from './Loading'
 
+declare module '@tanstack/react-table' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface ColumnMeta<TData, TValue> {
+    sticky?: boolean
+  }
+}
+
 export type OnSortParam = { order: 'asc' | 'desc' | ''; key: string | number }
 
 type DataTableProps<T> = {
@@ -235,6 +242,9 @@ function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableRese
               onCheckBoxChange={(e) => handleCheckBoxChange(e.target.checked, row.original)}
             />
           ),
+          meta: {
+            sticky: true,
+          },
         },
         ...columns,
       ]
@@ -291,8 +301,16 @@ function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableRese
                   const canSort = header.column.getCanSort()
                   const sortDirection = header.column.getIsSorted()
 
+                  const isSticky = header.column.columnDef.meta?.sticky
                   return (
-                    <Th key={header.id} colSpan={header.colSpan} index={header.index}>
+                    <Th
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      index={header.index}
+                      className={classNames(
+                        isSticky && 'sticky left-0 z-10 bg-white shadow-[2px_0_4px_rgba(0,0,0,0.05)]',
+                      )}
+                    >
                       {header.isPlaceholder ? null : (
                         <div
                           className={classNames('flex items-center gap-2', canSort && 'cursor-pointer select-none')}
@@ -351,7 +369,17 @@ function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableRese
                   return (
                     <Tr key={row.id} className={rowClassName}>
                       {row.getVisibleCells().map((cell) => {
-                        return <Td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Td>
+                        const isSticky = cell.column.columnDef.meta?.sticky
+                        return (
+                          <Td
+                            key={cell.id}
+                            className={classNames(
+                              isSticky && 'sticky left-0 z-10 bg-white shadow-[2px_0_4px_rgba(0,0,0,0.05)]',
+                            )}
+                          >
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          </Td>
+                        )
                       })}
                     </Tr>
                   )

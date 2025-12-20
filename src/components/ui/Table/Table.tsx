@@ -1,6 +1,6 @@
-import { forwardRef } from 'react'
 import classNames from 'classnames'
 import type { ComponentPropsWithRef, ElementType } from 'react'
+import { forwardRef } from 'react'
 
 export interface TableProps extends ComponentPropsWithRef<'table'> {
   asElement?: ElementType
@@ -17,7 +17,7 @@ const Table = forwardRef<HTMLElement, TableProps>((props, ref) => {
     children,
     className,
     compact = false,
-    hoverable = true,
+    hoverable = false,
     overflow = true,
     ...rest
   } = props
