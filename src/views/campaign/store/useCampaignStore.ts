@@ -12,6 +12,7 @@ export type CampaignFilterRequest = CommonFilterRequest & {
   externalId?: string
   gmail?: string
   campaignName?: string
+  finalUrl?: string
 }
 
 type CampaignState = {
