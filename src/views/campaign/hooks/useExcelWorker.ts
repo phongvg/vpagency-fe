@@ -2,7 +2,11 @@ import { CurrencyRate, UpdateCampaignRequest } from '@/views/campaign/types/camp
 import { useCallback, useRef, useState } from 'react'
 
 interface UseExcelWorkerReturn {
-  processFile: (file: File) => Promise<{ data: UpdateCampaignRequest[]; currencyRates: CurrencyRate[] }>
+  getAvailableDates: (file: File) => Promise<string[]>
+  processFile: (
+    file: File,
+    selectedDate?: string,
+  ) => Promise<{ data: UpdateCampaignRequest[]; currencyRates: CurrencyRate[] }>
   isProcessing: boolean
   progress: number
   error: string | null
@@ -14,8 +18,46 @@ export const useExcelWorker = (): UseExcelWorkerReturn => {
   const [error, setError] = useState<string | null>(null)
   const workerRef = useRef<Worker | null>(null)
 
+  const getAvailableDates = useCallback((file: File): Promise<string[]> => {
+    return new Promise((resolve, reject) => {
+      const worker = new Worker(new URL('../workers/excelWorker.ts', import.meta.url), {
+        type: 'module',
+      })
+
+      worker.onmessage = (e: MessageEvent) => {
+        const { type, availableDates, error: workerError } = e.data
+
+        if (type === 'dates') {
+          worker.terminate()
+          resolve(availableDates || [])
+        } else if (type === 'error') {
+          worker.terminate()
+          reject(new Error(workerError || 'Lỗi xử lý file'))
+        }
+      }
+
+      worker.onerror = (err) => {
+        worker.terminate()
+        reject(err)
+      }
+
+      const reader = new FileReader()
+      reader.onload = () => {
+        worker.postMessage({
+          type: 'get-dates',
+          file: reader.result,
+        })
+      }
+      reader.onerror = () => {
+        worker.terminate()
+        reject(new Error('Lỗi đọc file'))
+      }
+      reader.readAsArrayBuffer(file)
+    })
+  }, [])
+
   const processFile = useCallback(
-    (file: File): Promise<{ data: UpdateCampaignRequest[]; currencyRates: CurrencyRate[] }> => {
+    (file: File, selectedDate?: string): Promise<{ data: UpdateCampaignRequest[]; currencyRates: CurrencyRate[] }> => {
       return new Promise((resolve, reject) => {
         setIsProcessing(true)
         setProgress(0)
@@ -65,6 +107,7 @@ export const useExcelWorker = (): UseExcelWorkerReturn => {
           worker.postMessage({
             type: 'process',
             file: reader.result,
+            selectedDate,
           })
         }
         reader.onerror = () => {
@@ -81,6 +124,7 @@ export const useExcelWorker = (): UseExcelWorkerReturn => {
   )
 
   return {
+    getAvailableDates,
     processFile,
     isProcessing,
     progress,

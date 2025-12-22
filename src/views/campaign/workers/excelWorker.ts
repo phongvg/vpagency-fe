@@ -1,16 +1,18 @@
-import { Campaign, CurrencyRate, UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
 import { removeDash } from '@/helpers/removeDash'
+import { Campaign, CurrencyRate, UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
 import * as XLSX from 'xlsx'
 
 interface WorkerMessage {
-  type: 'process'
+  type: 'get-dates' | 'process'
   file: ArrayBuffer
+  selectedDate?: string
 }
 
 interface WorkerResponse {
-  type: 'success' | 'error' | 'progress' | 'debug'
+  type: 'success' | 'error' | 'progress' | 'debug' | 'dates'
   data?: Campaign[]
   currencyRates?: CurrencyRate[]
+  availableDates?: string[]
   error?: string
   progress?: number
 }
@@ -30,9 +32,9 @@ const getSheetData = (workbook: XLSX.WorkBook, sheetName: string): Record<string
 }
 
 self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
-  const { type, file } = e.data
+  const { type, file, selectedDate } = e.data
 
-  if (type !== 'process') return
+  if (type !== 'process' && type !== 'get-dates') return
 
   try {
     self.postMessage({ type: 'progress', progress: 10 } as WorkerResponse)
@@ -53,6 +55,17 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
     const locationTableSheet = getSheetData(workbook, 'Location_Table')
     const campaignBudgetSheet = getSheetData(workbook, 'Campaign_Budget')
     const keywordPfmYesterdaySheet = getSheetData(workbook, 'Keyword_Performance_Yesterday')
+
+    if (type === 'get-dates') {
+      const dates = campaignPfmYesterdaySheet.map((row) => row['Data Date']).filter(Boolean)
+      const uniqueDates = [...new Set(dates)]
+        .map((date) => (typeof date === 'number' ? excelDateToJSDate(date) : String(date)))
+        .sort()
+        .reverse()
+
+      self.postMessage({ type: 'dates', availableDates: uniqueDates } as WorkerResponse)
+      return
+    }
 
     self.postMessage({ type: 'progress', progress: 50 } as WorkerResponse)
 
@@ -166,7 +179,24 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
 
       const importAt = campaignPfmRows.map((row) => row['Date Pulled'])
       const date = campaignPfmRows.map((row) => row['Data Date'])
-      const currentDataDate = date[date.length - 1]
+
+      // Filter by selectedDate if provided
+      let filteredCampaignPfmRows = campaignPfmRows
+      let currentDataDate = date[date.length - 1]
+
+      if (selectedDate) {
+        filteredCampaignPfmRows = campaignPfmRows.filter((row) => {
+          const rowDate = row['Data Date']
+          const normalizedRowDate = typeof rowDate === 'number' ? excelDateToJSDate(rowDate) : String(rowDate)
+          return normalizedRowDate === selectedDate
+        })
+
+        if (filteredCampaignPfmRows.length === 0) {
+          filteredCampaignPfmRows = campaignPfmRows
+        } else {
+          currentDataDate = selectedDate
+        }
+      }
 
       const searchTermRows = searchTermMap.get(`${id}|${currentDataDate}`) || []
       const geographicViewYesterdayRows = geographicViewMap.get(`${id}|${currentDataDate}`) || []
@@ -237,16 +267,16 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
         ).values(),
       )
       const statusCampaign = campaignRows.map((row) => row['Status'])
-      const avgCpc = campaignPfmRows.map((row) => row['CPC'])
+      const avgCpc = filteredCampaignPfmRows.map((row) => row['CPC'])
       const targetCpc = campaignRows.map((row) => row['Target CPC (micros)'])
       const cpcBidMicros = adGroupCriterionRows.map((row) => row['CPC Bid Micros'])
       const microsCalc =
         (cpcBidMicros[cpcBidMicros.length - 1] ? cpcBidMicros[cpcBidMicros.length - 1] / 1000000 : null) ||
         (targetCpc[targetCpc.length - 1] ? targetCpc[targetCpc.length - 1] / 1000000 : null)
-      const clicks = campaignPfmRows.map((row) => row['Clicks'])
-      const ctr = campaignPfmRows.map((row) => row['CTR'])
-      const cpm = campaignPfmRows.map((row) => row['CPM'])
-      const cost = campaignPfmRows.map((row) => row['Cost'])
+      const clicks = filteredCampaignPfmRows.map((row) => row['Clicks'])
+      const ctr = filteredCampaignPfmRows.map((row) => row['CTR'])
+      const cpm = filteredCampaignPfmRows.map((row) => row['CPM'])
+      const cost = filteredCampaignPfmRows.map((row) => row['Cost'])
       const targetLocations = [
         ...new Set(
           campaignCriterionRows
@@ -278,21 +308,23 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
         ),
       ]
       const campaignBudget = campaignBudgetRows.map((row) => row['Amount (Micros)'])
-      const impression = campaignPfmRows.map((row) => row['Impressions'])
+      const impression = filteredCampaignPfmRows.map((row) => row['Impressions'])
 
       return {
         // Nếu không có dữ liệu ngày nhập hoặc ngày dữ liệu thì gán ngày hiện tại
-        importAt: importAt[importAt.length - 1]
-          ? excelDateToJSDate(importAt[importAt.length - 1])
+        importAt: filteredCampaignPfmRows[filteredCampaignPfmRows.length - 1]?.['Date Pulled']
+          ? excelDateToJSDate(filteredCampaignPfmRows[filteredCampaignPfmRows.length - 1]['Date Pulled'])
           : new Date().toISOString().slice(0, 10),
-        // Nếu không có dữ liệu ngày thì gán ngày hôm qua
-        date: date[date.length - 1]
-          ? excelDateToJSDate(date[date.length - 1])
-          : (() => {
-              const d = new Date()
-              d.setDate(d.getDate() - 1)
-              return d.toISOString().slice(0, 10)
-            })(),
+        // Use selectedDate or last available date
+        date:
+          selectedDate ||
+          (date[date.length - 1]
+            ? excelDateToJSDate(date[date.length - 1])
+            : (() => {
+                const d = new Date()
+                d.setDate(d.getDate() - 1)
+                return d.toISOString().slice(0, 10)
+              })()),
         uid: uidString,
         mcc,
         name: campaignRows[campaignRows.length - 1]?.['Name'] || null,
@@ -317,6 +349,7 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
         negativeKeywords,
         locationExcluded,
         impression: impression[impression.length - 1] ?? 0,
+        gmail: '',
       }
     })
 

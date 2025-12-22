@@ -2,6 +2,7 @@ import { Button, Progress } from '@/components/ui'
 import { toastError, toastSuccess } from '@/utils/toast'
 import CampaignFilter, { CampaignFilterPanel } from '@/views/campaign/components/CampaignFilter'
 import CurrencyRateDialog from '@/views/campaign/components/CurrencyRateDialog'
+import DateSelectDialog from '@/views/campaign/components/DateSelectDialog'
 import { useEmailExcelWorker } from '@/views/campaign/hooks/useEmailExcelWorker'
 import { useExcelWorker } from '@/views/campaign/hooks/useExcelWorker'
 import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
@@ -17,6 +18,10 @@ interface ImportData {
 
 export default function CampaignTableTools() {
   const [isOpenCurrencyRateDialog, setIsOpenCurrencyRateDialog] = useState(false)
+  const [isOpenDateSelectDialog, setIsOpenDateSelectDialog] = useState(false)
+  const [availableDates, setAvailableDates] = useState<string[]>([])
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
+  const [pendingFile, setPendingFile] = useState<File | null>(null)
   const [importData, setImportData] = useState<ImportData>({
     data: [],
     currencyRates: [],
@@ -25,7 +30,7 @@ export default function CampaignTableTools() {
   const { openDialog, openPreviewDialog, openEmailPreviewDialog, setCampaigns, setEmailAssignments, clearFilter } =
     useCampaignStore()
   const { showFilters, filterButton } = CampaignFilter()
-  const { processFile, isProcessing, progress } = useExcelWorker()
+  const { getAvailableDates, processFile, isProcessing, progress } = useExcelWorker()
   const {
     processFile: processEmailFile,
     isProcessing: isEmailProcessing,
@@ -54,7 +59,31 @@ export default function CampaignTableTools() {
     if (!file) return
 
     try {
-      const { data, currencyRates } = await processFile(file)
+      const dates = await getAvailableDates(file)
+
+      if (dates.length === 0) {
+        toastError('Không tìm thấy dữ liệu ngày trong file')
+        return
+      }
+
+      setPendingFile(file)
+      setAvailableDates(dates)
+      setSelectedDate(dates[0])
+      setIsOpenDateSelectDialog(true)
+    } catch (err) {
+      toastError((err as Error).message ?? 'Lỗi đọc file')
+    } finally {
+      e.target.value = ''
+    }
+  }
+
+  const handleDateSelect = async () => {
+    if (!pendingFile || !selectedDate) return
+
+    setIsOpenDateSelectDialog(false)
+
+    try {
+      const { data, currencyRates } = await processFile(pendingFile, selectedDate)
 
       setImportData({ data, currencyRates })
 
@@ -68,8 +97,17 @@ export default function CampaignTableTools() {
     } catch (err) {
       toastError((err as Error).message ?? 'Lỗi nhập dữ liệu')
     } finally {
-      e.target.value = ''
+      setPendingFile(null)
+      setSelectedDate(null)
+      setAvailableDates([])
     }
+  }
+
+  const closeDateSelectDialog = () => {
+    setIsOpenDateSelectDialog(false)
+    setPendingFile(null)
+    setSelectedDate(null)
+    setAvailableDates([])
   }
 
   const handleEmailFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -180,6 +218,15 @@ export default function CampaignTableTools() {
         onChangeCurrencyRate={handleCurrencyRateChange}
         onSubmit={handleCurrencyRateSubmit}
         onClose={closeCurrencyRateDialog}
+      />
+
+      <DateSelectDialog
+        isOpen={isOpenDateSelectDialog}
+        availableDates={availableDates}
+        selectedDate={selectedDate}
+        onSelectDate={setSelectedDate}
+        onSubmit={handleDateSelect}
+        onClose={closeDateSelectDialog}
       />
     </>
   )
