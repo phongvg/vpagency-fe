@@ -1,14 +1,15 @@
-import { BaseListResponse, BaseResponse } from '@/@types/common'
+import { BaseResponse } from '@/@types/common'
 import ApiService from '@/services/ApiService'
 import {
   GenerateProjectDailyStatRequest,
   ProjectDailyStat,
   ProjectDailyStatFilterRequest,
+  ProjectDailyStatResponse,
   UpdateProjectDailyStatRequest,
 } from '@/views/finance/reports/types/ProjectDailyStat.type'
 
 export async function apiGetProjectDailyReports(params: ProjectDailyStatFilterRequest) {
-  return ApiService.fetchData<BaseListResponse<ProjectDailyStat>>({
+  return ApiService.fetchData<ProjectDailyStatResponse>({
     url: '/project-daily-stats',
     method: 'post',
     data: params,

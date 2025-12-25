@@ -36,6 +36,17 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
     onClose()
   }
 
+  const handleSubmit = async () => {
+    await updateProgressMutation.mutateAsync({
+      taskId,
+      payload: {
+        progress,
+      },
+    })
+
+    handleClose()
+  }
+
   return (
     <>
       <Dialog isOpen={isOpen} width={800} onClose={handleClose} onRequestClose={handleClose}>
@@ -82,7 +93,7 @@ export default function UpdateProgressModal({ isOpen, taskId, onClose }: Props) 
           <Button type="button" variant="default" onClick={handleClose}>
             Hủy
           </Button>
-          <Button variant="solid" loading={updateProgressMutation.isPending}>
+          <Button variant="solid" onClick={handleSubmit} loading={updateProgressMutation.isPending}>
             Cập nhật tiến độ
           </Button>
         </div>

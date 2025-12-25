@@ -9,6 +9,15 @@ export type DashboardProjectStat = {
 }
 
 export type DashboardMonthlySpendingStat = {
-  data: number[]
+  cost: number[]
+  holdRevenue: number[]
+  profit: number[]
+  receivedRevenue: number[]
   month: number
+}
+
+export type DashboardTopProjectByProfit = {
+  projectId: string
+  projectName: string
+  profit: number
 }

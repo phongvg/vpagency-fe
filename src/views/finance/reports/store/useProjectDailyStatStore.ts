@@ -11,6 +11,7 @@ export const useProjectDailyStatStore = create<ProjectDailyStatState>()((set, _,
   filters: {
     fromDate: undefined,
     toDate: undefined,
+    projectName: undefined,
     page: 1,
     limit: 10,
   },

@@ -39,8 +39,6 @@ export default function FinanceReportFormStep2({ generatedData, onSubmit, onCanc
   }
 
   const calculateFields = (values: ManualInputData) => {
-    console.log('123 :>> ', 123)
-
     const totalCost = generatedData.totalCost || 0
     const totalClicks = generatedData.totalClicks || 0
     const totalRef = parseFloat(String(values.totalRef)) || 0

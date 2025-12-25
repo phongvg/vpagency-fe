@@ -25,7 +25,7 @@ export default function Dashboard() {
         <>
           <Statistic data={userStats} />
           <Card header="Báo cáo tiến độ hàng ngày của dự án">
-            <FinanceReportTable />
+            <FinanceReportTable showSummary />
           </Card>
           <FinanceStats />
         </>

@@ -1,6 +1,6 @@
 import { DataTable } from '@/components/shared'
 import { TableTooltip } from '@/components/shared/TableTooltip'
-import { Button, Checkbox, Dropdown } from '@/components/ui'
+import { Button, Card, Checkbox, Dropdown } from '@/components/ui'
 import { convertNumberToPercent } from '@/helpers/convertNumberToPercent'
 import { formatDate } from '@/helpers/formatDate'
 import { formatUSD } from '@/helpers/formatUSD'
@@ -9,13 +9,17 @@ import { isAdminOrAccounting } from '@/utils/checkRole'
 import { COLUMN_CONFIG } from '@/views/finance/reports/constants/financeReportColumnConfig.constant'
 import { useProjectDailyStat } from '@/views/finance/reports/hooks/useProjectDailyStat'
 import { useProjectDailyStatStore } from '@/views/finance/reports/store/useProjectDailyStatStore'
-import { ProjectDailyStat } from '@/views/finance/reports/types/ProjectDailyStat.type'
+import { ProjectDailyStat, ProjectDailyStatSummary } from '@/views/finance/reports/types/ProjectDailyStat.type'
 import { ColumnDef } from '@tanstack/react-table'
 import { useCallback, useMemo, useState } from 'react'
 import { HiOutlinePencilAlt, HiOutlineViewList } from 'react-icons/hi'
 import FinanceReportEditDialog from './FinanceReportEditDialog'
 
-export default function FinanceReportTable() {
+type Props = {
+  showSummary?: boolean
+}
+
+export default function FinanceReportTable({ showSummary = false }: Props) {
   const { filters, setFilters } = useProjectDailyStatStore()
   const { user } = useAuthStore()
 
@@ -309,6 +313,143 @@ export default function FinanceReportTable() {
     return allColumns.filter((col) => columnVisibility[col.id as string])
   }, [allColumns, columnVisibility])
 
+  const summaryColumns: ColumnDef<ProjectDailyStatSummary>[] = useMemo(
+    () => [
+      {
+        header: 'STT',
+        cell: (props) => {
+          const row = props.row.index
+          return <span>{(filters.page - 1) * filters.limit + row + 1}</span>
+        },
+      },
+      {
+        header: 'Tên dự án',
+        accessorKey: 'projectName',
+      },
+      {
+        header: 'Tổng chi tiêu',
+        accessorKey: 'totalCost',
+        cell: (props) => {
+          const row = props.row.original
+          return <span>{formatUSD(row.totalCost)}</span>
+        },
+      },
+      {
+        header: 'Tổng lượt click',
+        accessorKey: 'totalClicks',
+      },
+      {
+        header: 'CPC trung bình',
+        accessorKey: 'avgTargetCpc',
+        cell: (props) => {
+          const row = props.row.original
+          return <span>{formatUSD(row.avgTargetCpc)}</span>
+        },
+      },
+      ...(isAdminOrAccounting(user?.roles)
+        ? ([
+            {
+              header: 'Hoa hồng',
+              accessorKey: 'profit',
+              cell: (props) => {
+                const row = props.row.original
+                return <span>{formatUSD(row.profit)}</span>
+              },
+            },
+            {
+              header: 'ROI (%)',
+              accessorKey: 'roi',
+              cell: (props) => {
+                const row = props.row.original
+                return <span>{convertNumberToPercent(row.roi)}</span>
+              },
+            },
+            {
+              header: 'Doanh thu giữ lại',
+              accessorKey: 'holdRevenue',
+              cell: (props) => {
+                const row = props.row.original
+                return <span>{formatUSD(row.holdRevenue)}</span>
+              },
+            },
+            {
+              header: 'Doanh thu nhận được',
+              accessorKey: 'receivedRevenue',
+              cell: (props) => {
+                const row = props.row.original
+                return <span>{formatUSD(row.receivedRevenue)}</span>
+              },
+            },
+            {
+              header: 'Tổng Ref',
+              accessorKey: 'totalRef',
+            },
+            {
+              header: 'Chi phí mỗi Ref',
+              accessorKey: 'costPerRef',
+              cell: (props) => {
+                const row = props.row.original
+                return <span>{formatUSD(row.costPerRef)}</span>
+              },
+            },
+            {
+              header: 'Tỷ lệ Ref/Click (%)',
+              accessorKey: 'rateRefPerClick',
+              cell: (props) => {
+                const row = props.row.original
+                return <span>{convertNumberToPercent(row.rateRefPerClick)}</span>
+              },
+            },
+            {
+              header: 'Số FTD',
+              accessorKey: 'totalFtd',
+            },
+            {
+              header: 'Chi phí mỗi FTD',
+              accessorKey: 'costPerFtd',
+              cell: (props) => {
+                const row = props.row.original
+                return <span>{formatUSD(row.costPerFtd)}</span>
+              },
+            },
+            {
+              header: 'Tỷ lệ FTD/Ref (%)',
+              accessorKey: 'rateFtdPerRef',
+              cell: (props) => {
+                const row = props.row.original
+                return <span>{convertNumberToPercent(row.rateFtdPerRef)}</span>
+              },
+            },
+            {
+              header: 'Volume key/ngày',
+              accessorKey: 'totalTargetDailyKeyVolume',
+            },
+            {
+              header: 'Dự tính Ref/ngày',
+              accessorKey: 'totalTargetRef',
+            },
+            {
+              header: '% Click đạt được',
+              accessorKey: 'clickAchievementRate',
+              cell: (props) => {
+                const row = props.row.original
+                return <span>{convertNumberToPercent(row.clickAchievementRate)}</span>
+              },
+            },
+            {
+              header: '% Ref đạt được',
+              accessorKey: 'refAchievementRate',
+              cell: (props) => {
+                const row = props.row.original
+                return <span>{convertNumberToPercent(row.refAchievementRate)}</span>
+              },
+            },
+          ] as ColumnDef<ProjectDailyStatSummary>[])
+        : []),
+    ],
+    [filters, user?.roles],
+  )
+
   const onPaginationChange = (page: number) => {
     const newFilter = { ...filters, page }
     setFilters(newFilter)
@@ -321,6 +462,12 @@ export default function FinanceReportTable() {
 
   return (
     <>
+      {showSummary && (
+        <Card header="Tổng quan dự án" className="mb-4">
+          <DataTable columns={summaryColumns} data={data?.summary || []} loading={isLoading} />
+        </Card>
+      )}
+
       <div className="flex justify-between items-center mb-4">
         <Dropdown
           renderTitle={

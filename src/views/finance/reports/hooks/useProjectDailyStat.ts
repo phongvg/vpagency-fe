@@ -1,4 +1,4 @@
-import { GET_PROJECT_DAILY_STAT_LIST, GET_PROJECT_DAILY_STAT_DETAIL } from '@/utils/queryKey'
+import { GET_PROJECT_DAILY_STAT_DETAIL, GET_PROJECT_DAILY_STAT_LIST } from '@/utils/queryKey'
 import {
   apiGenerateProjectDailyReport,
   apiGetProjectDailyReports,
