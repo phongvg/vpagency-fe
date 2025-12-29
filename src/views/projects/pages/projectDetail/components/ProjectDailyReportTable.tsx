@@ -1,10 +1,9 @@
 import { ColumnDef, DataTable } from '@/components/shared'
-import { useProjectDailyReportStore } from '@/views/projects/pages/projectDetail/store/useProjectDailyReportStore'
-import { useGetProjectStatisticQuery } from '@/views/projects/pages/projectDetail/hooks/useProjectDetail'
-import { FinalURLStat } from '@/views/projects/pages/projectDetail/types/projectDetail.type'
 import { formatUSD } from '@/helpers/formatUSD'
 import ProjectReportStatistics from '@/views/projects/pages/projectDetail/components/ProjectReportStatistics'
-import { convertNumberToPercent } from '@/helpers/convertNumberToPercent'
+import { useGetProjectStatisticQuery } from '@/views/projects/pages/projectDetail/hooks/useProjectDetail'
+import { useProjectDailyReportStore } from '@/views/projects/pages/projectDetail/store/useProjectDailyReportStore'
+import { FinalURLStat } from '@/views/projects/pages/projectDetail/types/projectDetail.type'
 
 type Props = {
   projectId: string
@@ -66,7 +65,7 @@ export default function ProjectDailyReportTable({ projectId }: Props) {
       header: 'CTR',
       cell: (props) => {
         const row = props.row.original.avgCtr
-        return <span>{convertNumberToPercent(row)}</span>
+        return <span>{row}%</span>
       },
     },
     {

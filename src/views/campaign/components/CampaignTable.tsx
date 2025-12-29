@@ -3,7 +3,6 @@ import BadgeStatus from '@/components/shared/BadgeStatus'
 import { TableTooltip } from '@/components/shared/TableTooltip'
 import { Button, Checkbox, ConfirmDialog, Dropdown } from '@/components/ui'
 import { addDash } from '@/helpers/addDash'
-import { convertNumberToPercent } from '@/helpers/convertNumberToPercent'
 import { fixedNumber } from '@/helpers/fixedNumber'
 import { formatDate } from '@/helpers/formatDate'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
@@ -217,7 +216,7 @@ export default function CampaignTable() {
         accessorKey: 'ctr',
         cell: (props) => {
           const row = props.row.original.ctr
-          return <span>{convertNumberToPercent(row)}</span>
+          return <span>{row}%</span>
         },
       },
       {

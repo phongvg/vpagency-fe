@@ -3,7 +3,6 @@ import BadgeStatus from '@/components/shared/BadgeStatus'
 import { TableTooltip } from '@/components/shared/TableTooltip'
 import { Button, Checkbox, ConfirmDialog, Dialog, Dropdown } from '@/components/ui'
 import { addDash } from '@/helpers/addDash'
-import { convertNumberToPercent } from '@/helpers/convertNumberToPercent'
 import { fixedNumber } from '@/helpers/fixedNumber'
 import { formatDate } from '@/helpers/formatDate'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
@@ -263,7 +262,7 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
         accessorKey: 'ctr',
         cell: (props) => {
           const row = props.row.original.ctr
-          return <span>{convertNumberToPercent(row)}</span>
+          return <span>{row}%</span>
         },
       },
       {

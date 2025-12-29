@@ -1,7 +1,6 @@
 import { DataTable } from '@/components/shared'
 import { Button, Card, Dialog } from '@/components/ui'
 import { addDash } from '@/helpers/addDash'
-import { convertNumberToPercent } from '@/helpers/convertNumberToPercent'
 import { formatDate } from '@/helpers/formatDate'
 import { formatUSD } from '@/helpers/formatUSD'
 import { useGetProgressDetail } from '@/views/tasks/assign/hooks/useTask'
@@ -141,7 +140,7 @@ export default function TaskProgressDetailModal({ isOpen, taskId, onClose }: Pro
         accessorKey: 'ctr',
         cell: (props) => {
           const row = props.row.original
-          return <span>{convertNumberToPercent(row.ctr)}</span>
+          return <span>{row.ctr}%</span>
         },
       },
       {

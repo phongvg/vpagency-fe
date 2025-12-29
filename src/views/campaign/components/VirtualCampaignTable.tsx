@@ -1,9 +1,8 @@
-import { UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
-import { addDash } from '@/helpers/addDash'
-import { FixedSizeList } from 'react-window'
-import { useCallback, useMemo } from 'react'
 import { TableTooltip } from '@/components/shared/TableTooltip'
-import { convertNumberToPercent } from '@/helpers/convertNumberToPercent'
+import { addDash } from '@/helpers/addDash'
+import { UpdateCampaignRequest } from '@/views/campaign/types/campaign.type'
+import { useCallback, useMemo } from 'react'
+import { FixedSizeList } from 'react-window'
 
 interface VirtualCampaignTableProps {
   campaigns: UpdateCampaignRequest[]
@@ -151,7 +150,7 @@ export default function VirtualCampaignTable({ campaigns, height = 860 }: Virtua
             style={{ width: columnWidths.ctr, minWidth: columnWidths.ctr }}
             className="flex items-center px-4 border-r"
           >
-            {convertNumberToPercent(campaign.ctr)}
+            {campaign.ctr}%
           </div>
           <div
             style={{ width: columnWidths.cpm, minWidth: columnWidths.cpm }}
