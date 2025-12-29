@@ -3,7 +3,7 @@ import { Card, Progress } from '@/components/ui'
 import { formatUSD } from '@/helpers/formatUSD'
 import { getDaysArrayInMonth, getDaysInMonth } from '@/helpers/getDaysArrayInMonth'
 import { useAuthStore } from '@/store/auth/useAuthStore'
-import { isAdminOrManagerOrAccounting } from '@/utils/checkRole'
+import { isAdminOrAccounting, isAdminOrManagerOrAccounting } from '@/utils/checkRole'
 import {
   useGetMonthlySpendingStat,
   useProjectStatQuery,
@@ -35,7 +35,7 @@ export default function FinanceStats() {
   const { user } = useAuthStore()
   const { data: projectStat } = useProjectStatQuery(isAdminOrManagerOrAccounting(user?.roles))
   const { data: monthlySpendingStat } = useGetMonthlySpendingStat(isAdminOrManagerOrAccounting(user?.roles))
-  const { data: topProjectsByProfit } = useTopProjectsByProfitQuery(isAdminOrManagerOrAccounting(user?.roles))
+  const { data: topProjectsByProfit } = useTopProjectsByProfitQuery(isAdminOrAccounting(user?.roles))
 
   const getPerformanceLabel = (active?: number, total?: number) => {
     if (!active || !total) return 'Chưa có dữ liệu'
@@ -90,39 +90,41 @@ export default function FinanceStats() {
       </div>
 
       <div className="gap-4 grid grid-cols-1 lg:grid-cols-3">
-        <Card>
-          <h4 className="mb-4 font-semibold">Top dự án theo lợi nhuận</h4>
-          <div className="space-y-3 max-h-80 overflow-y-auto">
-            {topProjectsByProfit && topProjectsByProfit.length > 0 ? (
-              topProjectsByProfit.map((project, index) => (
-                <div
-                  key={project.projectId}
-                  className="flex justify-between items-center pb-3 border-gray-100 border-b last:border-b-0"
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`flex justify-center items-center rounded-full w-8 h-8 font-bold text-sm text-white ${
-                        index === 0
-                          ? 'bg-yellow-500'
-                          : index === 1
-                            ? 'bg-gray-400'
-                            : index === 2
-                              ? 'bg-orange-600'
-                              : 'bg-gray-300'
-                      }`}
-                    >
-                      {index + 1}
+        {isAdminOrAccounting(user?.roles) && (
+          <Card>
+            <h4 className="mb-4 font-semibold">Top dự án theo lợi nhuận</h4>
+            <div className="space-y-3 max-h-80 overflow-y-auto">
+              {topProjectsByProfit && topProjectsByProfit.length > 0 ? (
+                topProjectsByProfit.map((project, index) => (
+                  <div
+                    key={project.projectId}
+                    className="flex justify-between items-center pb-3 border-gray-100 border-b last:border-b-0"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`flex justify-center items-center rounded-full w-8 h-8 font-bold text-sm text-white ${
+                          index === 0
+                            ? 'bg-yellow-500'
+                            : index === 1
+                              ? 'bg-gray-400'
+                              : index === 2
+                                ? 'bg-orange-600'
+                                : 'bg-gray-300'
+                        }`}
+                      >
+                        {index + 1}
+                      </div>
+                      <span className="font-medium text-gray-700 text-sm">{project.projectName}</span>
                     </div>
-                    <span className="font-medium text-gray-700 text-sm">{project.projectName}</span>
+                    <span className="font-semibold text-green-600 text-sm">{formatUSD(project.profit)}</span>
                   </div>
-                  <span className="font-semibold text-green-600 text-sm">{formatUSD(project.profit)}</span>
-                </div>
-              ))
-            ) : (
-              <p className="text-gray-500 text-sm text-center">Chưa có dữ liệu</p>
-            )}
-          </div>
-        </Card>
+                ))
+              ) : (
+                <p className="text-gray-500 text-sm text-center">Chưa có dữ liệu</p>
+              )}
+            </div>
+          </Card>
+        )}
 
         <Card>
           <h4 className="mb-2">Tỷ lệ dự án hoạt động</h4>
