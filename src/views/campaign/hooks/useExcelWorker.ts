@@ -2,7 +2,6 @@ import { CurrencyRate, UpdateCampaignRequest } from '@/views/campaign/types/camp
 import { useCallback, useRef, useState } from 'react'
 
 interface UseExcelWorkerReturn {
-  getAvailableDates: (file: File) => Promise<string[]>
   processFile: (
     file: File,
     selectedDate?: string,
@@ -17,44 +16,6 @@ export const useExcelWorker = (): UseExcelWorkerReturn => {
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
   const workerRef = useRef<Worker | null>(null)
-
-  const getAvailableDates = useCallback((file: File): Promise<string[]> => {
-    return new Promise((resolve, reject) => {
-      const worker = new Worker(new URL('../workers/excelWorker.ts', import.meta.url), {
-        type: 'module',
-      })
-
-      worker.onmessage = (e: MessageEvent) => {
-        const { type, availableDates, error: workerError } = e.data
-
-        if (type === 'dates') {
-          worker.terminate()
-          resolve(availableDates || [])
-        } else if (type === 'error') {
-          worker.terminate()
-          reject(new Error(workerError || 'Lỗi xử lý file'))
-        }
-      }
-
-      worker.onerror = (err) => {
-        worker.terminate()
-        reject(err)
-      }
-
-      const reader = new FileReader()
-      reader.onload = () => {
-        worker.postMessage({
-          type: 'get-dates',
-          file: reader.result,
-        })
-      }
-      reader.onerror = () => {
-        worker.terminate()
-        reject(new Error('Lỗi đọc file'))
-      }
-      reader.readAsArrayBuffer(file)
-    })
-  }, [])
 
   const processFile = useCallback(
     (file: File, selectedDate?: string): Promise<{ data: UpdateCampaignRequest[]; currencyRates: CurrencyRate[] }> => {
@@ -124,7 +85,6 @@ export const useExcelWorker = (): UseExcelWorkerReturn => {
   )
 
   return {
-    getAvailableDates,
     processFile,
     isProcessing,
     progress,

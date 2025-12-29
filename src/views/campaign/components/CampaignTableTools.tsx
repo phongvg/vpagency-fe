@@ -19,7 +19,6 @@ interface ImportData {
 export default function CampaignTableTools() {
   const [isOpenCurrencyRateDialog, setIsOpenCurrencyRateDialog] = useState(false)
   const [isOpenDateSelectDialog, setIsOpenDateSelectDialog] = useState(false)
-  const [availableDates, setAvailableDates] = useState<string[]>([])
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
   const [pendingFile, setPendingFile] = useState<File | null>(null)
   const [importData, setImportData] = useState<ImportData>({
@@ -30,7 +29,7 @@ export default function CampaignTableTools() {
   const { openDialog, openPreviewDialog, openEmailPreviewDialog, setCampaigns, setEmailAssignments, clearFilter } =
     useCampaignStore()
   const { showFilters, filterButton } = CampaignFilter()
-  const { getAvailableDates, processFile, isProcessing, progress } = useExcelWorker()
+  const { processFile, isProcessing, progress } = useExcelWorker()
   const {
     processFile: processEmailFile,
     isProcessing: isEmailProcessing,
@@ -54,27 +53,13 @@ export default function CampaignTableTools() {
     inputEmailRef.current?.click()
   }
 
-  const handleCampaignFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+  const handleCampaignFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
-    try {
-      const dates = await getAvailableDates(file)
-
-      if (dates.length === 0) {
-        toastError('Không tìm thấy dữ liệu ngày trong file')
-        return
-      }
-
-      setPendingFile(file)
-      setAvailableDates(dates)
-      setSelectedDate(dates[0])
-      setIsOpenDateSelectDialog(true)
-    } catch (err) {
-      toastError((err as Error).message ?? 'Lỗi đọc file')
-    } finally {
-      e.target.value = ''
-    }
+    setPendingFile(file)
+    setIsOpenDateSelectDialog(true)
+    e.target.value = ''
   }
 
   const handleDateSelect = async () => {
@@ -99,7 +84,6 @@ export default function CampaignTableTools() {
     } finally {
       setPendingFile(null)
       setSelectedDate(null)
-      setAvailableDates([])
     }
   }
 
@@ -107,7 +91,6 @@ export default function CampaignTableTools() {
     setIsOpenDateSelectDialog(false)
     setPendingFile(null)
     setSelectedDate(null)
-    setAvailableDates([])
   }
 
   const handleEmailFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -222,7 +205,6 @@ export default function CampaignTableTools() {
 
       <DateSelectDialog
         isOpen={isOpenDateSelectDialog}
-        availableDates={availableDates}
         selectedDate={selectedDate}
         onSelectDate={setSelectedDate}
         onSubmit={handleDateSelect}

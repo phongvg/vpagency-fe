@@ -3,16 +3,15 @@ import { Campaign, CurrencyRate, UpdateCampaignRequest } from '@/views/campaign/
 import * as XLSX from 'xlsx'
 
 interface WorkerMessage {
-  type: 'get-dates' | 'process'
+  type: 'process'
   file: ArrayBuffer
   selectedDate?: string
 }
 
 interface WorkerResponse {
-  type: 'success' | 'error' | 'progress' | 'debug' | 'dates'
+  type: 'success' | 'error' | 'progress' | 'debug'
   data?: Campaign[]
   currencyRates?: CurrencyRate[]
-  availableDates?: string[]
   error?: string
   progress?: number
 }
@@ -32,9 +31,7 @@ const getSheetData = (workbook: XLSX.WorkBook, sheetName: string): Record<string
 }
 
 self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
-  const { type, file, selectedDate } = e.data
-
-  if (type !== 'process' && type !== 'get-dates') return
+  const { file, selectedDate } = e.data
 
   try {
     self.postMessage({ type: 'progress', progress: 10 } as WorkerResponse)
@@ -55,17 +52,6 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
     const locationTableSheet = getSheetData(workbook, 'Location_Table')
     const campaignBudgetSheet = getSheetData(workbook, 'Campaign_Budget')
     const keywordPfmYesterdaySheet = getSheetData(workbook, 'Keyword_Performance_Yesterday')
-
-    if (type === 'get-dates') {
-      const dates = campaignPfmYesterdaySheet.map((row) => row['Data Date']).filter(Boolean)
-      const uniqueDates = [...new Set(dates)]
-        .map((date) => (typeof date === 'number' ? excelDateToJSDate(date) : String(date)))
-        .sort()
-        .reverse()
-
-      self.postMessage({ type: 'dates', availableDates: uniqueDates } as WorkerResponse)
-      return
-    }
 
     self.postMessage({ type: 'progress', progress: 50 } as WorkerResponse)
 
@@ -160,7 +146,17 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
 
     self.postMessage({ type: 'progress', progress: 70 } as WorkerResponse)
 
-    const campaignId = campaignSheet.map((item) => item['Campaign ID'])
+    // Filter campaigns by selectedDate if provided
+    let filteredCampaignSheet = campaignSheet
+    if (selectedDate) {
+      filteredCampaignSheet = campaignSheet.filter((row) => {
+        const datePulled = row['Date Pulled']
+        const normalizedDate = typeof datePulled === 'number' ? excelDateToJSDate(datePulled) : String(datePulled)
+        return normalizedDate === selectedDate
+      })
+    }
+
+    const campaignId = filteredCampaignSheet.map((item) => item['Campaign ID'])
     const uniqueCampaignIds = [...new Set(campaignId)]
 
     const campaigns: UpdateCampaignRequest[] = uniqueCampaignIds.map((id, index) => {
@@ -170,36 +166,38 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
       }
 
       const adGroupCriterionRows = adGroupCriterionMap.get(id) || []
-      const campaignRows = campaignMap.get(id) || []
+      const campaignRows = filteredCampaignSheet.filter((row) => row['Campaign ID'] === id)
       const campaignPfmRows = campaignPfmMap.get(id) || []
       const adGroupAdRows = adGroupAdMap.get(id) || []
       const campaignCriterionRows = campaignCriterionMap.get(id) || []
       const campaignBudgetRows = campaignBudgetMap.get(id) || []
       const keywordPfmYesterdayRows = keywordPfmYesterdayMap.get(id) || []
 
-      const importAt = campaignPfmRows.map((row) => row['Date Pulled'])
-      const date = campaignPfmRows.map((row) => row['Data Date'])
+      // Get Date Pulled from filtered campaign rows
+      const datePulledRaw = campaignRows[0]?.['Date Pulled']
+      const datePulledString = datePulledRaw
+        ? typeof datePulledRaw === 'number'
+          ? excelDateToJSDate(datePulledRaw)
+          : String(datePulledRaw)
+        : new Date().toISOString().slice(0, 10)
 
-      // Filter by selectedDate if provided
-      let filteredCampaignPfmRows = campaignPfmRows
-      let currentDataDate = date[date.length - 1]
+      // Calculate date as Date Pulled - 1
+      const datePulledDate = new Date(datePulledString)
+      datePulledDate.setDate(datePulledDate.getDate() - 1)
+      const dataDate = datePulledDate.toISOString().slice(0, 10)
 
-      if (selectedDate) {
-        filteredCampaignPfmRows = campaignPfmRows.filter((row) => {
-          const rowDate = row['Data Date']
-          const normalizedRowDate = typeof rowDate === 'number' ? excelDateToJSDate(rowDate) : String(rowDate)
-          return normalizedRowDate === selectedDate
-        })
+      // Filter performance data by dataDate
+      const filteredCampaignPfmRows = campaignPfmRows.filter((row) => {
+        const rowDate = row['Data Date']
+        const normalizedRowDate = typeof rowDate === 'number' ? excelDateToJSDate(rowDate) : String(rowDate)
+        return normalizedRowDate === dataDate
+      })
 
-        if (filteredCampaignPfmRows.length === 0) {
-          filteredCampaignPfmRows = campaignPfmRows
-        } else {
-          currentDataDate = selectedDate
-        }
-      }
+      // Use all performance data if no match found for specific date
+      const performanceRows = filteredCampaignPfmRows.length > 0 ? filteredCampaignPfmRows : campaignPfmRows
 
-      const searchTermRows = searchTermMap.get(`${id}|${currentDataDate}`) || []
-      const geographicViewYesterdayRows = geographicViewMap.get(`${id}|${currentDataDate}`) || []
+      const searchTermRows = searchTermMap.get(`${id}|${dataDate}`) || []
+      const geographicViewYesterdayRows = geographicViewMap.get(`${id}|${dataDate}`) || []
 
       const uids = campaignRows.map((row) => row['Customer ID'])
       const lastUid = uids[uids.length - 1]
@@ -267,16 +265,16 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
         ).values(),
       )
       const statusCampaign = campaignRows.map((row) => row['Status'])
-      const avgCpc = filteredCampaignPfmRows.map((row) => row['CPC'])
+      const avgCpc = performanceRows.map((row) => row['CPC'])
       const targetCpc = campaignRows.map((row) => row['Target CPC (micros)'])
       const cpcBidMicros = adGroupCriterionRows.map((row) => row['CPC Bid Micros'])
       const microsCalc =
         (cpcBidMicros[cpcBidMicros.length - 1] ? cpcBidMicros[cpcBidMicros.length - 1] / 1000000 : null) ||
         (targetCpc[targetCpc.length - 1] ? targetCpc[targetCpc.length - 1] / 1000000 : null)
-      const clicks = filteredCampaignPfmRows.map((row) => row['Clicks'])
-      const ctr = filteredCampaignPfmRows.map((row) => row['CTR'])
-      const cpm = filteredCampaignPfmRows.map((row) => row['CPM'])
-      const cost = filteredCampaignPfmRows.map((row) => row['Cost'])
+      const clicks = performanceRows.map((row) => row['Clicks'])
+      const ctr = performanceRows.map((row) => row['CTR'])
+      const cpm = performanceRows.map((row) => row['CPM'])
+      const cost = performanceRows.map((row) => row['Cost'])
       const targetLocations = [
         ...new Set(
           campaignCriterionRows
@@ -308,23 +306,11 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
         ),
       ]
       const campaignBudget = campaignBudgetRows.map((row) => row['Amount (Micros)'])
-      const impression = filteredCampaignPfmRows.map((row) => row['Impressions'])
+      const impression = performanceRows.map((row) => row['Impressions'])
 
       return {
-        // Nếu không có dữ liệu ngày nhập hoặc ngày dữ liệu thì gán ngày hiện tại
-        importAt: filteredCampaignPfmRows[filteredCampaignPfmRows.length - 1]?.['Date Pulled']
-          ? excelDateToJSDate(filteredCampaignPfmRows[filteredCampaignPfmRows.length - 1]['Date Pulled'])
-          : new Date().toISOString().slice(0, 10),
-        // Use selectedDate or last available date
-        date:
-          selectedDate ||
-          (date[date.length - 1]
-            ? excelDateToJSDate(date[date.length - 1])
-            : (() => {
-                const d = new Date()
-                d.setDate(d.getDate() - 1)
-                return d.toISOString().slice(0, 10)
-              })()),
+        importAt: datePulledString,
+        date: dataDate,
         uid: uidString,
         mcc,
         name: campaignRows[campaignRows.length - 1]?.['Name'] || null,
