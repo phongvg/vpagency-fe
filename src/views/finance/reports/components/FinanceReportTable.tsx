@@ -1,7 +1,7 @@
 import { DataTable } from '@/components/shared'
 import { TableTooltip } from '@/components/shared/TableTooltip'
 import { Button, Card, Checkbox, Dropdown } from '@/components/ui'
-import { convertNumberToPercent } from '@/helpers/convertNumberToPercent'
+import { fixedNumber } from '@/helpers/fixedNumber'
 import { formatDate } from '@/helpers/formatDate'
 import { formatUSD } from '@/helpers/formatUSD'
 import { useAuthStore } from '@/store/auth/useAuthStore'
@@ -139,7 +139,7 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
               accessorKey: 'roi',
               cell: (props) => {
                 const row = props.row.original
-                return <span>{convertNumberToPercent(row.roi)}</span>
+                return <span>{fixedNumber(row.roi)}%</span>
               },
             },
             {
@@ -180,7 +180,7 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
               accessorKey: 'rateRefPerClick',
               cell: (props) => {
                 const row = props.row.original
-                return <span>{convertNumberToPercent(row.rateRefPerClick)}</span>
+                return <span>{fixedNumber(row.rateRefPerClick)}%</span>
               },
             },
             {
@@ -203,7 +203,7 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
               accessorKey: 'costFtdPerRef',
               cell: (props) => {
                 const row = props.row.original
-                return <span>{convertNumberToPercent(row.costFtdPerRef)}</span>
+                return <span>{fixedNumber(row.costFtdPerRef)}%</span>
               },
             },
             {
@@ -226,7 +226,7 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
               accessorKey: 'totalClickPerVolume',
               cell: (props) => {
                 const row = props.row.original
-                return <span>{convertNumberToPercent(row.totalClickPerVolume)}</span>
+                return <span>{fixedNumber(row.totalClickPerVolume)}%</span>
               },
             },
             {
@@ -235,7 +235,7 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
               accessorKey: 'totalRefPerVolume',
               cell: (props) => {
                 const row = props.row.original
-                return <span>{convertNumberToPercent(row.totalRefPerVolume)}</span>
+                return <span>{fixedNumber(row.totalRefPerVolume)}%</span>
               },
             },
           ] as ColumnDef<ProjectDailyStat>[])
@@ -361,7 +361,7 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
               accessorKey: 'roi',
               cell: (props) => {
                 const row = props.row.original
-                return <span>{convertNumberToPercent(row.roi)}</span>
+                return <span>{fixedNumber(row.roi)}%</span>
               },
             },
             {
@@ -397,7 +397,7 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
               accessorKey: 'rateRefPerClick',
               cell: (props) => {
                 const row = props.row.original
-                return <span>{convertNumberToPercent(row.rateRefPerClick)}</span>
+                return <span>{fixedNumber(row.rateRefPerClick)}%</span>
               },
             },
             {
@@ -417,7 +417,7 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
               accessorKey: 'rateFtdPerRef',
               cell: (props) => {
                 const row = props.row.original
-                return <span>{convertNumberToPercent(row.rateFtdPerRef)}</span>
+                return <span>{fixedNumber(row.rateFtdPerRef)}%</span>
               },
             },
             {
@@ -433,7 +433,7 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
               accessorKey: 'clickAchievementRate',
               cell: (props) => {
                 const row = props.row.original
-                return <span>{convertNumberToPercent(row.clickAchievementRate)}</span>
+                return <span>{fixedNumber(row.clickAchievementRate)}%</span>
               },
             },
             {
@@ -441,7 +441,7 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
               accessorKey: 'refAchievementRate',
               cell: (props) => {
                 const row = props.row.original
-                return <span>{convertNumberToPercent(row.refAchievementRate)}</span>
+                return <span>{fixedNumber(row.refAchievementRate)}%</span>
               },
             },
           ] as ColumnDef<ProjectDailyStatSummary>[])

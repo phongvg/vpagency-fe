@@ -1,5 +1,4 @@
 import { Badge, Tooltip } from '@/components/ui'
-import { convertNumberToPercent } from '@/helpers/convertNumberToPercent'
 import { fixedNumber } from '@/helpers/fixedNumber'
 
 interface TableTooltipProps<T> {
@@ -43,7 +42,7 @@ export function TableTooltip<T extends Record<string, any>>({
                   {columns.map((col) => (
                     <td key={String(col.key)} className="px-3 py-1 text-left">
                       {typeof row[col.key] === 'number' && col.key === 'ctr'
-                        ? convertNumberToPercent(row[col.key])
+                        ? fixedNumber(row[col.key]) + '%'
                         : typeof row[col.key] === 'number'
                           ? fixedNumber(row[col.key])
                           : row[col.key]}

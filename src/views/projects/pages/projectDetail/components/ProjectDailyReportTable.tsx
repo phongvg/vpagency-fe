@@ -1,4 +1,5 @@
 import { ColumnDef, DataTable } from '@/components/shared'
+import { fixedNumber } from '@/helpers/fixedNumber'
 import { formatUSD } from '@/helpers/formatUSD'
 import ProjectReportStatistics from '@/views/projects/pages/projectDetail/components/ProjectReportStatistics'
 import { useGetProjectStatisticQuery } from '@/views/projects/pages/projectDetail/hooks/useProjectDetail'
@@ -65,7 +66,7 @@ export default function ProjectDailyReportTable({ projectId }: Props) {
       header: 'CTR',
       cell: (props) => {
         const row = props.row.original.avgCtr
-        return <span>{row}%</span>
+        return <span>{fixedNumber(row)}%</span>
       },
     },
     {

@@ -262,7 +262,7 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
         accessorKey: 'ctr',
         cell: (props) => {
           const row = props.row.original.ctr
-          return <span>{row}%</span>
+          return <span>{fixedNumber(row)}%</span>
         },
       },
       {
