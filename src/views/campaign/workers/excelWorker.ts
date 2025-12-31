@@ -146,7 +146,6 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
 
     self.postMessage({ type: 'progress', progress: 70 } as WorkerResponse)
 
-    // Filter campaigns by selectedDate if provided
     let filteredCampaignSheet = campaignSheet
     if (selectedDate) {
       filteredCampaignSheet = campaignSheet.filter((row) => {
@@ -173,7 +172,6 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
       const campaignBudgetRows = campaignBudgetMap.get(id) || []
       const keywordPfmYesterdayRows = keywordPfmYesterdayMap.get(id) || []
 
-      // Get Date Pulled from filtered campaign rows
       const datePulledRaw = campaignRows[0]?.['Date Pulled']
       const datePulledString = datePulledRaw
         ? typeof datePulledRaw === 'number'
@@ -181,20 +179,39 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
           : String(datePulledRaw)
         : new Date().toISOString().slice(0, 10)
 
-      // Calculate date as Date Pulled - 1
       const datePulledDate = new Date(datePulledString)
       datePulledDate.setDate(datePulledDate.getDate() - 1)
       const dataDate = datePulledDate.toISOString().slice(0, 10)
 
-      // Filter performance data by dataDate
-      const filteredCampaignPfmRows = campaignPfmRows.filter((row) => {
-        const rowDate = row['Data Date']
-        const normalizedRowDate = typeof rowDate === 'number' ? excelDateToJSDate(rowDate) : String(rowDate)
-        return normalizedRowDate === dataDate
+      let avgCpcValue = 0
+      let clicksValue = 0
+      let ctrValue = 0
+      let cpmValue = 0
+      let costValue = 0
+      let impressionValue = 0
+
+      const filteredPfmRows = campaignPfmRows.filter((row) => {
+        const pfmDatePulled = row['Date Pulled']
+        const normalizedPfmDate =
+          typeof pfmDatePulled === 'number' ? excelDateToJSDate(pfmDatePulled) : String(pfmDatePulled)
+        return normalizedPfmDate === datePulledString
       })
 
-      // Use all performance data if no match found for specific date
-      const performanceRows = filteredCampaignPfmRows.length > 0 ? filteredCampaignPfmRows : campaignPfmRows
+      if (filteredPfmRows.length > 0) {
+        const avgCpc = filteredPfmRows.map((row) => row['CPC'])
+        const clicks = filteredPfmRows.map((row) => row['Clicks'])
+        const ctr = filteredPfmRows.map((row) => row['CTR'])
+        const cpm = filteredPfmRows.map((row) => row['CPM'])
+        const cost = filteredPfmRows.map((row) => row['Cost'])
+        const impression = filteredPfmRows.map((row) => row['Impressions'])
+
+        avgCpcValue = avgCpc[avgCpc.length - 1] ?? 0
+        clicksValue = clicks[clicks.length - 1] ?? 0
+        ctrValue = ctr[ctr.length - 1] ?? 0
+        cpmValue = cpm[cpm.length - 1] ?? 0
+        costValue = cost[cost.length - 1] ?? 0
+        impressionValue = impression[impression.length - 1] ?? 0
+      }
 
       const searchTermRows = searchTermMap.get(`${id}|${dataDate}`) || []
       const geographicViewYesterdayRows = geographicViewMap.get(`${id}|${dataDate}`) || []
@@ -265,16 +282,11 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
         ).values(),
       )
       const statusCampaign = campaignRows.map((row) => row['Status'])
-      const avgCpc = performanceRows.map((row) => row['CPC'])
       const targetCpc = campaignRows.map((row) => row['Target CPC (micros)'])
       const cpcBidMicros = adGroupCriterionRows.map((row) => row['CPC Bid Micros'])
       const microsCalc =
         (cpcBidMicros[cpcBidMicros.length - 1] ? cpcBidMicros[cpcBidMicros.length - 1] / 1000000 : null) ||
         (targetCpc[targetCpc.length - 1] ? targetCpc[targetCpc.length - 1] / 1000000 : null)
-      const clicks = performanceRows.map((row) => row['Clicks'])
-      const ctr = performanceRows.map((row) => row['CTR'])
-      const cpm = performanceRows.map((row) => row['CPM'])
-      const cost = performanceRows.map((row) => row['Cost'])
       const targetLocations = [
         ...new Set(
           campaignCriterionRows
@@ -306,7 +318,6 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
         ),
       ]
       const campaignBudget = campaignBudgetRows.map((row) => row['Amount (Micros)'])
-      const impression = performanceRows.map((row) => row['Impressions'])
 
       return {
         importAt: datePulledString,
@@ -321,12 +332,12 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
         keywords,
         topSearchTerms,
         status: statusCampaign[statusCampaign.length - 1] ?? null,
-        avgCpc: avgCpc[avgCpc.length - 1] ?? 0,
+        avgCpc: avgCpcValue,
         targetCpc: microsCalc,
-        clicks: clicks[clicks.length - 1] ?? 0,
-        ctr: ctr[ctr.length - 1] ?? 0,
-        cpm: cpm[cpm.length - 1] ?? 0,
-        cost: cost[cost.length - 1] ?? 0,
+        clicks: clicksValue,
+        ctr: ctrValue,
+        cpm: cpmValue,
+        cost: costValue,
         targetLocations,
         locationStats,
         campaignBudget: campaignBudget[campaignBudget.length - 1]
@@ -334,7 +345,7 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
           : 0,
         negativeKeywords,
         locationExcluded,
-        impression: impression[impression.length - 1] ?? 0,
+        impression: impressionValue,
         gmail: '',
       }
     })
