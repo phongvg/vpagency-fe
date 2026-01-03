@@ -38,3 +38,10 @@ export async function apiGetProjectDailyStatById(id: string) {
     method: 'get',
   })
 }
+
+export async function apiDeleteProjectDailyStat(id: string) {
+  return ApiService.fetchData<BaseResponse<null>>({
+    url: `/project-daily-stats/${id}`,
+    method: 'delete',
+  })
+}

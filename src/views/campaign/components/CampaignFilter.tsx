@@ -10,10 +10,12 @@ export function CampaignFilterPanel() {
   const [uid, setUid] = useState(filter.uid || '')
   const [externalId, setExternalId] = useState(filter.externalId || '')
   const [gmail, setGmail] = useState(filter.gmail || '')
+  const [finalUrl, setFinalUrl] = useState(filter.finalUrl || '')
 
   const debouncedUid = useDebounce(uid, 500)
   const debouncedExternalId = useDebounce(externalId, 500)
   const debouncedGmail = useDebounce(gmail, 500)
+  const debouncedFinalUrl = useDebounce(finalUrl, 500)
 
   useEffect(() => {
     setFilter({
@@ -41,6 +43,15 @@ export function CampaignFilterPanel() {
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedGmail])
+
+  useEffect(() => {
+    setFilter({
+      ...filter,
+      finalUrl: debouncedFinalUrl || undefined,
+      page: 1,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedFinalUrl])
 
   const handleImportAtFromChange = (date: Date | null) => {
     setFilter({
@@ -84,6 +95,10 @@ export function CampaignFilterPanel() {
 
   const handleGmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGmail(e.target.value)
+  }
+
+  const handleFinalUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFinalUrl(e.target.value)
   }
 
   return (
@@ -145,6 +160,11 @@ export function CampaignFilterPanel() {
           <label className="block mb-1 font-semibold text-sm">Gmail</label>
           <Input size="sm" placeholder="Nhập Gmail..." value={gmail} onChange={handleGmailChange} />
         </div>
+
+        <div>
+          <label className="block mb-1 font-semibold text-sm">URL</label>
+          <Input size="sm" placeholder="Nhập URL..." value={finalUrl} onChange={handleFinalUrlChange} />
+        </div>
       </div>
     </div>
   )
@@ -163,12 +183,21 @@ export default function CampaignFilter() {
       dateTo: undefined,
       uid: undefined,
       externalId: undefined,
+      gmail: undefined,
+      finalUrl: undefined,
       page: 1,
     })
   }
 
   const hasActiveFilters =
-    filter.importAtFrom || filter.importAtTo || filter.dateFrom || filter.dateTo || filter.uid || filter.externalId
+    filter.importAtFrom ||
+    filter.importAtTo ||
+    filter.dateFrom ||
+    filter.dateTo ||
+    filter.uid ||
+    filter.externalId ||
+    filter.gmail ||
+    filter.finalUrl
 
   return {
     showFilters,

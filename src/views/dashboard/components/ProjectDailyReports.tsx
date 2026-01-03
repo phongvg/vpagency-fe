@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import { ProjectReports, ProjectReportsFilterRequest } from '@/@types/statistic'
+import { useMemo } from 'react'
+import { ProjectReports } from '@/@types/statistic'
 import { useProjectReportStatisticQuery } from '@/views/dashboard/hooks/useStatisticQueries'
 import { useAuthStore } from '@/store/auth/useAuthStore'
 import { isAdmin } from '@/utils/checkRole'
@@ -8,17 +8,12 @@ import { formatDate } from '@/helpers/formatDate'
 import { Avatar, Card } from '@/components/ui'
 import { formatUSD } from '@/helpers/formatUSD'
 import { DataTable } from '@/components/shared'
+import { useDashboardStore } from '@/views/dashboard/store/useDashboardStore'
+import ProjectDailyReportsFilter from '@/views/dashboard/components/ProjectDailyReportsFilter'
 
 export default function ProjectDailyReports() {
   const { user } = useAuthStore()
-
-  const [filters, setFilters] = useState<ProjectReportsFilterRequest>({
-    search: '',
-    page: 1,
-    limit: 10,
-    projectId: '',
-    runnerId: '',
-  })
+  const { filters, setFilters } = useDashboardStore()
 
   const { data, isLoading } = useProjectReportStatisticQuery(filters, isAdmin(user?.roles))
 
@@ -148,6 +143,7 @@ export default function ProjectDailyReports() {
 
   return (
     <>
+      <ProjectDailyReportsFilter />
       <Card header="Báo cáo tiến độ hàng ngày của dự án">
         <DataTable
           columns={columns}

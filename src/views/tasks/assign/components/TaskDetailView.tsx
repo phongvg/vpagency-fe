@@ -264,6 +264,33 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
         </div>
       )}
 
+      {task.creator && (
+        <div className="mb-6">
+          <div className="flex items-center gap-2 mb-3">
+            <HiUsers className="w-4 h-4 text-gray-500" />
+            <h3 className="font-medium text-gray-700 text-sm">Người giao việc</h3>
+          </div>
+          <div className="space-y-2">
+            {(() => {
+              const user = task.creator
+              const displayName =
+                user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.username
+              return (
+                <div key={user.id} className="flex items-center gap-3 bg-gray-50 p-2 rounded-lg">
+                  <Avatar size="sm" src={user.avatar || undefined} shape="circle">
+                    {displayName.charAt(0).toUpperCase()}
+                  </Avatar>
+                  <div className="flex-1">
+                    <p className="font-medium text-gray-900 text-sm">{displayName}</p>
+                    <p className="text-gray-500 text-xs">{user.email || user.username}</p>
+                  </div>
+                </div>
+              )
+            })()}
+          </div>
+        </div>
+      )}
+
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-3">
           <HiUsers className="w-4 h-4 text-gray-500" />

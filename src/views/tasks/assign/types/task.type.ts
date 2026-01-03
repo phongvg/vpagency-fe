@@ -23,6 +23,7 @@ export type Task = {
   numberOfAccounts: number | null
   assignedUsers: User[]
   creatorId: string
+  creator?: User
   createdAt: Date
   updatedAt: Date
   numberOfResultCampaigns: number | null

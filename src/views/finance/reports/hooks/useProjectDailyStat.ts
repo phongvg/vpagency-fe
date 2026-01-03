@@ -1,5 +1,6 @@
 import { GET_PROJECT_DAILY_STAT_DETAIL, GET_PROJECT_DAILY_STAT_LIST } from '@/utils/queryKey'
 import {
+  apiDeleteProjectDailyStat,
   apiGenerateProjectDailyReport,
   apiGetProjectDailyReports,
   apiGetProjectDailyStatById,
@@ -50,6 +51,17 @@ export const useUpdateProjectDailyStatMutation = () => {
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: [GET_PROJECT_DAILY_STAT_LIST] })
       queryClient.invalidateQueries({ queryKey: [GET_PROJECT_DAILY_STAT_DETAIL, variables.id] })
+    },
+  })
+}
+
+export const useDeleteProjectDailyStatMutation = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (id: string) => apiDeleteProjectDailyStat(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [GET_PROJECT_DAILY_STAT_LIST] })
     },
   })
 }

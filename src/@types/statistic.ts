@@ -22,6 +22,9 @@ export type ByStatus = {
 export type ProjectReportsFilterRequest = CommonFilterRequest & {
   projectId?: string
   runnerId?: string
+  fromDate?: string
+  toDate?: string
+  projectName?: string
 }
 
 export type ProjectReports = {

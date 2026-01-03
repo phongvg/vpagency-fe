@@ -10,6 +10,7 @@ import Statistic from '@/views/dashboard/components/Statistic'
 import TaskOverview from '@/views/dashboard/components/TaskOverview'
 import { useTaskStatisticQuery, useUserStatisticQuery } from '@/views/dashboard/hooks/useStatisticQueries'
 import FinanceReportTable from '@/views/finance/reports/components/FinanceReportTable'
+import FinanceReportTableTools from '@/views/finance/reports/components/FinanceReportTableTools'
 
 export default function Dashboard() {
   const { user } = useAuthStore()
@@ -24,7 +25,9 @@ export default function Dashboard() {
       return (
         <>
           <Statistic data={userStats} />
+
           <Card header="Báo cáo tiến độ hàng ngày của dự án">
+            <FinanceReportTableTools />
             <FinanceReportTable showSummary />
           </Card>
           <FinanceStats />

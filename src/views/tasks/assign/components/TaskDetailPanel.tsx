@@ -279,6 +279,12 @@ function TaskProjectSection({ task }: TaskPanelProps) {
 function TaskPeopleSection({ task }: TaskPanelProps) {
   return (
     <ul className="space-y-2">
+      {task.creator && (
+        <li className="flex justify-between items-center">
+          <span>Người giao việc:</span>
+          <UsersAvatarGroup avatarProps={{ size: 25 }} users={[task.creator]} />
+        </li>
+      )}
       <li className="flex justify-between items-center">
         <span>Người nhận việc:</span>
         <UsersAvatarGroup avatarProps={{ size: 25 }} users={task.assignedUsers} />

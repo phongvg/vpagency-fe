@@ -6,7 +6,7 @@ export default function FinanceReport() {
   return (
     <AdaptableCard className="h-full" bodyClass="h-full">
       <FinanceReportTableTools />
-      <FinanceReportTable />
+      <FinanceReportTable showSummary />
     </AdaptableCard>
   )
 }

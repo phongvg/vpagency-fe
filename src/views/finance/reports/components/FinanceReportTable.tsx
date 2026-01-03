@@ -1,18 +1,23 @@
 import { DataTable } from '@/components/shared'
 import { TableTooltip } from '@/components/shared/TableTooltip'
-import { Button, Card, Checkbox, Dropdown } from '@/components/ui'
+import { Button, Card, Checkbox, ConfirmDialog, Dropdown } from '@/components/ui'
 import { fixedNumber } from '@/helpers/fixedNumber'
 import { formatDate } from '@/helpers/formatDate'
 import { formatUSD } from '@/helpers/formatUSD'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { useAuthStore } from '@/store/auth/useAuthStore'
 import { isAdminOrAccounting } from '@/utils/checkRole'
+import { toastError, toastSuccess } from '@/utils/toast'
 import { COLUMN_CONFIG } from '@/views/finance/reports/constants/financeReportColumnConfig.constant'
-import { useProjectDailyStat } from '@/views/finance/reports/hooks/useProjectDailyStat'
+import {
+  useDeleteProjectDailyStatMutation,
+  useProjectDailyStat,
+} from '@/views/finance/reports/hooks/useProjectDailyStat'
 import { useProjectDailyStatStore } from '@/views/finance/reports/store/useProjectDailyStatStore'
 import { ProjectDailyStat, ProjectDailyStatSummary } from '@/views/finance/reports/types/ProjectDailyStat.type'
 import { ColumnDef } from '@tanstack/react-table'
 import { useCallback, useMemo, useState } from 'react'
-import { HiOutlinePencilAlt, HiOutlineViewList } from 'react-icons/hi'
+import { HiOutlinePencilAlt, HiOutlineTrash, HiOutlineViewList } from 'react-icons/hi'
 import FinanceReportEditDialog from './FinanceReportEditDialog'
 
 type Props = {
@@ -24,9 +29,17 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
   const { user } = useAuthStore()
 
   const { data, isLoading } = useProjectDailyStat(filters)
+  const { mutateAsync: deleteReport, isPending: isDeleting } = useDeleteProjectDailyStatMutation()
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [selectedProjectDailyStatId, setSelectedProjectDailyStatId] = useState<string | null>(null)
+
+  const { showConfirm, confirmProps } = useConfirmDialog({
+    title: 'Xóa báo cáo tài chính',
+    type: 'danger',
+    confirmText: 'Xóa',
+    cancelText: 'Hủy',
+  })
 
   const availableColumns = useMemo(() => {
     if (isAdminOrAccounting(user?.roles)) {
@@ -97,6 +110,24 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
     setIsEditDialogOpen(false)
     setSelectedProjectDailyStatId(null)
   }, [])
+
+  const handleDeleteClick = useCallback(
+    async (id: string, projectName: string, date: string) => {
+      const confirmed = await showConfirm({
+        message: `Bạn có chắc chắn muốn xóa báo cáo "${projectName}" ngày ${formatDate(date, 'DD/MM/YYYY')}?`,
+      })
+
+      if (confirmed) {
+        try {
+          await deleteReport(id)
+          toastSuccess('Xóa báo cáo thành công')
+        } catch (error: any) {
+          toastError(error?.response?.data?.message || 'Xóa báo cáo thất bại')
+        }
+      }
+    },
+    [showConfirm, deleteReport],
+  )
 
   const allColumns: ColumnDef<ProjectDailyStat>[] = useMemo(
     () => [
@@ -295,9 +326,22 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
               cell: (props) => {
                 const row = props.row.original
                 return (
-                  <div className="flex justify-center">
-                    <button type="button" onClick={() => handleEditClick(row.id)}>
-                      <HiOutlinePencilAlt size={24} />
+                  <div className="flex justify-center gap-2">
+                    <button type="button" onClick={() => handleEditClick(row.id)} title="Sửa">
+                      <HiOutlinePencilAlt size={24} className="text-blue-600 hover:text-blue-800" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleDeleteClick(
+                          row.id,
+                          row.projectName,
+                          row.date instanceof Date ? row.date.toISOString() : String(row.date),
+                        )
+                      }
+                      title="Xóa"
+                    >
+                      <HiOutlineTrash size={24} className="text-red-600 hover:text-red-800" />
                     </button>
                   </div>
                 )
@@ -306,7 +350,7 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
           ] as ColumnDef<ProjectDailyStat>[])
         : []),
     ],
-    [user?.roles, filters, handleEditClick],
+    [user?.roles, filters, handleEditClick, handleDeleteClick],
   )
 
   const visibleColumns = useMemo(() => {
@@ -513,6 +557,8 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
         projectDailyStatId={selectedProjectDailyStatId}
         onClose={handleCloseEditDialog}
       />
+
+      <ConfirmDialog {...confirmProps} loading={isDeleting} />
     </>
   )
 }
