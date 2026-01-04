@@ -1,5 +1,5 @@
 import { Button, Card, FormContainer, FormItem, Input } from '@/components/ui'
-import { convertNumberToPercent } from '@/helpers/convertNumberToPercent'
+import { fixedNumber } from '@/helpers/fixedNumber'
 import { formatUSD } from '@/helpers/formatUSD'
 import { UpdateProjectDailyStatRequest } from '@/views/finance/reports/types/ProjectDailyStat.type'
 import { Form, Formik } from 'formik'
@@ -24,8 +24,6 @@ export type ManualInputData = {
   totalFtd: number
   receivedRevenue: number
   holdRevenue: number
-  profit: number
-  roi: number
 }
 
 export default function FinanceReportFormStep2({ generatedData, onSubmit, onCancel, onBack }: Props) {
@@ -34,8 +32,6 @@ export default function FinanceReportFormStep2({ generatedData, onSubmit, onCanc
     totalFtd: generatedData.totalFtd || 0,
     receivedRevenue: generatedData.receivedRevenue || 0,
     holdRevenue: generatedData.holdRevenue || 0,
-    profit: (generatedData.receivedRevenue || 0) - (generatedData.totalCost || 0),
-    roi: generatedData.roi || 0,
   }
 
   const calculateFields = (values: ManualInputData) => {
@@ -84,11 +80,20 @@ export default function FinanceReportFormStep2({ generatedData, onSubmit, onCanc
 
   const handleSubmit = (values: ManualInputData) => {
     const calculated = calculateFields(values)
-    onSubmit({
+
+    const payload = {
       ...values,
-      profit: calculated.profit,
-      roi: calculated.roi,
-    })
+      costPerRef: calculated.costPerRef, // Chi phí mỗi REF
+      rateRefPerClick: calculated.rateRefPerClick, // Tỷ lệ Ref/Click (%)
+      costPerFtd: calculated.costPerFtd, // Chi phí mỗi FTD
+      costFtdPerRef: calculated.costFtdPerRef, // Tỷ lệ FTD/Ref (%)
+      totalClickPerVolume: calculated.totalClickPerVolume, // % click đạt được
+      totalRefPerVolume: calculated.totalRefPerVolume, // % Ref đạt được
+      profit: calculated.profit, // Lợi nhuận
+      roi: calculated.roi, // ROI (%)
+    }
+
+    onSubmit(payload)
   }
 
   return (
@@ -204,43 +209,35 @@ export default function FinanceReportFormStep2({ generatedData, onSubmit, onCanc
                   <h6 className="mb-4 font-semibold text-gray-700">Kết quả tính toán (Tự động)</h6>
                   <div className="gap-4 grid grid-cols-3">
                     <FormItem label="Chi phí mỗi REF">
-                      <Input disabled value={formatUSD(calculated.costPerRef)} className="bg-white" />
+                      <Input disabled value={fixedNumber(calculated.costPerRef)} className="bg-white" />
                     </FormItem>
 
                     <FormItem label="Tỷ lệ Ref/Click (%)">
-                      <Input disabled value={convertNumberToPercent(calculated.rateRefPerClick)} className="bg-white" />
+                      <Input disabled value={fixedNumber(calculated.rateRefPerClick)} className="bg-white" />
                     </FormItem>
 
                     <FormItem label="Chi phí mỗi FTD">
-                      <Input disabled value={formatUSD(calculated.costPerFtd)} className="bg-white" />
+                      <Input disabled value={fixedNumber(calculated.costPerFtd)} className="bg-white" />
                     </FormItem>
 
                     <FormItem label="Tỷ lệ FTD/Ref (%)">
-                      <Input disabled value={convertNumberToPercent(calculated.costFtdPerRef)} className="bg-white" />
+                      <Input disabled value={fixedNumber(calculated.costFtdPerRef)} className="bg-white" />
                     </FormItem>
 
                     <FormItem label="% click đạt được">
-                      <Input
-                        disabled
-                        value={convertNumberToPercent(calculated.totalClickPerVolume)}
-                        className="bg-white"
-                      />
+                      <Input disabled value={fixedNumber(calculated.totalClickPerVolume)} className="bg-white" />
                     </FormItem>
 
                     <FormItem label="% Ref đạt được">
-                      <Input
-                        disabled
-                        value={convertNumberToPercent(calculated.totalRefPerVolume)}
-                        className="bg-white"
-                      />
+                      <Input disabled value={fixedNumber(calculated.totalRefPerVolume)} className="bg-white" />
                     </FormItem>
 
                     <FormItem label="ROI (%)">
-                      <Input disabled value={convertNumberToPercent(calculated.roi)} className="bg-white" />
+                      <Input disabled value={fixedNumber(calculated.roi)} className="bg-white" />
                     </FormItem>
 
                     <FormItem label="Lợi nhuận">
-                      <Input disabled value={formatUSD(calculated.profit)} className="bg-white" />
+                      <Input disabled value={fixedNumber(calculated.profit)} className="bg-white" />
                     </FormItem>
                   </div>
                 </Card>
