@@ -1,4 +1,4 @@
-import { DataTable } from '@/components/shared'
+import { DataTable, DataTableResetHandle, Row } from '@/components/shared'
 import BadgeStatus from '@/components/shared/BadgeStatus'
 import { TableTooltip } from '@/components/shared/TableTooltip'
 import { Button, Checkbox, ConfirmDialog, Dropdown } from '@/components/ui'
@@ -12,7 +12,7 @@ import { useDeleteCampaignMutation, useGetCampaignsQuery } from '@/views/campaig
 import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
 import { Campaign } from '@/views/campaign/types/campaign.type'
 import { ColumnDef } from '@tanstack/react-table'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { HiOutlineDuplicate, HiOutlinePencilAlt, HiOutlineTrash, HiOutlineViewList } from 'react-icons/hi'
 
 export default function CampaignTable() {
@@ -28,6 +28,10 @@ export default function CampaignTable() {
     })
     return initial
   })
+
+  const [selectedRows, setSelectedRows] = useState<string[]>([])
+
+  const tableRef = useRef<DataTableResetHandle>(null)
 
   const { showConfirm, confirmProps } = useConfirmDialog({
     title: 'Xác nhận xóa chiến dịch',
@@ -93,6 +97,61 @@ export default function CampaignTable() {
       },
     )
   }, [])
+
+  const handleResetSelection = () => {
+    setSelectedRows([])
+    tableRef.current?.resetSelected()
+  }
+
+  const handleCheckBoxChange = (checked: boolean, row: Campaign) => {
+    if (checked) {
+      setSelectedRows((prevData) => {
+        if (!prevData.includes(row.id)) {
+          return [...prevData, ...[row.id]]
+        }
+        return prevData
+      })
+    } else {
+      setSelectedRows((prevData) => {
+        if (prevData.includes(row.id)) {
+          return prevData.filter((id) => id !== row.id)
+        }
+        return prevData
+      })
+    }
+  }
+
+  const handleIndeterminateCheckBoxChange = (checked: boolean, rows: Row<Campaign>[]) => {
+    if (checked) {
+      const originalRows = rows.map((row) => row.original)
+      const selectedIds: string[] = []
+      originalRows.forEach((row) => {
+        selectedIds.push(row.id)
+      })
+      setSelectedRows(selectedIds)
+    } else {
+      setSelectedRows([])
+    }
+  }
+
+  const selectedCampaignsData = useMemo(() => {
+    const campaigns = getCampaignsResponse?.items || []
+    return campaigns.filter((c) => selectedRows.includes(c.id))
+  }, [getCampaignsResponse?.items, selectedRows])
+
+  const aggregatedData = useMemo(() => {
+    const count = selectedCampaignsData.length
+    const totalClicks = selectedCampaignsData.reduce((sum, c) => sum + (c.clicks || 0), 0)
+    const totalImpressions = selectedCampaignsData.reduce((sum, c) => sum + (c.impression || 0), 0)
+    const totalCost = selectedCampaignsData.reduce((sum, c) => sum + (c.cost || 0), 0)
+
+    return {
+      count,
+      totalClicks,
+      totalImpressions,
+      totalCost,
+    }
+  }, [selectedCampaignsData])
 
   const allColumns: ColumnDef<Campaign>[] = useMemo(
     () => [
@@ -396,6 +455,7 @@ export default function CampaignTable() {
   const onPaginationChange = (page: number) => {
     const newFilter = { ...filter, page }
     setFilter(newFilter)
+    handleResetSelection()
   }
 
   const onSelectChange = (value: number) => {
@@ -432,15 +492,57 @@ export default function CampaignTable() {
         </Dropdown>
       </div>
 
+      {selectedRows.length > 0 && (
+        <div className="bg-blue-50 mb-4 p-4 border border-blue-200 rounded-lg">
+          <div className="flex flex-wrap justify-between items-center gap-4">
+            <div className="flex items-center gap-6">
+              <div>
+                <span className="font-medium text-gray-600 text-sm">Số campaign đã chọn:</span>
+                <span className="ml-2 font-semibold text-blue-700 text-lg">{aggregatedData.count}</span>
+              </div>
+              <div className="bg-gray-300 w-px h-8" />
+              <div>
+                <span className="font-medium text-gray-600 text-sm">Tổng Clicks:</span>
+                <span className="ml-2 font-semibold text-blue-700 text-lg">
+                  {aggregatedData.totalClicks.toLocaleString()}
+                </span>
+              </div>
+              <div className="bg-gray-300 w-px h-8" />
+              <div>
+                <span className="font-medium text-gray-600 text-sm">Tổng lượt hiển thị:</span>
+                <span className="ml-2 font-semibold text-blue-700 text-lg">
+                  {aggregatedData.totalImpressions.toLocaleString()}
+                </span>
+              </div>
+              <div className="bg-gray-300 w-px h-8" />
+              <div>
+                <span className="font-medium text-gray-600 text-sm">Tổng ngân sách:</span>
+                <span className="ml-2 font-semibold text-blue-700 text-lg">
+                  ${fixedNumber(aggregatedData.totalCost)}
+                </span>
+              </div>
+            </div>
+            <Button size="sm" variant="plain" onClick={handleResetSelection}>
+              Bỏ chọn tất cả
+            </Button>
+          </div>
+        </div>
+      )}
+
       <DataTable
+        ref={tableRef}
+        selectable
         columns={visibleColumns}
         data={getCampaignsResponse?.items || []}
         loading={isLoading}
+        getRowId={(row) => row.id}
         pagingData={{
           total: metaTableData?.total as number,
           pageIndex: metaTableData?.page as number,
           pageSize: metaTableData?.limit as number,
         }}
+        onCheckBoxChange={handleCheckBoxChange}
+        onIndeterminateCheckBoxChange={handleIndeterminateCheckBoxChange}
         onPaginationChange={onPaginationChange}
         onSelectChange={onSelectChange}
       />
