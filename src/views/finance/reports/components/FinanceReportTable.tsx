@@ -1,4 +1,5 @@
 import { DataTable } from '@/components/shared'
+import BadgeStatus from '@/components/shared/BadgeStatus'
 import { TableTooltip } from '@/components/shared/TableTooltip'
 import { Button, Card, Checkbox, ConfirmDialog, Dropdown } from '@/components/ui'
 import { fixedNumber } from '@/helpers/fixedNumber'
@@ -152,6 +153,12 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
         id: 'projectName',
         header: 'Tên dự án',
         accessorKey: 'projectName',
+      },
+      {
+        id: 'projectStatus',
+        header: 'Trạng thái dự án',
+        accessorKey: 'projectStatus',
+        cell: (props) => <BadgeStatus content={props.row.original.projectStatus} />,
       },
       ...(isAdminOrAccounting(user?.roles)
         ? ([

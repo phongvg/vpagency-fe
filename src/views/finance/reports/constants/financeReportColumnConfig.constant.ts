@@ -2,6 +2,7 @@ export const COLUMN_CONFIG = [
   { id: 'stt', label: 'STT', visible: true, required: true },
   { id: 'date', label: 'Ngày', visible: true, required: true },
   { id: 'projectName', label: 'Tên dự án', visible: true, required: true },
+  { id: 'projectStatus', label: 'Trạng thái dự án', visible: true, required: true },
   { id: 'profit', label: 'Lợi nhuận', visible: true, required: true },
   { id: 'roi', label: 'ROI (%)', visible: true, required: true },
   { id: 'holdRevenue', label: 'Doanh thu giữ lại', visible: true, required: true },

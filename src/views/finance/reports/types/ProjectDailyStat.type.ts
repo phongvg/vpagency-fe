@@ -21,6 +21,7 @@ export type ProjectDailyStat = {
   id: string
   projectId: string
   projectName: string
+  projectStatus: string
   date: Date
   totalClicks: number
   totalCost: number
