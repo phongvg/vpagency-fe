@@ -2,6 +2,7 @@ import { DataTable, DataTableResetHandle, Row } from '@/components/shared'
 import BadgeStatus from '@/components/shared/BadgeStatus'
 import { TableTooltip } from '@/components/shared/TableTooltip'
 import { Button, Checkbox, ConfirmDialog, Dropdown } from '@/components/ui'
+import Avatar from '@/components/ui/Avatar/Avatar'
 import { addDash } from '@/helpers/addDash'
 import { fixedNumber } from '@/helpers/fixedNumber'
 import { formatDate } from '@/helpers/formatDate'
@@ -244,6 +245,23 @@ export default function CampaignTable() {
           if (!props.row.original.status) return null
 
           return <BadgeStatus content={props.row.original.status} />
+        },
+      },
+      {
+        id: 'creator',
+        header: 'Người nhập',
+        accessorKey: 'creator',
+        cell: (props) => {
+          if (!props.row.original.creator) return null
+
+          return (
+            <div className="flex items-center">
+              <Avatar size={38} shape="circle" src={props.row.original.creator.avatar ?? ''} />
+              <span className="rtl:mr-2 ml-2 max-w-[150px] font-semibold truncate">
+                {props.row.original.creator.firstName} {props.row.original.creator.lastName}
+              </span>
+            </div>
+          )
         },
       },
       {

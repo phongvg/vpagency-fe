@@ -1,3 +1,4 @@
+import { User } from '@/@types/user'
 import { FinalUrl } from '@/views/projects/types/finalUrl.type'
 
 export type Campaign = {
@@ -28,6 +29,8 @@ export type Campaign = {
   finalUrlImportId: string | null
   campaignBudget: number
   locationExcluded: string[]
+  creator: User | null
+  creatorId: string | null
 }
 
 export type KeywordMatch = {
