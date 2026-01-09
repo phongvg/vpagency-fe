@@ -8,7 +8,7 @@ export const COLUMN_CONFIG = [
   { id: 'finalUrl', label: 'URL', visible: true, required: false },
   { id: 'gmail', label: 'Gmail', visible: true, required: false },
   { id: 'statusCampaign', label: 'Trạng thái chiến dịch', visible: true, required: false },
-  { id: 'creator', label: 'Người nhập', visible: true, required: false },
+  { id: 'importer', label: 'Người nhập', visible: true, required: false },
   { id: 'mcc', label: 'MCC', visible: false, required: false },
   { id: 'avgCpc', label: 'CPC trung bình', visible: false, required: false },
   { id: 'targetCpc', label: 'Thầu chung', visible: false, required: false },

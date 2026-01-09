@@ -248,17 +248,17 @@ export default function CampaignTable() {
         },
       },
       {
-        id: 'creator',
+        id: 'importer',
         header: 'Người nhập',
-        accessorKey: 'creator',
+        accessorKey: 'importer',
         cell: (props) => {
-          if (!props.row.original.creator) return null
+          if (!props.row.original.importer) return null
 
           return (
             <div className="flex items-center">
-              <Avatar size={38} shape="circle" src={props.row.original.creator.avatar ?? ''} />
+              <Avatar size={38} shape="circle" src={props.row.original.importer.avatar ?? ''} />
               <span className="rtl:mr-2 ml-2 max-w-[150px] font-semibold truncate">
-                {props.row.original.creator.firstName} {props.row.original.creator.lastName}
+                {props.row.original.importer.firstName} {props.row.original.importer.lastName}
               </span>
             </div>
           )

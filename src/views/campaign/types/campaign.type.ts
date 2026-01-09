@@ -29,8 +29,7 @@ export type Campaign = {
   finalUrlImportId: string | null
   campaignBudget: number
   locationExcluded: string[]
-  creator: User | null
-  creatorId: string | null
+  importer: User | null
 }
 
 export type KeywordMatch = {
