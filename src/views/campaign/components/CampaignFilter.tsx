@@ -3,7 +3,7 @@ import { formatDate } from '@/helpers/formatDate'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useCampaignStore } from '@/views/campaign/store/useCampaignStore'
 import { useEffect, useState } from 'react'
-import { HiOutlineFilter, HiOutlineX } from 'react-icons/hi'
+import { HiOutlineFilter } from 'react-icons/hi'
 
 export function CampaignFilterPanel() {
   const { filter, setFilter } = useCampaignStore()
@@ -211,15 +211,8 @@ export default function CampaignFilter() {
           icon={<HiOutlineFilter />}
           onClick={() => setShowFilters(!showFilters)}
         >
-          Bộ lọc{' '}
-          {hasActiveFilters &&
-            `(${Object.values(filter).filter((v) => v && typeof v === 'string' && v !== filter.search).length})`}
+          Bộ lọc
         </Button>
-        {hasActiveFilters && (
-          <Button size="sm" icon={<HiOutlineX />} onClick={handleClearFilters}>
-            Xóa bộ lọc
-          </Button>
-        )}
       </>
     ),
   }
