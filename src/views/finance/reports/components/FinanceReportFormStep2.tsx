@@ -120,6 +120,7 @@ export default function FinanceReportFormStep2({ generatedData, onSubmit, onCanc
                       <Input
                         disabled
                         value={generatedData.activeCountries?.map((c) => c.location).join(', ')}
+                        title={generatedData.activeCountries?.map((c) => c.location).join(', ')}
                         className="bg-gray-50"
                       />
                     </FormItem>
@@ -171,13 +172,13 @@ export default function FinanceReportFormStep2({ generatedData, onSubmit, onCanc
 
                     <FormItem
                       asterisk
-                      label="Doanh thu đã nhận"
+                      label="Hoa hồng rút về"
                       invalid={!!(errors.receivedRevenue && touched.receivedRevenue)}
                       errorMessage={errors.receivedRevenue as string}
                     >
                       <Input
                         type="number"
-                        placeholder="Nhập doanh thu đã nhận..."
+                        placeholder="Nhập hoa hồng rút về..."
                         value={values.receivedRevenue}
                         onChange={(e) => {
                           const receivedRevenue = parseFloat(e.target.value) || 0
@@ -191,13 +192,13 @@ export default function FinanceReportFormStep2({ generatedData, onSubmit, onCanc
 
                     <FormItem
                       asterisk
-                      label="Doanh thu đang giữ"
+                      label="Hoa hồng tạm giữ"
                       invalid={!!(errors.holdRevenue && touched.holdRevenue)}
                       errorMessage={errors.holdRevenue as string}
                     >
                       <Input
                         type="number"
-                        placeholder="Nhập doanh thu đang giữ..."
+                        placeholder="Nhập hoa hồng tạm giữ..."
                         value={values.holdRevenue}
                         onChange={(e) => setFieldValue('holdRevenue', e.target.value)}
                       />

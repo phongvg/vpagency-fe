@@ -182,7 +182,7 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
             },
             {
               id: 'holdRevenue',
-              header: 'Doanh thu giữ lại',
+              header: 'Hoa hồng tạm giữ',
               accessorKey: 'holdRevenue',
               cell: (props) => {
                 const row = props.row.original
@@ -191,7 +191,7 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
             },
             {
               id: 'receivedRevenue',
-              header: 'Doanh thu nhận được',
+              header: 'Hoa hồng rút về',
               accessorKey: 'receivedRevenue',
               cell: (props) => {
                 const row = props.row.original
@@ -334,11 +334,12 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
                 const row = props.row.original
                 return (
                   <div className="flex justify-center gap-2">
-                    <button type="button" onClick={() => handleEditClick(row.id)} title="Sửa">
+                    <button type="button" title="Sửa" onClick={() => handleEditClick(row.id)}>
                       <HiOutlinePencilAlt size={24} className="text-blue-600 hover:text-blue-800" />
                     </button>
                     <button
                       type="button"
+                      title="Xóa"
                       onClick={() =>
                         handleDeleteClick(
                           row.id,
@@ -346,7 +347,6 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
                           row.date instanceof Date ? row.date.toISOString() : String(row.date),
                         )
                       }
-                      title="Xóa"
                     >
                       <HiOutlineTrash size={24} className="text-red-600 hover:text-red-800" />
                     </button>
@@ -400,7 +400,7 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
       ...(isAdminOrAccounting(user?.roles)
         ? ([
             {
-              header: 'Hoa hồng',
+              header: 'Lợi nhuận',
               accessorKey: 'profit',
               cell: (props) => {
                 const row = props.row.original
@@ -416,7 +416,7 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
               },
             },
             {
-              header: 'Doanh thu giữ lại',
+              header: 'Hoa hồng tạm giữ',
               accessorKey: 'holdRevenue',
               cell: (props) => {
                 const row = props.row.original
@@ -424,7 +424,7 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
               },
             },
             {
-              header: 'Doanh thu nhận được',
+              header: 'Hoa hồng rút về',
               accessorKey: 'receivedRevenue',
               cell: (props) => {
                 const row = props.row.original
@@ -515,7 +515,9 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
     <>
       {showSummary && (
         <Card header="Tổng quan dự án" className="mb-4">
-          <DataTable columns={summaryColumns} data={data?.summary || []} loading={isLoading} />
+          <div className="max-h-[500px] overflow-y-auto">
+            <DataTable columns={summaryColumns} data={data?.summary || []} loading={isLoading} />
+          </div>
         </Card>
       )}
 

@@ -55,11 +55,11 @@ export default function FinanceStats() {
     return {
       series: [
         {
-          name: 'Doanh thu đã nhận',
+          name: 'Hoa hồng rút về',
           data: padArray(monthlySpendingStat?.receivedRevenue),
         },
         {
-          name: 'Doanh thu đang giữ',
+          name: 'Hoa hồng tạm giữ',
           data: padArray(monthlySpendingStat?.holdRevenue),
         },
         {
@@ -161,13 +161,13 @@ export default function FinanceStats() {
             <div className="pt-4 border-gray-200 border-t">
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-gray-600 text-xs">Doanh thu đã nhận</span>
+                  <span className="text-gray-600 text-xs">Hoa hồng rút về</span>
                   <span className="font-semibold text-green-600 text-xs">
                     {formatUSD(monthlySpendingStat?.receivedRevenue?.reduce((acc, curr) => acc + curr, 0) || 0)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 text-xs">Doanh thu đang giữ</span>
+                  <span className="text-gray-600 text-xs">Hoa hồng tạm giữ</span>
                   <span className="font-semibold text-blue-600 text-xs">
                     {formatUSD(monthlySpendingStat?.holdRevenue?.reduce((acc, curr) => acc + curr, 0) || 0)}
                   </span>
