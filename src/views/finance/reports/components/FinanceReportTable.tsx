@@ -25,6 +25,20 @@ type Props = {
   showSummary?: boolean
 }
 
+type StatCardProps = {
+  label: string
+  value: string | number
+}
+
+function StatCard({ label, value }: StatCardProps) {
+  return (
+    <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+      <div className="text-sm text-gray-600 mb-1">{label}</div>
+      <div className="text-2xl font-bold text-indigo-600">{value}</div>
+    </div>
+  )
+}
+
 export default function FinanceReportTable({ showSummary = false }: Props) {
   const { filters, setFilters } = useProjectDailyStatStore()
   const { user } = useAuthStore()
@@ -511,10 +525,88 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
     setFilters(newFilter)
   }
 
+  const totalStats = useMemo(() => {
+    if (!data?.summary || data.summary.length === 0) {
+      return {
+        totalCost: 0,
+        totalClicks: 0,
+        avgCpc: 0,
+        totalProfit: 0,
+        avgRoi: 0,
+        totalHoldRevenue: 0,
+        totalReceivedRevenue: 0,
+        totalRef: 0,
+        avgCostPerRef: 0,
+        avgRateRefPerClick: 0,
+        totalFtd: 0,
+        avgCostPerFtd: 0,
+        avgRateFtdPerRef: 0,
+        totalTargetDailyKeyVolume: 0,
+        totalTargetRef: 0,
+        avgClickAchievementRate: 0,
+        avgRefAchievementRate: 0,
+      }
+    }
+
+    const summary = data.summary
+    const count = summary.length
+
+    const totalCost = summary.reduce((sum, item) => sum + (item.totalCost || 0), 0)
+    const totalClicks = summary.reduce((sum, item) => sum + (item.totalClicks || 0), 0)
+    const totalProfit = summary.reduce((sum, item) => sum + (item.profit || 0), 0)
+    const totalRef = summary.reduce((sum, item) => sum + (item.totalRef || 0), 0)
+    const totalFtd = summary.reduce((sum, item) => sum + (item.totalFtd || 0), 0)
+
+    return {
+      totalCost,
+      totalClicks,
+      avgCpc: totalClicks > 0 ? totalCost / totalClicks : 0,
+      totalProfit,
+      avgRoi: totalCost > 0 ? (totalProfit / totalCost) * 100 : 0,
+      totalHoldRevenue: summary.reduce((sum, item) => sum + (item.holdRevenue || 0), 0),
+      totalReceivedRevenue: summary.reduce((sum, item) => sum + (item.receivedRevenue || 0), 0),
+      totalRef,
+      avgCostPerRef: totalRef > 0 ? totalCost / totalRef : 0,
+      avgRateRefPerClick: totalClicks > 0 ? (totalRef / totalClicks) * 100 : 0,
+      totalFtd,
+      avgCostPerFtd: totalFtd > 0 ? totalCost / totalFtd : 0,
+      avgRateFtdPerRef: totalRef > 0 ? (totalFtd / totalRef) * 100 : 0,
+      totalTargetDailyKeyVolume: summary.reduce((sum, item) => sum + (item.totalTargetDailyKeyVolume || 0), 0),
+      totalTargetRef: summary.reduce((sum, item) => sum + (item.totalTargetRef || 0), 0),
+      avgClickAchievementRate: summary.reduce((sum, item) => sum + (item.clickAchievementRate || 0), 0) / count,
+      avgRefAchievementRate: summary.reduce((sum, item) => sum + (item.refAchievementRate || 0), 0) / count,
+    }
+  }, [data?.summary])
+
   return (
     <>
       {showSummary && (
         <Card header="Tổng quan dự án" className="mb-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-6">
+            <StatCard label="Tổng chi tiêu" value={formatUSD(totalStats.totalCost)} />
+            <StatCard label="Tổng lượt click" value={totalStats.totalClicks.toLocaleString()} />
+            <StatCard label="CPC trung bình" value={formatUSD(totalStats.avgCpc)} />
+
+            {isAdminOrAccounting(user?.roles) && (
+              <>
+                <StatCard label="Lợi nhuận" value={formatUSD(totalStats.totalProfit)} />
+                <StatCard label="ROI trung bình" value={`${fixedNumber(totalStats.avgRoi)}%`} />
+                <StatCard label="Hoa hồng tạm giữ" value={formatUSD(totalStats.totalHoldRevenue)} />
+                <StatCard label="Hoa hồng rút về" value={formatUSD(totalStats.totalReceivedRevenue)} />
+                <StatCard label="Tổng Ref" value={totalStats.totalRef.toLocaleString()} />
+                <StatCard label="Chi phí/Ref TB" value={formatUSD(totalStats.avgCostPerRef)} />
+                <StatCard label="Tỷ lệ Ref/Click TB" value={`${fixedNumber(totalStats.avgRateRefPerClick)}%`} />
+                <StatCard label="Tổng FTD" value={totalStats.totalFtd.toLocaleString()} />
+                <StatCard label="Chi phí/FTD TB" value={formatUSD(totalStats.avgCostPerFtd)} />
+                <StatCard label="Tỷ lệ FTD/Ref TB" value={`${fixedNumber(totalStats.avgRateFtdPerRef)}%`} />
+                <StatCard label="Volume key/ngày" value={totalStats.totalTargetDailyKeyVolume.toLocaleString()} />
+                <StatCard label="Dự tính Ref/ngày" value={totalStats.totalTargetRef.toLocaleString()} />
+                <StatCard label="% Click đạt được TB" value={`${fixedNumber(totalStats.avgClickAchievementRate)}%`} />
+                <StatCard label="% Ref đạt được TB" value={`${fixedNumber(totalStats.avgRefAchievementRate)}%`} />
+              </>
+            )}
+          </div>
+
           <div className="max-h-[500px] overflow-y-auto">
             <DataTable columns={summaryColumns} data={data?.summary || []} loading={isLoading} />
           </div>
