@@ -1,8 +1,8 @@
-import { Task } from '@/views/tasks/assign/types/task.type'
 import { Card, Tag } from '@/components/ui'
 import { TaskPriority, TaskType, TaskTypeLabels } from '@/enums/task.enum'
 import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
+import { Task } from '@/views/tasks/assign/types/task.type'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { HiChevronDoubleUp, HiChevronDown, HiMenu, HiMenuAlt4 } from 'react-icons/hi'
@@ -22,10 +22,6 @@ const taskTypeColors: Record<TaskType, string> = {
   [TaskType.SET_CAMPAIGN]: 'bg-blue-500',
   [TaskType.LAUNCH_CAMPAIGN]: 'bg-green-500',
   [TaskType.NURTURE_ACCOUNT]: 'bg-purple-500',
-  [TaskType.APPEAL_ACCOUNT]: 'bg-yellow-500',
-  [TaskType.DOCUMENT_APPEAL]: 'bg-gray-500',
-  [TaskType.TEST_LINK]: 'bg-indigo-500',
-  [TaskType.RESEARCH]: 'bg-pink-500',
 }
 
 export default function BoardCard({ task }: Props) {

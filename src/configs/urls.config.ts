@@ -3,6 +3,11 @@ import { APP_PREFIX_PATH, AUTH_PREFIX_PATH } from '@/constants/route.constant'
 export const urlConfig = {
   dashboard: `${APP_PREFIX_PATH}/dashboard`,
   taskAssign: `${APP_PREFIX_PATH}/tasks/assign`,
+  pendingTask: `${APP_PREFIX_PATH}/tasks/pending`,
+  specialTasks: `${APP_PREFIX_PATH}/tasks/special`,
+  accountAppeal: `${APP_PREFIX_PATH}/tasks/account-appeal`,
+  documentAppeal: `${APP_PREFIX_PATH}/tasks/document-appeal`,
+  research: `${APP_PREFIX_PATH}/tasks/research`,
   taskReport: `${APP_PREFIX_PATH}/tasks/reports`,
   customerList: `${APP_PREFIX_PATH}/customers/list`,
   customerUpdate: `${APP_PREFIX_PATH}/customers/update`,

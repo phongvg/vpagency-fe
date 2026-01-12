@@ -2,20 +2,12 @@ export enum TaskType {
   SET_CAMPAIGN = 'SET_CAMPAIGN',
   LAUNCH_CAMPAIGN = 'LAUNCH_CAMPAIGN',
   NURTURE_ACCOUNT = 'NURTURE_ACCOUNT',
-  APPEAL_ACCOUNT = 'APPEAL_ACCOUNT',
-  DOCUMENT_APPEAL = 'DOCUMENT_APPEAL',
-  TEST_LINK = 'TEST_LINK',
-  RESEARCH = 'RESEARCH',
 }
 
 export const TaskTypeLabels: Record<TaskType, string> = {
   [TaskType.SET_CAMPAIGN]: 'Lên camp',
   [TaskType.LAUNCH_CAMPAIGN]: 'Duy trì camp',
   [TaskType.NURTURE_ACCOUNT]: 'Nuôi tài khoản',
-  [TaskType.APPEAL_ACCOUNT]: 'Kháng tài khoản',
-  [TaskType.DOCUMENT_APPEAL]: 'Kháng giấy bẻ key',
-  [TaskType.TEST_LINK]: 'Kiểm tra liên kết',
-  [TaskType.RESEARCH]: 'Nghiên cứu',
 }
 
 export enum TaskFrequency {
