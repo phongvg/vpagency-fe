@@ -115,7 +115,7 @@ export type AssignToFinalUrlRequest = {
 
 export type RemoveFromFinalUrlRequest = {
   finalUrlId: string
-  campaignDailyStatId: string
+  campaignDailyStatIds: string[]
 }
 
 export type GmailUIDMapping = {

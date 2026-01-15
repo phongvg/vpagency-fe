@@ -113,7 +113,7 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
             id: taskId,
             payload: {
               finalUrlId: finalUrlId!,
-              campaignDailyStatId: id,
+              campaignDailyStatIds: [id],
             },
           },
           {
@@ -460,9 +460,7 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
       const originalRows = rows.map((row) => row.original)
       const selectedIds: string[] = []
       originalRows.forEach((row) => {
-        if (!row.finalUrlId) {
-          selectedIds.push(row.id)
-        }
+        selectedIds.push(row.id)
       })
       setSelectedRows(selectedIds)
     } else {
@@ -479,6 +477,32 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
 
     if (confirmed) {
       await assignMutation.mutateAsync(
+        {
+          id: taskId,
+          payload: {
+            finalUrlId: finalUrlId!,
+            campaignDailyStatIds: selectedRows,
+          },
+        },
+        {
+          onSuccess: () => {
+            onClose()
+            handleResetSelection()
+          },
+        },
+      )
+    }
+  }
+
+  const handleBulkRemove = async () => {
+    if (selectedRows.length === 0) return
+
+    const confirmed = await showDeleteConfirm({
+      message: `Bạn có chắc chắn muốn loại bỏ chỉ số của ${selectedRows.length} chiến dịch đã chọn không?`,
+    })
+
+    if (confirmed) {
+      await removeMutation.mutateAsync(
         {
           id: taskId,
           payload: {
@@ -538,6 +562,11 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
           <Button size="sm" variant="solid" onClick={handleBulkAssign}>
             Gán chiến dịch
           </Button>
+
+          <Button size="sm" variant="twoTone" onClick={handleBulkRemove}>
+            Loại bỏ chiến dịch
+          </Button>
+
           <Button size="sm" onClick={handleResetSelection}>
             Bỏ chọn
           </Button>
@@ -552,7 +581,7 @@ export default function CampaignStatsModal({ isOpen, taskId, finalUrlId, onClose
         loading={isLoading}
         getRowId={(row) => row.id}
         getRowClassName={(row) => (row.finalUrlId ? 'bg-gray-200' : '')}
-        enableRowSelection={(row) => !row.finalUrlId}
+        // enableRowSelection={(row) => !row.finalUrlId}
         pagingData={{
           total: metaTableData?.total as number,
           pageIndex: metaTableData?.page as number,
