@@ -1,4 +1,4 @@
-import { DataTable } from '@/components/shared'
+import { DataTable, DataTableResetHandle } from '@/components/shared'
 import BadgeStatus from '@/components/shared/BadgeStatus'
 import { TableTooltip } from '@/components/shared/TableTooltip'
 import { Button, Card, Checkbox, ConfirmDialog, Dropdown } from '@/components/ui'
@@ -16,8 +16,8 @@ import {
 } from '@/views/finance/reports/hooks/useProjectDailyStat'
 import { useProjectDailyStatStore } from '@/views/finance/reports/store/useProjectDailyStatStore'
 import { ProjectDailyStat, ProjectDailyStatSummary } from '@/views/finance/reports/types/ProjectDailyStat.type'
-import { ColumnDef } from '@tanstack/react-table'
-import { useCallback, useMemo, useState } from 'react'
+import { ColumnDef, Row } from '@tanstack/react-table'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { HiOutlinePencilAlt, HiOutlineTrash, HiOutlineViewList } from 'react-icons/hi'
 import FinanceReportEditDialog from './FinanceReportEditDialog'
 
@@ -48,6 +48,9 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [selectedProjectDailyStatId, setSelectedProjectDailyStatId] = useState<string | null>(null)
+  const [selectedSummaryRows, setSelectedSummaryRows] = useState<ProjectDailyStatSummary[]>([])
+
+  const summaryTableRef = useRef<DataTableResetHandle>(null)
 
   const { showConfirm, confirmProps } = useConfirmDialog({
     title: 'Xóa báo cáo tài chính',
@@ -525,6 +528,22 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
     setFilters(newFilter)
   }
 
+  const handleSummaryCheckBoxChange = (checked: boolean, row: ProjectDailyStatSummary) => {
+    if (checked) {
+      setSelectedSummaryRows([...selectedSummaryRows, row])
+    } else {
+      setSelectedSummaryRows(selectedSummaryRows.filter((r) => r.projectName !== row.projectName))
+    }
+  }
+
+  const handleSummaryIndeterminateCheckBoxChange = (checked: boolean, rows: Row<ProjectDailyStatSummary>[]) => {
+    if (checked) {
+      setSelectedSummaryRows(rows.map((r) => r.original))
+    } else {
+      setSelectedSummaryRows([])
+    }
+  }
+
   const totalStats = useMemo(() => {
     if (!data?.summary || data.summary.length === 0) {
       return {
@@ -548,7 +567,8 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
       }
     }
 
-    const summary = data.summary
+    // Nếu có dòng được chọn thì tính theo dòng được chọn, nếu không thì tính tất cả
+    const summary = selectedSummaryRows.length > 0 ? selectedSummaryRows : data.summary
     const count = summary.length
 
     const totalCost = summary.reduce((sum, item) => sum + (item.totalCost || 0), 0)
@@ -576,7 +596,7 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
       avgClickAchievementRate: summary.reduce((sum, item) => sum + (item.clickAchievementRate || 0), 0) / count,
       avgRefAchievementRate: summary.reduce((sum, item) => sum + (item.refAchievementRate || 0), 0) / count,
     }
-  }, [data?.summary])
+  }, [data?.summary, selectedSummaryRows])
 
   return (
     <>
@@ -607,8 +627,32 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
             )}
           </div>
 
+          {selectedSummaryRows.length > 0 && (
+            <div className="flex items-center gap-4 bg-blue-50 mb-4 p-4 rounded">
+              <span className="font-medium">Đã chọn {selectedSummaryRows.length} dự án để tính toán</span>
+              <Button
+                size="sm"
+                onClick={() => {
+                  summaryTableRef.current?.resetSelected()
+                  setSelectedSummaryRows([])
+                }}
+              >
+                Bỏ chọn
+              </Button>
+            </div>
+          )}
+
           <div className="max-h-[500px] overflow-y-auto">
-            <DataTable columns={summaryColumns} data={data?.summary || []} loading={isLoading} />
+            <DataTable
+              ref={summaryTableRef}
+              selectable
+              columns={summaryColumns}
+              data={data?.summary || []}
+              loading={isLoading}
+              getRowId={(row) => row.projectName}
+              onCheckBoxChange={handleSummaryCheckBoxChange}
+              onIndeterminateCheckBoxChange={handleSummaryIndeterminateCheckBoxChange}
+            />
           </div>
         </Card>
       )}
