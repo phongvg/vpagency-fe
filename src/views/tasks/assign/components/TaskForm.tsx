@@ -1,20 +1,19 @@
-import { Task, UpdateTaskRequest } from '@/views/tasks/assign/types/task.type'
 import SelectCustom, { SelectParams } from '@/components/shared/SelectCustom'
 import { Button, Checkbox, DatePicker, FormItem, Input, Select, Textarea, UserSelect } from '@/components/ui'
 import { UserOption } from '@/components/ui/UserSelect/UserSelect'
 import { TaskFrequency, TaskPriority, TaskType } from '@/enums/task.enum'
+import { useCreateFinalUrlMutation, useGetFinalUrlsByProjectId } from '@/views/projects/hooks/useFinalUrl'
 import { apiGetProjectList } from '@/views/projects/services/ProjectService'
-import { useGetFinalUrlsByProjectId, useCreateFinalUrlMutation } from '@/views/projects/hooks/useFinalUrl'
-import { Field, FieldProps, Form, Formik, FormikProps } from 'formik'
-import { useEffect, useRef, useState } from 'react'
-import * as Yup from 'yup'
 import {
   frequencyOptions,
   priorityOptions,
   typeOptions,
 } from '@/views/tasks/assign/constants/taskOptionSelect.constant'
+import { Task, UpdateTaskRequest } from '@/views/tasks/assign/types/task.type'
+import { Field, FieldProps, Form, Formik, FormikProps } from 'formik'
+import { useEffect, useRef, useState } from 'react'
 import { HiOutlinePlus } from 'react-icons/hi'
-import { apiGetGmailAccountList } from '@/views/gmailAccounts/services/GmailAccountService'
+import * as Yup from 'yup'
 
 type Props = {
   task?: Task | null
@@ -30,10 +29,17 @@ const validationSchema = Yup.object().shape({
   frequency: Yup.string().required('Tần suất là bắt buộc'),
   priority: Yup.string().required('Độ ưu tiên là bắt buộc'),
   deadline: Yup.date().required('Deadline là bắt buộc'),
-  projectId: Yup.string().required('Dự án là bắt buộc'),
+  projectId: Yup.string().when('type', {
+    is: (val: string) => val !== TaskType.APPEAL_ACCOUNT,
+    then: (schema) => schema.required('Dự án là bắt buộc'),
+    otherwise: (schema) => schema.nullable(),
+  }),
   assignedUserIds: Yup.array().min(1, 'Phải chọn ít nhất một người nhận việc'),
-  finalUrlIds: Yup.array().min(1, 'Phải chọn ít nhất một URL'),
-  gmailIds: Yup.array(),
+  finalUrlIds: Yup.array().when('type', {
+    is: (val: string) => val !== TaskType.APPEAL_ACCOUNT,
+    then: (schema) => schema.min(1, 'Phải chọn ít nhất một URL'),
+    otherwise: (schema) => schema,
+  }),
 })
 
 export default function TaskForm({ task, isEdit = false, loading = false, onSubmit, onCancel }: Props) {
@@ -70,7 +76,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
     numberOfAccounts: task?.numberOfAccounts || undefined,
     numberOfResultCampaigns: task?.numberOfResultCampaigns || undefined,
     finalUrlIds: task?.finalUrlIds || [],
-    gmailIds: task?.gmailIds || [],
+    numberOfSuspendedAccounts: task?.numberOfSuspendedAccounts || undefined,
   }
 
   useEffect(() => {
@@ -102,20 +108,6 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
   const fetchProjectOptions = async ({ page, limit, search }: SelectParams) => {
     try {
       const response = await apiGetProjectList({ search: search || '', page, limit })
-      const { items, meta } = response.data.data
-      return {
-        data: items,
-        total: meta.total,
-        hasMore: meta.hasNext,
-      }
-    } catch {
-      return { data: [], total: 0, hasMore: false }
-    }
-  }
-
-  const fetchGmailOptions = async ({ page, limit, search }: SelectParams) => {
-    try {
-      const response = await apiGetGmailAccountList({ search: search || '', page, limit })
       const { items, meta } = response.data.data
       return {
         data: items,
@@ -247,24 +239,6 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                 </FormItem>
 
                 <FormItem
-                  label="Gmail"
-                  errorMessage={errors.gmailIds as string}
-                  invalid={touched.gmailIds && Boolean(errors.gmailIds)}
-                >
-                  <Field name="gmailIds">
-                    {({ field, form }: FieldProps) => (
-                      <SelectCustom
-                        isMulti
-                        field={field}
-                        form={form}
-                        placeholder="Chọn tài khoản Gmail..."
-                        fetchOptions={fetchGmailOptions}
-                      />
-                    )}
-                  </Field>
-                </FormItem>
-
-                <FormItem
                   asterisk
                   errorMessage={errors.assignedUserIds as string}
                   invalid={touched.assignedUserIds && Boolean(errors.assignedUserIds)}
@@ -284,33 +258,34 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                   />
                 </FormItem>
 
-                <FormItem
-                  asterisk
-                  label="Dự án"
-                  errorMessage={errors.projectId}
-                  invalid={touched.projectId && Boolean(errors.projectId)}
-                  className="col-span-2"
-                >
-                  <Field name="projectId">
-                    {({ field, form }: FieldProps) => (
-                      <SelectCustom
-                        isCreatable
-                        field={field}
-                        form={form}
-                        fetchOptions={fetchProjectOptions}
-                        placeholder="Chọn dự án..."
-                        onChange={(value) => {
-                          form.setFieldValue('projectId', value)
-                          setSelectedProjectId(value as string | null)
-                          setSelectedFinalUrlIds([])
-                          form.setFieldValue('finalUrlIds', [])
-                        }}
-                      />
-                    )}
-                  </Field>
-                </FormItem>
+                {values.type !== TaskType.APPEAL_ACCOUNT && (
+                  <FormItem
+                    asterisk
+                    label="Dự án"
+                    errorMessage={errors.projectId}
+                    invalid={touched.projectId && Boolean(errors.projectId)}
+                  >
+                    <Field name="projectId">
+                      {({ field, form }: FieldProps) => (
+                        <SelectCustom
+                          isCreatable
+                          field={field}
+                          form={form}
+                          fetchOptions={fetchProjectOptions}
+                          placeholder="Chọn dự án..."
+                          onChange={(value) => {
+                            form.setFieldValue('projectId', value)
+                            setSelectedProjectId(value as string | null)
+                            setSelectedFinalUrlIds([])
+                            form.setFieldValue('finalUrlIds', [])
+                          }}
+                        />
+                      )}
+                    </Field>
+                  </FormItem>
+                )}
 
-                {selectedProjectId && (
+                {values.type !== TaskType.APPEAL_ACCOUNT && selectedProjectId && (
                   <div className="col-span-2 bg-gray-50 px-4 py-4 rounded-lg">
                     <div className="flex justify-between items-center mb-3">
                       <h5 className="font-semibold text-gray-900">
@@ -494,6 +469,25 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                           placeholder="Nhập số lượng tài khoản dự phòng..."
                           type="number"
                           value={values.numberOfBackupCampaigns || ''}
+                          min={0}
+                          onChange={handleChange}
+                        />
+                      </FormItem>
+                    </div>
+                  </div>
+                )}
+
+                {values.type === TaskType.APPEAL_ACCOUNT && (
+                  <div className="space-y-4 col-span-2 bg-gray-50 mb-3 px-4 py-4 rounded-lg">
+                    <h5>Thông tin chi tiết</h5>
+
+                    <div className="gap-x-4 grid grid-cols-1 lg:grid-cols-2">
+                      <FormItem label="Số lượng tài khoản tạm ngưng">
+                        <Input
+                          name="numberOfSuspendedAccounts"
+                          placeholder="Nhập số lượng tài khoản tạm ngưng..."
+                          type="number"
+                          value={values.numberOfSuspendedAccounts || ''}
                           min={0}
                           onChange={handleChange}
                         />

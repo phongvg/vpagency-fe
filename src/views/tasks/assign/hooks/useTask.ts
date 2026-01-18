@@ -22,12 +22,17 @@ import {
   apiGetTasks,
   apiGetTasksGroupedByStatus,
   apiRemoveCampaignsFromFinalUrl,
+  apiUpdateAppealMetrics,
   apiUpdateTask,
   apiUpdateTaskProgress,
   apiUpdateTaskStatus,
 } from '@/views/tasks/assign/services/TaskService'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
-import { TaskProgressRequest, UpdateTaskRequest } from '@/views/tasks/assign/types/task.type'
+import {
+  TaskProgressRequest,
+  UpdateAppealMetricsRequest,
+  UpdateTaskRequest,
+} from '@/views/tasks/assign/types/task.type'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 export const useGetTasksWithFilters = (enabled: boolean = false) => {
@@ -227,5 +232,24 @@ export const useGetProgressDetail = (taskId: string | null, enabled = false) => 
       return response.data.data
     },
     enabled: !!taskId && enabled,
+  })
+}
+
+export const useUpdateAppealMetrics = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({ taskId, payload }: { taskId: string; payload: UpdateAppealMetricsRequest }) => {
+      const response = await apiUpdateAppealMetrics(taskId, payload)
+      return response.data
+    },
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: [GET_TASK_DETAIL] })
+      queryClient.invalidateQueries({ queryKey: [GET_TASKS_GROUPED_BY_STATUS] })
+      toastSuccess(response.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
+    },
   })
 }

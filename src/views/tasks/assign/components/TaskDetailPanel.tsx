@@ -12,6 +12,7 @@ import {
   TaskType,
   TaskTypeLabels,
 } from '@/enums/task.enum'
+import { fixedNumber } from '@/helpers/fixedNumber'
 import { formatDate } from '@/helpers/formatDate'
 import { formatUSD } from '@/helpers/formatUSD'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
@@ -21,11 +22,12 @@ import { GET_TASK_DETAIL } from '@/utils/queryKey'
 import { toastError, toastSuccess } from '@/utils/toast'
 import { FinalUrl } from '@/views/projects/types/finalUrl.type'
 import TaskProgressDetailModal from '@/views/tasks/assign/components/TaskProgressDetailModal'
+import UpdateAppealMetricsModal from '@/views/tasks/assign/components/UpdateAppealMetricsModal'
 import UpdateProgressModal from '@/views/tasks/assign/components/UpdateProgressModal'
 import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
 import { useDeleteTask } from '@/views/tasks/assign/hooks/useTask'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
-import { Task } from '@/views/tasks/assign/types/task.type'
+import { Task, TaskAppealDetail } from '@/views/tasks/assign/types/task.type'
 import { useQueryClient } from '@tanstack/react-query'
 import { ColumnDef } from '@tanstack/react-table'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -54,6 +56,7 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
 
   const [isProgressModalOpen, setIsProgressModalOpen] = useState(false)
   const [isProgressDetailModalOpen, setIsProgressDetailModalOpen] = useState(false)
+  const [isAppealMetricsModalOpen, setIsAppealMetricsModalOpen] = useState(false)
 
   const { showConfirm, confirmProps } = useConfirmDialog({
     title: 'Xác nhận xóa công việc',
@@ -96,6 +99,7 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
         onEdit={handleEdit}
         onUpdateProgress={() => setIsProgressModalOpen(true)}
         onViewProgressDetail={() => setIsProgressDetailModalOpen(true)}
+        onUpdateAppealMetrics={() => setIsAppealMetricsModalOpen(true)}
         onDelete={handleDelete}
       />
 
@@ -109,17 +113,25 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
             <div>{displayTask.note}</div>
           </Accordion.Item>
 
-          {[TaskType.LAUNCH_CAMPAIGN, TaskType.SET_CAMPAIGN].includes(displayTask.type) && (
+          {[TaskType.LAUNCH_CAMPAIGN, TaskType.SET_CAMPAIGN, TaskType.NURTURE_ACCOUNT].includes(displayTask.type) && (
             <Accordion.Item itemKey="3" title="Thông tin chiến dịch">
               <TaskCampaignSection task={displayTask} />
             </Accordion.Item>
           )}
         </Accordion>
 
-        <Accordion defaultActiveKey={['1', '2', '3']} accordion={false}>
-          <Accordion.Item itemKey="1" title="Thông tin dự án">
-            <TaskProjectSection task={displayTask} />
-          </Accordion.Item>
+        <Accordion defaultActiveKey={['1', '2', '3', '4']} accordion={false}>
+          {[TaskType.LAUNCH_CAMPAIGN, TaskType.SET_CAMPAIGN, TaskType.NURTURE_ACCOUNT].includes(displayTask.type) && (
+            <Accordion.Item itemKey="1" title="Thông tin dự án">
+              <TaskProjectSection task={displayTask} />
+            </Accordion.Item>
+          )}
+
+          {displayTask.type === TaskType.APPEAL_ACCOUNT && (
+            <Accordion.Item itemKey="4" title="Thông tin kháng tài khoản">
+              <TaskAppealDetailSection task={displayTask} />
+            </Accordion.Item>
+          )}
 
           <Accordion.Item itemKey="2" title="Mọi người">
             <TaskPeopleSection task={displayTask} />
@@ -131,10 +143,19 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
         </Accordion>
       </div>
 
-      <div className="mt-8">
-        <h2 className="mb-4 font-semibold text-lg">Thông tin URL cuối</h2>
-        <TaskFinalUrlSection finalUrls={displayTask.finalUrls} />
-      </div>
+      {[TaskType.LAUNCH_CAMPAIGN, TaskType.SET_CAMPAIGN, TaskType.NURTURE_ACCOUNT].includes(displayTask.type) && (
+        <div className="mt-8">
+          <h2 className="mb-4 font-semibold text-lg">Thông tin URL cuối</h2>
+          <TaskFinalUrlSection finalUrls={displayTask.finalUrls} />
+        </div>
+      )}
+
+      {displayTask.type === TaskType.APPEAL_ACCOUNT && (
+        <div className="mt-8">
+          <h2 className="mb-4 font-semibold text-lg">Thông tin kháng tài khoản</h2>
+          <TaskAppealDetailTable appealDetails={displayTask.appealDetails ?? []} />
+        </div>
+      )}
 
       <ConfirmDialog {...confirmProps} loading={deleteTask.isPending} />
 
@@ -152,6 +173,12 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
         taskId={displayTask?.id}
         onClose={() => setIsProgressDetailModalOpen(false)}
       />
+
+      <UpdateAppealMetricsModal
+        isOpen={isAppealMetricsModalOpen}
+        task={displayTask}
+        onClose={() => setIsAppealMetricsModalOpen(false)}
+      />
     </>
   )
 }
@@ -165,9 +192,17 @@ interface TaskHeaderPanelProps extends TaskPanelProps {
   onUpdateProgress: () => void
   onViewProgressDetail: () => void
   onDelete: () => void
+  onUpdateAppealMetrics: () => void
 }
 
-function TaskHeaderPanel({ task, onEdit, onUpdateProgress, onViewProgressDetail, onDelete }: TaskHeaderPanelProps) {
+function TaskHeaderPanel({
+  task,
+  onEdit,
+  onUpdateProgress,
+  onViewProgressDetail,
+  onDelete,
+  onUpdateAppealMetrics,
+}: TaskHeaderPanelProps) {
   const { user } = useAuthStore()
 
   return (
@@ -184,12 +219,23 @@ function TaskHeaderPanel({ task, onEdit, onUpdateProgress, onViewProgressDetail,
             </Button>
           </>
         )}
-        <Button variant="default" size="xs" onClick={onViewProgressDetail}>
-          Xem tiến độ
-        </Button>
-        <Button variant="default" size="xs" onClick={onUpdateProgress}>
-          Cập nhật tiến độ
-        </Button>
+
+        {[TaskType.LAUNCH_CAMPAIGN, TaskType.SET_CAMPAIGN, TaskType.NURTURE_ACCOUNT].includes(task.type) && (
+          <>
+            <Button variant="default" size="xs" onClick={onViewProgressDetail}>
+              Xem tiến độ
+            </Button>
+            <Button variant="default" size="xs" onClick={onUpdateProgress}>
+              Cập nhật tiến độ
+            </Button>
+          </>
+        )}
+
+        {task.type === TaskType.APPEAL_ACCOUNT && (
+          <Button variant="default" size="xs" onClick={onUpdateAppealMetrics}>
+            Cập nhật tiến độ kháng
+          </Button>
+        )}
       </div>
     </header>
   )
@@ -271,6 +317,33 @@ function TaskProjectSection({ task }: TaskPanelProps) {
       <li className="flex justify-between items-center">
         <span>CPC trung bình:</span>
         <span>{formatUSD(task.avgCpc)}</span>
+      </li>
+    </ul>
+  )
+}
+
+function TaskAppealDetailSection({ task }: TaskPanelProps) {
+  return (
+    <ul className="space-y-2">
+      <li className="flex justify-between items-center">
+        <span>Số lượng tài khoản tạm ngưng:</span>
+        <span>{task.numberOfSuspendedAccounts || 0}</span>
+      </li>
+      <li className="flex justify-between items-center">
+        <span>Tổng số lượng kháng:</span>
+        <span>{task.appealSummary?.totalAppealCount || 0}</span>
+      </li>
+      <li className="flex justify-between items-center">
+        <span>Tổng số lượng thành công:</span>
+        <span>{task.appealSummary?.totalSuccessCount || 0}</span>
+      </li>
+      <li className="flex justify-between items-center">
+        <span>Tổng số lượng thất bại:</span>
+        <span>{task.appealSummary?.totalFailureCount || 0}</span>
+      </li>
+      <li className="flex justify-between items-center">
+        <span>Tỷ lệ thành công:</span>
+        <span>{fixedNumber(task.appealSummary?.overallSuccessRate || 0)}%</span>
       </li>
     </ul>
   )
@@ -492,4 +565,54 @@ function TaskFinalUrlSection({ finalUrls }: { finalUrls: FinalUrl[] }) {
   )
 
   return <DataTable columns={columns} data={finalUrls} maxHeight={500} />
+}
+
+export function TaskAppealDetailTable({ appealDetails }: { appealDetails: TaskAppealDetail[] }) {
+  const columns: ColumnDef<TaskAppealDetail>[] = useMemo(
+    () => [
+      {
+        header: 'STT',
+        accessorKey: 'index',
+        cell: (props) => {
+          const row = props.row.index
+          return <span>{row + 1}</span>
+        },
+      },
+      {
+        header: 'Ngày kháng tài khoản tạm ngưng',
+        accessorKey: 'appealDate',
+        cell: (props) => <span className="font-medium">{formatDate(props.row.original.appealDate, 'DD/MM/YYYY')}</span>,
+      },
+      {
+        header: 'Nguyên nhân tạm ngưng',
+        accessorKey: 'suspensionReason',
+        cell: (props) => {
+          const row = props.row.original
+          return <span className="block max-w-[250px] truncate">{row.suspensionReason}</span>
+        },
+      },
+      {
+        header: 'Số lượng kháng',
+        accessorKey: 'appealCount',
+      },
+      {
+        header: 'Số lượng thành công',
+        accessorKey: 'successCount',
+      },
+      {
+        header: 'Số lượng thất bại',
+        accessorKey: 'failureCount',
+      },
+      {
+        header: 'Tỷ lệ thành công (%)',
+        accessorKey: 'successRate',
+        cell: (props) => {
+          return <span>{fixedNumber(props.row.original.successRate)}%</span>
+        },
+      },
+    ],
+    [],
+  )
+
+  return <DataTable columns={columns} data={appealDetails} maxHeight={500} />
 }

@@ -4,6 +4,7 @@ import { TableTooltip } from '@/components/shared/TableTooltip'
 import { Avatar, Badge, Button, Progress } from '@/components/ui'
 import { getPriorityColor, getStatusColor } from '@/constants/task.constant'
 import { TaskFrequency, TaskPriorityLabels, TaskStatusLabels, TaskType, TaskTypeLabels } from '@/enums/task.enum'
+import { fixedNumber } from '@/helpers/fixedNumber'
 import { formatDate } from '@/helpers/formatDate'
 import { formatUSD } from '@/helpers/formatUSD'
 import { useAuthStore } from '@/store/auth/useAuthStore'
@@ -11,7 +12,9 @@ import { isAdminOrManager } from '@/utils/checkRole'
 import { GET_TASK_DETAIL } from '@/utils/queryKey'
 import { toastError, toastSuccess } from '@/utils/toast'
 import { FinalUrl } from '@/views/projects/types/finalUrl.type'
+import { TaskAppealDetailTable } from '@/views/tasks/assign/components/TaskDetailPanel'
 import TaskProgressDetailModal from '@/views/tasks/assign/components/TaskProgressDetailModal'
+import UpdateAppealMetricsModal from '@/views/tasks/assign/components/UpdateAppealMetricsModal'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import { Task } from '@/views/tasks/assign/types/task.type'
 import { useQueryClient } from '@tanstack/react-query'
@@ -33,6 +36,7 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
 
   const [isProgressModalOpen, setIsProgressModalOpen] = useState(false)
   const [isProgressDetailModalOpen, setIsProgressDetailModalOpen] = useState(false)
+  const [isAppealMetricsModalOpen, setIsAppealMetricsModalOpen] = useState(false)
 
   const handleCopyToClipboard = useCallback((text: string) => {
     navigator.clipboard.writeText(text).then(
@@ -203,13 +207,23 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
                 </>
               )}
 
-              <Button size="sm" variant="solid" onClick={() => setIsProgressDetailModalOpen(true)}>
-                Xem tiến độ
-              </Button>
+              {[TaskType.LAUNCH_CAMPAIGN, TaskType.SET_CAMPAIGN, TaskType.NURTURE_ACCOUNT].includes(task.type) && (
+                <>
+                  <Button size="sm" variant="solid" onClick={() => setIsProgressDetailModalOpen(true)}>
+                    Xem tiến độ
+                  </Button>
 
-              <Button size="sm" variant="solid" onClick={() => setIsProgressModalOpen(true)}>
-                Cập nhật tiến độ
-              </Button>
+                  <Button size="sm" variant="solid" onClick={() => setIsProgressModalOpen(true)}>
+                    Cập nhật tiến độ
+                  </Button>
+                </>
+              )}
+
+              {task.type === TaskType.APPEAL_ACCOUNT && (
+                <Button size="sm" variant="solid" onClick={() => setIsAppealMetricsModalOpen(true)}>
+                  Cập nhật tiến độ kháng
+                </Button>
+              )}
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -244,16 +258,18 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
         </div>
       </div>
 
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-2">
-          <div className="flex items-center gap-3">
-            <span className="font-medium text-gray-700 text-sm">Tiến độ</span>
-            <div>
-              <Progress variant="circle" percent={task.progress} gapDegree={70} gapPosition="bottom" size="sm" />
+      {[TaskType.LAUNCH_CAMPAIGN, TaskType.SET_CAMPAIGN, TaskType.NURTURE_ACCOUNT].includes(task.type) && (
+        <div className="mb-6">
+          <div className="flex justify-between items-center mb-2">
+            <div className="flex items-center gap-3">
+              <span className="font-medium text-gray-700 text-sm">Tiến độ</span>
+              <div>
+                <Progress variant="circle" percent={task.progress} gapDegree={70} gapPosition="bottom" size="sm" />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {task.note && (
         <div className="mb-6">
@@ -273,8 +289,7 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
           <div className="space-y-2">
             {(() => {
               const user = task.creator
-              const displayName =
-                user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.username
+              const displayName = user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.username
               return (
                 <div key={user.id} className="flex items-center gap-3 bg-gray-50 p-2 rounded-lg">
                   <Avatar size="sm" src={user.avatar || undefined} shape="circle">
@@ -354,46 +369,89 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
         </div>
       )}
 
-      <div className="mb-6">
-        <div className="mb-6 p-4 border border-blue-100 rounded-lg">
-          <h5 className="mb-3">Thông tin dự án</h5>
-          <div className="gap-4 grid grid-cols-2 text-sm">
-            <div>
-              <span>Tên dự án:</span>
-              <span className="ml-1 font-medium">{task.project?.name}</span>
-            </div>
-            <div>
-              <span>Loại dự án:</span>
-              <span className="ml-1 font-medium">{task.project?.typeName}</span>
-            </div>
-            <div>
-              <span>Trạng thái:</span>
-              <span className="ml-2">
-                <BadgeStatus content={task.project?.statusName} />
-              </span>
-            </div>
-            <div>
-              <span>Tổng ngân sách:</span>
-              <span className="ml-1 font-medium">{formatUSD(task.project?.totalBudget)}</span>
-            </div>
-            <div>
-              <span>Ngân sách đã tiêu:</span>
-              <span className="ml-1 font-medium">{formatUSD(task.totalCost)}</span>
-            </div>
-            <div>
-              <span>CPC trung bình:</span>
-              <span className="ml-1 font-medium">{formatUSD(task.avgCpc)}</span>
+      {[TaskType.LAUNCH_CAMPAIGN, TaskType.SET_CAMPAIGN, TaskType.NURTURE_ACCOUNT].includes(task.type) && (
+        <>
+          <div className="mb-6">
+            <div className="mb-6 p-4 border border-blue-100 rounded-lg">
+              <h5 className="mb-3">Thông tin dự án</h5>
+              <div className="gap-4 grid grid-cols-2 text-sm">
+                <div>
+                  <span>Tên dự án:</span>
+                  <span className="ml-1 font-medium">{task.project?.name}</span>
+                </div>
+                <div>
+                  <span>Loại dự án:</span>
+                  <span className="ml-1 font-medium">{task.project?.typeName}</span>
+                </div>
+                <div>
+                  <span>Trạng thái:</span>
+                  <span className="ml-2">
+                    <BadgeStatus content={task.project?.statusName} />
+                  </span>
+                </div>
+                <div>
+                  <span>Tổng ngân sách:</span>
+                  <span className="ml-1 font-medium">{formatUSD(task.project?.totalBudget)}</span>
+                </div>
+                <div>
+                  <span>Ngân sách đã tiêu:</span>
+                  <span className="ml-1 font-medium">{formatUSD(task.totalCost)}</span>
+                </div>
+                <div>
+                  <span>CPC trung bình:</span>
+                  <span className="ml-1 font-medium">{formatUSD(task.avgCpc)}</span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div className="mb-6">
-        <div className="mb-6 p-4 border border-blue-100 rounded-lg">
-          <h5 className="mb-3">Thông tin URL cuối</h5>
-          <DataTable columns={columns} data={task.finalUrls || []} loading={false} pagingData={undefined} />
-        </div>
-      </div>
+          <div className="mb-6">
+            <div className="mb-6 p-4 border border-blue-100 rounded-lg">
+              <h5 className="mb-3">Thông tin URL cuối</h5>
+              <DataTable columns={columns} data={task.finalUrls || []} loading={false} pagingData={undefined} />
+            </div>
+          </div>
+        </>
+      )}
+
+      {task.type === TaskType.APPEAL_ACCOUNT && (
+        <>
+          <div className="mb-6">
+            <div className="mb-6 p-4 border border-blue-100 rounded-lg">
+              <h5 className="mb-3">Thông tin kháng tài khoản</h5>
+              <div className="gap-4 grid grid-cols-2 text-sm">
+                <div>
+                  <span>Số lượng tài khoản tạm ngưng:</span>
+                  <span className="ml-1 font-medium">{task.numberOfSuspendedAccounts || 0}</span>
+                </div>
+                <div>
+                  <span>Tổng số lượng kháng:</span>
+                  <span className="ml-1 font-medium">{task.appealSummary?.totalAppealCount || 0}</span>
+                </div>
+                <div>
+                  <span>Tổng số lượng thành công:</span>
+                  <span className="ml-1 font-medium">{task.appealSummary?.totalSuccessCount || 0}</span>
+                </div>
+                <div>
+                  <span>Tổng số lượng thất bại:</span>
+                  <span className="ml-1 font-medium">{task.appealSummary?.totalFailureCount || 0}</span>
+                </div>
+                <div>
+                  <span>Tỷ lệ thành công:</span>
+                  <span className="ml-1 font-medium">{fixedNumber(task.appealSummary?.overallSuccessRate || 0)}%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <div className="mb-6 p-4 border border-blue-100 rounded-lg">
+              <h5 className="mb-3">Thông tin kháng tài khoản</h5>
+              <TaskAppealDetailTable appealDetails={task.appealDetails ?? []} />
+            </div>
+          </div>
+        </>
+      )}
 
       <div className="flex justify-between pt-4 border-t">
         <Button size="sm" variant="default" onClick={closeDialog}>
@@ -414,6 +472,12 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
         isOpen={isProgressDetailModalOpen}
         taskId={task.id}
         onClose={() => setIsProgressDetailModalOpen(false)}
+      />
+
+      <UpdateAppealMetricsModal
+        isOpen={isAppealMetricsModalOpen}
+        task={task}
+        onClose={() => setIsAppealMetricsModalOpen(false)}
       />
     </div>
   )

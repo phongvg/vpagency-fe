@@ -27,11 +27,15 @@ export type Task = {
   createdAt: Date
   updatedAt: Date
   numberOfResultCampaigns: number | null
+  numberOfSuspendedAccounts: number | null
   finalUrlIds: string[]
   gmailIds: string[]
   finalUrls: FinalUrl[]
   totalCost: number
   avgCpc: number
+
+  appealDetails?: TaskAppealDetail[]
+  appealSummary?: TaskAppealSummary
 }
 
 export type TasksGroupedByStatus = {
@@ -83,11 +87,19 @@ export type UpdateTaskRequest = {
   numberOfAccounts?: number
   numberOfResultCampaigns?: number
   finalUrlIds?: string[]
-  gmailIds?: string[]
+  numberOfSuspendedAccounts?: number
 }
 
 export type TaskProgressRequest = {
   progress: number
+}
+
+export type UpdateAppealMetricsRequest = {
+  appealDate: string
+  suspensionReason: string
+  appealCount: number
+  successCount: number
+  failureCount: number
 }
 
 export type UpdateSingleFinalUrlProgressRequest = {
@@ -162,4 +174,20 @@ export type UserStat = {
   totalImpression: number
   avgCpc: number
   campaignCount: number
+}
+
+export type TaskAppealDetail = {
+  appealDate: string
+  suspensionReason: string
+  appealCount: number
+  successCount: number
+  failureCount: number
+  successRate: number
+}
+
+export type TaskAppealSummary = {
+  totalAppealCount: number
+  totalSuccessCount: number
+  totalFailureCount: number
+  overallSuccessRate: number
 }
