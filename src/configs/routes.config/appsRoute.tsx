@@ -151,6 +151,15 @@ const appsRoute: Routes = [
     },
   },
   {
+    key: 'appealAccounts',
+    path: urlConfig.appealAccounts,
+    component: lazy(() => import('@/views/appealAccount')),
+    authority: [Role.ADMIN, Role.MANAGER_AFF, Role.MEMBER_AFF, Role.ACCOUNTING],
+    meta: {
+      header: 'Tài khoản Ads đã kháng giấy',
+    },
+  },
+  {
     key: 'projectTypes',
     path: urlConfig.projectTypes,
     component: lazy(() => import('@/views/masterData/projectType')),

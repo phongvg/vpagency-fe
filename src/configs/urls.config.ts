@@ -31,6 +31,7 @@ export const urlConfig = {
   finalUrls: `${APP_PREFIX_PATH}/final-urls`,
   gmailStatus: `${APP_PREFIX_PATH}/master-data/gmail-status`,
   financeReports: `${APP_PREFIX_PATH}/reports`,
+  appealAccounts: `${APP_PREFIX_PATH}/appeal-accounts`,
 
   login: `${AUTH_PREFIX_PATH}/login`,
   loginTelegram: `${AUTH_PREFIX_PATH}/telegram`,

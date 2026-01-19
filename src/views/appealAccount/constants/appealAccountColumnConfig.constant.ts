@@ -1,0 +1,17 @@
+export const COLUMN_CONFIG = [
+  { id: 'stt', label: 'STT', visible: true, required: true },
+  { id: 'profileName', label: 'Tên hồ sơ', visible: true, required: false },
+  { id: 'email', label: 'Email', visible: true, required: false },
+  { id: 'password', label: 'Mật khẩu', visible: true, required: false },
+  { id: 'recoveryEmail', label: 'Mail khôi phục', visible: true, required: false },
+  { id: 'twoFa', label: 'Mã 2FA', visible: true, required: false },
+  { id: 'mcc', label: 'MCC', visible: true, required: false },
+  { id: 'uid', label: 'UID', visible: true, required: false },
+  { id: 'appealPlatform', label: 'Sàn kháng được', visible: true, required: false },
+  { id: 'appealedBy', label: 'Người kháng', visible: true, required: false },
+  { id: 'usedBy', label: 'Người sử dụng', visible: true, required: false },
+  { id: 'note', label: 'Ghi chú', visible: true, required: false },
+  { id: 'note2', label: 'Ghi chú 2', visible: true, required: false },
+  { id: 'rarityLevel', label: 'Mức độ hiếm', visible: true, required: false },
+  { id: 'creator', label: 'Người tạo', visible: true, required: false },
+] as const
