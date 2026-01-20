@@ -11,6 +11,8 @@ import {
   TasksGroupedByStatus,
   TaskStatisticResponse,
   UpdateAppealMetricsRequest,
+  UpdateDocumentAppealMetricsRequest,
+  UpdateResearchMetricsRequest,
   UpdateTaskRequest,
 } from '@/views/tasks/assign/types/task.type'
 
@@ -124,6 +126,22 @@ export async function apiGetProgressDetail(taskId: string) {
 export async function apiUpdateAppealMetrics(taskId: string, payload: UpdateAppealMetricsRequest) {
   return ApiService.fetchData<BaseResponse<Task>>({
     url: `/tasks/${taskId}/appeal-details`,
+    method: 'post',
+    data: payload,
+  })
+}
+
+export async function apiUpdateDocumentAppealMetrics(taskId: string, payload: UpdateDocumentAppealMetricsRequest) {
+  return ApiService.fetchData<BaseResponse<Task>>({
+    url: `/tasks/${taskId}/document-appeal-details`,
+    method: 'post',
+    data: payload,
+  })
+}
+
+export async function apiUpdateResearchMetrics(taskId: string, payload: UpdateResearchMetricsRequest) {
+  return ApiService.fetchData<BaseResponse<Task>>({
+    url: `/tasks/${taskId}/research-details`,
     method: 'post',
     data: payload,
   })

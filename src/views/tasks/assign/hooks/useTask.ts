@@ -23,6 +23,8 @@ import {
   apiGetTasksGroupedByStatus,
   apiRemoveCampaignsFromFinalUrl,
   apiUpdateAppealMetrics,
+  apiUpdateDocumentAppealMetrics,
+  apiUpdateResearchMetrics,
   apiUpdateTask,
   apiUpdateTaskProgress,
   apiUpdateTaskStatus,
@@ -241,6 +243,44 @@ export const useUpdateAppealMetrics = () => {
   return useMutation({
     mutationFn: async ({ taskId, payload }: { taskId: string; payload: UpdateAppealMetricsRequest }) => {
       const response = await apiUpdateAppealMetrics(taskId, payload)
+      return response.data
+    },
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: [GET_TASK_DETAIL] })
+      queryClient.invalidateQueries({ queryKey: [GET_TASKS_GROUPED_BY_STATUS] })
+      toastSuccess(response.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
+    },
+  })
+}
+
+export const useUpdateDocumentAppealMetrics = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({ taskId, payload }: { taskId: string; payload: UpdateDocumentAppealMetricsRequest }) => {
+      const response = await apiUpdateDocumentAppealMetrics(taskId, payload)
+      return response.data
+    },
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: [GET_TASK_DETAIL] })
+      queryClient.invalidateQueries({ queryKey: [GET_TASKS_GROUPED_BY_STATUS] })
+      toastSuccess(response.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
+    },
+  })
+}
+
+export const useUpdateResearchMetrics = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({ taskId, payload }: { taskId: string; payload: UpdateResearchMetricsRequest }) => {
+      const response = await apiUpdateResearchMetrics(taskId, payload)
       return response.data
     },
     onSuccess: (response) => {

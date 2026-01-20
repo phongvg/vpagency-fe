@@ -28,6 +28,9 @@ export type Task = {
   updatedAt: Date
   numberOfResultCampaigns: number | null
   numberOfSuspendedAccounts: number | null
+  appealProject: string | null
+  numberOfAppealDocuments: number | null
+  researchContent: string | null
   finalUrlIds: string[]
   gmailIds: string[]
   finalUrls: FinalUrl[]
@@ -36,6 +39,10 @@ export type Task = {
 
   appealDetails?: TaskAppealDetail[]
   appealSummary?: TaskAppealSummary
+  documentAppealDetails?: TaskDocumentAppealDetail[]
+  documentAppealSummary?: TaskDocumentAppealSummary
+  researchDetails?: TaskResearchDetail[]
+  researchSummary?: TaskResearchSummary
 }
 
 export type TasksGroupedByStatus = {
@@ -88,6 +95,9 @@ export type UpdateTaskRequest = {
   numberOfResultCampaigns?: number
   finalUrlIds?: string[]
   numberOfSuspendedAccounts?: number
+  appealProject?: string
+  numberOfAppealDocuments?: number
+  researchContent?: string
 }
 
 export type TaskProgressRequest = {
@@ -190,4 +200,45 @@ export type TaskAppealSummary = {
   totalSuccessCount: number
   totalFailureCount: number
   overallSuccessRate: number
+}
+
+export type TaskDocumentAppealDetail = {
+  appealDate: string
+  projectName: string
+  appealCount: number
+  successCount: number
+  note: string | null
+  successRate: number
+}
+
+export type TaskDocumentAppealSummary = {
+  totalAppealCount: number
+  totalSuccessCount: number
+  totalFailureCount: number
+  overallSuccessRate: number
+}
+
+export type UpdateDocumentAppealMetricsRequest = {
+  appealDate: string
+  projectName: string
+  appealCount: number
+  successCount: number
+  note?: string
+}
+
+export type TaskResearchDetail = {
+  researchDate: string
+  result: string
+  difficultyLevel: string
+}
+
+export type TaskResearchSummary = {
+  totalResearchCount: number
+  averageDifficulty: string
+}
+
+export type UpdateResearchMetricsRequest = {
+  researchDate: string
+  result: string
+  difficultyLevel: string
 }

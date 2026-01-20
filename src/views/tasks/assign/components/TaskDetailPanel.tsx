@@ -23,11 +23,18 @@ import { toastError, toastSuccess } from '@/utils/toast'
 import { FinalUrl } from '@/views/projects/types/finalUrl.type'
 import TaskProgressDetailModal from '@/views/tasks/assign/components/TaskProgressDetailModal'
 import UpdateAppealMetricsModal from '@/views/tasks/assign/components/UpdateAppealMetricsModal'
+import UpdateDocumentAppealMetricsModal from '@/views/tasks/assign/components/UpdateDocumentAppealMetricsModal'
 import UpdateProgressModal from '@/views/tasks/assign/components/UpdateProgressModal'
+import UpdateResearchMetricsModal from '@/views/tasks/assign/components/UpdateResearchMetricsModal'
 import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
 import { useDeleteTask } from '@/views/tasks/assign/hooks/useTask'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
-import { Task, TaskAppealDetail } from '@/views/tasks/assign/types/task.type'
+import {
+  Task,
+  TaskAppealDetail,
+  TaskDocumentAppealDetail,
+  TaskResearchDetail,
+} from '@/views/tasks/assign/types/task.type'
 import { useQueryClient } from '@tanstack/react-query'
 import { ColumnDef } from '@tanstack/react-table'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -57,6 +64,8 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
   const [isProgressModalOpen, setIsProgressModalOpen] = useState(false)
   const [isProgressDetailModalOpen, setIsProgressDetailModalOpen] = useState(false)
   const [isAppealMetricsModalOpen, setIsAppealMetricsModalOpen] = useState(false)
+  const [isDocumentAppealMetricsModalOpen, setIsDocumentAppealMetricsModalOpen] = useState(false)
+  const [isResearchMetricsModalOpen, setIsResearchMetricsModalOpen] = useState(false)
 
   const { showConfirm, confirmProps } = useConfirmDialog({
     title: 'Xác nhận xóa công việc',
@@ -100,6 +109,8 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
         onUpdateProgress={() => setIsProgressModalOpen(true)}
         onViewProgressDetail={() => setIsProgressDetailModalOpen(true)}
         onUpdateAppealMetrics={() => setIsAppealMetricsModalOpen(true)}
+        onUpdateDocumentAppealMetrics={() => setIsDocumentAppealMetricsModalOpen(true)}
+        onUpdateResearchMetrics={() => setIsResearchMetricsModalOpen(true)}
         onDelete={handleDelete}
       />
 
@@ -118,9 +129,15 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
               <TaskCampaignSection task={displayTask} />
             </Accordion.Item>
           )}
+
+          {displayTask.type === TaskType.RESEARCH && displayTask.researchContent && (
+            <Accordion.Item itemKey="4" title="Nội dung nghiên cứu">
+              <div className="whitespace-pre-wrap">{displayTask.researchContent}</div>
+            </Accordion.Item>
+          )}
         </Accordion>
 
-        <Accordion defaultActiveKey={['1', '2', '3', '4']} accordion={false}>
+        <Accordion defaultActiveKey={['1', '2', '3', '4', '5', '6']} accordion={false}>
           {[TaskType.LAUNCH_CAMPAIGN, TaskType.SET_CAMPAIGN, TaskType.NURTURE_ACCOUNT].includes(displayTask.type) && (
             <Accordion.Item itemKey="1" title="Thông tin dự án">
               <TaskProjectSection task={displayTask} />
@@ -130,6 +147,18 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
           {displayTask.type === TaskType.APPEAL_ACCOUNT && (
             <Accordion.Item itemKey="4" title="Thông tin kháng tài khoản">
               <TaskAppealDetailSection task={displayTask} />
+            </Accordion.Item>
+          )}
+
+          {displayTask.type === TaskType.DOCUMENT_APPEAL && (
+            <Accordion.Item itemKey="5" title="Thông tin kháng giấy">
+              <TaskDocumentAppealDetailSection task={displayTask} />
+            </Accordion.Item>
+          )}
+
+          {displayTask.type === TaskType.RESEARCH && (
+            <Accordion.Item itemKey="6" title="Thông tin nghiên cứu">
+              <TaskResearchDetailSection task={displayTask} />
             </Accordion.Item>
           )}
 
@@ -157,6 +186,20 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
         </div>
       )}
 
+      {displayTask.type === TaskType.DOCUMENT_APPEAL && (
+        <div className="mt-8">
+          <h2 className="mb-4 font-semibold text-lg">Chi tiết kháng giấy</h2>
+          <TaskDocumentAppealDetailTable documentAppealDetails={displayTask.documentAppealDetails ?? []} />
+        </div>
+      )}
+
+      {displayTask.type === TaskType.RESEARCH && (
+        <div className="mt-8">
+          <h2 className="mb-4 font-semibold text-lg">Chi tiết kết quả nghiên cứu</h2>
+          <TaskResearchDetailTable researchDetails={displayTask.researchDetails ?? []} />
+        </div>
+      )}
+
       <ConfirmDialog {...confirmProps} loading={deleteTask.isPending} />
 
       <UpdateProgressModal
@@ -179,6 +222,18 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
         task={displayTask}
         onClose={() => setIsAppealMetricsModalOpen(false)}
       />
+
+      <UpdateDocumentAppealMetricsModal
+        isOpen={isDocumentAppealMetricsModalOpen}
+        task={displayTask}
+        onClose={() => setIsDocumentAppealMetricsModalOpen(false)}
+      />
+
+      <UpdateResearchMetricsModal
+        isOpen={isResearchMetricsModalOpen}
+        task={displayTask}
+        onClose={() => setIsResearchMetricsModalOpen(false)}
+      />
     </>
   )
 }
@@ -193,6 +248,8 @@ interface TaskHeaderPanelProps extends TaskPanelProps {
   onViewProgressDetail: () => void
   onDelete: () => void
   onUpdateAppealMetrics: () => void
+  onUpdateDocumentAppealMetrics: () => void
+  onUpdateResearchMetrics: () => void
 }
 
 function TaskHeaderPanel({
@@ -202,6 +259,8 @@ function TaskHeaderPanel({
   onViewProgressDetail,
   onDelete,
   onUpdateAppealMetrics,
+  onUpdateDocumentAppealMetrics,
+  onUpdateResearchMetrics,
 }: TaskHeaderPanelProps) {
   const { user } = useAuthStore()
 
@@ -234,6 +293,18 @@ function TaskHeaderPanel({
         {task.type === TaskType.APPEAL_ACCOUNT && (
           <Button variant="default" size="xs" onClick={onUpdateAppealMetrics}>
             Cập nhật tiến độ kháng
+          </Button>
+        )}
+
+        {task.type === TaskType.DOCUMENT_APPEAL && (
+          <Button variant="default" size="xs" onClick={onUpdateDocumentAppealMetrics}>
+            Cập nhật tiến độ kháng giấy
+          </Button>
+        )}
+
+        {task.type === TaskType.RESEARCH && (
+          <Button variant="default" size="xs" onClick={onUpdateResearchMetrics}>
+            Cập nhật kết quả nghiên cứu
           </Button>
         )}
       </div>
@@ -344,6 +415,48 @@ function TaskAppealDetailSection({ task }: TaskPanelProps) {
       <li className="flex justify-between items-center">
         <span>Tỷ lệ thành công:</span>
         <span>{fixedNumber(task.appealSummary?.overallSuccessRate || 0)}%</span>
+      </li>
+    </ul>
+  )
+}
+
+function TaskDocumentAppealDetailSection({ task }: TaskPanelProps) {
+  return (
+    <ul className="space-y-2">
+      <li className="flex justify-between items-center">
+        <span>Số lượng đơn kháng:</span>
+        <span>{task.numberOfAppealDocuments || 0}</span>
+      </li>
+      <li className="flex justify-between items-center">
+        <span>Tổng số lượng kháng:</span>
+        <span>{task.documentAppealSummary?.totalAppealCount || 0}</span>
+      </li>
+      <li className="flex justify-between items-center">
+        <span>Tổng số lượng thành công:</span>
+        <span>{task.documentAppealSummary?.totalSuccessCount || 0}</span>
+      </li>
+      <li className="flex justify-between items-center">
+        <span>Tổng số lượng thất bại:</span>
+        <span>{task.documentAppealSummary?.totalFailureCount || 0}</span>
+      </li>
+      <li className="flex justify-between items-center">
+        <span>Tỷ lệ thành công:</span>
+        <span>{fixedNumber(task.documentAppealSummary?.overallSuccessRate || 0)}%</span>
+      </li>
+    </ul>
+  )
+}
+
+function TaskResearchDetailSection({ task }: TaskPanelProps) {
+  return (
+    <ul className="space-y-2">
+      <li className="flex justify-between items-center">
+        <span>Tổng số kết quả nghiên cứu:</span>
+        <span>{task.researchSummary?.totalResearchCount || 0}</span>
+      </li>
+      <li className="flex justify-between items-center">
+        <span>Mức độ khó trung bình:</span>
+        <span>{task.researchSummary?.averageDifficulty || 'Chưa có'}</span>
       </li>
     </ul>
   )
@@ -615,4 +728,133 @@ export function TaskAppealDetailTable({ appealDetails }: { appealDetails: TaskAp
   )
 
   return <DataTable columns={columns} data={appealDetails} maxHeight={500} />
+}
+
+export function TaskDocumentAppealDetailTable({
+  documentAppealDetails,
+}: {
+  documentAppealDetails: TaskDocumentAppealDetail[]
+}) {
+  const columns: ColumnDef<TaskDocumentAppealDetail>[] = useMemo(
+    () => [
+      {
+        header: 'STT',
+        accessorKey: 'index',
+        cell: (props) => {
+          const row = props.row.index
+          return <span>{row + 1}</span>
+        },
+      },
+      {
+        header: 'Ngày kháng giấy',
+        accessorKey: 'appealDate',
+        cell: (props) => <span className="font-medium">{formatDate(props.row.original.appealDate, 'DD/MM/YYYY')}</span>,
+      },
+      {
+        header: 'Dự án',
+        accessorKey: 'projectName',
+        cell: (props) => <span className="font-medium">{props.row.original.projectName}</span>,
+      },
+      {
+        header: 'Số lượng đơn kháng',
+        accessorKey: 'appealCount',
+      },
+      {
+        header: 'Số lượng đơn thành công',
+        accessorKey: 'successCount',
+      },
+      {
+        header: 'Số lượng thất bại',
+        accessorKey: 'failureCount',
+        cell: (props) => {
+          const row = props.row.original
+          return <span>{row.appealCount - row.successCount}</span>
+        },
+      },
+      {
+        header: 'Tỷ lệ thành công (%)',
+        accessorKey: 'successRate',
+        cell: (props) => {
+          return <span>{fixedNumber(props.row.original.successRate)}%</span>
+        },
+      },
+      {
+        header: 'Ghi chú',
+        accessorKey: 'note',
+        cell: (props) => {
+          const row = props.row.original
+          return row.note ? <span className="block max-w-[250px] truncate">{row.note}</span> : '-'
+        },
+      },
+    ],
+    [],
+  )
+
+  return <DataTable columns={columns} data={documentAppealDetails} maxHeight={500} />
+}
+
+export function TaskResearchDetailTable({ researchDetails }: { researchDetails: TaskResearchDetail[] }) {
+  const difficultyLabels: Record<string, string> = {
+    LOW: 'Thấp',
+    MEDIUM: 'Trung bình',
+    HIGH: 'Cao',
+    VERY_HIGH: 'Rất cao',
+  }
+
+  const columns: ColumnDef<TaskResearchDetail>[] = useMemo(
+    () => [
+      {
+        header: 'STT',
+        accessorKey: 'index',
+        cell: (props) => {
+          const row = props.row.index
+          return <span>{row + 1}</span>
+        },
+      },
+      {
+        header: 'Ngày ghi kết quả',
+        accessorKey: 'researchDate',
+        cell: (props) => (
+          <span className="font-medium">{formatDate(props.row.original.researchDate, 'DD/MM/YYYY')}</span>
+        ),
+      },
+      {
+        header: 'Kết quả nghiên cứu',
+        accessorKey: 'result',
+        cell: (props) => {
+          const row = props.row.original
+          return (
+            <span className="block max-w-[400px] truncate" title={row.result}>
+              {row.result}
+            </span>
+          )
+        },
+      },
+      {
+        header: 'Mức độ khó',
+        accessorKey: 'difficultyLevel',
+        cell: (props) => {
+          const row = props.row.original
+          const difficultyColors: Record<string, string> = {
+            LOW: 'bg-green-100 text-green-800',
+            MEDIUM: 'bg-yellow-100 text-yellow-800',
+            HIGH: 'bg-orange-100 text-orange-800',
+            VERY_HIGH: 'bg-red-100 text-red-800',
+          }
+          return (
+            <span
+              className={`px-2 py-1 rounded-md text-xs font-medium ${
+                difficultyColors[row.difficultyLevel] || 'bg-gray-100 text-gray-800'
+              }`}
+            >
+              {difficultyLabels[row.difficultyLevel] || row.difficultyLevel}
+            </span>
+          )
+        },
+      },
+    ],
+    [],
+  )
+
+  return <DataTable columns={columns} data={researchDetails} maxHeight={500} />
 }

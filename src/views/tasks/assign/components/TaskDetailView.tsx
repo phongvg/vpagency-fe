@@ -12,9 +12,15 @@ import { isAdminOrManager } from '@/utils/checkRole'
 import { GET_TASK_DETAIL } from '@/utils/queryKey'
 import { toastError, toastSuccess } from '@/utils/toast'
 import { FinalUrl } from '@/views/projects/types/finalUrl.type'
-import { TaskAppealDetailTable } from '@/views/tasks/assign/components/TaskDetailPanel'
+import {
+  TaskAppealDetailTable,
+  TaskDocumentAppealDetailTable,
+  TaskResearchDetailTable,
+} from '@/views/tasks/assign/components/TaskDetailPanel'
 import TaskProgressDetailModal from '@/views/tasks/assign/components/TaskProgressDetailModal'
 import UpdateAppealMetricsModal from '@/views/tasks/assign/components/UpdateAppealMetricsModal'
+import UpdateDocumentAppealMetricsModal from '@/views/tasks/assign/components/UpdateDocumentAppealMetricsModal'
+import UpdateResearchMetricsModal from '@/views/tasks/assign/components/UpdateResearchMetricsModal'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import { Task } from '@/views/tasks/assign/types/task.type'
 import { useQueryClient } from '@tanstack/react-query'
@@ -37,6 +43,8 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
   const [isProgressModalOpen, setIsProgressModalOpen] = useState(false)
   const [isProgressDetailModalOpen, setIsProgressDetailModalOpen] = useState(false)
   const [isAppealMetricsModalOpen, setIsAppealMetricsModalOpen] = useState(false)
+  const [isDocumentAppealMetricsModalOpen, setIsDocumentAppealMetricsModalOpen] = useState(false)
+  const [isResearchMetricsModalOpen, setIsResearchMetricsModalOpen] = useState(false)
 
   const handleCopyToClipboard = useCallback((text: string) => {
     navigator.clipboard.writeText(text).then(
@@ -224,6 +232,18 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
                   Cập nhật tiến độ kháng
                 </Button>
               )}
+
+              {task.type === TaskType.DOCUMENT_APPEAL && (
+                <Button size="sm" variant="solid" onClick={() => setIsDocumentAppealMetricsModalOpen(true)}>
+                  Cập nhật tiến độ kháng giấy
+                </Button>
+              )}
+
+              {task.type === TaskType.RESEARCH && (
+                <Button size="sm" variant="solid" onClick={() => setIsResearchMetricsModalOpen(true)}>
+                  Cập nhật kết quả nghiên cứu
+                </Button>
+              )}
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -276,6 +296,24 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
           <h3 className="mb-2 font-medium text-gray-700 text-sm">Ghi chú</h3>
           <div className="bg-gray-50 p-3 border rounded-lg">
             <p className="text-gray-700 text-sm whitespace-pre-wrap">{task.note}</p>
+          </div>
+        </div>
+      )}
+
+      {task.type === TaskType.RESEARCH && task.researchContent && (
+        <div className="mb-6">
+          <h3 className="mb-2 font-medium text-gray-700 text-sm">Nội dung nghiên cứu</h3>
+          <div className="bg-blue-50 p-3 border border-blue-100 rounded-lg">
+            <p className="text-gray-700 text-sm whitespace-pre-wrap">{task.researchContent}</p>
+          </div>
+        </div>
+      )}
+
+      {task.type === TaskType.RESEARCH && task.researchContent && (
+        <div className="mb-6">
+          <h3 className="mb-2 font-medium text-gray-700 text-sm">Nội dung nghiên cứu</h3>
+          <div className="bg-blue-50 p-3 border border-blue-100 rounded-lg">
+            <p className="text-gray-700 text-sm whitespace-pre-wrap">{task.researchContent}</p>
           </div>
         </div>
       )}
@@ -453,6 +491,74 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
         </>
       )}
 
+      {task.type === TaskType.DOCUMENT_APPEAL && (
+        <>
+          <div className="mb-6">
+            <div className="mb-6 p-4 border border-blue-100 rounded-lg">
+              <h5 className="mb-3">Thông tin kháng giấy</h5>
+              <div className="gap-4 grid grid-cols-2 text-sm">
+                <div>
+                  <span>Số lượng đơn kháng:</span>
+                  <span className="ml-1 font-medium">{task.numberOfAppealDocuments || 0}</span>
+                </div>
+                <div>
+                  <span>Tổng số lượng kháng:</span>
+                  <span className="ml-1 font-medium">{task.documentAppealSummary?.totalAppealCount || 0}</span>
+                </div>
+                <div>
+                  <span>Tổng số lượng thành công:</span>
+                  <span className="ml-1 font-medium">{task.documentAppealSummary?.totalSuccessCount || 0}</span>
+                </div>
+                <div>
+                  <span>Tổng số lượng thất bại:</span>
+                  <span className="ml-1 font-medium">{task.documentAppealSummary?.totalFailureCount || 0}</span>
+                </div>
+                <div>
+                  <span>Tỷ lệ thành công:</span>
+                  <span className="ml-1 font-medium">
+                    {fixedNumber(task.documentAppealSummary?.overallSuccessRate || 0)}%
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <div className="mb-6 p-4 border border-blue-100 rounded-lg">
+              <h5 className="mb-3">Chi tiết kháng giấy</h5>
+              <TaskDocumentAppealDetailTable documentAppealDetails={task.documentAppealDetails ?? []} />
+            </div>
+          </div>
+        </>
+      )}
+
+      {task.type === TaskType.RESEARCH && (
+        <>
+          <div className="mb-6">
+            <div className="mb-6 p-4 border border-blue-100 rounded-lg">
+              <h5 className="mb-3">Thông tin nghiên cứu</h5>
+              <div className="gap-4 grid grid-cols-2 text-sm">
+                <div>
+                  <span>Tổng số kết quả nghiên cứu:</span>
+                  <span className="ml-1 font-medium">{task.researchSummary?.totalResearchCount || 0}</span>
+                </div>
+                <div>
+                  <span>Mức độ khó trung bình:</span>
+                  <span className="ml-1 font-medium">{task.researchSummary?.averageDifficulty || 'Chưa có'}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <div className="mb-6 p-4 border border-blue-100 rounded-lg">
+              <h5 className="mb-3">Chi tiết kết quả nghiên cứu</h5>
+              <TaskResearchDetailTable researchDetails={task.researchDetails ?? []} />
+            </div>
+          </div>
+        </>
+      )}
+
       <div className="flex justify-between pt-4 border-t">
         <Button size="sm" variant="default" onClick={closeDialog}>
           Đóng
@@ -478,6 +584,18 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
         isOpen={isAppealMetricsModalOpen}
         task={task}
         onClose={() => setIsAppealMetricsModalOpen(false)}
+      />
+
+      <UpdateDocumentAppealMetricsModal
+        isOpen={isDocumentAppealMetricsModalOpen}
+        task={task}
+        onClose={() => setIsDocumentAppealMetricsModalOpen(false)}
+      />
+
+      <UpdateResearchMetricsModal
+        isOpen={isResearchMetricsModalOpen}
+        task={task}
+        onClose={() => setIsResearchMetricsModalOpen(false)}
       />
     </div>
   )

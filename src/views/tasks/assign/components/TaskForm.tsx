@@ -30,13 +30,15 @@ const validationSchema = Yup.object().shape({
   priority: Yup.string().required('Độ ưu tiên là bắt buộc'),
   deadline: Yup.date().required('Deadline là bắt buộc'),
   projectId: Yup.string().when('type', {
-    is: (val: string) => val !== TaskType.APPEAL_ACCOUNT,
+    is: (val: string) =>
+      val === TaskType.SET_CAMPAIGN || val === TaskType.LAUNCH_CAMPAIGN || val === TaskType.NURTURE_ACCOUNT,
     then: (schema) => schema.required('Dự án là bắt buộc'),
     otherwise: (schema) => schema.nullable(),
   }),
   assignedUserIds: Yup.array().min(1, 'Phải chọn ít nhất một người nhận việc'),
   finalUrlIds: Yup.array().when('type', {
-    is: (val: string) => val !== TaskType.APPEAL_ACCOUNT,
+    is: (val: string) =>
+      val === TaskType.SET_CAMPAIGN || val === TaskType.LAUNCH_CAMPAIGN || val === TaskType.NURTURE_ACCOUNT,
     then: (schema) => schema.min(1, 'Phải chọn ít nhất một URL'),
     otherwise: (schema) => schema,
   }),
@@ -77,6 +79,9 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
     numberOfResultCampaigns: task?.numberOfResultCampaigns || undefined,
     finalUrlIds: task?.finalUrlIds || [],
     numberOfSuspendedAccounts: task?.numberOfSuspendedAccounts || undefined,
+    appealProject: task?.appealProject || undefined,
+    numberOfAppealDocuments: task?.numberOfAppealDocuments || undefined,
+    researchContent: task?.researchContent || undefined,
   }
 
   useEffect(() => {
@@ -258,7 +263,7 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                   />
                 </FormItem>
 
-                {values.type !== TaskType.APPEAL_ACCOUNT && (
+                {[TaskType.SET_CAMPAIGN, TaskType.LAUNCH_CAMPAIGN, TaskType.NURTURE_ACCOUNT].includes(values.type!) && (
                   <FormItem
                     asterisk
                     label="Dự án"
@@ -493,6 +498,52 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                         />
                       </FormItem>
                     </div>
+                  </div>
+                )}
+
+                {values.type === TaskType.DOCUMENT_APPEAL && (
+                  <div className="space-y-4 col-span-2 bg-gray-50 mb-3 px-4 py-4 rounded-lg">
+                    <h5>Thông tin chi tiết</h5>
+
+                    <div className="gap-x-4 grid grid-cols-1 lg:grid-cols-2">
+                      <FormItem label="Dự án cần kháng">
+                        <Input
+                          name="appealProject"
+                          placeholder="Nhập dự án cần kháng..."
+                          type="text"
+                          value={values.appealProject || ''}
+                          min={0}
+                          onChange={handleChange}
+                        />
+                      </FormItem>
+
+                      <FormItem label="Số lượng đơn kháng">
+                        <Input
+                          name="numberOfAppealDocuments"
+                          placeholder="Nhập số lượng đơn kháng..."
+                          type="number"
+                          value={values.numberOfAppealDocuments || ''}
+                          min={0}
+                          onChange={handleChange}
+                        />
+                      </FormItem>
+                    </div>
+                  </div>
+                )}
+
+                {values.type === TaskType.RESEARCH && (
+                  <div className="space-y-4 col-span-2 bg-gray-50 mb-3 px-4 py-4 rounded-lg">
+                    <h5>Thông tin chi tiết</h5>
+
+                    <FormItem label="Nội dung nghiên cứu" className="col-span-2">
+                      <Textarea
+                        name="researchContent"
+                        placeholder="Nhập nội dung nghiên cứu..."
+                        rows={4}
+                        value={values.researchContent || ''}
+                        onChange={handleChange}
+                      />
+                    </FormItem>
                   </div>
                 )}
               </div>
