@@ -1,6 +1,6 @@
-import { Button, DatePicker, Dialog, FormItem, Select, Textarea } from '@/components/ui'
-import { useUpdateResearchMetrics } from '@/views/tasks/assign/hooks/useTask'
-import { Task, UpdateResearchMetricsRequest } from '@/views/tasks/assign/types/task.type'
+import { Button, DatePicker, Dialog, FormItem, Input, Textarea } from '@/components/ui'
+import { useUpdateResearchDetail, useUpdateResearchMetrics } from '@/views/tasks/assign/hooks/useTask'
+import { Task, TaskResearchDetail, UpdateResearchMetricsRequest } from '@/views/tasks/assign/types/task.type'
 import { Form, Formik } from 'formik'
 import { HiOutlineDocumentText } from 'react-icons/hi'
 import * as Yup from 'yup'
@@ -8,6 +8,7 @@ import * as Yup from 'yup'
 type Props = {
   isOpen: boolean
   task: Task | null
+  editingDetail?: TaskResearchDetail | null
   onClose: () => void
 }
 
@@ -19,18 +20,21 @@ const difficultyLevelOptions = [
 ]
 
 const validationSchema = Yup.object().shape({
-  researchDate: Yup.date().required('Ngày ghi kết quả nghiên cứu là bắt buộc'),
+  resultDate: Yup.date().required('Ngày ghi kết quả nghiên cứu là bắt buộc'),
   result: Yup.string().required('Kết quả nghiên cứu là bắt buộc'),
   difficultyLevel: Yup.string().required('Mức độ khó là bắt buộc'),
 })
 
-export default function UpdateResearchMetricsModal({ isOpen, task, onClose }: Props) {
+export default function UpdateResearchMetricsModal({ isOpen, task, editingDetail, onClose }: Props) {
   const updateResearchMetricsMutation = useUpdateResearchMetrics()
+  const updateResearchDetailMutation = useUpdateResearchDetail()
+
+  const isEditMode = !!editingDetail
 
   const initialValues: UpdateResearchMetricsRequest = {
-    researchDate: '',
-    result: '',
-    difficultyLevel: '',
+    resultDate: editingDetail?.resultDate || '',
+    result: editingDetail?.result || '',
+    difficultyLevel: editingDetail?.difficultyLevel || '',
   }
 
   const handleClose = () => {
@@ -40,10 +44,18 @@ export default function UpdateResearchMetricsModal({ isOpen, task, onClose }: Pr
   const handleSubmit = async (values: UpdateResearchMetricsRequest) => {
     if (!task?.id) return
 
-    await updateResearchMetricsMutation.mutateAsync({
-      taskId: task.id,
-      payload: values,
-    })
+    if (isEditMode && editingDetail) {
+      await updateResearchDetailMutation.mutateAsync({
+        taskId: task.id,
+        detailId: editingDetail.id,
+        payload: values,
+      })
+    } else {
+      await updateResearchMetricsMutation.mutateAsync({
+        taskId: task.id,
+        payload: values,
+      })
+    }
 
     handleClose()
   }
@@ -56,7 +68,9 @@ export default function UpdateResearchMetricsModal({ isOpen, task, onClose }: Pr
             <HiOutlineDocumentText className="w-6 h-6 text-blue-600" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900 text-lg">Cập nhật kết quả nghiên cứu</h3>
+            <h3 className="font-semibold text-gray-900 text-lg">
+              {isEditMode ? 'Chỉnh sửa kết quả nghiên cứu' : 'Cập nhật kết quả nghiên cứu'}
+            </h3>
             <p className="text-gray-500 text-sm line-clamp-1">{task?.name}</p>
           </div>
         </div>
@@ -73,14 +87,14 @@ export default function UpdateResearchMetricsModal({ isOpen, task, onClose }: Pr
                 <FormItem
                   asterisk
                   label="Ngày ghi kết quả nghiên cứu"
-                  errorMessage={errors.researchDate as string}
-                  invalid={touched.researchDate && Boolean(errors.researchDate)}
+                  errorMessage={errors.resultDate as string}
+                  invalid={touched.resultDate && Boolean(errors.resultDate)}
                 >
                   <DatePicker
                     inputFormat="DD/MM/YYYY"
                     placeholder="Chọn ngày ghi kết quả"
-                    value={values.researchDate ? new Date(values.researchDate) : null}
-                    onChange={(date) => setFieldValue('researchDate', date)}
+                    value={values.resultDate ? new Date(values.resultDate) : null}
+                    onChange={(date) => setFieldValue('resultDate', date)}
                   />
                 </FormItem>
 
@@ -105,14 +119,11 @@ export default function UpdateResearchMetricsModal({ isOpen, task, onClose }: Pr
                   errorMessage={errors.difficultyLevel}
                   invalid={touched.difficultyLevel && Boolean(errors.difficultyLevel)}
                 >
-                  <Select
+                  <Input
                     name="difficultyLevel"
-                    options={difficultyLevelOptions}
-                    placeholder="Chọn mức độ khó"
-                    value={difficultyLevelOptions.find((opt) => opt.value === values.difficultyLevel)}
-                    onChange={(option: { value: string; label: string } | null) =>
-                      setFieldValue('difficultyLevel', option?.value || '')
-                    }
+                    placeholder="Nhập mức độ khó..."
+                    value={values.difficultyLevel}
+                    onChange={handleChange}
                   />
                 </FormItem>
               </div>
@@ -121,8 +132,12 @@ export default function UpdateResearchMetricsModal({ isOpen, task, onClose }: Pr
                 <Button type="button" variant="default" onClick={handleClose}>
                   Hủy
                 </Button>
-                <Button variant="solid" type="submit" loading={updateResearchMetricsMutation.isPending}>
-                  Cập nhật
+                <Button
+                  variant="solid"
+                  type="submit"
+                  loading={updateResearchMetricsMutation.isPending || updateResearchDetailMutation.isPending}
+                >
+                  {isEditMode ? 'Cập nhật' : 'Thêm mới'}
                 </Button>
               </div>
             </Form>

@@ -21,13 +21,19 @@ import { isAdminOrManager } from '@/utils/checkRole'
 import { GET_TASK_DETAIL } from '@/utils/queryKey'
 import { toastError, toastSuccess } from '@/utils/toast'
 import { FinalUrl } from '@/views/projects/types/finalUrl.type'
+import { Project } from '@/views/projects/types/project.type'
 import TaskProgressDetailModal from '@/views/tasks/assign/components/TaskProgressDetailModal'
 import UpdateAppealMetricsModal from '@/views/tasks/assign/components/UpdateAppealMetricsModal'
 import UpdateDocumentAppealMetricsModal from '@/views/tasks/assign/components/UpdateDocumentAppealMetricsModal'
 import UpdateProgressModal from '@/views/tasks/assign/components/UpdateProgressModal'
 import UpdateResearchMetricsModal from '@/views/tasks/assign/components/UpdateResearchMetricsModal'
 import UsersAvatarGroup from '@/views/tasks/assign/components/UsersAvatarGroup'
-import { useDeleteTask } from '@/views/tasks/assign/hooks/useTask'
+import {
+  useDeleteDocumentAppealDetail,
+  useDeleteResearchDetail,
+  useDeleteTask,
+  useUpdateResearchDetail,
+} from '@/views/tasks/assign/hooks/useTask'
 import { useBoardStore } from '@/views/tasks/assign/store/useBoardStore'
 import {
   Task,
@@ -115,7 +121,7 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
       />
 
       <div className="gap-x-28 grid grid-cols-1 lg:grid-cols-2 mb-8">
-        <Accordion defaultActiveKey={['1', '2', '3']} accordion={false}>
+        <Accordion defaultActiveKey={['1', '2', '3', '4']} accordion={false}>
           <Accordion.Item itemKey="1" title="Thông tin chung">
             <TaskDetailSection task={displayTask} />
           </Accordion.Item>
@@ -127,12 +133,6 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
           {[TaskType.LAUNCH_CAMPAIGN, TaskType.SET_CAMPAIGN, TaskType.NURTURE_ACCOUNT].includes(displayTask.type) && (
             <Accordion.Item itemKey="3" title="Thông tin chiến dịch">
               <TaskCampaignSection task={displayTask} />
-            </Accordion.Item>
-          )}
-
-          {displayTask.type === TaskType.RESEARCH && displayTask.researchContent && (
-            <Accordion.Item itemKey="4" title="Nội dung nghiên cứu">
-              <div className="whitespace-pre-wrap">{displayTask.researchContent}</div>
             </Accordion.Item>
           )}
         </Accordion>
@@ -157,8 +157,8 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
           )}
 
           {displayTask.type === TaskType.RESEARCH && (
-            <Accordion.Item itemKey="6" title="Thông tin nghiên cứu">
-              <TaskResearchDetailSection task={displayTask} />
+            <Accordion.Item itemKey="4" title="Nội dung nghiên cứu">
+              <div className="whitespace-pre-wrap">{displayTask.researchContent}</div>
             </Accordion.Item>
           )}
 
@@ -187,10 +187,17 @@ export default function TaskDetailPanel({ inSplitView = false }: Props) {
       )}
 
       {displayTask.type === TaskType.DOCUMENT_APPEAL && (
-        <div className="mt-8">
-          <h2 className="mb-4 font-semibold text-lg">Chi tiết kháng giấy</h2>
-          <TaskDocumentAppealDetailTable documentAppealDetails={displayTask.documentAppealDetails ?? []} />
-        </div>
+        <>
+          <div className="mt-8">
+            <h2 className="mb-4 font-semibold text-lg">Danh sách dự án kháng</h2>
+            <TaskDocumentAppealTable projects={displayTask.projects ?? []} />
+          </div>
+
+          <div className="mt-8">
+            <h2 className="mb-4 font-semibold text-lg">Chi tiết kháng giấy</h2>
+            <TaskDocumentAppealDetailTable documentAppealDetails={displayTask.documentAppealDetails ?? []} />
+          </div>
+        </>
       )}
 
       {displayTask.type === TaskType.RESEARCH && (
@@ -442,21 +449,6 @@ function TaskDocumentAppealDetailSection({ task }: TaskPanelProps) {
       <li className="flex justify-between items-center">
         <span>Tỷ lệ thành công:</span>
         <span>{fixedNumber(task.documentAppealSummary?.overallSuccessRate || 0)}%</span>
-      </li>
-    </ul>
-  )
-}
-
-function TaskResearchDetailSection({ task }: TaskPanelProps) {
-  return (
-    <ul className="space-y-2">
-      <li className="flex justify-between items-center">
-        <span>Tổng số kết quả nghiên cứu:</span>
-        <span>{task.researchSummary?.totalResearchCount || 0}</span>
-      </li>
-      <li className="flex justify-between items-center">
-        <span>Mức độ khó trung bình:</span>
-        <span>{task.researchSummary?.averageDifficulty || 'Chưa có'}</span>
       </li>
     </ul>
   )
@@ -730,11 +722,66 @@ export function TaskAppealDetailTable({ appealDetails }: { appealDetails: TaskAp
   return <DataTable columns={columns} data={appealDetails} maxHeight={500} />
 }
 
+export function TaskDocumentAppealTable({ projects }: { projects: Project[] }) {
+  const columns: ColumnDef<Project>[] = useMemo(
+    () => [
+      {
+        header: 'STT',
+        accessorKey: 'index',
+        cell: (props) => {
+          const row = props.row.index
+          return <span>{row + 1}</span>
+        },
+      },
+      {
+        header: 'Dự án',
+        accessorKey: 'name',
+      },
+      {
+        header: 'Loại dự án',
+        accessorKey: 'typeName',
+      },
+      {
+        header: 'Trạng thái',
+        accessorKey: 'statusName',
+        cell: (props) => {
+          return <BadgeStatus content={props.row.original.statusName} />
+        },
+      },
+    ],
+    [],
+  )
+
+  return <DataTable columns={columns} data={projects} maxHeight={500} />
+}
+
 export function TaskDocumentAppealDetailTable({
   documentAppealDetails,
 }: {
   documentAppealDetails: TaskDocumentAppealDetail[]
 }) {
+  const deleteDocumentAppealDetail = useDeleteDocumentAppealDetail()
+  const { selectedTask } = useBoardStore()
+  const { showConfirm, confirmProps } = useConfirmDialog({
+    title: 'Xác nhận xóa',
+    type: 'danger',
+    confirmText: 'Xóa',
+    cancelText: 'Hủy',
+  })
+
+  const handleDelete = async (detailId: string) => {
+    const confirmed = await showConfirm({
+      message: 'Bạn có chắc chắn muốn xóa chi tiết kháng giấy này?',
+    })
+
+    if (confirmed && selectedTask?.id) {
+      await deleteDocumentAppealDetail.mutateAsync({
+        taskId: selectedTask.id,
+        detailId,
+      })
+    }
+  }
+
   const columns: ColumnDef<TaskDocumentAppealDetail>[] = useMemo(
     () => [
       {
@@ -786,19 +833,66 @@ export function TaskDocumentAppealDetailTable({
           return row.note ? <span className="block max-w-[250px] truncate">{row.note}</span> : '-'
         },
       },
+      {
+        header: 'Người kháng',
+        accessorKey: 'creator',
+        cell: (props) => {
+          return <UsersAvatarGroup avatarProps={{ size: 25 }} users={[props.row.original.creator]} />
+        },
+      },
+      {
+        header: 'Hành động',
+        accessorKey: 'actions',
+        cell: (props) => {
+          return (
+            <Button
+              size="xs"
+              variant="default"
+              icon={<HiOutlineTrash />}
+              onClick={() => handleDelete(props.row.original.id)}
+            />
+          )
+        },
+      },
     ],
-    [],
+    [handleDelete],
   )
 
-  return <DataTable columns={columns} data={documentAppealDetails} maxHeight={500} />
+  return (
+    <>
+      <DataTable columns={columns} data={documentAppealDetails} maxHeight={500} />
+      <ConfirmDialog {...confirmProps} loading={deleteDocumentAppealDetail.isPending} />
+    </>
+  )
 }
 
 export function TaskResearchDetailTable({ researchDetails }: { researchDetails: TaskResearchDetail[] }) {
-  const difficultyLabels: Record<string, string> = {
-    LOW: 'Thấp',
-    MEDIUM: 'Trung bình',
-    HIGH: 'Cao',
-    VERY_HIGH: 'Rất cao',
+  const deleteResearchDetail = useDeleteResearchDetail()
+  const updateResearchDetail = useUpdateResearchDetail()
+  const { selectedTask } = useBoardStore()
+  const [editingDetail, setEditingDetail] = useState<TaskResearchDetail | null>(null)
+  const { showConfirm, confirmProps } = useConfirmDialog({
+    title: 'Xác nhận xóa',
+    type: 'danger',
+    confirmText: 'Xóa',
+    cancelText: 'Hủy',
+  })
+
+  const handleDelete = async (detailId: string) => {
+    const confirmed = await showConfirm({
+      message: 'Bạn có chắc chắn muốn xóa chi tiết nghiên cứu này?',
+    })
+
+    if (confirmed && selectedTask?.id) {
+      await deleteResearchDetail.mutateAsync({
+        taskId: selectedTask.id,
+        detailId,
+      })
+    }
+  }
+
+  const handleEdit = (detail: TaskResearchDetail) => {
+    setEditingDetail(detail)
   }
 
   const columns: ColumnDef<TaskResearchDetail>[] = useMemo(
@@ -813,10 +907,8 @@ export function TaskResearchDetailTable({ researchDetails }: { researchDetails: 
       },
       {
         header: 'Ngày ghi kết quả',
-        accessorKey: 'researchDate',
-        cell: (props) => (
-          <span className="font-medium">{formatDate(props.row.original.researchDate, 'DD/MM/YYYY')}</span>
-        ),
+        accessorKey: 'resultDate',
+        cell: (props) => <span className="font-medium">{formatDate(props.row.original.resultDate, 'DD/MM/YYYY')}</span>,
       },
       {
         header: 'Kết quả nghiên cứu',
@@ -833,28 +925,50 @@ export function TaskResearchDetailTable({ researchDetails }: { researchDetails: 
       {
         header: 'Mức độ khó',
         accessorKey: 'difficultyLevel',
+      },
+      {
+        header: 'Người nghiên cứu',
+        accessorKey: 'creator',
         cell: (props) => {
-          const row = props.row.original
-          const difficultyColors: Record<string, string> = {
-            LOW: 'bg-green-100 text-green-800',
-            MEDIUM: 'bg-yellow-100 text-yellow-800',
-            HIGH: 'bg-orange-100 text-orange-800',
-            VERY_HIGH: 'bg-red-100 text-red-800',
-          }
+          return <UsersAvatarGroup avatarProps={{ size: 25 }} users={[props.row.original.creator]} />
+        },
+      },
+      {
+        header: 'Hành động',
+        accessorKey: 'actions',
+        cell: (props) => {
           return (
-            <span
-              className={`px-2 py-1 rounded-md text-xs font-medium ${
-                difficultyColors[row.difficultyLevel] || 'bg-gray-100 text-gray-800'
-              }`}
-            >
-              {difficultyLabels[row.difficultyLevel] || row.difficultyLevel}
-            </span>
+            <div className="flex items-center gap-2">
+              <Button
+                size="xs"
+                variant="default"
+                icon={<HiOutlinePencilAlt />}
+                onClick={() => handleEdit(props.row.original)}
+              />
+              <Button
+                size="xs"
+                variant="default"
+                icon={<HiOutlineTrash />}
+                onClick={() => handleDelete(props.row.original.id)}
+              />
+            </div>
           )
         },
       },
     ],
-    [],
+    [handleDelete, handleEdit],
   )
 
-  return <DataTable columns={columns} data={researchDetails} maxHeight={500} />
+  return (
+    <>
+      <DataTable columns={columns} data={researchDetails} maxHeight={500} />
+      <ConfirmDialog {...confirmProps} loading={deleteResearchDetail.isPending} />
+      <UpdateResearchMetricsModal
+        isOpen={!!editingDetail}
+        task={selectedTask}
+        editingDetail={editingDetail}
+        onClose={() => setEditingDetail(null)}
+      />
+    </>
+  )
 }

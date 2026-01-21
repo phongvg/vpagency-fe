@@ -14,6 +14,8 @@ import { AssignToFinalUrlRequest, RemoveFromFinalUrlRequest } from '@/views/camp
 import {
   apiAssignCampaignsToFinalUrl,
   apiCreateTask,
+  apiDeleteDocumentAppealDetail,
+  apiDeleteResearchDetail,
   apiDeleteTask,
   apiGetCampaignStatsByFinalUrl,
   apiGetProgressDetail,
@@ -24,6 +26,7 @@ import {
   apiRemoveCampaignsFromFinalUrl,
   apiUpdateAppealMetrics,
   apiUpdateDocumentAppealMetrics,
+  apiUpdateResearchDetail,
   apiUpdateResearchMetrics,
   apiUpdateTask,
   apiUpdateTaskProgress,
@@ -281,6 +284,71 @@ export const useUpdateResearchMetrics = () => {
   return useMutation({
     mutationFn: async ({ taskId, payload }: { taskId: string; payload: UpdateResearchMetricsRequest }) => {
       const response = await apiUpdateResearchMetrics(taskId, payload)
+      return response.data
+    },
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: [GET_TASK_DETAIL] })
+      queryClient.invalidateQueries({ queryKey: [GET_TASKS_GROUPED_BY_STATUS] })
+      toastSuccess(response.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
+    },
+  })
+}
+
+export const useDeleteDocumentAppealDetail = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({ taskId, detailId }: { taskId: string; detailId: string }) => {
+      const response = await apiDeleteDocumentAppealDetail(taskId, detailId)
+      return response.data
+    },
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: [GET_TASK_DETAIL] })
+      queryClient.invalidateQueries({ queryKey: [GET_TASKS_GROUPED_BY_STATUS] })
+      toastSuccess(response.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
+    },
+  })
+}
+
+export const useUpdateResearchDetail = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      taskId,
+      detailId,
+      payload,
+    }: {
+      taskId: string
+      detailId: string
+      payload: UpdateResearchMetricsRequest
+    }) => {
+      const response = await apiUpdateResearchDetail(taskId, detailId, payload)
+      return response.data
+    },
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: [GET_TASK_DETAIL] })
+      queryClient.invalidateQueries({ queryKey: [GET_TASKS_GROUPED_BY_STATUS] })
+      toastSuccess(response.message)
+    },
+    onError: (error: ApiAxiosError) => {
+      toastError(error.response?.data?.message)
+    },
+  })
+}
+
+export const useDeleteResearchDetail = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({ taskId, detailId }: { taskId: string; detailId: string }) => {
+      const response = await apiDeleteResearchDetail(taskId, detailId)
       return response.data
     },
     onSuccess: (response) => {

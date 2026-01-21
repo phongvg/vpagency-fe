@@ -79,9 +79,9 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
     numberOfResultCampaigns: task?.numberOfResultCampaigns || undefined,
     finalUrlIds: task?.finalUrlIds || [],
     numberOfSuspendedAccounts: task?.numberOfSuspendedAccounts || undefined,
-    appealProject: task?.appealProject || undefined,
     numberOfAppealDocuments: task?.numberOfAppealDocuments || undefined,
     researchContent: task?.researchContent || undefined,
+    projectIds: task?.projectIds,
   }
 
   useEffect(() => {
@@ -290,122 +290,128 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                   </FormItem>
                 )}
 
-                {values.type !== TaskType.APPEAL_ACCOUNT && selectedProjectId && (
-                  <div className="col-span-2 bg-gray-50 px-4 py-4 rounded-lg">
-                    <div className="flex justify-between items-center mb-3">
-                      <h5 className="font-semibold text-gray-900">
-                        Danh sách URL <span className="text-red-500">*</span>
-                        {selectedFinalUrlIds.length > 0 && (
-                          <span className="ml-2 text-sm">({selectedFinalUrlIds.length} đã chọn)</span>
+                {[TaskType.SET_CAMPAIGN, TaskType.LAUNCH_CAMPAIGN, TaskType.NURTURE_ACCOUNT].includes(values.type!) &&
+                  selectedProjectId && (
+                    <div className="col-span-2 bg-gray-50 px-4 py-4 rounded-lg">
+                      <div className="flex justify-between items-center mb-3">
+                        <h5 className="font-semibold text-gray-900">
+                          Danh sách URL <span className="text-red-500">*</span>
+                          {selectedFinalUrlIds.length > 0 && (
+                            <span className="ml-2 text-sm">({selectedFinalUrlIds.length} đã chọn)</span>
+                          )}
+                        </h5>
+                        {!isAddingUrl && (
+                          <Button
+                            size="sm"
+                            variant="solid"
+                            icon={<HiOutlinePlus />}
+                            onClick={() => setIsAddingUrl(true)}
+                          >
+                            Thêm URL
+                          </Button>
                         )}
-                      </h5>
-                      {!isAddingUrl && (
-                        <Button size="sm" variant="solid" icon={<HiOutlinePlus />} onClick={() => setIsAddingUrl(true)}>
-                          Thêm URL
-                        </Button>
+                      </div>
+                      {touched.finalUrlIds && errors.finalUrlIds && (
+                        <div className="mb-3 text-red-500 text-sm">{errors.finalUrlIds as string}</div>
                       )}
-                    </div>
-                    {touched.finalUrlIds && errors.finalUrlIds && (
-                      <div className="mb-3 text-red-500 text-sm">{errors.finalUrlIds as string}</div>
-                    )}
 
-                    {isAddingUrl && (
-                      <div className="bg-white mb-4 p-4 border border-gray-200 rounded-lg">
-                        <h6 className="mb-3 font-semibold text-gray-900">Thêm URL mới</h6>
-                        <div className="space-y-3">
-                          <FormItem asterisk label="Tên">
-                            <Input
-                              placeholder="Nhập tên..."
-                              value={newUrlName}
-                              onChange={(e) => setNewUrlName(e.target.value)}
-                            />
-                          </FormItem>
-                          <FormItem asterisk label="URL">
-                            <Input
-                              placeholder="https://example.com"
-                              value={newUrlFinalURL}
-                              onChange={(e) => setNewUrlFinalURL(e.target.value)}
-                            />
-                          </FormItem>
-                          <div className="flex justify-end gap-2">
-                            <Button size="sm" variant="plain" onClick={handleCancelAddUrl}>
-                              Hủy
-                            </Button>
-                            <Button
-                              type="button"
-                              disabled={!newUrlName || !newUrlFinalURL}
-                              loading={createFinalUrlMutation.isPending}
-                              size="sm"
-                              variant="solid"
-                              onClick={handleCreateUrl}
-                            >
-                              Lưu
-                            </Button>
+                      {isAddingUrl && (
+                        <div className="bg-white mb-4 p-4 border border-gray-200 rounded-lg">
+                          <h6 className="mb-3 font-semibold text-gray-900">Thêm URL mới</h6>
+                          <div className="space-y-3">
+                            <FormItem asterisk label="Tên">
+                              <Input
+                                placeholder="Nhập tên..."
+                                value={newUrlName}
+                                onChange={(e) => setNewUrlName(e.target.value)}
+                              />
+                            </FormItem>
+                            <FormItem asterisk label="URL">
+                              <Input
+                                placeholder="https://example.com"
+                                value={newUrlFinalURL}
+                                onChange={(e) => setNewUrlFinalURL(e.target.value)}
+                              />
+                            </FormItem>
+                            <div className="flex justify-end gap-2">
+                              <Button size="sm" variant="plain" onClick={handleCancelAddUrl}>
+                                Hủy
+                              </Button>
+                              <Button
+                                type="button"
+                                disabled={!newUrlName || !newUrlFinalURL}
+                                loading={createFinalUrlMutation.isPending}
+                                size="sm"
+                                variant="solid"
+                                onClick={handleCreateUrl}
+                              >
+                                Lưu
+                              </Button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )}
+                      )}
 
-                    {isLoadingFinalUrls ? (
-                      <div className="py-4 text-gray-500 text-center">Đang tải...</div>
-                    ) : finalUrls.length > 0 ? (
-                      <div className="border rounded-lg overflow-hidden">
-                        <table className="w-full align-middle">
-                          <thead className="bg-gray-100">
-                            <tr>
-                              <th className="px-4 py-2 font-semibold text-gray-700 text-sm text-left">Chọn</th>
-                              <th className="px-4 py-2 font-semibold text-gray-700 text-sm text-left">Tên</th>
-                              <th className="px-4 py-2 font-semibold text-gray-700 text-sm text-left">URL</th>
-                            </tr>
-                          </thead>
-                          <tbody className="bg-white">
-                            {finalUrls.map((url) => {
-                              const isChecked = selectedFinalUrlIds.includes(url.id)
-                              return (
-                                <tr
-                                  key={url.id}
-                                  className={`border-t cursor-pointer hover:bg-gray-50 ${
-                                    isChecked ? 'bg-blue-50' : ''
-                                  }`}
-                                  onClick={() => {
-                                    const newSelectedIds = isChecked
-                                      ? selectedFinalUrlIds.filter((id) => id !== url.id)
-                                      : [...selectedFinalUrlIds, url.id]
-                                    setSelectedFinalUrlIds(newSelectedIds)
-                                    setFieldValue('finalUrlIds', newSelectedIds)
-                                  }}
-                                >
-                                  <td className="px-4 py-2">
-                                    <div className="flex justify-start items-center">
-                                      <Checkbox readOnly checked={isChecked} color="green-500" />
-                                    </div>
-                                  </td>
-                                  <td className="px-4 py-2 text-gray-900 text-sm">{url.name}</td>
-                                  <td
-                                    className="px-4 py-2 max-w-xs text-gray-600 text-sm truncate"
-                                    title={url.finalURL}
+                      {isLoadingFinalUrls ? (
+                        <div className="py-4 text-gray-500 text-center">Đang tải...</div>
+                      ) : finalUrls.length > 0 ? (
+                        <div className="border rounded-lg overflow-hidden">
+                          <table className="w-full align-middle">
+                            <thead className="bg-gray-100">
+                              <tr>
+                                <th className="px-4 py-2 font-semibold text-gray-700 text-sm text-left">Chọn</th>
+                                <th className="px-4 py-2 font-semibold text-gray-700 text-sm text-left">Tên</th>
+                                <th className="px-4 py-2 font-semibold text-gray-700 text-sm text-left">URL</th>
+                              </tr>
+                            </thead>
+                            <tbody className="bg-white">
+                              {finalUrls.map((url) => {
+                                const isChecked = selectedFinalUrlIds.includes(url.id)
+                                return (
+                                  <tr
+                                    key={url.id}
+                                    className={`border-t cursor-pointer hover:bg-gray-50 ${
+                                      isChecked ? 'bg-blue-50' : ''
+                                    }`}
+                                    onClick={() => {
+                                      const newSelectedIds = isChecked
+                                        ? selectedFinalUrlIds.filter((id) => id !== url.id)
+                                        : [...selectedFinalUrlIds, url.id]
+                                      setSelectedFinalUrlIds(newSelectedIds)
+                                      setFieldValue('finalUrlIds', newSelectedIds)
+                                    }}
                                   >
-                                    <a
-                                      href={url.finalURL}
-                                      className="text-blue-700 hover:underline"
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      onClick={(e) => e.stopPropagation()}
+                                    <td className="px-4 py-2">
+                                      <div className="flex justify-start items-center">
+                                        <Checkbox readOnly checked={isChecked} color="green-500" />
+                                      </div>
+                                    </td>
+                                    <td className="px-4 py-2 text-gray-900 text-sm">{url.name}</td>
+                                    <td
+                                      className="px-4 py-2 max-w-xs text-gray-600 text-sm truncate"
+                                      title={url.finalURL}
                                     >
-                                      {url.finalURL}
-                                    </a>
-                                  </td>
-                                </tr>
-                              )
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
-                    ) : (
-                      <div className="py-4 text-gray-500 text-center">Dự án này chưa có URL</div>
-                    )}
-                  </div>
-                )}
+                                      <a
+                                        href={url.finalURL}
+                                        className="text-blue-700 hover:underline"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        onClick={(e) => e.stopPropagation()}
+                                      >
+                                        {url.finalURL}
+                                      </a>
+                                    </td>
+                                  </tr>
+                                )
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                      ) : (
+                        <div className="py-4 text-gray-500 text-center">Dự án này chưa có URL</div>
+                      )}
+                    </div>
+                  )}
 
                 <FormItem
                   label="Ghi chú"
@@ -506,15 +512,23 @@ export default function TaskForm({ task, isEdit = false, loading = false, onSubm
                     <h5>Thông tin chi tiết</h5>
 
                     <div className="gap-x-4 grid grid-cols-1 lg:grid-cols-2">
-                      <FormItem label="Dự án cần kháng">
-                        <Input
-                          name="appealProject"
-                          placeholder="Nhập dự án cần kháng..."
-                          type="text"
-                          value={values.appealProject || ''}
-                          min={0}
-                          onChange={handleChange}
-                        />
+                      <FormItem
+                        label="Dự án cần kháng"
+                        errorMessage={errors.projectIds}
+                        invalid={touched.projectIds && Boolean(errors.projectIds)}
+                      >
+                        <Field name="projectIds">
+                          {({ field, form }: FieldProps) => (
+                            <SelectCustom
+                              isMulti
+                              isCreatable
+                              field={field}
+                              form={form}
+                              fetchOptions={fetchProjectOptions}
+                              placeholder="Chọn dự án..."
+                            />
+                          )}
+                        </Field>
                       </FormItem>
 
                       <FormItem label="Số lượng đơn kháng">

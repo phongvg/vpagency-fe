@@ -146,3 +146,25 @@ export async function apiUpdateResearchMetrics(taskId: string, payload: UpdateRe
     data: payload,
   })
 }
+
+export async function apiDeleteDocumentAppealDetail(taskId: string, detailId: string) {
+  return ApiService.fetchData<BaseResponse<null>>({
+    url: `/tasks/${taskId}/document-appeal-details/${detailId}`,
+    method: 'delete',
+  })
+}
+
+export async function apiUpdateResearchDetail(taskId: string, detailId: string, payload: UpdateResearchMetricsRequest) {
+  return ApiService.fetchData<BaseResponse<Task>>({
+    url: `/tasks/${taskId}/research-details/${detailId}`,
+    method: 'put',
+    data: payload,
+  })
+}
+
+export async function apiDeleteResearchDetail(taskId: string, detailId: string) {
+  return ApiService.fetchData<BaseResponse<null>>({
+    url: `/tasks/${taskId}/research-details/${detailId}`,
+    method: 'delete',
+  })
+}

@@ -1,7 +1,9 @@
+import SelectCustom, { SelectParams } from '@/components/shared/SelectCustom'
 import { Button, DatePicker, Dialog, FormItem, Input, Textarea } from '@/components/ui'
+import { apiGetProjectList } from '@/views/projects/services/ProjectService'
 import { useUpdateDocumentAppealMetrics } from '@/views/tasks/assign/hooks/useTask'
 import { Task, UpdateDocumentAppealMetricsRequest } from '@/views/tasks/assign/types/task.type'
-import { Form, Formik } from 'formik'
+import { Field, FieldProps, Form, Formik } from 'formik'
 import { HiOutlineDocumentText } from 'react-icons/hi'
 import * as Yup from 'yup'
 
@@ -13,7 +15,7 @@ type Props = {
 
 const validationSchema = Yup.object().shape({
   appealDate: Yup.date().required('Ngày kháng giấy là bắt buộc'),
-  projectName: Yup.string().required('Tên dự án là bắt buộc'),
+  projectId: Yup.string().required('Dự án là bắt buộc'),
   appealCount: Yup.number()
     .required('Số lượng đơn kháng là bắt buộc')
     .min(0, 'Số lượng đơn kháng phải lớn hơn hoặc bằng 0'),
@@ -30,9 +32,23 @@ const validationSchema = Yup.object().shape({
 export default function UpdateDocumentAppealMetricsModal({ isOpen, task, onClose }: Props) {
   const updateDocumentAppealMetricsMutation = useUpdateDocumentAppealMetrics()
 
+  const fetchProjectOptions = async ({ page, limit, search }: SelectParams) => {
+    try {
+      const response = await apiGetProjectList({ search: search || '', page, limit })
+      const { items, meta } = response.data.data
+      return {
+        data: items,
+        total: meta.total,
+        hasMore: meta.hasNext,
+      }
+    } catch {
+      return { data: [], total: 0, hasMore: false }
+    }
+  }
+
   const initialValues: UpdateDocumentAppealMetricsRequest = {
     appealDate: '',
-    projectName: '',
+    projectId: '',
     appealCount: 0,
     successCount: 0,
     note: '',
@@ -92,15 +108,20 @@ export default function UpdateDocumentAppealMetricsModal({ isOpen, task, onClose
                 <FormItem
                   asterisk
                   label="Dự án"
-                  errorMessage={errors.projectName}
-                  invalid={touched.projectName && Boolean(errors.projectName)}
+                  errorMessage={errors.projectId}
+                  invalid={touched.projectId && Boolean(errors.projectId)}
                 >
-                  <Input
-                    name="projectName"
-                    placeholder="Nhập tên dự án..."
-                    value={values.projectName}
-                    onChange={handleChange}
-                  />
+                  <Field name="projectId">
+                    {({ field, form }: FieldProps) => (
+                      <SelectCustom
+                        isCreatable
+                        field={field}
+                        form={form}
+                        fetchOptions={fetchProjectOptions}
+                        placeholder="Chọn dự án..."
+                      />
+                    )}
+                  </Field>
                 </FormItem>
 
                 <div className="gap-4 grid grid-cols-1 sm:grid-cols-2">

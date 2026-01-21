@@ -15,6 +15,7 @@ import { FinalUrl } from '@/views/projects/types/finalUrl.type'
 import {
   TaskAppealDetailTable,
   TaskDocumentAppealDetailTable,
+  TaskDocumentAppealTable,
   TaskResearchDetailTable,
 } from '@/views/tasks/assign/components/TaskDetailPanel'
 import TaskProgressDetailModal from '@/views/tasks/assign/components/TaskProgressDetailModal'
@@ -525,6 +526,13 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
 
           <div className="mb-6">
             <div className="mb-6 p-4 border border-blue-100 rounded-lg">
+              <h5 className="mb-3">Danh sách dự án kháng</h5>
+              <TaskDocumentAppealTable projects={task.projects ?? []} />
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <div className="mb-6 p-4 border border-blue-100 rounded-lg">
               <h5 className="mb-3">Chi tiết kháng giấy</h5>
               <TaskDocumentAppealDetailTable documentAppealDetails={task.documentAppealDetails ?? []} />
             </div>
@@ -534,22 +542,6 @@ export default function TaskDetailView({ task, onEdit, onDelete }: TaskDetailVie
 
       {task.type === TaskType.RESEARCH && (
         <>
-          <div className="mb-6">
-            <div className="mb-6 p-4 border border-blue-100 rounded-lg">
-              <h5 className="mb-3">Thông tin nghiên cứu</h5>
-              <div className="gap-4 grid grid-cols-2 text-sm">
-                <div>
-                  <span>Tổng số kết quả nghiên cứu:</span>
-                  <span className="ml-1 font-medium">{task.researchSummary?.totalResearchCount || 0}</span>
-                </div>
-                <div>
-                  <span>Mức độ khó trung bình:</span>
-                  <span className="ml-1 font-medium">{task.researchSummary?.averageDifficulty || 'Chưa có'}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div className="mb-6">
             <div className="mb-6 p-4 border border-blue-100 rounded-lg">
               <h5 className="mb-3">Chi tiết kết quả nghiên cứu</h5>

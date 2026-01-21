@@ -15,7 +15,9 @@ export type Task = {
   note: string | null
   deadline: Date
   projectId: string
+  projectIds: string[]
   project: Project
+  projects: Project[]
   adsGroupId: string | null
   numberOfCampaigns: number | null
   numberOfBackupCampaigns: number
@@ -42,7 +44,6 @@ export type Task = {
   documentAppealDetails?: TaskDocumentAppealDetail[]
   documentAppealSummary?: TaskDocumentAppealSummary
   researchDetails?: TaskResearchDetail[]
-  researchSummary?: TaskResearchSummary
 }
 
 export type TasksGroupedByStatus = {
@@ -87,6 +88,7 @@ export type UpdateTaskRequest = {
   deadline?: Date | null
   assignedUserIds?: string[]
   projectId?: string | null
+  projectIds?: string[]
   note?: string
   numberOfCampaigns?: number
   numberOfBackupCampaigns?: number
@@ -95,7 +97,6 @@ export type UpdateTaskRequest = {
   numberOfResultCampaigns?: number
   finalUrlIds?: string[]
   numberOfSuspendedAccounts?: number
-  appealProject?: string
   numberOfAppealDocuments?: number
   researchContent?: string
 }
@@ -203,7 +204,10 @@ export type TaskAppealSummary = {
 }
 
 export type TaskDocumentAppealDetail = {
+  id: string
+  creator: User
   appealDate: string
+  projectId: string
   projectName: string
   appealCount: number
   successCount: number
@@ -220,25 +224,22 @@ export type TaskDocumentAppealSummary = {
 
 export type UpdateDocumentAppealMetricsRequest = {
   appealDate: string
-  projectName: string
+  projectId: string
   appealCount: number
   successCount: number
   note?: string
 }
 
 export type TaskResearchDetail = {
-  researchDate: string
+  id: string
+  creator: User
+  resultDate: string
   result: string
   difficultyLevel: string
 }
 
-export type TaskResearchSummary = {
-  totalResearchCount: number
-  averageDifficulty: string
-}
-
 export type UpdateResearchMetricsRequest = {
-  researchDate: string
+  resultDate: string
   result: string
   difficultyLevel: string
 }

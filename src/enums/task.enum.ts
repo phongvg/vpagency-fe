@@ -2,9 +2,9 @@ export enum TaskType {
   SET_CAMPAIGN = 'SET_CAMPAIGN',
   LAUNCH_CAMPAIGN = 'LAUNCH_CAMPAIGN',
   NURTURE_ACCOUNT = 'NURTURE_ACCOUNT',
-  APPEAL_ACCOUNT = 'APPEAL_ACCOUNT',
-  DOCUMENT_APPEAL = 'DOCUMENT_APPEAL',
-  RESEARCH = 'RESEARCH',
+  APPEAL_ACCOUNT = 'APPEAL_ACCOUNT', // Kháng tài khoản
+  DOCUMENT_APPEAL = 'DOCUMENT_APPEAL', // Kháng giấy
+  RESEARCH = 'RESEARCH', // Nghiên cứu
 }
 
 export const TaskTypeLabels: Record<TaskType, string> = {
