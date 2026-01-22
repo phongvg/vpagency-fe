@@ -50,7 +50,7 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
       const profileName = row['profile_name'] || null
       const email = row['email'] || null
       const password = row['password'] || null
-      const recoverMail = row['mail khôi phục'] || null
+      const recoveryEmail = row['mail khôi phục'] || null
       const twoFa = row['2fa'] || null
       const mcc = row['mcc'] || null
       const uid = row['UID TK'] || null
@@ -65,7 +65,7 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
         profileName,
         email,
         password,
-        recoverMail,
+        recoveryEmail,
         twoFa,
         mcc,
         uid,

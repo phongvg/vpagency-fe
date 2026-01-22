@@ -14,4 +14,5 @@ export const COLUMN_CONFIG = [
   { id: 'note2', label: 'Ghi chú 2', visible: true, required: false },
   { id: 'rarityLevel', label: 'Mức độ hiếm', visible: true, required: false },
   { id: 'creator', label: 'Người tạo', visible: true, required: false },
+  { id: 'actions', label: 'Hành động', visible: true, required: true },
 ] as const

@@ -4,7 +4,7 @@ import { AppealAccount, UpdateAppealAccountRequest } from '@/views/appealAccount
 
 export async function apiGetAppealAccountList(params: CommonFilterRequest) {
   return ApiService.fetchData<BaseListResponse<AppealAccount>>({
-    url: '/appeal-accounts',
+    url: '/appealed-ads-accounts',
     method: 'get',
     params,
   })
@@ -12,14 +12,14 @@ export async function apiGetAppealAccountList(params: CommonFilterRequest) {
 
 export async function apiGetAppealAccountById(id: string) {
   return ApiService.fetchData<BaseResponse<AppealAccount>>({
-    url: `/appeal-accounts/${id}`,
+    url: `/appealed-ads-accounts/${id}`,
     method: 'get',
   })
 }
 
 export async function apiCreateAppealAccount(payload: UpdateAppealAccountRequest | UpdateAppealAccountRequest[]) {
   return ApiService.fetchData<BaseResponse<AppealAccount>>({
-    url: '/appeal-accounts',
+    url: '/appealed-ads-accounts',
     method: 'post',
     data: payload as any,
   })
@@ -27,7 +27,7 @@ export async function apiCreateAppealAccount(payload: UpdateAppealAccountRequest
 
 export async function apiUpdateAppealAccount(id: string, payload: UpdateAppealAccountRequest) {
   return ApiService.fetchData<BaseResponse<AppealAccount>>({
-    url: `/appeal-accounts/${id}`,
+    url: `/appealed-ads-accounts/${id}`,
     method: 'put',
     data: payload,
   })
@@ -35,7 +35,7 @@ export async function apiUpdateAppealAccount(id: string, payload: UpdateAppealAc
 
 export async function apiDeleteAppealAccount(id: string) {
   return ApiService.fetchData<BaseResponse<null>>({
-    url: `/appeal-accounts/${id}`,
+    url: `/appealed-ads-accounts/${id}`,
     method: 'delete',
   })
 }

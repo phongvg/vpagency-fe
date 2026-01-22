@@ -3,14 +3,23 @@ import { UpdateAppealAccountRequest } from '@/views/appealAccount/types/appealAc
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
+export type AppealAccountFilterRequest = CommonFilterRequest & {
+  email?: string
+  uid?: string
+  appealedBy?: string
+  usedBy?: string
+  appealPlatform?: string
+  rarityLevel?: string
+}
+
 type AppealAccountState = {
-  filter: CommonFilterRequest
+  filter: AppealAccountFilterRequest
   appealAccountId: string | null
   dialogOpen: boolean
   dialogPreviewOpen: boolean
   appealAccounts: UpdateAppealAccountRequest[]
 
-  setFilter: (filter: CommonFilterRequest) => void
+  setFilter: (filter: AppealAccountFilterRequest) => void
   setSearch: (search: string) => void
   setAppealAccountId: (appealAccountId: string | null) => void
   openDialog: (appealAccountId?: string | null) => void

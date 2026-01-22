@@ -1,4 +1,4 @@
-import { ColumnDef, DataTable, DataTableResetHandle } from '@/components/shared'
+import { ColumnDef, ConfirmDialog, DataTable, DataTableResetHandle } from '@/components/shared'
 import { Button } from '@/components/ui'
 import Avatar from '@/components/ui/Avatar/Avatar'
 import Checkbox from '@/components/ui/Checkbox/Checkbox'
@@ -9,7 +9,7 @@ import { useDeleteAppealAccountMutation, useGetAppealAccountsQuery } from '@/vie
 import { useAppealAccountStore } from '@/views/appealAccount/store/useAppealAccountStore'
 import { AppealAccount } from '@/views/appealAccount/types/appealAccount.type'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { HiOutlineViewList } from 'react-icons/hi'
+import { HiOutlinePencilAlt, HiOutlineTrash, HiOutlineViewList } from 'react-icons/hi'
 
 const CreatorColumn = ({ row }: { row: AppealAccount }) => {
   if (!row.creator) {
@@ -93,6 +93,10 @@ export default function AppealAccountTable() {
         id: 'profileName',
         header: 'Tên hồ sơ',
         accessorKey: 'profileName',
+        cell: (props) => {
+          const row = props.row.original
+          return <div className="w-[200px]">{row.profileName}</div>
+        },
       },
       {
         id: 'email',
@@ -113,16 +117,28 @@ export default function AppealAccountTable() {
         id: 'twoFa',
         header: 'Mã 2FA',
         accessorKey: 'twoFa',
+        cell: (props) => {
+          const row = props.row.original
+          return <div className="w-[200px]">{row.twoFa}</div>
+        },
       },
       {
         id: 'mcc',
         header: 'MCC',
         accessorKey: 'mcc',
+        cell: (props) => {
+          const row = props.row.original
+          return <div className="w-[200px]">{row.mcc}</div>
+        },
       },
       {
         id: 'uid',
         header: 'UID',
         accessorKey: 'uid',
+        cell: (props) => {
+          const row = props.row.original
+          return <div className="w-[200px]">{row.uid}</div>
+        },
       },
       {
         id: 'appealPlatform',
@@ -143,11 +159,19 @@ export default function AppealAccountTable() {
         id: 'note',
         header: 'Ghi chú',
         accessorKey: 'note',
+        cell: (props) => {
+          const row = props.row.original
+          return <div className="w-[200px]">{row.note}</div>
+        },
       },
       {
         id: 'note2',
         header: 'Ghi chú 2',
         accessorKey: 'note2',
+        cell: (props) => {
+          const row = props.row.original
+          return <div className="w-[200px]">{row.note2}</div>
+        },
       },
       {
         id: 'rarityLevel',
@@ -161,6 +185,23 @@ export default function AppealAccountTable() {
         cell: (props) => {
           const row = props.row.original
           return <CreatorColumn row={row} />
+        },
+      },
+      {
+        id: 'actions',
+        header: 'Thao tác',
+        cell: (props) => {
+          const row = props.row.original
+          return (
+            <div className="flex justify-end items-center gap-4">
+              <button type="button" onClick={() => handleEdit(row)}>
+                <HiOutlinePencilAlt size={24} />
+              </button>
+              <button type="button" onClick={() => handleDelete(row.id)}>
+                <HiOutlineTrash size={24} />
+              </button>
+            </div>
+          )
         },
       },
     ],
@@ -247,10 +288,7 @@ export default function AppealAccountTable() {
         onSelectChange={onSelectChange}
       />
 
-      {/* <GmailAccountEditDialog />
-      <GmailAccountPreviewDialog />
-      <ConfirmDialog {...confirmProps} loading={deleteMutation.isPending} />
-      <ConfirmDialog {...batchConfirmProps} /> */}
+      <ConfirmDialog {...confirmProps} />
     </>
   )
 }
