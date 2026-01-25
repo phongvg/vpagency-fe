@@ -15,7 +15,7 @@ export default function FormInput({ name, label, placeholder, type = "text", dis
           {label && (
             <FieldLabel htmlFor={name}>
               {label}
-              {required && <span className='text-red-500 ml-1'>*</span>}
+              {required && <span className='text-red-500'>*</span>}
             </FieldLabel>
           )}
 

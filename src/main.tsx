@@ -1,10 +1,8 @@
 import App from "@/App";
+import "@/styles/app.css";
 import "@/styles/index.css";
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
+document.documentElement.classList.add("dark");
+
+createRoot(document.getElementById("root")!).render(<App />);

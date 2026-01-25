@@ -1,8 +1,10 @@
+import ProtectedRoute from "@/app/routes/ProtectedRoute";
 import { urls } from "@/app/routes/route.constant";
 import { LoginPage } from "@/modules/auth/login";
 import { DashboardPage } from "@/modules/dashboard";
 import { TaskListPage } from "@/modules/task";
 import { UserListPage } from "@/modules/user";
+import { Role } from "@/shared/constants/role.constant";
 import BlankLayout from "@/shared/layouts/BlankLayout";
 import DashboardLayout from "@/shared/layouts/DashboardLayout";
 import { ClipboardList, LayoutGrid, Users } from "lucide-react";
@@ -21,13 +23,19 @@ export const appRoutes: AppRoute[] = [
       {
         path: urls.dashboard,
         title: "Dashboard",
-        element: <DashboardPage />,
+        pageTitle: "Tổng quan hệ thống",
+        element: (
+          <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AGENCY, Role.MEMBER_AFF, Role.ACCOUNTING]}>
+            <DashboardPage />
+          </ProtectedRoute>
+        ),
         icon: LayoutGrid,
         showInSidebar: true,
       },
       {
         path: urls.task,
         title: "Quản lý công việc",
+        pageTitle: "Danh sách công việc",
         element: <TaskListPage />,
         icon: ClipboardList,
         showInSidebar: true,
@@ -35,6 +43,7 @@ export const appRoutes: AppRoute[] = [
       {
         path: urls.user,
         title: "Quản lý tài khoản",
+        pageTitle: "Danh sách tài khoản",
         element: <UserListPage />,
         icon: Users,
         showInSidebar: true,
