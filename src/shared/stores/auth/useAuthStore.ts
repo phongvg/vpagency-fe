@@ -6,7 +6,7 @@ export const useAuthStore = create<AuthStore>()(
   devtools(
     (set) => ({
       isAuthenticated: false,
-      loading: true,
+      loading: false,
       user: null,
 
       setAuthenticated: (isAuthenticated: boolean) => set({ isAuthenticated }),
