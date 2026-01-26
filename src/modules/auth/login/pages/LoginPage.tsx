@@ -1,31 +1,19 @@
-import authImage from "@/assets/images/authentication.jpg";
 import LoginForm from "@/modules/auth/login/components/LoginForm";
-import { FieldGroup } from "@/shared/components/ui/field";
-import { APP_NAME } from "@/shared/constants/app.constant";
+import { Icon } from "@iconify/react";
 
 export default function LoginPage() {
   return (
-    <div className='w-full max-w-md md:max-w-4xl'>
-      <div className='flex flex-col gap-6'>
-        {/* <Card className='overflow-hidden p-0'>
-          <CardContent className='grid p-0 md:grid-cols-2'> */}
-        <div className='p-6 md:p-8'>
-          <FieldGroup>
-            <div className='flex flex-col items-center gap-2 text-center'>
-              <h1 className='text-2xl font-bold'>Đăng nhập</h1>
-              <p className='text-muted-foreground text-balance'>Vui lòng đăng nhập để tiếp tục sử dụng hệ thống.</p>
-            </div>
-
-            <LoginForm />
-          </FieldGroup>
+    <div className='w-full max-w-[360px] mx-auto relative flex-1'>
+      <div className='space-y-4 mb-6'>
+        <div className='flex items-center justify-center'>
+          <Icon icon='solar:shield-keyhole-linear' className='text-6xl text-white/50' />
         </div>
 
-        <div className='bg-muted relative hidden md:block'>
-          <img src={authImage} alt={APP_NAME} className='absolute inset-0 h-full w-full object-cover' />
-        </div>
-        {/* </CardContent>
-        </Card> */}
+        <h1 className='text-center uppercase text-3xl font-bold'>Đăng nhập</h1>
+        <p className='text-center uppercase text-white/50'>Để bảo vệ bạn, vui lòng xác minh danh tính.</p>
       </div>
+
+      <LoginForm />
     </div>
   );
 }

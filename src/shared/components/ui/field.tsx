@@ -162,7 +162,7 @@ function FieldError({
   }
 
   return (
-    <div role='alert' data-slot='field-error' className={cn("text-red-500 text-xs font-normal", className)} {...props}>
+    <div role='alert' data-slot='field-error' className={cn("text-red-500 font-normal", className)} {...props}>
       {content}
     </div>
   );
