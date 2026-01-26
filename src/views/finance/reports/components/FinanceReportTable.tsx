@@ -393,6 +393,9 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
       {
         header: 'Tên dự án',
         accessorKey: 'projectName',
+        meta: {
+          sticky: true,
+        },
       },
       {
         header: 'Tổng chi tiêu',
@@ -642,18 +645,17 @@ export default function FinanceReportTable({ showSummary = false }: Props) {
             </div>
           )}
 
-          <div className="max-h-[500px] overflow-y-auto">
-            <DataTable
-              ref={summaryTableRef}
-              selectable
-              columns={summaryColumns}
-              data={data?.summary || []}
-              loading={isLoading}
-              getRowId={(row) => row.projectName}
-              onCheckBoxChange={handleSummaryCheckBoxChange}
-              onIndeterminateCheckBoxChange={handleSummaryIndeterminateCheckBoxChange}
-            />
-          </div>
+          <DataTable
+            maxHeight={500}
+            ref={summaryTableRef}
+            selectable
+            columns={summaryColumns}
+            data={data?.summary || []}
+            loading={isLoading}
+            getRowId={(row) => row.projectName}
+            onCheckBoxChange={handleSummaryCheckBoxChange}
+            onIndeterminateCheckBoxChange={handleSummaryIndeterminateCheckBoxChange}
+          />
         </Card>
       )}
 

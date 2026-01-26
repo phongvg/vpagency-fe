@@ -290,62 +290,78 @@ function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableRese
   return (
     <Loading loading={loading && data.length !== 0} type="cover">
       <div
-        className="overflow-y-auto"
+        className="overflow-y-auto border-l border-t"
         style={maxHeight ? { maxHeight: typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight } : undefined}
       >
-        <Table>
-          <THead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <Tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  const canSort = header.column.getCanSort()
-                  const sortDirection = header.column.getIsSorted()
+        <Table overflow={false}>
+          <THead className="bg-white sticky top-0 z-20">
+            {table.getHeaderGroups().map((headerGroup) => {
+              const stickyColumns: { index: number; width: number }[] = []
 
-                  const isSticky = header.column.columnDef.meta?.sticky
-                  return (
-                    <Th
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      index={header.index}
-                      className={classNames(
-                        isSticky && 'sticky left-0 z-10 bg-white shadow-[2px_0_4px_rgba(0,0,0,0.05)]',
-                      )}
-                    >
-                      {header.isPlaceholder ? null : (
-                        <div
-                          className={classNames('flex items-center gap-2', canSort && 'cursor-pointer select-none')}
-                          onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
-                        >
-                          <div className="flex-1">
-                            {flexRender(header.column.columnDef.header, header.getContext())}
-                          </div>
-                          {canSort && (
-                            <div className="flex flex-col">
-                              <span
-                                className={classNames(
-                                  'text-xs leading-none',
-                                  sortDirection === 'asc' ? 'text-blue-600' : 'text-gray-400',
-                                )}
-                              >
-                                ▲
-                              </span>
-                              <span
-                                className={classNames(
-                                  'text-xs leading-none',
-                                  sortDirection === 'desc' ? 'text-blue-600' : 'text-gray-400',
-                                )}
-                              >
-                                ▼
-                              </span>
+              headerGroup.headers.forEach((h, i) => {
+                if (h.column.columnDef.meta?.sticky) {
+                  stickyColumns.push({ index: i, width: 50 })
+                }
+              })
+
+              return (
+                <Tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header, idx) => {
+                    const canSort = header.column.getCanSort()
+                    const sortDirection = header.column.getIsSorted()
+
+                    const isSticky = header.column.columnDef.meta?.sticky
+                    const stickyIndex = stickyColumns.findIndex((col) => col.index === idx)
+                    const leftOffset =
+                      stickyIndex >= 0
+                        ? stickyColumns.slice(0, stickyIndex).reduce((sum, col) => sum + col.width, 0)
+                        : 0
+                    const stickyStyle = isSticky ? { left: `${leftOffset}px` } : undefined
+
+                    return (
+                      <Th
+                        key={header.id}
+                        colSpan={header.colSpan}
+                        index={header.index}
+                        style={stickyStyle}
+                        className={classNames(isSticky && 'sticky z-10 bg-white shadow-[2px_0_4px_rgba(0,0,0,0.05)]')}
+                      >
+                        {header.isPlaceholder ? null : (
+                          <div
+                            className={classNames('flex items-center gap-2', canSort && 'cursor-pointer select-none')}
+                            onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
+                          >
+                            <div className="flex-1">
+                              {flexRender(header.column.columnDef.header, header.getContext())}
                             </div>
-                          )}
-                        </div>
-                      )}
-                    </Th>
-                  )
-                })}
-              </Tr>
-            ))}
+                            {canSort && (
+                              <div className="flex flex-col">
+                                <span
+                                  className={classNames(
+                                    'text-xs leading-none',
+                                    sortDirection === 'asc' ? 'text-blue-600' : 'text-gray-400',
+                                  )}
+                                >
+                                  ▲
+                                </span>
+                                <span
+                                  className={classNames(
+                                    'text-xs leading-none',
+                                    sortDirection === 'desc' ? 'text-blue-600' : 'text-gray-400',
+                                  )}
+                                >
+                                  ▼
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </Th>
+                    )
+                  })}
+                </Tr>
+              )
+            })}
           </THead>
           {loading && data.length === 0 ? (
             <TableRowSkeleton
@@ -366,15 +382,32 @@ function _DataTable<T>(props: DataTableProps<T>, ref: ForwardedRef<DataTableRese
                 .rows.slice(0, pageSize)
                 .map((row) => {
                   const rowClassName = getRowClassName ? getRowClassName(row.original) : ''
+
+                  // Calculate sticky column positions for this row
+                  const stickyColumns: { index: number; width: number }[] = []
+                  row.getVisibleCells().forEach((c, i) => {
+                    if (c.column.columnDef.meta?.sticky) {
+                      stickyColumns.push({ index: i, width: 50 })
+                    }
+                  })
+
                   return (
                     <Tr key={row.id} className={rowClassName}>
-                      {row.getVisibleCells().map((cell) => {
+                      {row.getVisibleCells().map((cell, idx) => {
                         const isSticky = cell.column.columnDef.meta?.sticky
+                        const stickyIndex = stickyColumns.findIndex((col) => col.index === idx)
+                        const leftOffset =
+                          stickyIndex >= 0
+                            ? stickyColumns.slice(0, stickyIndex).reduce((sum, col) => sum + col.width, 0)
+                            : 0
+                        const stickyStyle = isSticky ? { left: `${leftOffset}px` } : undefined
+
                         return (
                           <Td
                             key={cell.id}
+                            style={stickyStyle}
                             className={classNames(
-                              isSticky && 'sticky left-0 z-10 bg-white shadow-[2px_0_4px_rgba(0,0,0,0.05)]',
+                              isSticky && 'sticky z-10 bg-white shadow-[2px_0_4px_rgba(0,0,0,0.05)]',
                             )}
                           >
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
