@@ -1,6 +1,7 @@
 import { AppButton } from "@/shared/components/common/AppButton";
 import type { Role } from "@/shared/constants/role.constant";
 import { isAdminOrManager } from "@/shared/utils/permission.util";
+import { Icon } from "@iconify/react";
 import { Fragment } from "react/jsx-runtime";
 
 interface TaskActionButtonProps {
@@ -16,11 +17,13 @@ export default function TaskActionButton({ isCampaignTask, isAppealTask, isDocum
     <div className='flex items-center gap-2'>
       {isAdminOrManager(userRoles) && (
         <Fragment>
-          <AppButton variant='outline' size='sm'>
+          <AppButton variant='outline' size='sm' className='text-primary'>
+            <Icon icon='solar:pen-linear' />
             Chỉnh sửa
           </AppButton>
 
-          <AppButton variant='outline' size='sm'>
+          <AppButton variant='outline' size='sm' className='text-primary'>
+            <Icon icon='tabler:trash' />
             Xóa
           </AppButton>
         </Fragment>
@@ -28,30 +31,35 @@ export default function TaskActionButton({ isCampaignTask, isAppealTask, isDocum
 
       {isCampaignTask && (
         <Fragment>
-          <AppButton variant='outline' size='sm'>
+          <AppButton variant='outline' size='sm' className='text-primary'>
+            <Icon icon='lets-icons:view' />
             Xem tiến độ
           </AppButton>
 
-          <AppButton variant='outline' size='sm'>
+          <AppButton variant='outline' size='sm' className='text-primary'>
+            <Icon icon='solar:pen-linear' />
             Cập nhật tiến độ
           </AppButton>
         </Fragment>
       )}
 
       {isAppealTask && (
-        <AppButton variant='outline' size='sm'>
+        <AppButton variant='outline' size='sm' className='text-primary'>
+          <Icon icon='solar:pen-linear' />
           Cập nhật tiến độ kháng
         </AppButton>
       )}
 
       {isDocumentAppealTask && (
-        <AppButton variant='outline' size='sm'>
+        <AppButton variant='outline' size='sm' className='text-primary'>
+          <Icon icon='solar:pen-linear' />
           Cập nhật tiến độ kháng giấy
         </AppButton>
       )}
 
       {isResearchTask && (
-        <AppButton variant='outline' size='sm'>
+        <AppButton variant='outline' size='sm' className='text-primary'>
+          <Icon icon='solar:pen-linear' />
           Cập nhật kết quả nghiên cứu
         </AppButton>
       )}

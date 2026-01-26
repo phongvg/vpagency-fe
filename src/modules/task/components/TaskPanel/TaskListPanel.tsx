@@ -33,13 +33,13 @@ export default function TaskListPanel({ params, setParams, tasks, meta, loading 
   if (loading) return <AppLoading loading={loading} />;
 
   return (
-    <Card className='w-[360px] space-y-4'>
+    <Card className='w-[360px] space-y-4 flex flex-col'>
       <CardHeader>
         <CardTitle>Danh sách công việc ({meta?.total || 0})</CardTitle>
       </CardHeader>
 
-      <CardContent className='py-0'>
-        <ScrollArea className='w-full h-[600px] p-1 border-border border'>
+      <CardContent className='py-0 flex-1 flex flex-col'>
+        <ScrollArea className='w-full h-full p-1 border-border border'>
           <ul className='space-y-2'>
             {tasks.map((task) => (
               <li

@@ -42,3 +42,8 @@ export const typeOptions = Object.entries(TaskTypeMap).map(([value, label]) => (
   value,
   label,
 }));
+
+export const frequencyOptions = Object.entries(TaskFrequencyMap).map(([value, label]) => ({
+  value,
+  label,
+}));

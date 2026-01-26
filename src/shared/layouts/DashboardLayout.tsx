@@ -5,9 +5,9 @@ export default function DashboardLayout() {
   return (
     <>
       <div className='app-cover'></div>
-      <div className='app flex flex-auto min-h-dvh w-full'>
+      <div className='app flex h-dvh'>
         <Sidebar />
-        <main className='p-2 relative flex flex-1 flex-col m-4 shadow-sm'>
+        <main className='relative flex-1 h-full p-4'>
           <Outlet />
         </main>
       </div>

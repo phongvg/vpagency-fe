@@ -10,7 +10,11 @@ import { Icon } from "@iconify/react";
 import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-export default function TaskSplit() {
+interface TaskSplitProps {
+  onEditTask: (taskId?: string) => void;
+}
+
+export default function TaskSplit({ onEditTask }: TaskSplitProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -45,11 +49,11 @@ export default function TaskSplit() {
   };
 
   return (
-    <div className='flex flex-col gap-2'>
-      <div>
+    <div className='flex-1 flex flex-col gap-2 h-full'>
+      <div className='flex items-center gap-2'>
         <Popover>
           <PopoverTrigger asChild>
-            <AppButton variant='outline'>
+            <AppButton variant='outline' size='sm'>
               <Icon icon='tabler:filter' />
               Lọc
             </AppButton>
@@ -68,9 +72,14 @@ export default function TaskSplit() {
             />
           </PopoverContent>
         </Popover>
+
+        <AppButton variant='outline' size='sm' onClick={() => onEditTask()}>
+          <Icon icon='uil:plus-circle' />
+          Tạo mới công việc
+        </AppButton>
       </div>
 
-      <div className='flex w-full gap-3'>
+      <div className='flex-1 flex gap-3 h-0 min-h-0'>
         <TaskListPanel params={params} setParams={setParams} tasks={tasks} meta={meta} loading={isLoading} />
         <TaskDetailPanel />
       </div>
