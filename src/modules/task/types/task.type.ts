@@ -1,3 +1,4 @@
+import type { FinalUrl } from "@/modules/finalUrl/types/finalUrl.type";
 import type { Project } from "@/modules/project/types/project.type";
 import type { User } from "@/modules/user/types/user.type";
 import type { BaseParam } from "@/shared/types/common/param.type";
@@ -78,6 +79,7 @@ export type Task = {
   numberOfAppealDocuments: number | null;
   researchContent: string | null;
   finalUrlIds: string[];
+  finalUrls: FinalUrl[];
   gmailIds: string[];
   totalCost: number;
   avgCpc: number;

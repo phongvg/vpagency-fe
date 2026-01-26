@@ -10,12 +10,12 @@
   }
 }
 
-body {
-  font-family: "Noto Sans", sans-serif;
-  font-weight: 500;
-  background-color: #0a151a;
-  font-size: 10px;
-  -webkit-font-smoothing: antialiased;
-  letter-spacing: 0.75px;
-  color: #ffffff;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply text-sm font-medium text-white bg-[#0a151a] antialiased tracking-[0.75px];
+    font-family: "Noto Sans", sans-serif;
+  }
 }

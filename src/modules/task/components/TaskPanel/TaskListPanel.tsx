@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Ca
 import { AppLoading } from "@/shared/components/common/AppLoading";
 import AppPagination from "@/shared/components/common/AppPagination/AppPagination";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
+import { useQueryParam } from "@/shared/hooks/useQueryParam";
+import { cn } from "@/shared/libs/utils";
 import type { Meta } from "@/shared/types/common/apiResponse.type";
 import { useNavigate } from "react-router-dom";
 
@@ -18,6 +20,7 @@ interface TaskListPanelProps {
 
 export default function TaskListPanel({ params, setParams, tasks, meta, loading }: TaskListPanelProps) {
   const navigate = useNavigate();
+  const activeTaskId = useQueryParam("id");
 
   const onPageChange = (page: number) => {
     setParams((prev) => ({ ...prev, page }));
@@ -39,7 +42,13 @@ export default function TaskListPanel({ params, setParams, tasks, meta, loading 
         <ScrollArea className='w-full h-[600px] p-1 border-border border'>
           <ul className='space-y-2'>
             {tasks.map((task) => (
-              <li key={task.id} className='p-2 cursor-pointer space-y-1' onClick={() => getTaskDetail(task.id)}>
+              <li
+                key={task.id}
+                className={cn(
+                  "p-2 cursor-pointer space-y-1 rounded transition-colors",
+                  activeTaskId === task.id ? "bg-white/10" : "hover:bg-white/10"
+                )}
+                onClick={() => getTaskDetail(task.id)}>
                 <h3 className='font-semibold text-primary line-clamp-1' title={task.name}>
                   {task.name}
                 </h3>

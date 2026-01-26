@@ -7,7 +7,7 @@ export default function InfoRow({ label, value }: InfoRowProps) {
   return (
     <div className='flex items-center justify-between'>
       <span className='text-muted-foreground'>{label}</span>
-      <span className='font-medium'>{value}</span>
+      <span className='font-medium'>{value ?? "N/A"}</span>
     </div>
   );
 }

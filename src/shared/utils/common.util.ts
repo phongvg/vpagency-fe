@@ -1,5 +1,7 @@
+import toast from "react-hot-toast";
+
 export const formatDollarAmount = (amount: number | null): string => {
-  if (amount === null) return "-";
+  if (amount === null) return formatDollarAmount(0);
 
   return amount.toLocaleString("en-US", {
     style: "currency",
@@ -41,4 +43,41 @@ export const normalizeParams = (params: Record<string, any>) => {
       },
       {} as Record<string, any>
     );
+};
+
+export const getInitials = (fullName: string): string => {
+  if (!fullName) return "";
+
+  const words = fullName.trim().split(/\s+/);
+
+  if (words.length === 1) {
+    return words[0].charAt(0).toUpperCase();
+  }
+
+  if (words.length === 2) {
+    return words[0].charAt(0).toUpperCase() + words[1].charAt(0).toUpperCase();
+  }
+
+  return words[0].charAt(0).toUpperCase() + words[words.length - 1].charAt(0).toUpperCase();
+};
+
+export const fixedNumber = (num: number | null | undefined, fractionDigits = 2) => {
+  if (num === null || num === undefined) return 0;
+
+  try {
+    return Number(num.toFixed(fractionDigits));
+  } catch {
+    return 0;
+  }
+};
+
+export const copyToClipboard = (text: string) => {
+  navigator.clipboard.writeText(text).then(
+    () => {
+      toast.success("Đã sao chép vào clipboard");
+    },
+    () => {
+      toast.error("Sao chép thất bại");
+    }
+  );
 };

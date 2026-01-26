@@ -8,8 +8,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/
 import type { SelectOption } from "@/shared/types/common/select-option.type";
 import { Icon } from "@iconify/react";
 import { useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function TaskSplit() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [params, setParams] = useState<TaskListParams>({
     page: 1,
     limit: 10,
@@ -32,6 +36,14 @@ export default function TaskSplit() {
   const tasks = useMemo(() => data?.items || [], [data]);
   const meta = useMemo(() => data?.meta, [data]);
 
+  const applyFilters = (newParams: Partial<TaskListParams>) => {
+    setParams((prev) => ({ ...prev, ...newParams, page: 1 }));
+
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.delete("id");
+    navigate({ search: searchParams.toString() }, { replace: true });
+  };
+
   return (
     <div className='flex flex-col gap-2'>
       <div>
@@ -46,7 +58,7 @@ export default function TaskSplit() {
           <PopoverContent className='p-0'>
             <TaskListFilter
               params={params}
-              setParams={setParams}
+              setParams={applyFilters}
               projectSelect={projectSelect}
               setProjectSelect={setProjectSelect}
               assignedUserSelect={assignedUserSelect}
