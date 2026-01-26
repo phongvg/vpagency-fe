@@ -1,6 +1,7 @@
 import EmptyTaskDetailPanel from "@/modules/task/components/TaskPanel/EmptyTaskDetailPanel";
 import TaskActionButton from "@/modules/task/components/TaskPanel/TaskActionButton";
 import TaskAppealCard from "@/modules/task/components/TaskPanel/TaskAppealCard";
+import TaskAppealProjectTable from "@/modules/task/components/TaskPanel/TaskAppealProjectTable";
 import TaskCampaignCard from "@/modules/task/components/TaskPanel/TaskCampaignCard";
 import TaskDocumentAppealCard from "@/modules/task/components/TaskPanel/TaskDocumentAppealCard";
 import TaskFinalUrlTable from "@/modules/task/components/TaskPanel/TaskFinalUrlTable";
@@ -54,24 +55,35 @@ export default function TaskDetailPanel() {
             <TaskTimelineCard task={task} />
           </div>
 
-          {/* Thông tin chiến dịch */}
-          {isCampaignTask && <TaskCampaignCard task={task} />}
-
-          {/* Thông tin dự án */}
-          {isCampaignTask && <TaskProjectCard task={task} />}
-
-          {/* Thông tin URL cuối */}
           {isCampaignTask && (
-            <div className='col-span-2'>
-              <TaskFinalUrlTable finalUrls={task.finalUrls} />
-            </div>
+            <>
+              {/* Thông tin chiến dịch */}
+              <TaskCampaignCard task={task} />
+
+              {/* Thông tin dự án */}
+              <TaskProjectCard task={task} />
+
+              {/* Thông tin URL cuối */}
+              <div className='col-span-2'>
+                <TaskFinalUrlTable finalUrls={task.finalUrls} />
+              </div>
+            </>
           )}
 
           {/* Thông tin kháng tài khoản */}
           {isAppealTask && <TaskAppealCard task={task} />}
 
-          {/* Thông tin kháng giấy */}
-          {isDocumentAppealTask && <TaskDocumentAppealCard task={task} />}
+          {isDocumentAppealTask && (
+            <>
+              {/* Thông tin kháng giấy */}
+              <TaskDocumentAppealCard task={task} />
+
+              {/* Danh sách dự án kháng */}
+              <div className='col-span-2'>
+                <TaskAppealProjectTable projects={task.projects ?? []} />
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

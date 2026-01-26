@@ -63,6 +63,7 @@ export type Task = {
   deadline: Date;
   projectId: string;
   projectIds: string[];
+  projects?: Project[];
   adsGroupId: string | null;
   numberOfCampaigns: number | null;
   numberOfBackupCampaigns: number;
