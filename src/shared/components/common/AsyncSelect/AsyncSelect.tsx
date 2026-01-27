@@ -4,9 +4,9 @@ import type { SelectOption } from "@/shared/types/common/select-option.type";
 import { type GroupBase } from "react-select";
 import { AsyncPaginate, type LoadOptions } from "react-select-async-paginate";
 
-export interface AsyncPaginateSelectProps<T> {
-  value?: SelectOption | null;
-  onChange?: (value: SelectOption | null) => void;
+interface AsyncSelectProps<T> {
+  value?: SelectOption | SelectOption[] | null;
+  onChange?: (value: SelectOption | SelectOption[] | null) => void;
   fetcher?: (params: { search: string; page: number }) => Promise<{
     items: T[];
     meta: Meta;
@@ -14,9 +14,10 @@ export interface AsyncPaginateSelectProps<T> {
   mapOption?: (item: T) => SelectOption;
   placeholder?: string;
   disabled?: boolean;
+  isMulti?: boolean;
 }
 
-export default function AsyncSelect<T>({ value, onChange, fetcher, mapOption, placeholder, disabled }: AsyncPaginateSelectProps<T>) {
+export default function AsyncSelect<T>({ value, onChange, fetcher, mapOption, placeholder, disabled, isMulti }: AsyncSelectProps<T>) {
   const loadOptions: LoadOptions<SelectOption, GroupBase<SelectOption>, { page: number }> = async (search, _, additional) => {
     if (!fetcher || !mapOption) return { options: [], hasMore: false };
 
@@ -46,6 +47,7 @@ export default function AsyncSelect<T>({ value, onChange, fetcher, mapOption, pl
       placeholder={placeholder}
       isClearable={false}
       isDisabled={disabled}
+      isMulti={isMulti}
       loadingMessage={() => "ĐANG TẢI..."}
       noOptionsMessage={() => "KHÔNG CÓ DỮ LIỆU"}
     />

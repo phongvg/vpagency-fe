@@ -1,7 +1,17 @@
-import type { FormSelectProps } from "@/shared/components/form/FormSelect/FormSelect.type";
+import { AppSelect } from "@/shared/components/common/AppSelect";
 import { Field, FieldError, FieldLabel } from "@/shared/components/ui/field";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
+import type { SelectOption } from "@/shared/types/common/select-option.type";
 import { Controller, useFormContext } from "react-hook-form";
+
+interface FormSelectProps {
+  name: string;
+  label?: string;
+  options: SelectOption[];
+  placeholder?: string;
+  disabled?: boolean;
+  required?: boolean;
+  className?: string;
+}
 
 export default function FormSelect({ name, label, options, placeholder, disabled, required, className }: FormSelectProps) {
   const { control } = useFormContext();
@@ -19,19 +29,7 @@ export default function FormSelect({ name, label, options, placeholder, disabled
             </FieldLabel>
           )}
 
-          <Select name={field.name} value={field.value} onValueChange={field.onChange} disabled={disabled}>
-            <SelectTrigger>
-              <SelectValue placeholder={placeholder} />
-            </SelectTrigger>
-
-            <SelectContent>
-              {options.map((opt) => (
-                <SelectItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <AppSelect options={options} value={field.value} onValueChange={field.onChange} placeholder={placeholder} disabled={disabled} />
 
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
         </Field>

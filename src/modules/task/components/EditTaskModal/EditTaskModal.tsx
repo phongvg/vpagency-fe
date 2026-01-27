@@ -5,6 +5,7 @@ import { AppButton } from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 interface EditTaskModalProps {
@@ -24,6 +25,10 @@ export default function EditTaskModal({ open, onClose, taskId }: EditTaskModalPr
   const onSubmit = (values: TaskFormType) => {
     console.log("values :>> ", values);
   };
+
+  useEffect(() => {
+    console.log("form :>> ", form.formState.errors);
+  }, [form.formState.errors]);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>

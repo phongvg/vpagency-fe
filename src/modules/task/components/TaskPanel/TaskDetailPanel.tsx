@@ -27,6 +27,7 @@ export default function TaskDetailPanel() {
   const { data: task, isLoading } = useTaskDetail(id);
 
   if (isLoading) return <AppLoading loading={isLoading} />;
+
   if (!task) return <EmptyTaskDetailPanel />;
 
   const isCampaignTask = useMemo(() => [TaskType.LAUNCH_CAMPAIGN, TaskType.SET_CAMPAIGN, TaskType.NURTURE_ACCOUNT].includes(task.type), [task]);
@@ -39,8 +40,8 @@ export default function TaskDetailPanel() {
       <ScrollArea className='flex-1 h-full min-h-0'>
         <div className='p-4 flex flex-col'>
           <div className='space-y-2 mb-6'>
-            <h2 className='text-xl font-semibold mb-4 line-clamp-2 uppercase' title={task?.name}>
-              {task?.name}
+            <h2 className='text-xl font-semibold mb-4 line-clamp-2 uppercase' title={task.name}>
+              {task.name}
             </h2>
 
             <TaskActionButton

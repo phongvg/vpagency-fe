@@ -1,18 +1,17 @@
+import DatePicker from "@/shared/components/common/DatePicker/DatePicker";
 import { Field, FieldError, FieldLabel } from "@/shared/components/ui/field";
-import { Input } from "@/shared/components/ui/input";
 import { Controller, useFormContext } from "react-hook-form";
 
-interface FormInputProps {
+interface FormDatePickerProps {
   name: string;
   label?: string;
   placeholder?: string;
-  type?: React.HTMLInputTypeAttribute;
   disabled?: boolean;
   required?: boolean;
   className?: string;
 }
 
-export default function FormInput({ name, label, placeholder, type = "text", disabled, required, className }: FormInputProps) {
+export default function FormDatePicker({ name, label, placeholder, disabled, required, className }: FormDatePickerProps) {
   const { control } = useFormContext();
 
   return (
@@ -28,7 +27,7 @@ export default function FormInput({ name, label, placeholder, type = "text", dis
             </FieldLabel>
           )}
 
-          <Input {...field} id={name} type={type} placeholder={placeholder} disabled={disabled} maxLength={255} aria-invalid={fieldState.invalid} />
+          <DatePicker value={field.value} onChange={field.onChange} placeholder={placeholder} disabled={disabled} />
 
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
         </Field>

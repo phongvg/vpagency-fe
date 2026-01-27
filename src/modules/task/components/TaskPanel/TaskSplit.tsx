@@ -53,7 +53,7 @@ export default function TaskSplit({ onEditTask }: TaskSplitProps) {
       <div className='flex items-center gap-2'>
         <Popover>
           <PopoverTrigger asChild>
-            <AppButton variant='outline' size='sm'>
+            <AppButton type='button' variant='outline' size='sm'>
               <Icon icon='tabler:filter' />
               Lọc
             </AppButton>
