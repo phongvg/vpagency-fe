@@ -54,8 +54,6 @@ export default function TaskDetailPanel() {
 
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <TaskOverviewCard task={task} />
-            <TaskOverviewCard task={task} />
-            <TaskOverviewCard task={task} />
 
             <div>
               <TaskPeopleCard task={task} />
