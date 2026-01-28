@@ -1,18 +1,17 @@
+import PriceInput from "@/shared/components/common/PriceInput/PriceInput";
 import { Field, FieldError, FieldLabel } from "@/shared/components/ui/field";
-import { Input } from "@/shared/components/ui/input";
 import { Controller, useFormContext } from "react-hook-form";
 
-interface FormInputProps {
+interface FormPriceInputProps {
   name: string;
   label?: string;
   placeholder?: string;
-  type?: React.HTMLInputTypeAttribute;
   disabled?: boolean;
   required?: boolean;
   className?: string;
 }
 
-export default function FormInput({ name, label, placeholder, type = "text", disabled, required, className }: FormInputProps) {
+export default function FormPriceInput({ name, label, placeholder, disabled, required, className }: FormPriceInputProps) {
   const { control } = useFormContext();
 
   return (
@@ -28,16 +27,7 @@ export default function FormInput({ name, label, placeholder, type = "text", dis
             </FieldLabel>
           )}
 
-          <Input
-            {...field}
-            id={name}
-            type={type}
-            placeholder={placeholder}
-            disabled={disabled}
-            maxLength={255}
-            min={0}
-            aria-invalid={fieldState.invalid}
-          />
+          <PriceInput {...field} id={name} placeholder={placeholder} disabled={disabled} />
 
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
         </Field>

@@ -1,7 +1,10 @@
 import TaskForm from "@/modules/task/components/TaskForm/TaskForm";
-import { transformTaskToForm } from "@/modules/task/mappers/task.mapper";
+import { useCreateTask } from "@/modules/task/hooks/useCreateTask";
+import { useTaskDetail } from "@/modules/task/hooks/useTaskDetail";
+import { transformTaskFormToPayload, transformTaskToForm } from "@/modules/task/mappers/task.mapper";
 import { taskFormSchema, type TaskFormType } from "@/modules/task/schemas/task-form.schema";
 import { AppButton } from "@/shared/components/common/AppButton";
+import { AppLoading } from "@/shared/components/common/AppLoading";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,18 +20,28 @@ interface EditTaskModalProps {
 export default function EditTaskModal({ open, onClose, taskId }: EditTaskModalProps) {
   const isEditMode = Boolean(taskId);
 
+  const { data: task, isLoading } = useTaskDetail(taskId);
+
+  const createTask = useCreateTask();
+
   const form = useForm<TaskFormType>({
     resolver: zodResolver(taskFormSchema),
-    defaultValues: transformTaskToForm(undefined),
+    defaultValues: transformTaskToForm(task),
   });
 
-  const onSubmit = (values: TaskFormType) => {
-    console.log("values :>> ", values);
+  useEffect(() => {
+    if (task) {
+      form.reset(transformTaskToForm(task));
+    } else {
+      form.reset(transformTaskToForm());
+    }
+  }, [task, form]);
+
+  const onSubmit = async (values: TaskFormType) => {
+    await createTask.mutateAsync(transformTaskFormToPayload(values));
   };
 
-  useEffect(() => {
-    console.log("form :>> ", form.formState.errors);
-  }, [form.formState.errors]);
+  if (isEditMode && isLoading) return <AppLoading loading={isLoading} />;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>

@@ -4,7 +4,7 @@ import type { ButtonProps } from "./AppButton.type";
 
 export default function AppButton({ loading, children, ...props }: ButtonProps) {
   return (
-    <Button disabled={loading} {...props}>
+    <Button disabled={loading} className='text-primary' {...props}>
       {loading && <Spinner />}
       {children}
     </Button>

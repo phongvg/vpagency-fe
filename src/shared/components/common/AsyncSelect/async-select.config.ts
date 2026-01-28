@@ -39,6 +39,24 @@ export const selectStyles: StylesConfig<SelectOption, false> = {
     fontSize: 9,
   }),
 
+  multiValue: (base) => ({
+    ...base,
+    color: "rgb(255 255 255 / 0.5)",
+    backgroundColor: "white",
+    fontSize: 10,
+    fontWeight: "700",
+  }),
+
+  multiValueRemove: (base) => ({
+    ...base,
+    color: "black",
+    cursor: "pointer",
+    ":hover": {
+      backgroundColor: "transparent",
+      color: "red",
+    },
+  }),
+
   singleValue: (base) => ({
     ...base,
     fontSize: 10,

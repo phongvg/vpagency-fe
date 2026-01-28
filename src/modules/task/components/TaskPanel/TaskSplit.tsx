@@ -11,10 +11,10 @@ import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 interface TaskSplitProps {
-  onEditTask: (taskId?: string) => void;
+  onEdit: (taskId?: string) => void;
 }
 
-export default function TaskSplit({ onEditTask }: TaskSplitProps) {
+export default function TaskSplit({ onEdit }: TaskSplitProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -72,16 +72,11 @@ export default function TaskSplit({ onEditTask }: TaskSplitProps) {
             />
           </PopoverContent>
         </Popover>
-
-        <AppButton variant='outline' size='sm' onClick={() => onEditTask()}>
-          <Icon icon='uil:plus-circle' />
-          Tạo mới công việc
-        </AppButton>
       </div>
 
       <div className='flex-1 flex gap-3 h-0 min-h-0'>
         <TaskListPanel params={params} setParams={setParams} tasks={tasks} meta={meta} loading={isLoading} />
-        <TaskDetailPanel />
+        <TaskDetailPanel onEdit={onEdit} />
       </div>
     </div>
   );

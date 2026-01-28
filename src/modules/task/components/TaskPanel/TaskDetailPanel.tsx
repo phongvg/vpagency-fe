@@ -20,7 +20,11 @@ import { useQueryParam } from "@/shared/hooks/useQueryParam";
 import { useAuthStore } from "@/shared/stores/auth/useAuthStore";
 import { Fragment, useMemo } from "react";
 
-export default function TaskDetailPanel() {
+interface TaskDetailPanelProps {
+  onEdit: (taskId?: string) => void;
+}
+
+export default function TaskDetailPanel({ onEdit }: TaskDetailPanelProps) {
   const id = useQueryParam("id");
   const { user } = useAuthStore();
 
@@ -50,6 +54,7 @@ export default function TaskDetailPanel() {
               isDocumentAppealTask={isDocumentAppealTask}
               isResearchTask={isResearchTask}
               userRoles={user?.roles || []}
+              onEdit={() => onEdit(task.id)}
             />
           </div>
 

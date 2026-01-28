@@ -2,7 +2,7 @@ import { AsyncSelect } from "@/shared/components/common/AsyncSelect";
 import { Field, FieldError, FieldLabel } from "@/shared/components/ui/field";
 import type { Meta } from "@/shared/types/common/apiResponse.type";
 import type { SelectOption } from "@/shared/types/common/select-option.type";
-import { Controller, useFormContext, type ControllerRenderProps, type FieldValues } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 interface FormAsyncSelectProps<T> {
   name: string;
@@ -32,14 +32,6 @@ export default function FormAsyncSelect<T>({
 }: FormAsyncSelectProps<T>) {
   const { control } = useFormContext();
 
-  const onSelectChange = (field: ControllerRenderProps<FieldValues, string>, value: SelectOption | SelectOption[] | null) => {
-    if (Array.isArray(value)) {
-      field.onChange(value.map((option) => option.value));
-    } else {
-      field.onChange(value);
-    }
-  };
-
   return (
     <Controller
       name={name}
@@ -55,7 +47,7 @@ export default function FormAsyncSelect<T>({
 
           <AsyncSelect<T>
             value={field.value}
-            onChange={(value) => onSelectChange(field, value)}
+            onChange={field.onChange}
             fetcher={fetcher}
             mapOption={mapOption}
             placeholder={placeholder}

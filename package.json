@@ -38,6 +38,7 @@
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.71.1",
     "react-hot-toast": "^2.6.0",
+    "react-number-format": "^5.4.4",
     "react-router-dom": "^6.30.3",
     "react-select": "^5.10.2",
     "react-select-async-paginate": "^0.7.11",

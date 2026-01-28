@@ -136,3 +136,24 @@ export type TaskResearchDetail = {
   result: string;
   difficultyLevel: string;
 };
+
+export type UpdateTaskRequest = {
+  name?: string;
+  type?: TaskType | null;
+  frequency?: TaskFrequency | null;
+  priority?: TaskPriority | null;
+  deadline?: Date | null;
+  assignedUserIds?: string[];
+  projectId?: string | null;
+  projectIds?: string[];
+  note?: string;
+  numberOfCampaigns?: number;
+  numberOfBackupCampaigns?: number;
+  dailyBudget?: number;
+  numberOfAccounts?: number;
+  numberOfResultCampaigns?: number;
+  finalUrlIds?: string[];
+  numberOfSuspendedAccounts?: number;
+  numberOfAppealDocuments?: number;
+  researchContent?: string;
+};

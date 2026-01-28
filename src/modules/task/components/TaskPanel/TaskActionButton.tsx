@@ -10,19 +10,27 @@ interface TaskActionButtonProps {
   isDocumentAppealTask: boolean;
   isResearchTask: boolean;
   userRoles: Role[];
+  onEdit: () => void;
 }
 
-export default function TaskActionButton({ isCampaignTask, isAppealTask, isDocumentAppealTask, isResearchTask, userRoles }: TaskActionButtonProps) {
+export default function TaskActionButton({
+  isCampaignTask,
+  isAppealTask,
+  isDocumentAppealTask,
+  isResearchTask,
+  userRoles,
+  onEdit,
+}: TaskActionButtonProps) {
   return (
     <div className='flex items-center gap-2'>
       {isAdminOrManager(userRoles) && (
         <Fragment>
-          <AppButton variant='outline' size='sm' className='text-primary'>
+          <AppButton variant='outline' size='sm' onClick={onEdit}>
             <Icon icon='solar:pen-linear' />
             Chỉnh sửa
           </AppButton>
 
-          <AppButton variant='outline' size='sm' className='text-primary'>
+          <AppButton variant='outline' size='sm'>
             <Icon icon='tabler:trash' />
             Xóa
           </AppButton>
@@ -31,12 +39,12 @@ export default function TaskActionButton({ isCampaignTask, isAppealTask, isDocum
 
       {isCampaignTask && (
         <Fragment>
-          <AppButton variant='outline' size='sm' className='text-primary'>
+          <AppButton variant='outline' size='sm'>
             <Icon icon='lets-icons:view' />
             Xem tiến độ
           </AppButton>
 
-          <AppButton variant='outline' size='sm' className='text-primary'>
+          <AppButton variant='outline' size='sm'>
             <Icon icon='solar:pen-linear' />
             Cập nhật tiến độ
           </AppButton>
@@ -44,21 +52,21 @@ export default function TaskActionButton({ isCampaignTask, isAppealTask, isDocum
       )}
 
       {isAppealTask && (
-        <AppButton variant='outline' size='sm' className='text-primary'>
+        <AppButton variant='outline' size='sm'>
           <Icon icon='solar:pen-linear' />
           Cập nhật tiến độ kháng
         </AppButton>
       )}
 
       {isDocumentAppealTask && (
-        <AppButton variant='outline' size='sm' className='text-primary'>
+        <AppButton variant='outline' size='sm'>
           <Icon icon='solar:pen-linear' />
           Cập nhật tiến độ kháng giấy
         </AppButton>
       )}
 
       {isResearchTask && (
-        <AppButton variant='outline' size='sm' className='text-primary'>
+        <AppButton variant='outline' size='sm'>
           <Icon icon='solar:pen-linear' />
           Cập nhật kết quả nghiên cứu
         </AppButton>
