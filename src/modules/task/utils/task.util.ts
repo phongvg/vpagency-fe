@@ -47,3 +47,17 @@ export const frequencyOptions = Object.entries(TaskFrequencyMap).map(([value, la
   value,
   label,
 }));
+
+export const TaskStatusBgClassMap: Record<TaskStatus, string> = {
+  [TaskStatus.PENDING]: "bg-gray-50",
+  [TaskStatus.IN_PROGRESS]: "bg-blue-50",
+  [TaskStatus.COMPLETED]: "bg-green-50",
+  [TaskStatus.CANCELLED]: "bg-red-50",
+};
+
+export const TaskStatusTextClassMap: Record<TaskStatus, string> = {
+  [TaskStatus.PENDING]: "text-gray-700",
+  [TaskStatus.IN_PROGRESS]: "text-blue-700",
+  [TaskStatus.COMPLETED]: "text-green-700",
+  [TaskStatus.CANCELLED]: "text-red-700",
+};

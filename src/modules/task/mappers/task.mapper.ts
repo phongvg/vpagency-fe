@@ -10,7 +10,7 @@ export const transformTaskToForm = (data?: Task | undefined): TaskFormType => ({
   projectId: data?.project ? { value: data.project.id, label: data.project.name } : null,
   assignedUserIds: data?.assignedUsers?.map((user) => ({ value: user.id, label: `${user.firstName} ${user.lastName}` })) ?? [],
   note: data?.note ?? "",
-  finalUrlIds: data?.finalUrls?.map((url) => url.id) ?? [],
+  finalUrlIds: data?.finalUrlIds ?? [],
   dailyBudget: data?.dailyBudget ?? undefined,
   numberOfAccounts: data?.numberOfAccounts ?? undefined,
   numberOfResultCampaigns: data?.numberOfResultCampaigns ?? undefined,

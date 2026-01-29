@@ -1,4 +1,4 @@
-import TaskForm from "@/modules/task/components/TaskForm/TaskForm";
+import TaskForm from "@/modules/task/components/TaskForm";
 import { useCreateTask } from "@/modules/task/hooks/useCreateTask";
 import { useTaskDetail } from "@/modules/task/hooks/useTaskDetail";
 import { transformTaskFormToPayload, transformTaskToForm } from "@/modules/task/mappers/task.mapper";

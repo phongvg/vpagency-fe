@@ -1,56 +1,94 @@
 import { authApi } from "@/auth/api/auth.api";
-import type { LoginPayload } from "@/auth/types/auth.type";
-import { ACCESS_TOKEN, REFRESH_TOKEN, USER_ID } from "@/shared/constants/token.constant";
+import type { LoginResponse } from "@/auth/types/auth.type";
+import { ACCESS_TOKEN, EXPIRES_AT, FIVE_MINUTES_IN_MS, REFRESH_TOKEN, USER_ID } from "@/shared/constants/auth.constant";
 import { useAuthStore } from "@/shared/stores/auth/useAuthStore";
-import { getStorageItem, removeStorageItem, setStorageItem } from "@/shared/utils/storage.util";
+import { getStorageItem, setStorageItem } from "@/shared/utils/storage.util";
+import { useQueryClient } from "@tanstack/react-query";
+
+let refreshTimeoutId: number | null = null;
+let refreshPromise: Promise<void> | null = null;
 
 export const authService = {
-  login: async (payload: LoginPayload): Promise<void> => {
+  login: (data: LoginResponse): void => {
+    const { user, accessToken, refreshToken, expiresAt } = data;
     const { setUser, setAuthenticated, setLoading } = useAuthStore.getState();
 
     setLoading(true);
 
-    const response = await authApi.login(payload);
+    authService.setSession(accessToken, refreshToken);
 
-    const { user, accessToken, refreshToken } = response.data;
+    const expiresAtMs = new Date(expiresAt).getTime();
 
-    setStorageItem(ACCESS_TOKEN, accessToken);
-    setStorageItem(REFRESH_TOKEN, refreshToken);
     setStorageItem(USER_ID, user.id);
+    setStorageItem(EXPIRES_AT, expiresAtMs.toString());
 
     setUser(user);
     setAuthenticated(true);
     setLoading(false);
+
+    authService.scheduleRefresh();
   },
 
-  refreshToken: async (): Promise<string> => {
-    const userId = getStorageItem<string | null>(USER_ID, null);
-    const token = getStorageItem<string | null>(REFRESH_TOKEN, null);
-
-    if (!userId) {
-      throw new Error("No user ID available");
-    }
-
-    if (!token) {
-      throw new Error("No refresh token available");
-    }
-
-    const response = await authApi.refreshToken(userId);
-
-    const { accessToken, refreshToken: newRefreshToken } = response.data;
-
+  setSession: (accessToken: string, refreshToken: string): void => {
     setStorageItem(ACCESS_TOKEN, accessToken);
-    setStorageItem(REFRESH_TOKEN, newRefreshToken);
+    setStorageItem(REFRESH_TOKEN, refreshToken);
+  },
 
-    return accessToken;
+  scheduleRefresh: () => {
+    if (refreshTimeoutId) clearTimeout(refreshTimeoutId);
+
+    const expiresAt = Number(getStorageItem<string | null>(EXPIRES_AT, null));
+    if (!expiresAt) return;
+
+    const target = expiresAt - FIVE_MINUTES_IN_MS;
+    const delay = target - Date.now();
+
+    if (delay <= 0) {
+      authService.refreshToken();
+      return;
+    }
+
+    const MAX_TIMEOUT = 2_000_000_000;
+    const timeout = Math.min(delay, MAX_TIMEOUT);
+
+    refreshTimeoutId = window.setTimeout(() => {
+      authService.scheduleRefresh();
+    }, timeout);
+  },
+
+  refreshToken: async (): Promise<void> => {
+    if (!refreshPromise) {
+      const userId = getStorageItem<string | null>(USER_ID, null);
+
+      if (!userId) {
+        throw new Error("No user ID available");
+      }
+
+      refreshPromise = authApi
+        .refreshToken(userId)
+        .then((res) => {
+          const { accessToken, refreshToken } = res.data;
+          authService.setSession(accessToken, refreshToken);
+        })
+        .finally(() => {
+          refreshPromise = null;
+        });
+    }
+
+    return refreshPromise;
+  },
+
+  clearSession() {
+    if (refreshTimeoutId) clearTimeout(refreshTimeoutId);
+    localStorage.clear();
   },
 
   logout: (): void => {
     const { setUser, setAuthenticated, setLoading } = useAuthStore.getState();
+    const queryClient = useQueryClient();
 
-    removeStorageItem(ACCESS_TOKEN);
-    removeStorageItem(REFRESH_TOKEN);
-    removeStorageItem(USER_ID);
+    authService.clearSession();
+    queryClient.clear();
 
     setUser(null);
     setAuthenticated(false);
@@ -68,7 +106,7 @@ export const authService = {
 
       setUser(user);
       setAuthenticated(true);
-    } catch (error) {
+    } catch {
       setUser(null);
       setAuthenticated(false);
     } finally {

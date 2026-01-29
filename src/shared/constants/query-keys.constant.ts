@@ -10,3 +10,11 @@ export const taskQueryKeys = {
 
   detail: (id: string) => [...taskQueryKeys.all, "detail", id] as const,
 };
+
+export const finalUrlQueryKeys = {
+  all: ["final-urls"] as const,
+
+  lists: () => [...finalUrlQueryKeys.all, "list"] as const,
+
+  listByProject: (projectId: string) => [...finalUrlQueryKeys.lists(), "by-project", projectId] as const,
+};

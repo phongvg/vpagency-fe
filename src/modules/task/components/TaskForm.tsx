@@ -1,5 +1,6 @@
 import { projectApi } from "@/modules/project/api/project.api";
 import type { Project } from "@/modules/project/types/project.type";
+import AddFinalUrlSection from "@/modules/task/components/AddFinalUrlSection";
 import { TaskType } from "@/modules/task/types/task.type";
 import { frequencyOptions, priorityOptions, typeOptions } from "@/modules/task/utils/task.util";
 import { userApi } from "@/modules/user/api/user.api";
@@ -22,14 +23,42 @@ export default function TaskForm() {
     name: "type",
   });
 
+  const projectId = useWatch({
+    control,
+    name: "projectId",
+  });
+
   const fetchUsers = createAsyncSelectFetcher(userApi.getUsers);
   const fetchProjects = createAsyncSelectFetcher(projectApi.getProjects);
+
+  const renderProjectField = () => {
+    if (taskType === TaskType.SET_CAMPAIGN || taskType === TaskType.LAUNCH_CAMPAIGN || taskType === TaskType.NURTURE_ACCOUNT) {
+      return (
+        <Fragment>
+          <FormAsyncSelect<Project>
+            name='projectId'
+            label='Dự án'
+            fetcher={fetchProjects}
+            mapOption={(project) => ({ value: project.id, label: project.name })}
+            placeholder='Chọn dự án'
+            className='col-span-2'
+            required
+          />
+
+          {projectId && <AddFinalUrlSection />}
+        </Fragment>
+      );
+    }
+
+    return null;
+  };
 
   const renderFormFields = () => {
     switch (taskType) {
       case TaskType.SET_CAMPAIGN:
         return (
           <Fragment>
+            {renderProjectField()}
             <FormInput type='number' name='numberOfAccounts' label='Số lượng tài khoản' />
             <FormInput type='number' name='numberOfResultCampaigns' label='Số lượng kết quả chiến dịch' />
           </Fragment>
@@ -37,28 +66,15 @@ export default function TaskForm() {
       case TaskType.LAUNCH_CAMPAIGN:
         return (
           <Fragment>
+            {renderProjectField()}
             <FormPriceInput name='dailyBudget' label='Ngân sách hàng ngày' />
             <FormInput type='number' name='numberOfBackupCampaigns' label='Số lượng tài khoản dự phòng' />
           </Fragment>
         );
+      case TaskType.NURTURE_ACCOUNT:
+        return renderProjectField();
       case TaskType.APPEAL_ACCOUNT:
         return <FormInput type='number' name='numberOfSuspendedAccounts' label='Số lượng tài khoản tạm ngưng' />;
-      case TaskType.DOCUMENT_APPEAL:
-        return (
-          <Fragment>
-            <FormAsyncSelect<Project>
-              name='projectIds'
-              label='Dự án cần kháng'
-              className='col-span-2'
-              fetcher={fetchProjects}
-              mapOption={(project) => ({ value: project.id, label: project.name })}
-              placeholder='Chọn dự án cần kháng'
-              required
-              isMulti
-            />
-            <FormInput type='number' name='numberOfAppealDocuments' label='Số lượng đơn kháng' />
-          </Fragment>
-        );
       case TaskType.RESEARCH:
         return <FormTextarea name='researchContent' label='Nội dung nghiên cứu' className='col-span-2' />;
       default:

@@ -1,4 +1,4 @@
-import EditTaskModal from "@/modules/task/components/EditTaskModal/EditTaskModal";
+import EditTaskModal from "@/modules/task/components/EditTaskModal";
 import TaskSplit from "@/modules/task/components/TaskPanel/TaskSplit";
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";

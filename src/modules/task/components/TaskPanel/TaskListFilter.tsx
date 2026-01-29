@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 
 interface TaskListFilterProps {
   params: TaskListParams;
-  setParams: (params: Partial<TaskListParams>) => void;
+  setParams: (params: TaskListParams) => void;
   projectSelect: SelectOption | null;
   setProjectSelect: React.Dispatch<React.SetStateAction<SelectOption | null>>;
   assignedUserSelect: SelectOption | null;
@@ -78,8 +78,8 @@ export default function TaskListFilter({
             mapOption={(item) => ({ label: item.name, value: item.id })}
             value={projectSelect}
             onChange={(value) => {
-              setProjectSelect(value);
-              setParams({ projectId: value ? value.value : undefined });
+              setProjectSelect(value as SelectOption | null);
+              setParams({ projectId: Array.isArray(value) ? undefined : value ? value.value : undefined });
             }}
           />
 
@@ -89,8 +89,8 @@ export default function TaskListFilter({
             mapOption={(item) => ({ label: `${item.firstName} ${item.lastName}`, value: item.id })}
             value={creatorSelect}
             onChange={(value) => {
-              setCreatorSelect(value);
-              setParams({ creatorId: value ? value.value : undefined });
+              setCreatorSelect(value as SelectOption | null);
+              setParams({ creatorId: Array.isArray(value) ? undefined : value ? value.value : undefined });
             }}
           />
 
@@ -100,8 +100,8 @@ export default function TaskListFilter({
             mapOption={(item) => ({ label: `${item.firstName} ${item.lastName}`, value: item.id })}
             value={assignedUserSelect}
             onChange={(value) => {
-              setAssignedUserSelect(value);
-              setParams({ assignedUserId: value ? value.value : undefined });
+              setAssignedUserSelect(value as SelectOption | null);
+              setParams({ assignedUserId: Array.isArray(value) ? undefined : value ? value.value : undefined });
             }}
           />
 
