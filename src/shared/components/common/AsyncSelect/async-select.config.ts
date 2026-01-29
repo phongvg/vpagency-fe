@@ -35,8 +35,9 @@ export const selectStyles: StylesConfig<SelectOption, false> = {
 
   placeholder: (base) => ({
     ...base,
+    textTransform: "none",
     color: "rgb(255 255 255 / 0.5)",
-    fontSize: 9,
+    fontSize: 10,
   }),
 
   multiValue: (base) => ({

@@ -1,7 +1,7 @@
 import { AppButton } from "@/shared/components/common/AppButton";
 import type { Role } from "@/shared/constants/role.constant";
 import { isAdminOrManager } from "@/shared/utils/permission.util";
-import { Icon } from "@iconify/react";
+import { Eye, SquarePen, Trash2 } from "lucide-react";
 import { Fragment } from "react/jsx-runtime";
 
 interface TaskActionButtonProps {
@@ -11,6 +11,7 @@ interface TaskActionButtonProps {
   isResearchTask: boolean;
   userRoles: Role[];
   onEdit: () => void;
+  onUpdateProgress: () => void;
 }
 
 export default function TaskActionButton({
@@ -20,18 +21,19 @@ export default function TaskActionButton({
   isResearchTask,
   userRoles,
   onEdit,
+  onUpdateProgress,
 }: TaskActionButtonProps) {
   return (
     <div className='flex items-center gap-2'>
       {isAdminOrManager(userRoles) && (
         <Fragment>
           <AppButton variant='outline' size='sm' onClick={onEdit}>
-            <Icon icon='solar:pen-linear' />
+            <SquarePen />
             Chỉnh sửa
           </AppButton>
 
           <AppButton variant='outline' size='sm'>
-            <Icon icon='tabler:trash' />
+            <Trash2 />
             Xóa
           </AppButton>
         </Fragment>
@@ -40,12 +42,12 @@ export default function TaskActionButton({
       {isCampaignTask && (
         <Fragment>
           <AppButton variant='outline' size='sm'>
-            <Icon icon='lets-icons:view' />
+            <Eye />
             Xem tiến độ
           </AppButton>
 
-          <AppButton variant='outline' size='sm'>
-            <Icon icon='solar:pen-linear' />
+          <AppButton variant='outline' size='sm' onClick={onUpdateProgress}>
+            <SquarePen />
             Cập nhật tiến độ
           </AppButton>
         </Fragment>
@@ -53,21 +55,21 @@ export default function TaskActionButton({
 
       {isAppealTask && (
         <AppButton variant='outline' size='sm'>
-          <Icon icon='solar:pen-linear' />
+          <SquarePen />
           Cập nhật tiến độ kháng
         </AppButton>
       )}
 
       {isDocumentAppealTask && (
         <AppButton variant='outline' size='sm'>
-          <Icon icon='solar:pen-linear' />
+          <SquarePen />
           Cập nhật tiến độ kháng giấy
         </AppButton>
       )}
 
       {isResearchTask && (
         <AppButton variant='outline' size='sm'>
-          <Icon icon='solar:pen-linear' />
+          <SquarePen />
           Cập nhật kết quả nghiên cứu
         </AppButton>
       )}

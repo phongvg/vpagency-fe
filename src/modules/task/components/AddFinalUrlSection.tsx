@@ -1,20 +1,19 @@
 import { useFinalUrlsByProjectId } from "@/modules/finalUrl/hooks/useFinalUrlsByProjectId";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
 import { Checkbox } from "@/shared/components/ui/checkbox";
-import { useEffect } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 
 export default function AddFinalUrlSection() {
-  const { control, setValue } = useFormContext();
+  const {
+    control,
+    formState: { errors },
+    setValue,
+  } = useFormContext();
 
   const projectId = useWatch({
     control,
     name: "projectId",
   });
-
-  useEffect(() => {
-    setValue("finalUrlIds", []);
-  }, [projectId?.value]);
 
   const selectedFinalUrlIds: string[] = useWatch({
     control,
@@ -54,16 +53,16 @@ export default function AddFinalUrlSection() {
             <table className='w-full align-middle'>
               <thead>
                 <tr>
-                  <th className='px-2 py-2 font-semibold text-white text-center'></th>
+                  <th className='px-2 py-2 font-semibold text-white text-center w-[40px]'></th>
                   <th className='px-2 py-2 font-semibold text-white text-left'>Tên</th>
-                  <th className='px-2 py-2 font-semibold text-white text-left'>URL</th>
+                  <th className='px-2 py-2 font-semibold text-white text-left w-[250px]'>URL</th>
                 </tr>
               </thead>
 
               <tbody>
                 {finalUrls.map((url) => (
                   <tr key={url.id} className='border-t'>
-                    <td className='px-2 py-4'>
+                    <td className='px-2 py-4 w-[40px]'>
                       <div className='flex justify-center items-center'>
                         <Checkbox checked={selectedFinalUrlIds.includes(url.id)} onCheckedChange={(checked) => toggleFinalUrl(url.id, !!checked)} />
                       </div>
@@ -71,10 +70,10 @@ export default function AddFinalUrlSection() {
 
                     <td className='px-2 py-4'>{url.name}</td>
 
-                    <td className='px-2 py-4 max-w-xs truncate' title={url.finalURL}>
+                    <td className='px-2 py-4 max-w-[250px] truncate text-blue-500' title={url.finalURL}>
                       <a
                         href={url.finalURL}
-                        className='text-blue-500 hover:underline'
+                        className='hover:underline'
                         target='_blank'
                         rel='noopener noreferrer'
                         onClick={(e) => e.stopPropagation()}>
@@ -90,6 +89,8 @@ export default function AddFinalUrlSection() {
           )}
         </CardContent>
       </Card>
+
+      {errors.finalUrlIds && <p className='mt-2 text-sm text-red-500'>{errors.finalUrlIds.message as string}</p>}
     </div>
   );
 }

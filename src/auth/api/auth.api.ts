@@ -5,7 +5,7 @@ import type { ApiBaseResponse } from "@/shared/types/common/apiResponse.type";
 
 export const authApi = {
   login: async (payload: LoginPayload): Promise<ApiBaseResponse<LoginResponse>> => {
-    return await http.post("/auth/login", payload);
+    return await http.post("/auth/login", payload, { skipAuth: true });
   },
 
   refreshToken: async (userId: string): Promise<ApiBaseResponse<RefreshTokenResponse>> => {

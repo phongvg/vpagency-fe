@@ -1,4 +1,4 @@
-import type { FinalUrl } from "@/modules/finalUrl/types/finalUrl.type";
+import type { FinalUrl, FinalURLGroup } from "@/modules/finalUrl/types/finalUrl.type";
 import type { Project } from "@/modules/project/types/project.type";
 import type { User } from "@/modules/user/types/user.type";
 import type { BaseParam } from "@/shared/types/common/param.type";
@@ -156,4 +156,13 @@ export type UpdateTaskRequest = {
   numberOfSuspendedAccounts?: number;
   numberOfAppealDocuments?: number;
   researchContent?: string;
+};
+
+export type TaskProgress = {
+  id: string;
+  name: string;
+  projectId: string;
+  progress: number;
+  totalFinalUrls: number;
+  finalUrls: FinalURLGroup[];
 };

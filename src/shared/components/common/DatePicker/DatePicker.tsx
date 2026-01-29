@@ -11,17 +11,17 @@ interface DatePickerProps {
   disabled?: boolean;
 }
 
-export default function DatePicker({ value, onChange, placeholder, disabled }: DatePickerProps) {
+export default function DatePicker({ value, onChange, placeholder = "Chọn ngày", disabled }: DatePickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
           variant='outline'
           data-empty={!value}
-          className='data-[empty=true]:text-white/50 justify-start text-left font-normal'
+          className='data-[empty=true]:text-white/50 justify-start text-left font-normal normal-case'
           disabled={disabled}>
           <CalendarIcon className='text-white/50' />
-          <span className='text-white/50 text-[10px]'>{value ? format(value, "dd/MM/yyyy") : placeholder || "Chọn ngày"}</span>
+          <span className='text-white/50'>{value ? format(value, "dd/MM/yyyy") : placeholder}</span>
         </Button>
       </PopoverTrigger>
 

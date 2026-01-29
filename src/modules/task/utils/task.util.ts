@@ -61,3 +61,12 @@ export const TaskStatusTextClassMap: Record<TaskStatus, string> = {
   [TaskStatus.COMPLETED]: "text-green-700",
   [TaskStatus.CANCELLED]: "text-red-700",
 };
+
+export const TaskTypeColorMap: Record<TaskType, string> = {
+  [TaskType.SET_CAMPAIGN]: "text-blue-500",
+  [TaskType.LAUNCH_CAMPAIGN]: "text-green-500",
+  [TaskType.NURTURE_ACCOUNT]: "text-purple-500",
+  [TaskType.APPEAL_ACCOUNT]: "text-red-500",
+  [TaskType.DOCUMENT_APPEAL]: "text-orange-500",
+  [TaskType.RESEARCH]: "text-yellow-500",
+};

@@ -6,15 +6,16 @@ import type { TaskListParams } from "@/modules/task/types/task.type";
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
 import type { SelectOption } from "@/shared/types/common/select-option.type";
-import { Icon } from "@iconify/react";
+import { Funnel } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 interface TaskSplitProps {
   onEdit: (taskId?: string) => void;
+  onUpdateProgress: (taskId: string) => void;
 }
 
-export default function TaskSplit({ onEdit }: TaskSplitProps) {
+export default function TaskSplit({ onEdit, onUpdateProgress }: TaskSplitProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -54,7 +55,7 @@ export default function TaskSplit({ onEdit }: TaskSplitProps) {
         <Popover>
           <PopoverTrigger asChild>
             <AppButton type='button' variant='outline' size='sm'>
-              <Icon icon='tabler:filter' />
+              <Funnel />
               Lọc
             </AppButton>
           </PopoverTrigger>
@@ -76,7 +77,7 @@ export default function TaskSplit({ onEdit }: TaskSplitProps) {
 
       <div className='flex-1 flex gap-3 h-0 min-h-0'>
         <TaskListPanel params={params} setParams={setParams} tasks={tasks} meta={meta} loading={isLoading} />
-        <TaskDetailPanel onEdit={onEdit} />
+        <TaskDetailPanel onEdit={onEdit} onUpdateProgress={onUpdateProgress} />
       </div>
     </div>
   );

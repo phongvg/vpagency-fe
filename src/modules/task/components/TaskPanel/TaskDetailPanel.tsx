@@ -22,9 +22,10 @@ import { Fragment, useMemo } from "react";
 
 interface TaskDetailPanelProps {
   onEdit: (taskId?: string) => void;
+  onUpdateProgress: (taskId: string) => void;
 }
 
-export default function TaskDetailPanel({ onEdit }: TaskDetailPanelProps) {
+export default function TaskDetailPanel({ onEdit, onUpdateProgress }: TaskDetailPanelProps) {
   const id = useQueryParam("id");
   const { user } = useAuthStore();
 
@@ -55,6 +56,7 @@ export default function TaskDetailPanel({ onEdit }: TaskDetailPanelProps) {
               isResearchTask={isResearchTask}
               userRoles={user?.roles || []}
               onEdit={() => onEdit(task.id)}
+              onUpdateProgress={() => onUpdateProgress(task.id)}
             />
           </div>
 

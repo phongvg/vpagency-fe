@@ -9,6 +9,8 @@ export const taskQueryKeys = {
   list: (params: TaskListParams) => [...taskQueryKeys.lists(), normalizeParams(params)] as const,
 
   detail: (id: string) => [...taskQueryKeys.all, "detail", id] as const,
+
+  progress: (id: string) => [...taskQueryKeys.all, "progress", id] as const,
 };
 
 export const finalUrlQueryKeys = {

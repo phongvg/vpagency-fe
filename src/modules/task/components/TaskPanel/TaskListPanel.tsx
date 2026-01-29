@@ -1,6 +1,6 @@
 import { urls } from "@/app/routes/route.constant";
 import type { Task, TaskListParams } from "@/modules/task/types/task.type";
-import { TaskTypeMap } from "@/modules/task/utils/task.util";
+import { TaskTypeColorMap, TaskTypeMap } from "@/modules/task/utils/task.util";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
 import { AppLoading } from "@/shared/components/common/AppLoading";
 import AppPagination from "@/shared/components/common/AppPagination/AppPagination";
@@ -52,7 +52,7 @@ export default function TaskListPanel({ params, setParams, tasks, meta, loading 
                 onClick={() => getTaskDetail(task.id)}
                 title={task.name}>
                 <h3 className='font-semibold text-primary line-clamp-1'>{task.name}</h3>
-                <p className='text-muted-foreground'>{TaskTypeMap[task.type]}</p>
+                <p className={cn("text-sm font-medium", TaskTypeColorMap[task.type])}>{TaskTypeMap[task.type]}</p>
               </li>
             ))}
           </ul>

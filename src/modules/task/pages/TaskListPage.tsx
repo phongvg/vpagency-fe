@@ -1,8 +1,9 @@
 import EditTaskModal from "@/modules/task/components/EditTaskModal";
 import TaskSplit from "@/modules/task/components/TaskPanel/TaskSplit";
+import UpdateProgressTask from "@/modules/task/components/TaskProgress/UpdateProgressTask";
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
-import { Icon } from "@iconify/react";
+import { ClipboardPlus } from "lucide-react";
 import { useState } from "react";
 
 const TABS = [
@@ -12,11 +13,17 @@ const TABS = [
 
 export default function TaskListPage() {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [isUpdateProgressOpen, setUpdateProgressOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
   const handleOpenEditModal = (taskId?: string) => {
     setSelectedTaskId(taskId ?? null);
     setEditModalOpen(true);
+  };
+
+  const handleOpenUpdateProgress = (taskId: string) => {
+    setSelectedTaskId(taskId);
+    setUpdateProgressOpen(true);
   };
 
   return (
@@ -32,19 +39,21 @@ export default function TaskListPage() {
           </TabsList>
 
           <AppButton variant='outline' size='sm' onClick={() => handleOpenEditModal()}>
-            <Icon icon='uil:plus-circle' />
+            <ClipboardPlus />
             Tạo mới công việc
           </AppButton>
         </div>
 
         <TabsContent value={TABS[0].value} className='flex-1 h-0 flex flex-col'>
-          <TaskSplit onEdit={handleOpenEditModal} />
+          <TaskSplit onEdit={handleOpenEditModal} onUpdateProgress={handleOpenUpdateProgress} />
         </TabsContent>
 
         <TabsContent value={TABS[1].value}>Change your password here.</TabsContent>
       </Tabs>
 
       <EditTaskModal open={isEditModalOpen} onClose={() => setEditModalOpen(false)} taskId={selectedTaskId} />
+
+      <UpdateProgressTask open={isUpdateProgressOpen} onClose={() => setUpdateProgressOpen(false)} taskId={selectedTaskId} />
     </div>
   );
 }

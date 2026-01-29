@@ -21,6 +21,7 @@ export default function TaskOverviewCard({ task }: TaskOverviewCardProps) {
         <InfoRow label='Loại công việc' value={TaskTypeMap[task.type]} />
         <InfoRow label='Ưu tiên' value={TaskPriorityMap[task.priority]} />
         <InfoRow label='Deadline' value={formatDate(task.deadline, "dd/MM/yyyy")} />
+        <InfoRow label='Tiến độ công việc' value={task.progress + "%"} />
         <InfoRow label='Ghi chú' value={task.note} />
       </CardContent>
     </Card>

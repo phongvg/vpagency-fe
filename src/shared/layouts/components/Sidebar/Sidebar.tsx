@@ -1,6 +1,6 @@
 import Logo from "@/shared/components/Logo";
 import NavUser from "@/shared/layouts/components/Sidebar/NavUser";
-import { Icon } from "@iconify/react";
+import { Box } from "lucide-react";
 import { getSidebarRoutes } from "./sidebar.config";
 import SidebarItem from "./SidebarItem";
 
@@ -12,7 +12,7 @@ export default function Sidebar() {
       <div className='flex flex-col h-full'>
         <div className='space-y-3'>
           <div className='border-border border-b p-2 flex items-center gap-2'>
-            <Icon icon='mynaui:box' className='text-2xl text-white/50' />
+            <Box className='text-2xl' />
             <Logo />
           </div>
 

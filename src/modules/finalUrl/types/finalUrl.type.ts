@@ -27,3 +27,10 @@ export type FinalUrl = {
   updatedAt: string | Date;
   project: Project;
 };
+
+export type FinalURLGroup = {
+  finalUrlId: string;
+  finalUrlName: string;
+  finalURL: string;
+  totalCampaignDailyStats: number;
+};
