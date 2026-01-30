@@ -1,3 +1,5 @@
+import type { FinalUrl } from "@/modules/finalUrl/types/finalUrl.type";
+import type { User } from "@/modules/user/types/user.type";
 import type { BaseParam } from "@/shared/types/common/param.type";
 
 export type CampaignListParams = BaseParam & {
@@ -10,4 +12,67 @@ export type CampaignListParams = BaseParam & {
   gmail?: string;
   campaignName?: string;
   finalUrl?: string;
+};
+
+export type Campaign = {
+  id: string;
+  importAt: string | null;
+  date: string | null;
+  uid: string | null;
+  mcc: string | null;
+  name: string | null;
+  externalId: string | null;
+  finalUrl: FinalUrl | null;
+  finalUrlId: string | null;
+  gmail: string | null;
+  status: string;
+  keywords: KeywordMatch[];
+  negativeKeywords: KeywordMatch[];
+  topSearchTerms: SearchTerm[];
+  avgCpc: number | null;
+  targetCpc: number | null;
+  clicks: number | null;
+  ctr: number | null;
+  cpm: number | null;
+  cost: number | null;
+  impression: number | null;
+  targetLocations: string[];
+  locationStats: LocationStat[];
+  finalUrlImport: string | null;
+  finalUrlImportId: string | null;
+  campaignBudget: number;
+  locationExcluded: string[];
+  importer: User | null;
+};
+
+export type KeywordMatch = {
+  keyword: string;
+  match: string;
+  clicks?: number | null;
+  ctr?: number | null;
+  cpc?: number | null;
+  cpm?: number | null;
+  cost?: number | null;
+  impression?: number | null;
+  bid?: number | null;
+};
+
+export type SearchTerm = {
+  term: string;
+  cpc: number | null;
+  cost: number | null;
+  clicks: number | null;
+  ctr: number | null;
+  cpm: number | null;
+  impression: number | null;
+};
+
+export type LocationStat = {
+  location: string;
+  clicks: number | null;
+  ctr: number | null;
+  cpc: number | null;
+  cost: number | null;
+  cpm: number | null;
+  impression: number | null;
 };

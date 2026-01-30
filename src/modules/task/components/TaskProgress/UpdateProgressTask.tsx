@@ -1,3 +1,4 @@
+import CampaignStatsModal from "@/modules/task/components/TaskProgress/CampaignStatsModal";
 import FinalUrlsTable from "@/modules/task/components/TaskProgress/FinalUrlsTable";
 import { useTaskProgress } from "@/modules/task/hooks/useTaskProgress";
 import { useUpdateTaskProgress } from "@/modules/task/hooks/useUpdateTaskProgress";
@@ -10,7 +11,7 @@ import { taskQueryKeys } from "@/shared/constants/query-keys.constant";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { Save } from "lucide-react";
-import { useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -22,6 +23,9 @@ interface UpdateProgressTaskProps {
 
 export default function UpdateProgressTask({ open, taskId, onClose }: UpdateProgressTaskProps) {
   const queryClient = useQueryClient();
+
+  const [isCampaignStatsOpen, setCampaignStatsOpen] = useState(false);
+  const [selectedFinalUrlId, setSelectedFinalUrlId] = useState<string | null>(null);
 
   const { data: progress } = useTaskProgress(taskId);
 
@@ -46,6 +50,11 @@ export default function UpdateProgressTask({ open, taskId, onClose }: UpdateProg
     }
   }, [progress, form, open]);
 
+  const handleOpenCampaignStats = (finalUrlId: string) => {
+    setSelectedFinalUrlId(finalUrlId);
+    setCampaignStatsOpen(true);
+  };
+
   const onSubmit = async (values: TaskProgressFormSchema) => {
     if (!taskId) return;
 
@@ -63,31 +72,35 @@ export default function UpdateProgressTask({ open, taskId, onClose }: UpdateProg
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Cập nhật tiến độ công việc</DialogTitle>
-        </DialogHeader>
+    <Fragment>
+      <Dialog open={open} onOpenChange={onClose}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Cập nhật tiến độ công việc</DialogTitle>
+          </DialogHeader>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
-            <FormInput type='number' name='progress' label='Tiến độ (%)' max={100} />
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+              <FormInput type='number' name='progress' label='Tiến độ (%)' max={100} />
 
-            {progress?.finalUrls && <FinalUrlsTable finalUrls={progress.finalUrls} />}
+              {progress?.finalUrls && <FinalUrlsTable finalUrls={progress.finalUrls} onOpenCampaignStats={handleOpenCampaignStats} />}
 
-            <div className='flex justify-end gap-2'>
-              <AppButton type='button' variant='outline' size='sm' onClick={onClose}>
-                Hủy
-              </AppButton>
+              <div className='flex justify-end gap-2'>
+                <AppButton type='button' variant='outline' size='sm' onClick={onClose}>
+                  Hủy
+                </AppButton>
 
-              <AppButton type='submit' variant='outline' size='sm'>
-                <Save />
-                Xác nhận
-              </AppButton>
-            </div>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+                <AppButton type='submit' variant='outline' size='sm'>
+                  <Save />
+                  Xác nhận
+                </AppButton>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      <CampaignStatsModal finalUrlId={selectedFinalUrlId} taskId={taskId} open={isCampaignStatsOpen} onClose={() => setCampaignStatsOpen(false)} />
+    </Fragment>
   );
 }

@@ -1,13 +1,14 @@
 import ProtectedRoute from "@/app/routes/ProtectedRoute";
 import { urls } from "@/app/routes/route.constant";
 import { LoginPage } from "@/modules/auth/login";
+import { CampaignListPage } from "@/modules/campaign";
 import { DashboardPage } from "@/modules/dashboard";
 import { TaskListPage } from "@/modules/task";
 import { UserListPage } from "@/modules/user";
 import { Role } from "@/shared/constants/role.constant";
 import BlankLayout from "@/shared/layouts/BlankLayout";
 import DashboardLayout from "@/shared/layouts/DashboardLayout";
-import { ClipboardList, LayoutGrid, Users } from "lucide-react";
+import { ClipboardList, LayoutGrid, LayoutList, Users } from "lucide-react";
 import { Navigate } from "react-router-dom";
 import type { AppRoute } from "./route.type";
 
@@ -46,6 +47,14 @@ export const appRoutes: AppRoute[] = [
         pageTitle: "Danh sách tài khoản",
         element: <UserListPage />,
         icon: Users,
+        showInSidebar: true,
+      },
+      {
+        path: urls.campaign,
+        title: "Quản lý chiến dịch",
+        pageTitle: "Danh sách chiến dịch",
+        element: <CampaignListPage />,
+        icon: LayoutList,
         showInSidebar: true,
       },
     ],

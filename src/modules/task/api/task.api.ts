@@ -1,3 +1,4 @@
+import type { Campaign, CampaignListParams } from "@/modules/campaign/types/campaign.type";
 import type { Task, TaskListParams, TaskProgress, UpdateTaskRequest } from "@/modules/task/types/task.type";
 import { http } from "@/shared/libs/http";
 import type { ApiBaseListResponse, ApiBaseResponse } from "@/shared/types/common/apiResponse.type";
@@ -26,5 +27,17 @@ export const taskApi = {
 
   updateTaskProgress: (id: string, progress: number): Promise<ApiBaseResponse<TaskProgress>> => {
     return http.put(`/tasks/${id}/progress`, { progress });
+  },
+
+  getCampaignStatsByFinalUrl: ({
+    taskId,
+    finalUrlId,
+    params,
+  }: {
+    taskId: string;
+    finalUrlId: string;
+    params: CampaignListParams;
+  }): Promise<ApiBaseListResponse<Campaign>> => {
+    return http.get(`/tasks/${taskId}/final-urls/${finalUrlId}/campaign-stats${convertQueryParams(params)}`);
   },
 };

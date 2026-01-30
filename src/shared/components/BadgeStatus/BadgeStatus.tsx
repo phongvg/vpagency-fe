@@ -1,7 +1,7 @@
 import { Badge } from "@/shared/components/ui/badge";
 
 interface BadgeStatusProps {
-  status: string;
+  status: string | null | undefined;
 }
 
 const STATUS_COLOR: Record<string, string> = {
@@ -10,5 +10,7 @@ const STATUS_COLOR: Record<string, string> = {
 };
 
 export default function BadgeStatus({ status }: BadgeStatusProps) {
+  if (!status) return null;
+
   return <Badge className={`font-semibold rounded-md ${STATUS_COLOR[status] || "bg-red-50 text-red-500"}`}>{status}</Badge>;
 }

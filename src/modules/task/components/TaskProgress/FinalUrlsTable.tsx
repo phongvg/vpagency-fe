@@ -5,9 +5,10 @@ import { AppTable } from "@/shared/components/common/AppTable";
 
 interface FinalUrlsTableProps {
   finalUrls: FinalURLGroup[];
+  onOpenCampaignStats: (finalUrlId: string) => void;
 }
 
-export default function FinalUrlsTable({ finalUrls }: FinalUrlsTableProps) {
+export default function FinalUrlsTable({ finalUrls, onOpenCampaignStats }: FinalUrlsTableProps) {
   return (
     <Card>
       <CardHeader>
@@ -15,7 +16,7 @@ export default function FinalUrlsTable({ finalUrls }: FinalUrlsTableProps) {
       </CardHeader>
 
       <CardContent>
-        <AppTable columns={taskProgressUrlColumnConfig()} data={finalUrls} />
+        <AppTable columns={taskProgressUrlColumnConfig(onOpenCampaignStats)} data={finalUrls} />
       </CardContent>
     </Card>
   );

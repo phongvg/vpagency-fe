@@ -7,4 +7,5 @@ export const urls = {
   dashboard: "dashboard",
   task: "tasks",
   user: "users",
+  campaign: "campaigns",
 };

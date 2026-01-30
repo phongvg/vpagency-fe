@@ -1,11 +1,13 @@
 import toast from "react-hot-toast";
 
-export const formatDollarAmount = (amount: number | null): string => {
-  if (amount === null) return formatDollarAmount(0);
+export const formatDollarAmount = (amount: number | null | undefined): string => {
+  if (amount === null || amount === undefined) return formatDollarAmount(0);
 
   return amount.toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   });
 };
 
@@ -73,6 +75,31 @@ export const fixedNumber = (num: number | null | undefined, fractionDigits = 2) 
 
 export const copyToClipboard = (text: string) => {
   navigator.clipboard.writeText(text).then(
+    () => {
+      toast.success("Đã sao chép vào clipboard");
+    },
+    () => {
+      toast.error("Sao chép thất bại");
+    }
+  );
+};
+
+export const addDash = (str: string | null | undefined): string => {
+  if (!str) return "";
+
+  try {
+    const digits = str.replace(/\D/g, "");
+
+    const limited = digits.slice(0, 10);
+
+    return limited.replace(/^(\d{3})(\d{3})(\d{4})$/, "$1-$2-$3");
+  } catch {
+    return str || "";
+  }
+};
+
+export const copyTextToClipboard = (text: string | null | undefined) => {
+  navigator.clipboard.writeText(text || "").then(
     () => {
       toast.success("Đã sao chép vào clipboard");
     },

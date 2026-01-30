@@ -40,10 +40,7 @@ http.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig;
 
-    if (
-      !originalRequest.skipAuth &&
-      (error.response?.status === HttpStatusCode.Forbidden || error.response?.status === HttpStatusCode.Unauthorized)
-    ) {
+    if (!originalRequest.skipAuth && error.response?.status === HttpStatusCode.Unauthorized) {
       authService.clearSession();
       window.location.href = `${urls.auth}/${urls.login}?redirect=${encodeURIComponent(window.location.pathname)}`;
     }

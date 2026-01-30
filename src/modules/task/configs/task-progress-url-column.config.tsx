@@ -2,7 +2,7 @@ import type { FinalURLGroup } from "@/modules/finalUrl/types/finalUrl.type";
 import { Button } from "@/shared/components/ui/button";
 import type { ColumnDef } from "@tanstack/react-table";
 
-export const taskProgressUrlColumnConfig = (): ColumnDef<FinalURLGroup>[] => [
+export const taskProgressUrlColumnConfig = (onOpenCampaignStats: (finalUrlId: string) => void): ColumnDef<FinalURLGroup>[] => [
   {
     header: "STT",
     accessorKey: "index",
@@ -30,7 +30,7 @@ export const taskProgressUrlColumnConfig = (): ColumnDef<FinalURLGroup>[] => [
       const row = props.row.original;
 
       return (
-        <Button variant='link' size='sm' className='px-0'>
+        <Button variant='link' size='sm' className='px-0' onClick={() => onOpenCampaignStats(row.finalUrlId)}>
           Cập nhật số liệu ({row.totalCampaignDailyStats})
         </Button>
       );

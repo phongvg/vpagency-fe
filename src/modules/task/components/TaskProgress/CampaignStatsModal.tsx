@@ -1,4 +1,5 @@
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
+import { useCampaignStatsFinalUrl } from "@/modules/task/hooks/useCampaignStatsFinalUrl";
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Save } from "lucide-react";
@@ -25,6 +26,8 @@ export default function CampaignStatsModal({ open, onClose, taskId, finalUrlId }
     importAtFrom: undefined,
     importAtTo: undefined,
   });
+
+  const { data: campaignStats } = useCampaignStatsFinalUrl({ taskId, finalUrlId, params });
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
