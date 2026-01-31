@@ -9,15 +9,13 @@ interface ListTooltipProps<T> {
 }
 
 export default function ListTooltip<T>({ data, columns }: ListTooltipProps<T>) {
-  console.log("data :>> ", data);
-
   return (
     <HoverCard openDelay={10} closeDelay={100}>
       <HoverCardTrigger asChild>
         <Badge variant='outline'>+{data.length}</Badge>
       </HoverCardTrigger>
 
-      <HoverCardContent className='flex w-64 flex-col gap-0.5'>
+      <HoverCardContent className='flex flex-col gap-0.5 w-64'>
         <ScrollArea className='w-full'>
           <div className='p-2'>
             <table className='w-full'>

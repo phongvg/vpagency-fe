@@ -8,10 +8,10 @@ export default function Sidebar() {
   const routes = getSidebarRoutes();
 
   return (
-    <aside className='w-[250px] min-w-64 bg-[rgba(var(--body-bg-rgb),.75)]'>
+    <aside className='bg-[rgba(var(--body-bg-rgb),.75)] min-w-64'>
       <div className='flex flex-col h-full'>
         <div className='space-y-3'>
-          <div className='border-border border-b p-2 flex items-center gap-2'>
+          <div className='flex items-center gap-2 p-2 border-border border-b'>
             <Box className='text-2xl' />
             <Logo />
           </div>
@@ -19,19 +19,19 @@ export default function Sidebar() {
           <NavUser />
 
           <div className='px-2'>
-            <div className='flex items-center text-white text-[7.5px]'>
-              <div className='font-bold'>NAVIGATION</div>
-              <div className='flex-1 pt-[3px] ps-1'>
-                <div className='h-[1px] bg-white/25'></div>
-                <div className='py-[3px] flex'>
-                  <div className='hud-line flex-1 h-[4px] opacity-50'></div>
+            <div className='flex items-center text-[7.5px] text-white'>
+              <div className='font-bold'>MENU</div>
+              <div className='flex-1 ps-1 pt-[3px]'>
+                <div className='bg-white/25 h-[1px]'></div>
+                <div className='flex py-[3px]'>
+                  <div className='flex-1 opacity-50 h-[4px] hud-line'></div>
                 </div>
               </div>
             </div>
-            <div className='h-[1px] bg-white/25'></div>
+            <div className='bg-white/25 h-[1px]'></div>
           </div>
 
-          <div className='flex w-full min-w-0 flex-col gap-1 px-1'>
+          <div className='flex flex-col gap-1 px-1 w-full min-w-0'>
             {routes.map((route) => (
               <SidebarItem key={route.path} route={route} />
             ))}

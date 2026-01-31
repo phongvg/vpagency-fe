@@ -8,7 +8,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/
 import type { SelectOption } from "@/shared/types/common/select-option.type";
 import { Funnel } from "lucide-react";
 import { useMemo, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 
 interface TaskSplitProps {
   onEdit: (taskId?: string) => void;
@@ -16,9 +15,6 @@ interface TaskSplitProps {
 }
 
 export default function TaskSplit({ onEdit, onUpdateProgress }: TaskSplitProps) {
-  const navigate = useNavigate();
-  const location = useLocation();
-
   const [params, setParams] = useState<TaskListParams>({
     page: 1,
     limit: 10,
@@ -41,16 +37,8 @@ export default function TaskSplit({ onEdit, onUpdateProgress }: TaskSplitProps) 
   const tasks = useMemo(() => data?.items || [], [data]);
   const meta = useMemo(() => data?.meta, [data]);
 
-  const applyFilters = (newParams: Partial<TaskListParams>) => {
-    setParams((prev) => ({ ...prev, ...newParams, page: 1 }));
-
-    const searchParams = new URLSearchParams(location.search);
-    searchParams.delete("id");
-    navigate({ search: searchParams.toString() }, { replace: true });
-  };
-
   return (
-    <div className='flex-1 flex flex-col gap-2 h-full'>
+    <div className='flex flex-col flex-1 gap-2 h-full'>
       <div className='flex items-center gap-2'>
         <Popover>
           <PopoverTrigger asChild>
@@ -63,7 +51,7 @@ export default function TaskSplit({ onEdit, onUpdateProgress }: TaskSplitProps) 
           <PopoverContent className='p-0'>
             <TaskListFilter
               params={params}
-              setParams={applyFilters}
+              setParams={setParams}
               projectSelect={projectSelect}
               setProjectSelect={setProjectSelect}
               assignedUserSelect={assignedUserSelect}
@@ -75,7 +63,7 @@ export default function TaskSplit({ onEdit, onUpdateProgress }: TaskSplitProps) 
         </Popover>
       </div>
 
-      <div className='flex-1 flex gap-3 h-0 min-h-0'>
+      <div className='flex flex-1 gap-3 h-0 min-h-0'>
         <TaskListPanel params={params} setParams={setParams} tasks={tasks} meta={meta} loading={isLoading} />
         <TaskDetailPanel onEdit={onEdit} onUpdateProgress={onUpdateProgress} />
       </div>

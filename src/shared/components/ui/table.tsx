@@ -1,13 +1,9 @@
 import * as React from "react";
 
-import { ScrollArea, ScrollBar } from "@/shared/components/ui/scroll-area";
 import { cn } from "@/shared/libs/utils";
 
 const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(({ className, ...props }, ref) => (
-  <ScrollArea className='relative max-w-full w-full'>
-    <table ref={ref} className={cn("w-full caption-bottom text-sm", className)} {...props} />
-    <ScrollBar orientation='horizontal' />
-  </ScrollArea>
+  <table ref={ref} className={cn("min-w-full text-sm table-auto caption-bottom", className)} {...props} />
 ));
 Table.displayName = "Table";
 
@@ -22,12 +18,12 @@ const TableBody = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes
 TableBody.displayName = "TableBody";
 
 const TableFooter = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(({ className, ...props }, ref) => (
-  <tfoot ref={ref} className={cn("border-t bg-muted/50 font-medium [&>tr]:last:border-b-0", className)} {...props} />
+  <tfoot ref={ref} className={cn("bg-muted/50 border-t [&>tr]:last:border-b-0 font-medium", className)} {...props} />
 ));
 TableFooter.displayName = "TableFooter";
 
 const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTMLTableRowElement>>(({ className, ...props }, ref) => (
-  <tr ref={ref} className={cn("border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted", className)} {...props} />
+  <tr ref={ref} className={cn("data-[state=selected]:bg-muted hover:bg-muted/50 border-b transition-colors", className)} {...props} />
 ));
 TableRow.displayName = "TableRow";
 
@@ -49,7 +45,7 @@ const TableCell = React.forwardRef<HTMLTableCellElement, React.TdHTMLAttributes<
 TableCell.displayName = "TableCell";
 
 const TableCaption = React.forwardRef<HTMLTableCaptionElement, React.HTMLAttributes<HTMLTableCaptionElement>>(({ className, ...props }, ref) => (
-  <caption ref={ref} className={cn("mt-4 text-sm text-muted-foreground", className)} {...props} />
+  <caption ref={ref} className={cn("mt-4 text-muted-foreground text-sm", className)} {...props} />
 ));
 TableCaption.displayName = "TableCaption";
 

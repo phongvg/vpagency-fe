@@ -12,5 +12,5 @@ const STATUS_COLOR: Record<string, string> = {
 export default function BadgeStatus({ status }: BadgeStatusProps) {
   if (!status) return null;
 
-  return <Badge className={`font-semibold rounded-md ${STATUS_COLOR[status] || "bg-red-50 text-red-500"}`}>{status}</Badge>;
+  return <Badge className={`font-semibold rounded-lg ${STATUS_COLOR[status] || "bg-red-50 text-red-700"}`}>{status}</Badge>;
 }

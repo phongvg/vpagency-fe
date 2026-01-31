@@ -1,8 +1,10 @@
+import CampaignListFilter from "@/modules/campaign/components/CampaignListFilter";
 import CampaignTable from "@/modules/campaign/components/CampaignTable";
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
 import { AppButton } from "@/shared/components/common/AppButton";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
 import { Download, Funnel, Plus } from "lucide-react";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 
 export default function CampaignListPage() {
   const [params, setParams] = useState<CampaignListParams>({
@@ -20,12 +22,20 @@ export default function CampaignListPage() {
   });
 
   return (
-    <div className='h-full w-full flex flex-col gap-2'>
-      <div className='flex items-center justify-between'>
-        <AppButton type='button' variant='outline' size='sm'>
-          <Funnel />
-          Lọc
-        </AppButton>
+    <Fragment>
+      <div className='flex justify-between items-center'>
+        <Popover>
+          <PopoverTrigger asChild>
+            <AppButton type='button' variant='outline' size='sm'>
+              <Funnel />
+              Lọc
+            </AppButton>
+          </PopoverTrigger>
+
+          <PopoverContent className='p-0'>
+            <CampaignListFilter params={params} setParams={setParams} />
+          </PopoverContent>
+        </Popover>
 
         <div className='flex items-center gap-2'>
           <AppButton variant='outline' size='sm'>
@@ -45,7 +55,7 @@ export default function CampaignListPage() {
         </div>
       </div>
 
-      <CampaignTable params={params} />
-    </div>
+      <CampaignTable params={params} setParams={setParams} />
+    </Fragment>
   );
 }

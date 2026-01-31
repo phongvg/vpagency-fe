@@ -4,7 +4,7 @@ import UpdateProgressTask from "@/modules/task/components/TaskProgress/UpdatePro
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { ClipboardPlus } from "lucide-react";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 
 const TABS = [
   { value: "split", label: "Danh sách" },
@@ -27,9 +27,9 @@ export default function TaskListPage() {
   };
 
   return (
-    <div className='h-full w-full flex flex-col'>
+    <Fragment>
       <Tabs defaultValue={TABS[0].value} className='flex flex-col h-full'>
-        <div className='flex items-center justify-between'>
+        <div className='flex justify-between items-center'>
           <TabsList>
             {TABS.map((tab) => (
               <TabsTrigger key={tab.value} value={tab.value}>
@@ -44,7 +44,7 @@ export default function TaskListPage() {
           </AppButton>
         </div>
 
-        <TabsContent value={TABS[0].value} className='flex-1 h-0 flex flex-col'>
+        <TabsContent value={TABS[0].value} className='flex flex-col flex-1 h-0'>
           <TaskSplit onEdit={handleOpenEditModal} onUpdateProgress={handleOpenUpdateProgress} />
         </TabsContent>
 
@@ -54,6 +54,6 @@ export default function TaskListPage() {
       <EditTaskModal open={isEditModalOpen} onClose={() => setEditModalOpen(false)} taskId={selectedTaskId} />
 
       <UpdateProgressTask open={isUpdateProgressOpen} onClose={() => setUpdateProgressOpen(false)} taskId={selectedTaskId} />
-    </div>
+    </Fragment>
   );
 }

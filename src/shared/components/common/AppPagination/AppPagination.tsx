@@ -8,6 +8,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/shared/components/ui/pagination";
+import { cn } from "@/shared/libs/utils";
 
 interface PaginationProps {
   page?: number;
@@ -29,7 +30,10 @@ export default function AppPagination({ page = 1, totalPages, onPageChange, sibl
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious onClick={() => onPageChange(page - 1)} className={page === 1 ? "pointer-events-none opacity-50" : ""} />
+          <PaginationPrevious
+            onClick={() => onPageChange(page - 1)}
+            className={cn("cursor-pointer", page === 1 && "pointer-events-none opacity-50")}
+          />
         </PaginationItem>
 
         {pages.map((p, index) =>
@@ -47,7 +51,10 @@ export default function AppPagination({ page = 1, totalPages, onPageChange, sibl
         )}
 
         <PaginationItem>
-          <PaginationNext onClick={() => onPageChange(page + 1)} className={page === totalPages ? "pointer-events-none opacity-50" : ""} />
+          <PaginationNext
+            onClick={() => onPageChange(page + 1)}
+            className={cn("cursor-pointer", page === totalPages && "pointer-events-none opacity-50")}
+          />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

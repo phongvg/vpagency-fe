@@ -4,10 +4,10 @@ import { Outlet } from "react-router-dom";
 export default function DashboardLayout() {
   return (
     <>
-      <div className='app-cover'></div>
-      <div className='app flex h-dvh'>
+      <div className='app-cover' />
+      <div className='flex h-dvh app'>
         <Sidebar />
-        <main className='relative flex-1 h-full p-4'>
+        <main className='relative flex-1 p-4 min-w-0 h-full'>
           <Outlet />
         </main>
       </div>
