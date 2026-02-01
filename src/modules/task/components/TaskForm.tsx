@@ -76,7 +76,7 @@ export default function TaskForm() {
       case TaskType.APPEAL_ACCOUNT:
         return <FormInput type='number' name='numberOfSuspendedAccounts' label='Số lượng tài khoản tạm ngưng' />;
       case TaskType.RESEARCH:
-        return <FormTextarea name='researchContent' label='Nội dung nghiên cứu' className='col-span-2' />;
+        return <FormTextarea name='researchContent' label='Nội dung nghiên cứu' className='col-span-3' />;
       default:
         return null;
     }

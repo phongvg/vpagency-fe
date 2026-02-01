@@ -7,7 +7,7 @@ type UpsertTaskPayload = { id: string; data: UpdateTaskRequest } | { data: Updat
 export const useUpsertTask = () => {
   return useMutation({
     mutationFn: (payload: UpsertTaskPayload) => {
-      if ("id" in payload) {
+      if ("id" in payload && payload.id) {
         return taskApi.editTask(payload.id, payload.data);
       }
 

@@ -29,6 +29,16 @@ export default function TaskListPage() {
     setUpdateProgressOpen(true);
   };
 
+  const handleCloseEditModal = () => {
+    setSelectedTaskId(null);
+    setEditModalOpen(false);
+  };
+
+  const handleCloseUpdateProgress = () => {
+    setSelectedTaskId(null);
+    setUpdateProgressOpen(false);
+  };
+
   return (
     <Fragment>
       <Tabs value={tabValue} onValueChange={setTabValue} className='flex flex-col h-full'>
@@ -56,9 +66,9 @@ export default function TaskListPage() {
         </TabsContent>
       </Tabs>
 
-      <EditTaskModal open={isEditModalOpen} onClose={() => setEditModalOpen(false)} taskId={selectedTaskId} />
+      <EditTaskModal open={isEditModalOpen} onClose={handleCloseEditModal} taskId={selectedTaskId} />
 
-      <UpdateProgressTask open={isUpdateProgressOpen} onClose={() => setUpdateProgressOpen(false)} taskId={selectedTaskId} />
+      <UpdateProgressTask open={isUpdateProgressOpen} onClose={handleCloseUpdateProgress} taskId={selectedTaskId} />
     </Fragment>
   );
 }
