@@ -1,4 +1,5 @@
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
+import type { GmailListParams } from "@/modules/gmail/types/gmail.type";
 import type { TaskListParams } from "@/modules/task/types/task.type";
 import type { UserListParams } from "@/modules/user/types/user.type";
 import { normalizeParams } from "@/shared/utils/common.util";
@@ -44,4 +45,14 @@ export const userQueryKeys = {
   list: (params: UserListParams) => [...userQueryKeys.lists(), normalizeParams(params)] as const,
 
   detail: (id: string) => [...userQueryKeys.all, "detail", id] as const,
+};
+
+export const gmailQueryKeys = {
+  all: ["gmails"] as const,
+
+  lists: () => [...gmailQueryKeys.all, "list"] as const,
+
+  list: (params: GmailListParams) => [...gmailQueryKeys.lists(), normalizeParams(params)] as const,
+
+  detail: (id: string) => [...gmailQueryKeys.all, "detail", id] as const,
 };

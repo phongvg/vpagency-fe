@@ -1,4 +1,4 @@
-import { userColumnConfig } from "@/modules/user/configs/userColumn.config";
+import { userColumnConfig } from "@/modules/user/configs/user-column.config";
 import { useUpdateStatus } from "@/modules/user/hooks/useUpdateStatus";
 import { useUsers } from "@/modules/user/hooks/useUsers";
 import type { UserListParams } from "@/modules/user/types/user.type";
@@ -15,9 +15,9 @@ interface UserTableProps {
 }
 
 export default function UserTable({ params, setParams, onOpenEdit, onOpenChangePassword }: UserTableProps) {
-  const { data, isLoading } = useUsers(params);
-
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
+  const { data, isLoading } = useUsers(params);
 
   const users = useMemo(() => data?.items || [], [data]);
   const meta = useMemo(() => data?.meta, [data]);
