@@ -1,9 +1,17 @@
 import type { TaskDocumentAppealDetail } from "@/modules/task/types/task.type";
+import { Button } from "@/shared/components/ui/button";
 import UserAvatar from "@/shared/components/UserAvatar/UserAvatar";
 import type { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "date-fns";
+import { Trash2 } from "lucide-react";
 
-export const documentAppealDetailColumnConfig = (): ColumnDef<TaskDocumentAppealDetail>[] => [
+export const documentAppealDetailColumnConfig = ({
+  onEdit,
+  onDelete,
+}: {
+  onEdit: (documentAppealDetail: TaskDocumentAppealDetail) => void;
+  onDelete: (id: string) => void;
+}): ColumnDef<TaskDocumentAppealDetail>[] => [
   {
     header: "STT",
     accessorKey: "index",
@@ -39,5 +47,22 @@ export const documentAppealDetailColumnConfig = (): ColumnDef<TaskDocumentAppeal
     header: "Người tạo",
     accessorKey: "creator",
     cell: (props) => <UserAvatar data={props.row.original.creator} />,
+  },
+  {
+    header: "Hành động",
+    accessorKey: "actions",
+    cell: (props) => {
+      return (
+        <div className='flex items-center gap-2'>
+          {/* <Button size='icon' variant='default' onClick={() => onEdit(props.row.original)}>
+            <SquarePen />
+          </Button> */}
+
+          <Button size='icon' variant='default' onClick={() => onDelete(props.row.original.id)}>
+            <Trash2 />
+          </Button>
+        </div>
+      );
+    },
   },
 ];

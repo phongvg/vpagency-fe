@@ -3,6 +3,9 @@ import { urls } from "@/app/routes/route.constant";
 import { LoginPage } from "@/modules/auth/login";
 import { CampaignListPage } from "@/modules/campaign";
 import { DashboardPage } from "@/modules/dashboard";
+import { GmailListPage } from "@/modules/gmail";
+import { ProjectStatusListPage } from "@/modules/projectStatus";
+import { ProjectTypeListPage } from "@/modules/projectType";
 import { TaskListPage } from "@/modules/task";
 import { UserListPage } from "@/modules/user";
 import { Role } from "@/shared/constants/role.constant";
@@ -50,10 +53,34 @@ export const appRoutes: AppRoute[] = [
         showInSidebar: true,
       },
       {
+        path: urls.gmail,
+        title: "Quản lý gmail",
+        pageTitle: "Danh sách gmail",
+        element: <GmailListPage />,
+        icon: Users,
+        showInSidebar: true,
+      },
+      {
         path: urls.campaign,
         title: "Quản lý chiến dịch",
         pageTitle: "Danh sách chiến dịch",
         element: <CampaignListPage />,
+        icon: LayoutList,
+        showInSidebar: true,
+      },
+      {
+        path: urls.projectType,
+        title: "Quản lý loại dự án",
+        pageTitle: "Danh sách loại dự án",
+        element: <ProjectTypeListPage />,
+        icon: LayoutList,
+        showInSidebar: true,
+      },
+      {
+        path: urls.projectStatus,
+        title: "Quản lý trạng thái dự án",
+        pageTitle: "Danh sách trạng thái dự án",
+        element: <ProjectStatusListPage />,
         icon: LayoutList,
         showInSidebar: true,
       },

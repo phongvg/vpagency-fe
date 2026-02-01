@@ -78,6 +78,10 @@ export const taskApi = {
     return http.post(`/tasks/${id}/document-appeal-details`, payload);
   },
 
+  updateDocumentAppealDetail: (taskId: string, id: string, payload: UpdateDocumentAppealMetricsRequest): Promise<ApiBaseResponse<Task>> => {
+    return http.put(`/tasks/${taskId}/document-appeal-details/${id}`, payload);
+  },
+
   deleteDocumentAppeal: (taskId: string, id: string): Promise<ApiBaseResponse<null>> => {
     return http.delete(`/tasks/${taskId}/document-appeal-details/${id}`);
   },
@@ -87,7 +91,7 @@ export const taskApi = {
   },
 
   updateResearchDetail: (taskId: string, id: string, payload: UpdateResearchMetricsRequest): Promise<ApiBaseResponse<Task>> => {
-    return http.post(`/tasks/${taskId}/research-details/${id}`, payload);
+    return http.put(`/tasks/${taskId}/research-details/${id}`, payload);
   },
 
   deleteResearchDetail: (taskId: string, id: string): Promise<ApiBaseResponse<null>> => {

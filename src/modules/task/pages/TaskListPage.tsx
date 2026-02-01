@@ -1,3 +1,4 @@
+import { urls } from "@/app/routes/route.constant";
 import EditTaskModal from "@/modules/task/components/EditTaskModal";
 import Board from "@/modules/task/components/TaskKanban/Board";
 import TaskSplit from "@/modules/task/components/TaskPanel/TaskSplit";
@@ -6,13 +7,14 @@ import UpdateAppealMetricsModal from "@/modules/task/components/UpdateAppealMetr
 import UpdateDocumentAppealMetricsModal from "@/modules/task/components/UpdateDocumentAppealMetricsModal";
 import UpdateResearchMetricsModal from "@/modules/task/components/UpdateResearchMetricsModal";
 import { useDeleteTask } from "@/modules/task/hooks/useDeleteTask";
-import type { Task } from "@/modules/task/types/task.type";
+import type { Task, TaskDocumentAppealDetail, TaskResearchDetail } from "@/modules/task/types/task.type";
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { cn } from "@/shared/libs/utils";
 import { ClipboardPlus } from "lucide-react";
 import { Fragment, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const TABS = [
   { value: "split", label: "Danh sách" },
@@ -28,6 +30,10 @@ export default function TaskListPage() {
   const [isUpdateResearchMetricsOpen, setUpdateResearchMetricsOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedResearchDetail, setSelectedResearchDetail] = useState<TaskResearchDetail | null>(null);
+  const [selectedDocumentAppealDetail, setSelectedDocumentAppealDetail] = useState<TaskDocumentAppealDetail | null>(null);
+
+  const navigate = useNavigate();
 
   const { confirm } = useConfirm();
 
@@ -41,7 +47,11 @@ export default function TaskListPage() {
     });
 
     if (confirmed) {
-      await deleteTask.mutateAsync(taskId);
+      await deleteTask.mutateAsync(taskId, {
+        onSuccess: () => {
+          navigate(urls.root + urls.task);
+        },
+      });
     }
   };
 
@@ -75,23 +85,27 @@ export default function TaskListPage() {
     setUpdateAppealMetricsOpen(false);
   };
 
-  const handleOpenDocumentAppealMetricsModal = (task: Task) => {
+  const handleOpenDocumentAppealMetricsModal = (task: Task, documentAppealDetail?: TaskDocumentAppealDetail) => {
     setSelectedTask(task);
+    setSelectedDocumentAppealDetail(documentAppealDetail ?? null);
     setUpdateDocumentAppealMetricsOpen(true);
   };
 
   const handleCloseDocumentAppealMetricsModal = () => {
     setSelectedTask(null);
+    setSelectedDocumentAppealDetail(null);
     setUpdateDocumentAppealMetricsOpen(false);
   };
 
-  const handleOpenResearchMetricsModal = (task: Task) => {
+  const handleOpenResearchMetricsModal = (task: Task, researchDetail?: TaskResearchDetail) => {
     setSelectedTask(task);
+    setSelectedResearchDetail(researchDetail ?? null);
     setUpdateResearchMetricsOpen(true);
   };
 
   const handleCloseResearchMetricsModal = () => {
     setSelectedTask(null);
+    setSelectedResearchDetail(null);
     setUpdateResearchMetricsOpen(false);
   };
 
@@ -146,9 +160,15 @@ export default function TaskListPage() {
         open={isUpdateDocumentAppealMetricsOpen}
         onClose={handleCloseDocumentAppealMetricsModal}
         task={selectedTask}
+        documentAppealDetail={selectedDocumentAppealDetail}
       />
 
-      <UpdateResearchMetricsModal open={isUpdateResearchMetricsOpen} onClose={handleCloseResearchMetricsModal} task={selectedTask} />
+      <UpdateResearchMetricsModal
+        open={isUpdateResearchMetricsOpen}
+        onClose={handleCloseResearchMetricsModal}
+        task={selectedTask}
+        researchDetail={selectedResearchDetail}
+      />
     </Fragment>
   );
 }

@@ -8,4 +8,7 @@ export const urls = {
   task: "tasks",
   user: "users",
   campaign: "campaigns",
+  gmail: "gmails",
+  projectType: "project-types",
+  projectStatus: "project-statuses",
 };

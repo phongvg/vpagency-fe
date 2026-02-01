@@ -5,9 +5,11 @@ import { AppTable } from "@/shared/components/common/AppTable";
 
 interface TaskDocumentAppealDetailTableProps {
   documentAppealDetails: TaskDocumentAppealDetail[];
+  onEdit: (documentAppealDetail: TaskDocumentAppealDetail) => void;
+  onDelete: (id: string) => void;
 }
 
-export default function TaskDocumentAppealDetailTable({ documentAppealDetails }: TaskDocumentAppealDetailTableProps) {
+export default function TaskDocumentAppealDetailTable({ documentAppealDetails, onEdit, onDelete }: TaskDocumentAppealDetailTableProps) {
   return (
     <Card>
       <CardHeader>
@@ -15,7 +17,7 @@ export default function TaskDocumentAppealDetailTable({ documentAppealDetails }:
       </CardHeader>
 
       <CardContent>
-        <AppTable data={documentAppealDetails} columns={documentAppealDetailColumnConfig()} />
+        <AppTable data={documentAppealDetails} columns={documentAppealDetailColumnConfig({ onEdit, onDelete })} />
       </CardContent>
     </Card>
   );

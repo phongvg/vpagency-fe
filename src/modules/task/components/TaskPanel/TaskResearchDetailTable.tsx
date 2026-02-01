@@ -5,13 +5,11 @@ import { AppTable } from "@/shared/components/common/AppTable";
 
 interface TaskResearchDetailTableProps {
   researchDetails: TaskResearchDetail[];
+  onEdit: (researchDetail: TaskResearchDetail) => void;
+  onDelete: (id: string) => void;
 }
 
-export default function TaskResearchDetailTable({ researchDetails }: TaskResearchDetailTableProps) {
-  const handleEdit = (id: string) => {};
-
-  const handleDelete = (id: string) => {};
-
+export default function TaskResearchDetailTable({ researchDetails, onEdit, onDelete }: TaskResearchDetailTableProps) {
   return (
     <Card>
       <CardHeader>
@@ -19,7 +17,7 @@ export default function TaskResearchDetailTable({ researchDetails }: TaskResearc
       </CardHeader>
 
       <CardContent>
-        <AppTable data={researchDetails} columns={researchDetailColumnConfig({ onEdit: handleEdit, onDelete: handleDelete })} />
+        <AppTable data={researchDetails} columns={researchDetailColumnConfig({ onEdit, onDelete })} />
       </CardContent>
     </Card>
   );

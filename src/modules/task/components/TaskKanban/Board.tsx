@@ -2,7 +2,7 @@ import TaskBoardCard from "@/modules/task/components/TaskKanban/TaskBoardCard";
 import TaskDetailModal from "@/modules/task/components/TaskKanban/TaskDetailModal";
 import { useTaskDragDrop } from "@/modules/task/hooks/useTaskDragDrop";
 import { useTasksByStatus } from "@/modules/task/hooks/useTasksByStatus";
-import { TaskStatus, type Task } from "@/modules/task/types/task.type";
+import { TaskStatus, type Task, type TaskDocumentAppealDetail, type TaskResearchDetail } from "@/modules/task/types/task.type";
 import { TaskStatusMap } from "@/modules/task/utils/task.util";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
 import { AppLoading } from "@/shared/components/common/AppLoading";
@@ -21,8 +21,8 @@ interface BoardProps {
   onDelete: (taskId: string) => void;
   onUpdateProgress: (taskId: string) => void;
   onUpdateAppealMetrics: (task: Task) => void;
-  onUpdateDocumentAppealMetrics: (task: Task) => void;
-  onUpdateResearchMetrics: (task: Task) => void;
+  onUpdateDocumentAppealMetrics: (task: Task, documentAppealDetail?: TaskDocumentAppealDetail) => void;
+  onUpdateResearchMetrics: (task: Task, researchDetail?: TaskResearchDetail) => void;
 }
 
 export default function Board({

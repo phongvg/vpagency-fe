@@ -19,6 +19,7 @@ export default function DatePicker({ label, value, onChange, placeholder = "Chá»
         <div className='flex flex-col gap-1'>
           {label && <span className='text-[8px] text-white/50'>{label}</span>}
           <Button
+            type='button'
             variant='outline'
             data-empty={!value}
             className='justify-start border-border font-normal data-[empty=true]:text-white/50 text-left normal-case'

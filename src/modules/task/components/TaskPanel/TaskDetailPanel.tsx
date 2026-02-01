@@ -12,11 +12,14 @@ import TaskPeopleCard from "@/modules/task/components/TaskPanel/TaskPeopleCard";
 import TaskProjectCard from "@/modules/task/components/TaskPanel/TaskProjectCard";
 import TaskResearchDetailTable from "@/modules/task/components/TaskPanel/TaskResearchDetailTable";
 import TaskTimelineCard from "@/modules/task/components/TaskPanel/TaskTimelineCard";
+import { useDeleteDocumentAppealDetail } from "@/modules/task/hooks/useDeleteDocumentAppealDetail";
+import { useDeleteResearchDetail } from "@/modules/task/hooks/useDeleteResearchDetail";
 import { useTaskDetail } from "@/modules/task/hooks/useTaskDetail";
-import { TaskType, type Task } from "@/modules/task/types/task.type";
+import { TaskType, type Task, type TaskDocumentAppealDetail, type TaskResearchDetail } from "@/modules/task/types/task.type";
 
 import { AppLoading } from "@/shared/components/common/AppLoading";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
+import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { useQueryParam } from "@/shared/hooks/useQueryParam";
 import { useAuthStore } from "@/shared/stores/auth/useAuthStore";
 import { Fragment, useMemo } from "react";
@@ -27,8 +30,8 @@ interface TaskDetailPanelProps {
   onDelete: (taskId: string) => void;
   onUpdateProgress: (taskId: string) => void;
   onUpdateAppealMetrics: (task: Task) => void;
-  onUpdateDocumentAppealMetrics: (task: Task) => void;
-  onUpdateResearchMetrics: (task: Task) => void;
+  onUpdateDocumentAppealMetrics: (task: Task, documentAppealDetail?: TaskDocumentAppealDetail) => void;
+  onUpdateResearchMetrics: (task: Task, researchDetail?: TaskResearchDetail) => void;
 }
 
 export default function TaskDetailPanel({
@@ -40,11 +43,44 @@ export default function TaskDetailPanel({
   onUpdateResearchMetrics,
   taskId,
 }: TaskDetailPanelProps) {
+  const { confirm } = useConfirm();
+
   const queryId = useQueryParam("id");
   const { user } = useAuthStore();
 
   const id = taskId ?? queryId;
   const { data: task, isLoading } = useTaskDetail(id);
+
+  const deleteResearchDetail = useDeleteResearchDetail();
+  const deleteDocumentAppealDetail = useDeleteDocumentAppealDetail();
+
+  const handleDeleteResearchDetail = async (researchDetailId: string) => {
+    if (!task) return;
+
+    const isConfirmed = await confirm({
+      title: "Xác nhận xóa",
+      description: "Bạn có chắc chắn muốn xóa chi tiết nghiên cứu này không?",
+      confirmText: "Xóa",
+    });
+
+    if (isConfirmed) {
+      await deleteResearchDetail.mutateAsync({ taskId: task.id, id: researchDetailId });
+    }
+  };
+
+  const handleDeleteDocumentAppealDetail = async (documentAppealDetailId: string) => {
+    if (!task) return;
+
+    const isConfirmed = await confirm({
+      title: "Xác nhận xóa",
+      description: "Bạn có chắc chắn muốn xóa chi tiết kháng giấy này không?",
+      confirmText: "Xóa",
+    });
+
+    if (isConfirmed) {
+      await deleteDocumentAppealDetail.mutateAsync({ taskId: task.id, id: documentAppealDetailId });
+    }
+  };
 
   if (isLoading) return <AppLoading loading={isLoading} />;
 
@@ -126,7 +162,11 @@ export default function TaskDetailPanel({
 
                 {/* Chi tiết kháng giấy */}
                 <div className='col-span-2'>
-                  <TaskDocumentAppealDetailTable documentAppealDetails={task.documentAppealDetails ?? []} />
+                  <TaskDocumentAppealDetailTable
+                    documentAppealDetails={task.documentAppealDetails ?? []}
+                    onEdit={(documentAppealDetail) => onUpdateDocumentAppealMetrics(task, documentAppealDetail)}
+                    onDelete={handleDeleteDocumentAppealDetail}
+                  />
                 </div>
               </Fragment>
             )}
@@ -135,7 +175,11 @@ export default function TaskDetailPanel({
               <Fragment>
                 {/* Chi tiết nghiên cứu */}
                 <div className='col-span-2'>
-                  <TaskResearchDetailTable researchDetails={task.researchDetails ?? []} />
+                  <TaskResearchDetailTable
+                    researchDetails={task.researchDetails ?? []}
+                    onEdit={(researchDetail) => onUpdateResearchMetrics(task, researchDetail)}
+                    onDelete={handleDeleteResearchDetail}
+                  />
                 </div>
               </Fragment>
             )}

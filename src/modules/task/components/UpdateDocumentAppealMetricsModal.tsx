@@ -1,11 +1,12 @@
 import { projectApi } from "@/modules/project/api/project.api";
 import type { Project } from "@/modules/project/types/project.type";
+import { useUpdateDocumentAppealDetail } from "@/modules/task/hooks/useUpdateDocumentAppealDetail";
 import { useUpdateDocumentAppealMetrics } from "@/modules/task/hooks/useUpdateDocumentAppealMetrics";
 import {
   taskDocumentAppealMetricsFormSchema,
   type TaskDocumentAppealMetricsFormType,
 } from "@/modules/task/schemas/task-document-appeal-metrics-form.schema";
-import type { Task } from "@/modules/task/types/task.type";
+import type { Task, TaskDocumentAppealDetail } from "@/modules/task/types/task.type";
 import { AppButton } from "@/shared/components/common/AppButton";
 import { FormAsyncSelect } from "@/shared/components/form/FormAsyncSelect";
 import { FormDatePicker } from "@/shared/components/form/FormDatePicker";
@@ -16,16 +17,21 @@ import { createAsyncSelectFetcher } from "@/shared/utils/async-select.util";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formatDate } from "date-fns";
 import { Save } from "lucide-react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 interface UpdateDocumentAppealMetricsModalProps {
   open: boolean;
   onClose: () => void;
   task: Task | null;
+  documentAppealDetail?: TaskDocumentAppealDetail | null;
 }
 
-export default function UpdateDocumentAppealMetricsModal({ open, onClose, task }: UpdateDocumentAppealMetricsModalProps) {
+export default function UpdateDocumentAppealMetricsModal({ open, onClose, task, documentAppealDetail }: UpdateDocumentAppealMetricsModalProps) {
+  const isEditMode = !!documentAppealDetail;
+
   const updateDocumentAppealMetrics = useUpdateDocumentAppealMetrics();
+  const updateDocumentAppealDetail = useUpdateDocumentAppealDetail();
 
   const fetchProjects = createAsyncSelectFetcher(projectApi.getProjects);
 
@@ -40,32 +46,64 @@ export default function UpdateDocumentAppealMetricsModal({ open, onClose, task }
     },
   });
 
+  useEffect(() => {
+    if (open) {
+      form.reset({
+        appealDate: documentAppealDetail?.appealDate ? new Date(documentAppealDetail.appealDate) : new Date(),
+        appealCount: documentAppealDetail?.appealCount ?? 0,
+        successCount: documentAppealDetail?.successCount ?? 0,
+        note: documentAppealDetail?.note ?? "",
+        projectId: documentAppealDetail?.projectId ? { value: documentAppealDetail.projectId, label: documentAppealDetail.projectName } : undefined,
+      });
+    }
+  }, [open, documentAppealDetail, form]);
+
   const onSubmit = async (data: TaskDocumentAppealMetricsFormType) => {
-    await updateDocumentAppealMetrics.mutateAsync(
-      {
-        id: task?.id || "",
-        payload: {
-          appealDate: formatDate(data.appealDate, "yyyy-MM-dd"),
-          appealCount: data.appealCount,
-          successCount: data.successCount,
-          note: data.note,
-          projectId: data.projectId?.value ?? "",
+    if (!task) return;
+
+    const payload = {
+      appealDate: formatDate(data.appealDate, "yyyy-MM-dd"),
+      appealCount: data.appealCount,
+      successCount: data.successCount,
+      note: data.note,
+      projectId: data.projectId?.value ?? "",
+    };
+
+    if (isEditMode && documentAppealDetail) {
+      await updateDocumentAppealDetail.mutateAsync(
+        {
+          taskId: task.id,
+          id: documentAppealDetail.id,
+          payload,
         },
-      },
-      {
-        onSuccess: () => {
-          onClose();
-          form.reset();
+        {
+          onSuccess: () => {
+            onClose();
+            form.reset();
+          },
+        }
+      );
+    } else {
+      await updateDocumentAppealMetrics.mutateAsync(
+        {
+          id: task.id,
+          payload,
         },
-      }
-    );
+        {
+          onSuccess: () => {
+            onClose();
+            form.reset();
+          },
+        }
+      );
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Cập nhật chỉ số kháng giấy</DialogTitle>
+          <DialogTitle>{isEditMode ? "Chỉnh sửa chỉ số kháng giấy" : "Cập nhật chỉ số kháng giấy"}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>

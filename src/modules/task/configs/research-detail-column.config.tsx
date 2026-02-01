@@ -9,7 +9,7 @@ export const researchDetailColumnConfig = ({
   onEdit,
   onDelete,
 }: {
-  onEdit: (id: string) => void;
+  onEdit: (researchDetail: TaskResearchDetail) => void;
   onDelete: (id: string) => void;
 }): ColumnDef<TaskResearchDetail>[] => [
   {
@@ -44,7 +44,7 @@ export const researchDetailColumnConfig = ({
     cell: (props) => {
       return (
         <div className='flex items-center gap-2'>
-          <Button size='icon' variant='default' onClick={() => onEdit(props.row.original.id)}>
+          <Button size='icon' variant='default' onClick={() => onEdit(props.row.original)}>
             <SquarePen />
           </Button>
 
