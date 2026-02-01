@@ -1,3 +1,4 @@
+import { ConfirmProvider } from "@/app/providers/ConfirmProvider";
 import { queryClient } from "@/configs/queryClient";
 import { AppLoading } from "@/shared/components/common/AppLoading";
 import { TooltipProvider } from "@/shared/components/ui/tooltip";
@@ -13,7 +14,9 @@ export default function AppProvider({ children }: AppProviderProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <AppLoading />
-      <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
+      <TooltipProvider delayDuration={200}>
+        <ConfirmProvider>{children}</ConfirmProvider>
+      </TooltipProvider>
       <Toaster />
     </QueryClientProvider>
   );

@@ -4,7 +4,7 @@ import type { CampaignListParams } from "@/modules/campaign/types/campaign.type"
 import { AppLoading } from "@/shared/components/common/AppLoading";
 import { AppTable } from "@/shared/components/common/AppTable";
 import type { RowSelectionState, VisibilityState } from "@tanstack/react-table";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 interface CampaignTableProps {
   params: CampaignListParams;
@@ -18,10 +18,6 @@ export default function CampaignTable({ params, setParams }: CampaignTableProps)
 
   const campaigns = useMemo(() => data?.items || [], [data]);
   const meta = useMemo(() => data?.meta, [data]);
-
-  useEffect(() => {
-    console.log("rowSelection :>> ", rowSelection);
-  }, [rowSelection]);
 
   if (isLoading) return <AppLoading loading={isLoading} />;
 

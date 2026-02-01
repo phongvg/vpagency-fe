@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Ca
 import { AppInput } from "@/shared/components/common/AppInput";
 import DatePicker from "@/shared/components/common/DatePicker/DatePicker";
 import { useDebounce } from "@/shared/hooks/useDebounce";
+import { removeDash } from "@/shared/utils/common.util";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 
@@ -23,8 +24,8 @@ export default function CampaignListFilter({ params, setParams }: CampaignListFi
   const debouncedUrl = useDebounce(urlInput, 500);
 
   useEffect(() => {
-    if (debouncedUid !== params.uid) {
-      setParams((prev) => ({ ...prev, uid: debouncedUid, page: 1 }));
+    if (removeDash(debouncedUid) !== params.uid) {
+      setParams((prev) => ({ ...prev, uid: removeDash(debouncedUid), page: 1 }));
     }
   }, [debouncedUid, params.uid, setParams]);
 

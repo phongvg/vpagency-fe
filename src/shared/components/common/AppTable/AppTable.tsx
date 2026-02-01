@@ -33,6 +33,8 @@ interface AppTableProps<TData, TValue> {
   enableColumnVisibility?: boolean;
   columnVisibility?: VisibilityState;
   onColumnVisibilityChange?: OnChangeFn<VisibilityState>;
+
+  getRowClassName?: (row: TData) => string;
 }
 
 export function AppTable<TData, TValue>({
@@ -51,6 +53,8 @@ export function AppTable<TData, TValue>({
   enableColumnVisibility = false,
   columnVisibility,
   onColumnVisibilityChange,
+
+  getRowClassName,
 }: AppTableProps<TData, TValue>) {
   const selectColumn = useMemo<ColumnDef<TData> | null>(() => {
     if (!enableRowSelection) return null;
@@ -108,26 +112,28 @@ export function AppTable<TData, TValue>({
   }
 
   return (
-    <div className='space-y-4 py-4'>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <AppButton type='button' variant='outline' size='sm'>
-            <Settings2 />
-            Cấu hình cột
-          </AppButton>
-        </DropdownMenuTrigger>
+    <div className='space-y-4'>
+      {enableColumnVisibility && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <AppButton type='button' variant='outline' size='sm'>
+              <Settings2 />
+              Cấu hình cột
+            </AppButton>
+          </DropdownMenuTrigger>
 
-        <DropdownMenuContent>
-          {table
-            .getAllLeafColumns()
-            .filter((col) => col.getCanHide())
-            .map((column) => (
-              <DropdownMenuCheckboxItem key={column.id} checked={column.getIsVisible()} onCheckedChange={() => column.toggleVisibility()}>
-                {column.columnDef.header as string}
-              </DropdownMenuCheckboxItem>
-            ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+          <DropdownMenuContent>
+            {table
+              .getAllLeafColumns()
+              .filter((col) => col.getCanHide())
+              .map((column) => (
+                <DropdownMenuCheckboxItem key={column.id} checked={column.getIsVisible()} onCheckedChange={() => column.toggleVisibility()}>
+                  {column.columnDef.header as string}
+                </DropdownMenuCheckboxItem>
+              ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
 
       <ScrollArea className='w-full max-w-full'>
         <Table>
@@ -146,7 +152,7 @@ export function AppTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={getRowClassName?.(row.original)}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} style={{ minWidth: cell.column.columnDef.minSize }}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

@@ -1,4 +1,4 @@
-import type { Campaign, CampaignListParams } from "@/modules/campaign/types/campaign.type";
+import type { AssignToFinalUrlRequest, Campaign, CampaignListParams, RemoveFromFinalUrlRequest } from "@/modules/campaign/types/campaign.type";
 import type { Task, TaskListParams, TaskProgress, UpdateTaskRequest } from "@/modules/task/types/task.type";
 import { http } from "@/shared/libs/http";
 import type { ApiBaseListResponse, ApiBaseResponse } from "@/shared/types/common/apiResponse.type";
@@ -39,5 +39,13 @@ export const taskApi = {
     params: CampaignListParams;
   }): Promise<ApiBaseListResponse<Campaign>> => {
     return http.get(`/tasks/${taskId}/final-urls/${finalUrlId}/campaign-stats${convertQueryParams(params)}`);
+  },
+
+  assignCampaignToFinalUrl: (id: string, payload: AssignToFinalUrlRequest): Promise<ApiBaseResponse<null>> => {
+    return http.post(`/tasks/${id}/campaigns/assign`, payload);
+  },
+
+  removeCampaignsFromFinalUrl: (id: string, payload: RemoveFromFinalUrlRequest): Promise<ApiBaseResponse<null>> => {
+    return http.post(`/tasks/${id}/campaigns/remove`, payload);
   },
 };
