@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 
 interface TaskListFilterProps {
   params: TaskListParams;
-  setParams: (params: TaskListParams) => void;
+  setParams: React.Dispatch<React.SetStateAction<TaskListParams>>;
   projectSelect: SelectOption | null;
   setProjectSelect: React.Dispatch<React.SetStateAction<SelectOption | null>>;
   assignedUserSelect: SelectOption | null;
@@ -39,12 +39,14 @@ export default function TaskListFilter({
   const fetchProjects = createAsyncSelectFetcher(projectApi.getProjects);
   const fetchUsers = createAsyncSelectFetcher(userApi.getUsers);
 
-  const [searchInput, setSearchInput] = useState(params.search || "");
+  const [searchInput, setSearchInput] = useState<string | undefined>(undefined);
   const debouncedSearch = useDebounce(searchInput, 500);
 
   useEffect(() => {
-    setParams({ search: debouncedSearch });
-  }, [debouncedSearch]);
+    if (debouncedSearch !== params.search) {
+      setParams((prev) => ({ ...prev, search: debouncedSearch, page: 1 }));
+    }
+  }, [debouncedSearch, params.search, setParams]);
 
   return (
     <Card>
@@ -60,16 +62,21 @@ export default function TaskListFilter({
             options={statusOptions}
             placeholder='Trạng thái công việc'
             value={params.status}
-            onValueChange={(value) => setParams({ status: value })}
+            onValueChange={(value) => setParams((prev) => ({ ...prev, status: value, page: 1 }))}
           />
 
-          <AppSelect options={typeOptions} placeholder='Loại công việc' value={params.type} onValueChange={(value) => setParams({ type: value })} />
+          <AppSelect
+            options={typeOptions}
+            placeholder='Loại công việc'
+            value={params.type}
+            onValueChange={(value) => setParams((prev) => ({ ...prev, type: value, page: 1 }))}
+          />
 
           <AppSelect
             options={priorityOptions}
             placeholder='Mức độ ưu tiên'
             value={params.priority}
-            onValueChange={(value) => setParams({ priority: value })}
+            onValueChange={(value) => setParams((prev) => ({ ...prev, priority: value, page: 1 }))}
           />
 
           <AsyncSelect<Project>
@@ -79,7 +86,7 @@ export default function TaskListFilter({
             value={projectSelect}
             onChange={(value) => {
               setProjectSelect(value as SelectOption | null);
-              setParams({ projectId: Array.isArray(value) ? undefined : value ? value.value : undefined });
+              setParams((prev) => ({ ...prev, projectId: Array.isArray(value) ? undefined : value ? value.value : undefined, page: 1 }));
             }}
           />
 
@@ -90,7 +97,7 @@ export default function TaskListFilter({
             value={creatorSelect}
             onChange={(value) => {
               setCreatorSelect(value as SelectOption | null);
-              setParams({ creatorId: Array.isArray(value) ? undefined : value ? value.value : undefined });
+              setParams((prev) => ({ ...prev, creatorId: Array.isArray(value) ? undefined : value ? value.value : undefined, page: 1 }));
             }}
           />
 
@@ -101,13 +108,21 @@ export default function TaskListFilter({
             value={assignedUserSelect}
             onChange={(value) => {
               setAssignedUserSelect(value as SelectOption | null);
-              setParams({ assignedUserId: Array.isArray(value) ? undefined : value ? value.value : undefined });
+              setParams((prev) => ({ ...prev, assignedUserId: Array.isArray(value) ? undefined : value ? value.value : undefined, page: 1 }));
             }}
           />
 
-          <DatePicker value={params.fromDate} onChange={(date) => setParams({ fromDate: format(date!, "yyyy-MM-dd") })} placeholder='Từ ngày' />
+          <DatePicker
+            value={params.fromDate}
+            onChange={(date) => setParams((prev) => ({ ...prev, fromDate: date ? format(date, "yyyy-MM-dd") : undefined, page: 1 }))}
+            placeholder='Từ ngày'
+          />
 
-          <DatePicker value={params.toDate} onChange={(date) => setParams({ toDate: format(date!, "yyyy-MM-dd") })} placeholder='Đến ngày' />
+          <DatePicker
+            value={params.toDate}
+            onChange={(date) => setParams((prev) => ({ ...prev, toDate: date ? format(date, "yyyy-MM-dd") : undefined, page: 1 }))}
+            placeholder='Đến ngày'
+          />
         </div>
       </CardContent>
     </Card>

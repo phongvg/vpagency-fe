@@ -1,0 +1,86 @@
+import type { GmailUIDMapping } from "@/modules/campaign/types/campaign.type";
+import { useCallback, useRef, useState } from "react";
+
+interface UseImportGmailExcelReturn {
+  processFile: (file: File) => Promise<{ data: GmailUIDMapping[] }>;
+  isProcessing: boolean;
+  progress: number;
+  error: string | null;
+}
+
+export const useImportGmailExcel = (): UseImportGmailExcelReturn => {
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [error, setError] = useState<string | null>(null);
+  const workerRef = useRef<Worker | null>(null);
+
+  const processFile = useCallback((file: File): Promise<{ data: GmailUIDMapping[] }> => {
+    return new Promise((resolve, reject) => {
+      setIsProcessing(true);
+      setProgress(0);
+      setError(null);
+
+      const worker = new Worker(new URL("../workers/gmailExcelWorker.ts", import.meta.url), {
+        type: "module",
+      });
+
+      workerRef.current = worker;
+
+      worker.onmessage = (e: MessageEvent) => {
+        const { type, data, error: workerError, progress: workerProgress } = e.data;
+
+        if (type === "progress") {
+          setProgress(workerProgress || 0);
+        } else if (type === "success") {
+          setIsProcessing(false);
+          setProgress(100);
+          worker.terminate();
+          workerRef.current = null;
+          resolve({ data });
+        } else if (type === "error") {
+          setIsProcessing(false);
+          setError(workerError || "Lỗi xử lý file");
+          worker.terminate();
+          workerRef.current = null;
+          reject(new Error(workerError || "Lỗi xử lý file"));
+        } else if (type === "debug") {
+          console.log("debug", data);
+          setIsProcessing(false);
+          worker.terminate();
+          workerRef.current = null;
+        }
+      };
+
+      worker.onerror = (err) => {
+        setIsProcessing(false);
+        setError("Lỗi khởi tạo worker");
+        worker.terminate();
+        workerRef.current = null;
+        reject(err);
+      };
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        worker.postMessage({
+          type: "process",
+          file: reader.result,
+        });
+      };
+      reader.onerror = () => {
+        setIsProcessing(false);
+        setError("Lỗi đọc file");
+        worker.terminate();
+        workerRef.current = null;
+        reject(new Error("Lỗi đọc file"));
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  }, []);
+
+  return {
+    processFile,
+    isProcessing,
+    progress,
+    error,
+  };
+};

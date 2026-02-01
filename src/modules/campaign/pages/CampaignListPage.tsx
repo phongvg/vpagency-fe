@@ -1,16 +1,18 @@
 import CampaignListFilter from "@/modules/campaign/components/CampaignListFilter";
 import CampaignTable from "@/modules/campaign/components/CampaignTable";
+import ImportCampaignsButton from "@/modules/campaign/components/ImportCampaignsButton";
+import ImportGmailButton from "@/modules/campaign/components/ImportGmailButton";
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
-import { Download, Funnel, Plus } from "lucide-react";
+import { Funnel } from "lucide-react";
 import { Fragment, useState } from "react";
 
 export default function CampaignListPage() {
+  const [isOpenFilter, setIsOpenFilter] = useState(false);
   const [params, setParams] = useState<CampaignListParams>({
     page: 1,
     limit: 10,
-    campaignName: undefined,
     dateFrom: undefined,
     dateTo: undefined,
     externalId: undefined,
@@ -24,9 +26,9 @@ export default function CampaignListPage() {
   return (
     <Fragment>
       <div className='flex justify-between items-center'>
-        <Popover>
+        <Popover open={isOpenFilter} onOpenChange={setIsOpenFilter}>
           <PopoverTrigger asChild>
-            <AppButton type='button' variant='outline' size='sm'>
+            <AppButton type='button' variant='outline' size='sm' onClick={() => setIsOpenFilter(!isOpenFilter)}>
               <Funnel />
               Lọc
             </AppButton>
@@ -38,20 +40,14 @@ export default function CampaignListPage() {
         </Popover>
 
         <div className='flex items-center gap-2'>
-          <AppButton variant='outline' size='sm'>
-            <Download />
-            Nhập dữ liệu
-          </AppButton>
+          <ImportCampaignsButton />
 
-          <AppButton variant='outline' size='sm'>
-            <Download />
-            Nhập Gmail
-          </AppButton>
+          <ImportGmailButton />
 
-          <AppButton variant='outline' size='sm'>
+          {/* <AppButton variant='outline' size='sm'>
             <Plus />
             Thêm mới
-          </AppButton>
+          </AppButton> */}
         </div>
       </div>
 

@@ -30,7 +30,7 @@ export const taskProgressUrlColumnConfig = (onOpenCampaignStats: (finalUrlId: st
       const row = props.row.original;
 
       return (
-        <Button variant='link' size='sm' className='px-0' onClick={() => onOpenCampaignStats(row.finalUrlId)}>
+        <Button type='button' variant='link' size='sm' className='px-0' onClick={() => onOpenCampaignStats(row.finalUrlId)}>
           Cập nhật số liệu ({row.totalCampaignDailyStats})
         </Button>
       );

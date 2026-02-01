@@ -10,7 +10,6 @@ export type CampaignListParams = BaseParam & {
   uid?: string;
   externalId?: string;
   gmail?: string;
-  campaignName?: string;
   finalUrl?: string;
 };
 
@@ -75,4 +74,67 @@ export type LocationStat = {
   cost: number | null;
   cpm: number | null;
   impression: number | null;
+};
+
+export type Summary = {
+  total: number;
+  succeeded: number;
+  failed: number;
+};
+
+export type CurrencyRate = {
+  uid: string;
+  code: string;
+  rateToUSD: number | null;
+};
+
+export type CreateCampaignResponse = {
+  summary: Summary;
+  success: Campaign[];
+  failed: Array<{ campaign: Campaign; error: string }>;
+};
+
+export type UpdateCampaignRequest = {
+  importAt: string | null;
+  date: string | null;
+  uid: string | null;
+  mcc: string | null;
+  gmail: string | null;
+  name: string | null;
+  externalId: string | null;
+  finalUrl: string | null;
+  keywords: KeywordMatch[];
+  topSearchTerms: SearchTerm[];
+  status: string;
+  avgCpc: number | null;
+  targetCpc: number | null;
+  clicks: number | null;
+  ctr: number | null;
+  cpm: number | null;
+  cost: number | null;
+  impression: number | null;
+  targetLocations: string[];
+  locationStats: LocationStat[];
+  campaignBudget: number | null;
+  negativeKeywords: KeywordMatch[];
+  locationExcluded: string[];
+};
+
+export type AssignToFinalUrlRequest = {
+  finalUrlId: string;
+  campaignDailyStatIds: string[];
+};
+
+export type RemoveFromFinalUrlRequest = {
+  finalUrlId: string;
+  campaignDailyStatIds: string[];
+};
+
+export type GmailUIDMapping = {
+  gmail: string;
+  uid: string;
+};
+
+export type AssignToEmailRequest = {
+  mappings: GmailUIDMapping[];
 };

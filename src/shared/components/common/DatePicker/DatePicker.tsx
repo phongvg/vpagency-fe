@@ -5,27 +5,31 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 
 interface DatePickerProps {
+  label?: string;
   value: string | undefined;
   onChange?: (date: Date | undefined) => void;
   placeholder?: string;
   disabled?: boolean;
 }
 
-export default function DatePicker({ value, onChange, placeholder = "Chọn ngày", disabled }: DatePickerProps) {
+export default function DatePicker({ label, value, onChange, placeholder = "Chọn ngày", disabled }: DatePickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button
-          variant='outline'
-          data-empty={!value}
-          className='data-[empty=true]:text-white/50 justify-start text-left font-normal normal-case'
-          disabled={disabled}>
-          <CalendarIcon className='text-white/50' />
-          <span className='text-white/50'>{value ? format(value, "dd/MM/yyyy") : placeholder}</span>
-        </Button>
+        <div className='flex flex-col gap-1'>
+          {label && <span className='text-[8px] text-white/50'>{label}</span>}
+          <Button
+            variant='outline'
+            data-empty={!value}
+            className='justify-start border-border font-normal data-[empty=true]:text-white/50 text-left normal-case'
+            disabled={disabled}>
+            <CalendarIcon className='text-white/50' />
+            <span className='text-white/50'>{value ? format(new Date(value), "dd/MM/yyyy") : placeholder}</span>
+          </Button>
+        </div>
       </PopoverTrigger>
 
-      <PopoverContent className='w-auto p-0'>
+      <PopoverContent className='p-0 w-auto'>
         <Calendar mode='single' selected={value ? new Date(value) : undefined} onSelect={onChange} />
       </PopoverContent>
     </Popover>

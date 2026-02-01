@@ -1,22 +1,50 @@
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
-import { Input } from "@/shared/components/ui/input";
+import { AppInput } from "@/shared/components/common/AppInput";
+import DatePicker from "@/shared/components/common/DatePicker/DatePicker";
 import { useDebounce } from "@/shared/hooks/useDebounce";
+import { format } from "date-fns";
 import { useEffect, useState } from "react";
 
 interface CampaignListFilterProps {
   params: CampaignListParams;
-  setParams: (params: CampaignListParams) => void;
+  setParams: React.Dispatch<React.SetStateAction<CampaignListParams>>;
 }
 
 export default function CampaignListFilter({ params, setParams }: CampaignListFilterProps) {
-  const [campaignNameInput, setCampaignNameInput] = useState(params.campaignName || "");
+  const [uidInput, setUidInput] = useState<string | undefined>(undefined);
+  const [campaignIdInput, setCampaignIdInput] = useState<string | undefined>(undefined);
+  const [gmailInput, setGmailInput] = useState<string | undefined>(undefined);
+  const [urlInput, setUrlInput] = useState<string | undefined>(undefined);
 
-  const debouncedCampaignName = useDebounce(campaignNameInput, 500);
+  const debouncedUid = useDebounce(uidInput, 500);
+  const debouncedCampaignId = useDebounce(campaignIdInput, 500);
+  const debouncedGmail = useDebounce(gmailInput, 500);
+  const debouncedUrl = useDebounce(urlInput, 500);
 
   useEffect(() => {
-    setParams({ campaignName: debouncedCampaignName });
-  }, [debouncedCampaignName]);
+    if (debouncedUid !== params.uid) {
+      setParams((prev) => ({ ...prev, uid: debouncedUid, page: 1 }));
+    }
+  }, [debouncedUid, params.uid, setParams]);
+
+  useEffect(() => {
+    if (debouncedCampaignId !== params.externalId) {
+      setParams((prev) => ({ ...prev, externalId: debouncedCampaignId, page: 1 }));
+    }
+  }, [debouncedCampaignId, params.externalId, setParams]);
+
+  useEffect(() => {
+    if (debouncedGmail !== params.gmail) {
+      setParams((prev) => ({ ...prev, gmail: debouncedGmail, page: 1 }));
+    }
+  }, [debouncedGmail, params.gmail, setParams]);
+
+  useEffect(() => {
+    if (debouncedUrl !== params.finalUrl) {
+      setParams((prev) => ({ ...prev, finalUrl: debouncedUrl, page: 1 }));
+    }
+  }, [debouncedUrl, params.finalUrl, setParams]);
 
   return (
     <Card>
@@ -26,7 +54,42 @@ export default function CampaignListFilter({ params, setParams }: CampaignListFi
 
       <CardContent>
         <div className='flex flex-col gap-2'>
-          <Input placeholder='Tên chiến dịch' value={campaignNameInput} onChange={(e) => setCampaignNameInput(e.target.value)} />
+          <DatePicker
+            label='Ngày nhập dữ liệu từ'
+            value={params.importAtFrom}
+            onChange={(date) => setParams((prev) => ({ ...prev, importAtFrom: date ? format(date, "yyyy-MM-dd") : undefined, page: 1 }))}
+          />
+
+          <DatePicker
+            label='Ngày nhập dữ liệu đến'
+            value={params.importAtTo}
+            onChange={(date) => setParams((prev) => ({ ...prev, importAtTo: date ? format(date, "yyyy-MM-dd") : undefined, page: 1 }))}
+          />
+
+          <DatePicker
+            label='Dữ liệu từ ngày'
+            value={params.dateFrom}
+            onChange={(date) => setParams((prev) => ({ ...prev, dateFrom: date ? format(date, "yyyy-MM-dd") : undefined, page: 1 }))}
+          />
+
+          <DatePicker
+            label='Dữ liệu đến ngày'
+            value={params.dateTo}
+            onChange={(date) => setParams((prev) => ({ ...prev, dateTo: date ? format(date, "yyyy-MM-dd") : undefined, page: 1 }))}
+          />
+
+          <AppInput label='UID' placeholder='Tìm kiếm theo UID' value={uidInput} onChange={(e) => setUidInput(e.target.value)} />
+
+          <AppInput
+            label='ID chiến dịch'
+            placeholder='Tìm kiếm theo ID chiến dịch'
+            value={campaignIdInput}
+            onChange={(e) => setCampaignIdInput(e.target.value)}
+          />
+
+          <AppInput label='Gmail' placeholder='Tìm kiếm theo Gmail' value={gmailInput} onChange={(e) => setGmailInput(e.target.value)} />
+
+          <AppInput label='URL' placeholder='Tìm kiếm theo URL' value={urlInput} onChange={(e) => setUrlInput(e.target.value)} />
         </div>
       </CardContent>
     </Card>

@@ -98,6 +98,16 @@ export const addDash = (str: string | null | undefined): string => {
   }
 };
 
+export const removeDash = (str: string) => {
+  try {
+    if (!str.includes("-")) return str;
+
+    return str.replace(/-/g, "");
+  } catch {
+    return str || "";
+  }
+};
+
 export const copyTextToClipboard = (text: string | null | undefined) => {
   navigator.clipboard.writeText(text || "").then(
     () => {
