@@ -94,6 +94,13 @@ export type Task = {
   researchDetails?: TaskResearchDetail[];
 };
 
+export type TasksGroupedByStatus = {
+  PENDING: Task[];
+  IN_PROGRESS: Task[];
+  COMPLETED: Task[];
+  CANCELLED: Task[];
+};
+
 export type TaskAppealDetail = {
   appealDate: string;
   suspensionReason: string;

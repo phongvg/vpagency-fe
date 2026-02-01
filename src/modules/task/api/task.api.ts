@@ -1,5 +1,5 @@
 import type { AssignToFinalUrlRequest, Campaign, CampaignListParams, RemoveFromFinalUrlRequest } from "@/modules/campaign/types/campaign.type";
-import type { Task, TaskListParams, TaskProgress, UpdateTaskRequest } from "@/modules/task/types/task.type";
+import type { Task, TaskListParams, TaskProgress, TasksGroupedByStatus, UpdateTaskRequest } from "@/modules/task/types/task.type";
 import { http } from "@/shared/libs/http";
 import type { ApiBaseListResponse, ApiBaseResponse } from "@/shared/types/common/apiResponse.type";
 import { convertQueryParams } from "@/shared/utils/common.util";
@@ -7,6 +7,10 @@ import { convertQueryParams } from "@/shared/utils/common.util";
 export const taskApi = {
   getTasks: (params: TaskListParams): Promise<ApiBaseListResponse<Task>> => {
     return http.get(`/tasks${convertQueryParams(params)}`);
+  },
+
+  getTasksByStatus: (): Promise<ApiBaseResponse<TasksGroupedByStatus>> => {
+    return http.get("/tasks/by-status");
   },
 
   getTaskById: (id: string): Promise<ApiBaseResponse<Task>> => {
@@ -23,6 +27,10 @@ export const taskApi = {
 
   getTaskProgress: (id: string): Promise<ApiBaseResponse<TaskProgress>> => {
     return http.get(`/tasks/${id}/progress`);
+  },
+
+  updateTaskStatus: (id: string, status: string): Promise<ApiBaseResponse<Task>> => {
+    return http.patch(`/tasks/${id}/status`, { status });
   },
 
   updateTaskProgress: (id: string, progress: number): Promise<ApiBaseResponse<TaskProgress>> => {

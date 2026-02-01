@@ -41,7 +41,7 @@ export default function TaskForm() {
             fetcher={fetchProjects}
             mapOption={(project) => ({ value: project.id, label: project.name })}
             placeholder='Chọn dự án'
-            className='col-span-2'
+            className='col-span-3'
             required
           />
 
@@ -83,8 +83,8 @@ export default function TaskForm() {
   };
 
   return (
-    <div className='grid grid-cols-2 gap-4'>
-      <FormInput name='name' label='Tên công việc' className='col-span-2' required />
+    <div className='gap-4 grid grid-cols-3'>
+      <FormInput name='name' label='Tên công việc' required />
 
       <FormSelect name='type' label='Loại công việc' options={typeOptions} placeholder='Chọn loại công việc' required />
 
@@ -94,18 +94,18 @@ export default function TaskForm() {
 
       <FormDatePicker name='deadline' label='Deadline' placeholder='Chọn ngày' required />
 
+      <FormInput name='note' label='Ghi chú' />
+
       <FormAsyncSelect<User>
         name='assignedUserIds'
         label='Người nhận việc'
-        className='col-span-2'
+        className='col-span-3'
         fetcher={fetchUsers}
         mapOption={(user) => ({ value: user.id, label: `${user.firstName} ${user.lastName}` })}
         placeholder='Chọn người nhận việc'
         isMulti
         required
       />
-
-      <FormTextarea name='note' label='Ghi chú' className='col-span-2' />
 
       {renderFormFields()}
     </div>

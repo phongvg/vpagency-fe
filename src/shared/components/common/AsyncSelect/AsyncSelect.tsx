@@ -47,7 +47,7 @@ export default function AsyncSelect<T>({ value, onChange, fetcher, mapOption, pl
       placeholder={placeholder}
       isClearable={false}
       isDisabled={disabled}
-      isMulti={isMulti}
+      isMulti={isMulti as any}
       loadingMessage={() => "ĐANG TẢI..."}
       noOptionsMessage={() => "KHÔNG CÓ DỮ LIỆU"}
     />

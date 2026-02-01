@@ -99,7 +99,7 @@ export const addDash = (str: string | null | undefined): string => {
 };
 
 export const removeDash = (str: string | null | undefined) => {
-  if (!str) return "";
+  if (!str) return undefined;
 
   try {
     if (!str.includes("-")) return str;

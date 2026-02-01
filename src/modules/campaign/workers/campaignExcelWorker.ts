@@ -103,8 +103,8 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
     });
 
     mccCustomerListSheet.forEach((row) => {
-      const customerId = removeDash(String(row["Customer ID"]));
-      const mccId = removeDash(String(row["MCC ID"]));
+      const customerId = removeDash(String(row["Customer ID"])) ?? "";
+      const mccId = removeDash(String(row["MCC ID"])) ?? "";
       mccMap.set(customerId, mccId);
 
       const currencyCode = row["Currency"];
@@ -205,7 +205,7 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
       const uids = campaignRows.map((row) => row["Customer ID"]);
       const lastUid = uids[uids.length - 1];
       let uidString = typeof lastUid === "string" && lastUid.startsWith("customers/") ? lastUid.split("/")[1] : String(lastUid);
-      uidString = removeDash(uidString);
+      uidString = removeDash(uidString) ?? "";
       const mcc = mccMap.get(uidString) || null;
       const finalUrlAds = adGroupAdRows.map((row) => row["Final URL"]);
       const finalUrlKey = adGroupCriterionRows.map((row) => row["Final URL"]);

@@ -1,6 +1,13 @@
 import type { Role } from "@/shared/constants/role.constant";
 import type { BaseParam } from "@/shared/types/common/param.type";
-import type { UserStatus } from "../constants/user.constant";
+
+export const UserStatus = {
+  OnBoarding: "ONBOARDING",
+  Active: "ACTIVE",
+  Inactive: "INACTIVE",
+} as const;
+
+export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus];
 
 export type UserListParams = BaseParam & {
   search?: string;
@@ -18,4 +25,17 @@ export type User = {
   status: UserStatus;
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type UpdateUserRequest = {
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  roles: string[];
+};
+
+export type ChangePasswordRequest = {
+  newPassword: string;
+  confirmPassword?: string;
 };

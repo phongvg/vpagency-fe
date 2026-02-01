@@ -66,7 +66,7 @@ export default function EditTaskModal({ open, onClose, taskId }: EditTaskModalPr
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className='w-full sm:max-w-3xl'>
         <DialogHeader>
           <DialogTitle>
             <div className='flex items-center gap-1'>

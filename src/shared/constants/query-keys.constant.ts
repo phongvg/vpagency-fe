@@ -1,5 +1,6 @@
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
 import type { TaskListParams } from "@/modules/task/types/task.type";
+import type { UserListParams } from "@/modules/user/types/user.type";
 import { normalizeParams } from "@/shared/utils/common.util";
 
 export const taskQueryKeys = {
@@ -8,6 +9,8 @@ export const taskQueryKeys = {
   lists: () => [...taskQueryKeys.all, "list"] as const,
 
   list: (params: TaskListParams) => [...taskQueryKeys.lists(), normalizeParams(params)] as const,
+
+  byStatus: () => [...taskQueryKeys.all, "by-status"] as const,
 
   detail: (id: string) => [...taskQueryKeys.all, "detail", id] as const,
 
@@ -31,4 +34,14 @@ export const campaignQueryKeys = {
   lists: () => [...campaignQueryKeys.all, "list"] as const,
 
   list: (params: CampaignListParams) => [...campaignQueryKeys.lists(), normalizeParams(params)] as const,
+};
+
+export const userQueryKeys = {
+  all: ["users"] as const,
+
+  lists: () => [...userQueryKeys.all, "list"] as const,
+
+  list: (params: UserListParams) => [...userQueryKeys.lists(), normalizeParams(params)] as const,
+
+  detail: (id: string) => [...userQueryKeys.all, "detail", id] as const,
 };

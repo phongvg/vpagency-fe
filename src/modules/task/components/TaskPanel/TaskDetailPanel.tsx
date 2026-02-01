@@ -23,12 +23,14 @@ import { Fragment, useMemo } from "react";
 interface TaskDetailPanelProps {
   onEdit: (taskId?: string) => void;
   onUpdateProgress: (taskId: string) => void;
+  taskId?: string | null;
 }
 
-export default function TaskDetailPanel({ onEdit, onUpdateProgress }: TaskDetailPanelProps) {
-  const id = useQueryParam("id");
+export default function TaskDetailPanel({ onEdit, onUpdateProgress, taskId }: TaskDetailPanelProps) {
+  const queryId = useQueryParam("id");
   const { user } = useAuthStore();
 
+  const id = taskId ?? queryId;
   const { data: task, isLoading } = useTaskDetail(id);
 
   if (isLoading) return <AppLoading loading={isLoading} />;
@@ -41,11 +43,11 @@ export default function TaskDetailPanel({ onEdit, onUpdateProgress }: TaskDetail
   const isResearchTask = useMemo(() => task.type === TaskType.RESEARCH, [task]);
 
   return (
-    <div className='flex-1 flex flex-col border-border border p-1 h-full min-h-0'>
+    <div className='flex flex-col flex-1 p-1 border border-border h-full min-h-0'>
       <ScrollArea className='flex-1 h-full min-h-0'>
-        <div className='p-4 flex flex-col'>
+        <div className='flex flex-col p-4'>
           <div className='space-y-2 mb-6'>
-            <h2 className='text-xl font-semibold mb-4 line-clamp-2 uppercase' title={task.name}>
+            <h2 className='mb-4 font-semibold text-xl uppercase line-clamp-2' title={task.name}>
               {task.name}
             </h2>
 
@@ -60,7 +62,7 @@ export default function TaskDetailPanel({ onEdit, onUpdateProgress }: TaskDetail
             />
           </div>
 
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <div className='gap-4 grid grid-cols-1 md:grid-cols-2'>
             <TaskOverviewCard task={task} />
 
             <div>

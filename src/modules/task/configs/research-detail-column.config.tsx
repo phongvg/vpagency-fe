@@ -1,6 +1,6 @@
-import UserItem from "@/modules/task/components/TaskPanel/UserItem";
 import type { TaskResearchDetail } from "@/modules/task/types/task.type";
 import { Button } from "@/shared/components/ui/button";
+import UserAvatar from "@/shared/components/UserAvatar/UserAvatar";
 import type { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "date-fns";
 import { SquarePen, Trash2 } from "lucide-react";
@@ -35,7 +35,7 @@ export const researchDetailColumnConfig = ({
     header: "Người nghiên cứu",
     accessorKey: "creator",
     cell: (props) => {
-      return <UserItem data={props.row.original.creator} />;
+      return <UserAvatar data={props.row.original.creator} />;
     },
   },
   {

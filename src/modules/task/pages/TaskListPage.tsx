@@ -1,8 +1,10 @@
 import EditTaskModal from "@/modules/task/components/EditTaskModal";
+import Board from "@/modules/task/components/TaskKanban/Board";
 import TaskSplit from "@/modules/task/components/TaskPanel/TaskSplit";
 import UpdateProgressTask from "@/modules/task/components/TaskProgress/UpdateProgressTask";
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import { cn } from "@/shared/libs/utils";
 import { ClipboardPlus } from "lucide-react";
 import { Fragment, useState } from "react";
 
@@ -12,6 +14,7 @@ const TABS = [
 ];
 
 export default function TaskListPage() {
+  const [tabValue, setTabValue] = useState<string>(TABS[0].value);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isUpdateProgressOpen, setUpdateProgressOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
@@ -28,7 +31,7 @@ export default function TaskListPage() {
 
   return (
     <Fragment>
-      <Tabs defaultValue={TABS[0].value} className='flex flex-col h-full'>
+      <Tabs value={tabValue} onValueChange={setTabValue} className='flex flex-col h-full'>
         <div className='flex justify-between items-center'>
           <TabsList>
             {TABS.map((tab) => (
@@ -44,11 +47,13 @@ export default function TaskListPage() {
           </AppButton>
         </div>
 
-        <TabsContent value={TABS[0].value} className='flex flex-col flex-1 h-0'>
+        <TabsContent value={TABS[0].value} className={cn(tabValue === TABS[0].value && "flex-col flex-1 h-0")}>
           <TaskSplit onEdit={handleOpenEditModal} onUpdateProgress={handleOpenUpdateProgress} />
         </TabsContent>
 
-        <TabsContent value={TABS[1].value}>Change your password here.</TabsContent>
+        <TabsContent value={TABS[1].value} className={cn(tabValue === TABS[1].value && "flex flex-col flex-1 h-0")}>
+          <Board onEdit={handleOpenEditModal} onUpdateProgress={handleOpenUpdateProgress} />
+        </TabsContent>
       </Tabs>
 
       <EditTaskModal open={isEditModalOpen} onClose={() => setEditModalOpen(false)} taskId={selectedTaskId} />

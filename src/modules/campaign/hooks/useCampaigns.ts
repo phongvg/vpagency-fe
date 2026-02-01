@@ -7,6 +7,6 @@ export const useCampaigns = (params: CampaignListParams) => {
   return useQuery({
     queryKey: campaignQueryKeys.list(params),
     queryFn: () => campaignApi.getCampaigns(params),
-    select: (data) => data.data,
+    select: (res) => res.data,
   });
 };
