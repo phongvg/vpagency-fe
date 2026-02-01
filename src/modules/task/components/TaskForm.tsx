@@ -75,6 +75,22 @@ export default function TaskForm() {
         return renderProjectField();
       case TaskType.APPEAL_ACCOUNT:
         return <FormInput type='number' name='numberOfSuspendedAccounts' label='Số lượng tài khoản tạm ngưng' />;
+      case TaskType.DOCUMENT_APPEAL:
+        return (
+          <Fragment>
+            <FormAsyncSelect<Project>
+              name='projectIds'
+              label='Dự án'
+              fetcher={fetchProjects}
+              mapOption={(project) => ({ value: project.id, label: project.name })}
+              placeholder='Chọn dự án'
+              className='col-span-3'
+              isMulti
+              required
+            />
+            <FormInput type='number' name='numberOfAppealDocuments' label='Số lượng đơn kháng' className='col-span-3' />
+          </Fragment>
+        );
       case TaskType.RESEARCH:
         return <FormTextarea name='researchContent' label='Nội dung nghiên cứu' className='col-span-3' />;
       default:

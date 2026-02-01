@@ -11,7 +11,11 @@ interface TaskActionButtonProps {
   isResearchTask: boolean;
   userRoles: Role[];
   onEdit: () => void;
+  onDelete: () => void;
   onUpdateProgress: () => void;
+  onUpdateAppealMetrics: () => void;
+  onUpdateDocumentAppealMetrics: () => void;
+  onUpdateResearchMetrics: () => void;
 }
 
 export default function TaskActionButton({
@@ -21,7 +25,11 @@ export default function TaskActionButton({
   isResearchTask,
   userRoles,
   onEdit,
+  onDelete,
   onUpdateProgress,
+  onUpdateAppealMetrics,
+  onUpdateDocumentAppealMetrics,
+  onUpdateResearchMetrics,
 }: TaskActionButtonProps) {
   return (
     <div className='flex items-center gap-2'>
@@ -32,7 +40,7 @@ export default function TaskActionButton({
             Chỉnh sửa
           </AppButton>
 
-          <AppButton variant='outline' size='sm'>
+          <AppButton variant='outline' size='sm' onClick={onDelete}>
             <Trash2 />
             Xóa
           </AppButton>
@@ -54,21 +62,21 @@ export default function TaskActionButton({
       )}
 
       {isAppealTask && (
-        <AppButton variant='outline' size='sm'>
+        <AppButton variant='outline' size='sm' onClick={onUpdateAppealMetrics}>
           <SquarePen />
           Cập nhật tiến độ kháng
         </AppButton>
       )}
 
       {isDocumentAppealTask && (
-        <AppButton variant='outline' size='sm'>
+        <AppButton variant='outline' size='sm' onClick={onUpdateDocumentAppealMetrics}>
           <SquarePen />
           Cập nhật tiến độ kháng giấy
         </AppButton>
       )}
 
       {isResearchTask && (
-        <AppButton variant='outline' size='sm'>
+        <AppButton variant='outline' size='sm' onClick={onUpdateResearchMetrics}>
           <SquarePen />
           Cập nhật kết quả nghiên cứu
         </AppButton>

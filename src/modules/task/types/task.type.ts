@@ -173,3 +173,25 @@ export type TaskProgress = {
   totalFinalUrls: number;
   finalUrls: FinalURLGroup[];
 };
+
+export type UpdateAppealMetricsRequest = {
+  appealDate: string;
+  suspensionReason: string;
+  appealCount: number;
+  successCount: number;
+  failureCount: number;
+};
+
+export type UpdateDocumentAppealMetricsRequest = {
+  appealDate: string;
+  projectId: string;
+  appealCount: number;
+  successCount: number;
+  note?: string;
+};
+
+export type UpdateResearchMetricsRequest = {
+  resultDate: string;
+  result: string;
+  difficultyLevel: string;
+};

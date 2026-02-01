@@ -17,7 +17,7 @@ export const transformTaskToForm = (data?: Task | undefined): TaskFormType => ({
   numberOfSuspendedAccounts: data?.numberOfSuspendedAccounts ?? undefined,
   numberOfAppealDocuments: data?.numberOfAppealDocuments ?? undefined,
   researchContent: data?.researchContent ?? undefined,
-  projectIds: data?.projects?.map((project) => project.id) ?? undefined,
+  projectIds: data?.projects?.map((project) => ({ value: project.id, label: project.name })) ?? undefined,
 });
 
 export const transformTaskFormToPayload = (data: TaskFormType): UpdateTaskRequest => ({
@@ -36,5 +36,5 @@ export const transformTaskFormToPayload = (data: TaskFormType): UpdateTaskReques
   numberOfSuspendedAccounts: data.numberOfSuspendedAccounts,
   numberOfAppealDocuments: data.numberOfAppealDocuments,
   researchContent: data.researchContent,
-  projectIds: data.projectIds,
+  projectIds: data.projectIds?.map((project) => project.value) || [],
 });

@@ -5,6 +5,7 @@ import TaskAppealDetailTable from "@/modules/task/components/TaskPanel/TaskAppea
 import TaskAppealProjectTable from "@/modules/task/components/TaskPanel/TaskAppealProjectTable";
 import TaskCampaignCard from "@/modules/task/components/TaskPanel/TaskCampaignCard";
 import TaskDocumentAppealCard from "@/modules/task/components/TaskPanel/TaskDocumentAppealCard";
+import TaskDocumentAppealDetailTable from "@/modules/task/components/TaskPanel/TaskDocumentAppealDetailTable";
 import TaskFinalUrlTable from "@/modules/task/components/TaskPanel/TaskFinalUrlTable";
 import TaskOverviewCard from "@/modules/task/components/TaskPanel/TaskOverviewCard";
 import TaskPeopleCard from "@/modules/task/components/TaskPanel/TaskPeopleCard";
@@ -12,7 +13,7 @@ import TaskProjectCard from "@/modules/task/components/TaskPanel/TaskProjectCard
 import TaskResearchDetailTable from "@/modules/task/components/TaskPanel/TaskResearchDetailTable";
 import TaskTimelineCard from "@/modules/task/components/TaskPanel/TaskTimelineCard";
 import { useTaskDetail } from "@/modules/task/hooks/useTaskDetail";
-import { TaskType } from "@/modules/task/types/task.type";
+import { TaskType, type Task } from "@/modules/task/types/task.type";
 
 import { AppLoading } from "@/shared/components/common/AppLoading";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
@@ -21,12 +22,24 @@ import { useAuthStore } from "@/shared/stores/auth/useAuthStore";
 import { Fragment, useMemo } from "react";
 
 interface TaskDetailPanelProps {
-  onEdit: (taskId?: string) => void;
-  onUpdateProgress: (taskId: string) => void;
   taskId?: string | null;
+  onEdit: (taskId?: string) => void;
+  onDelete: (taskId: string) => void;
+  onUpdateProgress: (taskId: string) => void;
+  onUpdateAppealMetrics: (task: Task) => void;
+  onUpdateDocumentAppealMetrics: (task: Task) => void;
+  onUpdateResearchMetrics: (task: Task) => void;
 }
 
-export default function TaskDetailPanel({ onEdit, onUpdateProgress, taskId }: TaskDetailPanelProps) {
+export default function TaskDetailPanel({
+  onEdit,
+  onDelete,
+  onUpdateProgress,
+  onUpdateAppealMetrics,
+  onUpdateDocumentAppealMetrics,
+  onUpdateResearchMetrics,
+  taskId,
+}: TaskDetailPanelProps) {
   const queryId = useQueryParam("id");
   const { user } = useAuthStore();
 
@@ -58,7 +71,11 @@ export default function TaskDetailPanel({ onEdit, onUpdateProgress, taskId }: Ta
               isResearchTask={isResearchTask}
               userRoles={user?.roles || []}
               onEdit={() => onEdit(task.id)}
+              onDelete={() => onDelete(task.id)}
               onUpdateProgress={() => onUpdateProgress(task.id)}
+              onUpdateAppealMetrics={() => onUpdateAppealMetrics(task)}
+              onUpdateDocumentAppealMetrics={() => onUpdateDocumentAppealMetrics(task)}
+              onUpdateResearchMetrics={() => onUpdateResearchMetrics(task)}
             />
           </div>
 
@@ -105,6 +122,11 @@ export default function TaskDetailPanel({ onEdit, onUpdateProgress, taskId }: Ta
                 {/* Danh sách dự án kháng */}
                 <div className='col-span-2'>
                   <TaskAppealProjectTable projects={task.projects ?? []} />
+                </div>
+
+                {/* Chi tiết kháng giấy */}
+                <div className='col-span-2'>
+                  <TaskDocumentAppealDetailTable documentAppealDetails={task.documentAppealDetails ?? []} />
                 </div>
               </Fragment>
             )}

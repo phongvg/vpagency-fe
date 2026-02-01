@@ -1,5 +1,14 @@
 import type { AssignToFinalUrlRequest, Campaign, CampaignListParams, RemoveFromFinalUrlRequest } from "@/modules/campaign/types/campaign.type";
-import type { Task, TaskListParams, TaskProgress, TasksGroupedByStatus, UpdateTaskRequest } from "@/modules/task/types/task.type";
+import type {
+  Task,
+  TaskListParams,
+  TaskProgress,
+  TasksGroupedByStatus,
+  UpdateAppealMetricsRequest,
+  UpdateDocumentAppealMetricsRequest,
+  UpdateResearchMetricsRequest,
+  UpdateTaskRequest,
+} from "@/modules/task/types/task.type";
 import { http } from "@/shared/libs/http";
 import type { ApiBaseListResponse, ApiBaseResponse } from "@/shared/types/common/apiResponse.type";
 import { convertQueryParams } from "@/shared/utils/common.util";
@@ -23,6 +32,10 @@ export const taskApi = {
 
   editTask: (id: string, data: UpdateTaskRequest): Promise<ApiBaseResponse<Task>> => {
     return http.put(`/tasks/${id}`, data);
+  },
+
+  deleteTask: (id: string): Promise<ApiBaseResponse<null>> => {
+    return http.delete(`/tasks/${id}`);
   },
 
   getTaskProgress: (id: string): Promise<ApiBaseResponse<TaskProgress>> => {
@@ -55,5 +68,29 @@ export const taskApi = {
 
   removeCampaignsFromFinalUrl: (id: string, payload: RemoveFromFinalUrlRequest): Promise<ApiBaseResponse<null>> => {
     return http.post(`/tasks/${id}/campaigns/remove`, payload);
+  },
+
+  updateAppealMetrics: (id: string, payload: UpdateAppealMetricsRequest): Promise<ApiBaseResponse<Task>> => {
+    return http.post(`/tasks/${id}/appeal-details`, payload);
+  },
+
+  updateDocumentAppealMetrics: (id: string, payload: UpdateDocumentAppealMetricsRequest): Promise<ApiBaseResponse<Task>> => {
+    return http.post(`/tasks/${id}/document-appeal-details`, payload);
+  },
+
+  deleteDocumentAppeal: (taskId: string, id: string): Promise<ApiBaseResponse<null>> => {
+    return http.delete(`/tasks/${taskId}/document-appeal-details/${id}`);
+  },
+
+  updateResearchMetrics: (id: string, payload: UpdateResearchMetricsRequest): Promise<ApiBaseResponse<Task>> => {
+    return http.post(`/tasks/${id}/research-details`, payload);
+  },
+
+  updateResearchDetail: (taskId: string, id: string, payload: UpdateResearchMetricsRequest): Promise<ApiBaseResponse<Task>> => {
+    return http.post(`/tasks/${taskId}/research-details/${id}`, payload);
+  },
+
+  deleteResearchDetail: (taskId: string, id: string): Promise<ApiBaseResponse<null>> => {
+    return http.delete(`/tasks/${taskId}/research-details/${id}`);
   },
 };

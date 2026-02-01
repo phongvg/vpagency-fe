@@ -22,7 +22,7 @@ export const taskFormSchema = z
     numberOfSuspendedAccounts: z.number().min(1, "Số tài khoản tạm ngưng phải lớn hơn hoặc bằng 1").optional(),
     numberOfAppealDocuments: z.number().min(1, "Số tài khoản kháng phải lớn hơn hoặc bằng 1").optional(),
     researchContent: z.string().optional(),
-    projectIds: z.array(z.string()).optional(),
+    projectIds: z.array(z.object({ value: z.string(), label: z.string() })).optional(),
   })
   .superRefine((data, ctx) => {
     if (needProject(data.type) && !data.projectId) {

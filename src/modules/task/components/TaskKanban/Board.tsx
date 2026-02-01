@@ -2,7 +2,7 @@ import TaskBoardCard from "@/modules/task/components/TaskKanban/TaskBoardCard";
 import TaskDetailModal from "@/modules/task/components/TaskKanban/TaskDetailModal";
 import { useTaskDragDrop } from "@/modules/task/hooks/useTaskDragDrop";
 import { useTasksByStatus } from "@/modules/task/hooks/useTasksByStatus";
-import { TaskStatus } from "@/modules/task/types/task.type";
+import { TaskStatus, type Task } from "@/modules/task/types/task.type";
 import { TaskStatusMap } from "@/modules/task/utils/task.util";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
 import { AppLoading } from "@/shared/components/common/AppLoading";
@@ -18,10 +18,21 @@ const STATUS_COLUMNS: readonly { status: TaskStatus; label: string }[] = [
 
 interface BoardProps {
   onEdit: (taskId?: string) => void;
+  onDelete: (taskId: string) => void;
   onUpdateProgress: (taskId: string) => void;
+  onUpdateAppealMetrics: (task: Task) => void;
+  onUpdateDocumentAppealMetrics: (task: Task) => void;
+  onUpdateResearchMetrics: (task: Task) => void;
 }
 
-export default function Board({ onEdit, onUpdateProgress }: BoardProps) {
+export default function Board({
+  onEdit,
+  onDelete,
+  onUpdateProgress,
+  onUpdateAppealMetrics,
+  onUpdateDocumentAppealMetrics,
+  onUpdateResearchMetrics,
+}: BoardProps) {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
@@ -97,7 +108,11 @@ export default function Board({ onEdit, onUpdateProgress }: BoardProps) {
         onClose={handleCloseTaskDetail}
         taskId={selectedTaskId}
         onEdit={onEdit}
+        onDelete={onDelete}
         onUpdateProgress={onUpdateProgress}
+        onUpdateAppealMetrics={onUpdateAppealMetrics}
+        onUpdateDocumentAppealMetrics={onUpdateDocumentAppealMetrics}
+        onUpdateResearchMetrics={onUpdateResearchMetrics}
       />
     </Fragment>
   );
