@@ -32,10 +32,6 @@ export default function ProjectStatusTable({ params, setParams, onOpenEdit }: Pr
     await updateProjectStatus.mutateAsync({ id, payload: { active: isActive } });
   };
 
-  const handleEdit = (id: string) => {
-    onOpenEdit(id);
-  };
-
   const handleDelete = async (id: string) => {
     const isConfirmed = await confirm({
       title: "Xác nhận xóa trạng thái dự án",
@@ -52,7 +48,7 @@ export default function ProjectStatusTable({ params, setParams, onOpenEdit }: Pr
   return (
     <AppTable
       data={projectStatuses}
-      columns={projectStatusColumnConfig({ onUpdateStatus: handleUpdateStatus, onEdit: handleEdit, onDelete: handleDelete })}
+      columns={projectStatusColumnConfig({ onUpdateStatus: handleUpdateStatus, onEdit: onOpenEdit, onDelete: handleDelete })}
       page={params.page}
       pageCount={meta?.totalPages}
       pageSize={params.limit}
