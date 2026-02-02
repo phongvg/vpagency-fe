@@ -34,7 +34,6 @@ export default function ProjectStatusTable({ params, setParams, onOpenEdit }: Pr
 
   const handleDelete = async (id: string) => {
     const isConfirmed = await confirm({
-      title: "Xác nhận xóa trạng thái dự án",
       description: "Bạn có chắc chắn muốn xóa trạng thái dự án này không? Hành động này không thể hoàn tác.",
     });
 

@@ -20,7 +20,7 @@ export const useImportGmailExcel = (): UseExcelWorkerReturn => {
       setProgress(0);
       setError(null);
 
-      const worker = new Worker(new URL("../workers/excelWorker.ts", import.meta.url), {
+      const worker = new Worker(new URL("../workers/importGmailWorker.ts", import.meta.url), {
         type: "module",
       });
 

@@ -4,6 +4,7 @@ import { LoginPage } from "@/modules/auth/login";
 import { CampaignListPage } from "@/modules/campaign";
 import { DashboardPage } from "@/modules/dashboard";
 import { GmailListPage } from "@/modules/gmail";
+import { GmailStatusListPage } from "@/modules/gmailStatus";
 import { ProjectStatusListPage } from "@/modules/projectStatus";
 import { ProjectTypeListPage } from "@/modules/projectType";
 import { TaskListPage } from "@/modules/task";
@@ -81,6 +82,14 @@ export const appRoutes: AppRoute[] = [
         title: "Quản lý trạng thái dự án",
         pageTitle: "Danh sách trạng thái dự án",
         element: <ProjectStatusListPage />,
+        icon: LayoutList,
+        showInSidebar: true,
+      },
+      {
+        path: urls.gmailStatus,
+        title: "Quản lý trạng thái gmail",
+        pageTitle: "Danh sách trạng thái gmail",
+        element: <GmailStatusListPage />,
         icon: LayoutList,
         showInSidebar: true,
       },

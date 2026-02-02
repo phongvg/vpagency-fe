@@ -1,7 +1,7 @@
 import { FormInput } from "@/shared/components/form/FormInput";
 import { FormTextarea } from "@/shared/components/form/FormTextarea";
 
-export default function ProjectStatusForm() {
+export default function GmailStatusForm() {
   return (
     <div className='space-y-4'>
       <FormInput name='name' label='Tên trạng thái' required />

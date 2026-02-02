@@ -16,3 +16,8 @@ export type UpdateProjectTypeRequest = {
   name?: string;
   description?: string | null;
 };
+
+export type CreateProjectTypeRequest = {
+  name: string;
+  description?: string | null;
+};

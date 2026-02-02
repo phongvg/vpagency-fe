@@ -1,11 +1,11 @@
-import type { ProjectStatus } from "@/modules/projectStatus/types/projectStatus.type";
+import type { GmailStatus } from "@/modules/gmailStatus/types/gmailStatus.type";
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Switch } from "@/shared/components/ui/switch";
 import type { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "date-fns/format";
 import { SquarePen, Trash2 } from "lucide-react";
 
-export const projectStatusColumnConfig = ({
+export const gmailStatusColumnConfig = ({
   onUpdateStatus,
   onEdit,
   onDelete,
@@ -13,7 +13,7 @@ export const projectStatusColumnConfig = ({
   onUpdateStatus: (id: string, status: boolean) => void;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
-}): ColumnDef<ProjectStatus>[] => [
+}): ColumnDef<GmailStatus>[] => [
   {
     header: "STT",
     accessorKey: "index",

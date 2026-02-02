@@ -1,6 +1,8 @@
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
 import type { GmailListParams } from "@/modules/gmail/types/gmail.type";
+import type { GmailStatusListParams } from "@/modules/gmailStatus/types/gmailStatus.type";
 import type { ProjectStatusListParams } from "@/modules/projectStatus/types/projectStatus.type";
+import type { ProjectTypeListParams } from "@/modules/projectType/types/projectType.type";
 import type { TaskListParams } from "@/modules/task/types/task.type";
 import type { UserListParams } from "@/modules/user/types/user.type";
 import { normalizeParams } from "@/shared/utils/common.util";
@@ -66,4 +68,24 @@ export const projectStatusQueryKeys = {
   list: (params: ProjectStatusListParams) => [...projectStatusQueryKeys.lists(), normalizeParams(params)] as const,
 
   detail: (id: string) => [...projectStatusQueryKeys.all, "detail", id] as const,
+};
+
+export const projectTypeQueryKeys = {
+  all: ["project-types"] as const,
+
+  lists: () => [...projectTypeQueryKeys.all, "list"] as const,
+
+  list: (params: ProjectTypeListParams) => [...projectTypeQueryKeys.lists(), normalizeParams(params)] as const,
+
+  detail: (id: string) => [...projectTypeQueryKeys.all, "detail", id] as const,
+};
+
+export const gmailStatusQueryKeys = {
+  all: ["gmail-statuses"] as const,
+
+  lists: () => [...gmailStatusQueryKeys.all, "list"] as const,
+
+  list: (params: GmailStatusListParams) => [...gmailStatusQueryKeys.lists(), normalizeParams(params)] as const,
+
+  detail: (id: string) => [...gmailStatusQueryKeys.all, "detail", id] as const,
 };

@@ -1,15 +1,15 @@
-import EditProjectTypeModal from "@/modules/projectType/components/EditProjectTypeModal";
-import ProjectTypeTable from "@/modules/projectType/components/ProjectTypeTable";
-import type { ProjectTypeListParams } from "@/modules/projectType/types/projectType.type";
+import EditGmailStatusModal from "@/modules/gmailStatus/components/EditGmailStatusModal";
+import GmailStatusTable from "@/modules/gmailStatus/components/GmailStatusTable";
+import type { GmailStatusListParams } from "@/modules/gmailStatus/types/gmailStatus.type";
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Input } from "@/shared/components/ui/input";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { Fragment, useEffect, useState } from "react";
 
-export default function ProjectTypeListPage() {
+export default function GmailStatusListPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedProjectTypeId, setSelectedProjectTypeId] = useState<string | null>(null);
-  const [params, setParams] = useState<ProjectTypeListParams>({
+  const [selectedGmailStatusId, setSelectedGmailStatusId] = useState<string | null>(null);
+  const [params, setParams] = useState<GmailStatusListParams>({
     page: 1,
     limit: 10,
     search: undefined,
@@ -23,18 +23,18 @@ export default function ProjectTypeListPage() {
   }, [debounceSearch]);
 
   const handleOpenCreate = () => {
-    setSelectedProjectTypeId(null);
+    setSelectedGmailStatusId(null);
     setIsModalOpen(true);
   };
 
   const handleOpenEdit = (id: string) => {
-    setSelectedProjectTypeId(id);
+    setSelectedGmailStatusId(id);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedProjectTypeId(null);
+    setSelectedGmailStatusId(null);
   };
 
   return (
@@ -46,9 +46,9 @@ export default function ProjectTypeListPage() {
         </AppButton>
       </div>
 
-      <ProjectTypeTable params={params} setParams={setParams} onOpenEdit={handleOpenEdit} />
+      <GmailStatusTable params={params} setParams={setParams} onOpenEdit={handleOpenEdit} />
 
-      <EditProjectTypeModal open={isModalOpen} onClose={handleCloseModal} projectTypeId={selectedProjectTypeId} />
+      <EditGmailStatusModal open={isModalOpen} onClose={handleCloseModal} gmailStatusId={selectedGmailStatusId} />
     </Fragment>
   );
 }

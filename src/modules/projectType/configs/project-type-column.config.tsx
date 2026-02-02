@@ -1,32 +1,24 @@
-import type { ProjectStatus } from "@/modules/projectStatus/types/projectStatus.type";
+import type { ProjectType } from "@/modules/projectType/types/projectType.type";
 import { AppButton } from "@/shared/components/common/AppButton";
-import { Switch } from "@/shared/components/ui/switch";
 import type { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "date-fns/format";
 import { SquarePen, Trash2 } from "lucide-react";
 
-export const projectStatusColumnConfig = ({
-  onUpdateStatus,
+export const projectTypeColumnConfig = ({
   onEdit,
   onDelete,
 }: {
-  onUpdateStatus: (id: string, status: boolean) => void;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
-}): ColumnDef<ProjectStatus>[] => [
+}): ColumnDef<ProjectType>[] => [
   {
     header: "STT",
     accessorKey: "index",
     cell: (props) => props.row.index + 1,
   },
   {
-    header: "Tên trạng thái",
+    header: "Tên loại dự án",
     accessorKey: "name",
-  },
-  {
-    id: "updatedStatus",
-    header: "Trạng thái",
-    cell: (props) => <Switch checked={props.row.original.active} onCheckedChange={(checked) => onUpdateStatus(props.row.original.id, checked)} />,
   },
   {
     header: "Thời gian tạo",

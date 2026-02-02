@@ -9,6 +9,7 @@ export const urls = {
   user: "users",
   campaign: "campaigns",
   gmail: "gmails",
+  gmailStatus: "gmail-statuses",
   projectType: "project-types",
   projectStatus: "project-statuses",
 };
