@@ -18,8 +18,6 @@ interface PaginationProps {
 }
 
 export default function AppPagination({ page = 1, totalPages, onPageChange, siblingCount = 1 }: PaginationProps) {
-  if (totalPages <= 1) return null;
-
   const pages = getPaginationRange({
     currentPage: page,
     totalPages,

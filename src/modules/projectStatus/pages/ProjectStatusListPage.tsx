@@ -1,3 +1,54 @@
+import EditProjectStatusModal from "@/modules/projectStatus/components/EditProjectStatusModal";
+import ProjectStatusTable from "@/modules/projectStatus/components/ProjectStatusTable";
+import type { ProjectStatusListParams } from "@/modules/projectStatus/types/projectStatus.type";
+import { AppButton } from "@/shared/components/common/AppButton";
+import { Input } from "@/shared/components/ui/input";
+import { useDebounce } from "@/shared/hooks/useDebounce";
+import { Fragment, useEffect, useState } from "react";
+
 export default function ProjectStatusListPage() {
-  return <div>ProjectStatusListPage</div>;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProjectStatusId, setSelectedProjectStatusId] = useState<string | null>(null);
+  const [params, setParams] = useState<ProjectStatusListParams>({
+    page: 1,
+    limit: 10,
+    search: undefined,
+  });
+  const [searchInput, setSearchInput] = useState<string | undefined>(undefined);
+
+  const debounceSearch = useDebounce(searchInput, 500);
+
+  useEffect(() => {
+    setParams((prev) => ({ ...prev, search: debounceSearch, page: 1 }));
+  }, [debounceSearch]);
+
+  const handleOpenCreate = () => {
+    setSelectedProjectStatusId(null);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEdit = (id: string) => {
+    setSelectedProjectStatusId(id);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedProjectStatusId(null);
+  };
+
+  return (
+    <Fragment>
+      <div className='flex justify-between items-center gap-4 mb-4'>
+        <Input value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder='Tìm kiếm theo tên' className='max-w-[300px]' />
+        <AppButton onClick={handleOpenCreate} variant='outline' size='sm'>
+          Tạo mới
+        </AppButton>
+      </div>
+
+      <ProjectStatusTable params={params} setParams={setParams} onOpenEdit={handleOpenEdit} />
+
+      <EditProjectStatusModal open={isModalOpen} onClose={handleCloseModal} projectStatusId={selectedProjectStatusId} />
+    </Fragment>
+  );
 }
