@@ -18,6 +18,12 @@ export const authApi = {
     );
   },
 
+  logout: async (): Promise<ApiBaseResponse<null>> => {
+    return await http.post("/auth/logout", undefined, {
+      withCredentials: true,
+    });
+  },
+
   getMe: async (): Promise<ApiBaseResponse<User>> => {
     return await http.get("/users/me");
   },

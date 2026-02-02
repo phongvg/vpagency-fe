@@ -1,32 +1,39 @@
 import { authApi } from "@/auth/api/auth.api";
 import type { LoginResponse } from "@/auth/types/auth.type";
+import { queryClient } from "@/configs/queryClient";
 import { ACCESS_TOKEN, EXPIRES_AT, FIVE_MINUTES_IN_MS, REFRESH_TOKEN, USER_ID } from "@/shared/constants/auth.constant";
 import { useAuthStore } from "@/shared/stores/auth/useAuthStore";
+import { getExpiresAtFromToken } from "@/shared/utils/jwt.util";
 import { getStorageItem, setStorageItem } from "@/shared/utils/storage.util";
-import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 let refreshTimeoutId: number | null = null;
 let refreshPromise: Promise<void> | null = null;
 
 export const authService = {
   login: (data: LoginResponse): void => {
-    const { user, accessToken, refreshToken, expiresAt } = data;
+    const { user, accessToken, refreshToken } = data;
     const { setUser, setAuthenticated, setLoading } = useAuthStore.getState();
 
     setLoading(true);
 
     authService.setSession(accessToken, refreshToken);
 
-    const expiresAtMs = new Date(expiresAt).getTime();
+    const expiresAtMs = getExpiresAtFromToken(accessToken);
+    if (expiresAtMs) {
+      setStorageItem(EXPIRES_AT, expiresAtMs.toString());
+    }
 
     setStorageItem(USER_ID, user.id);
-    setStorageItem(EXPIRES_AT, expiresAtMs.toString());
 
     setUser(user);
     setAuthenticated(true);
     setLoading(false);
 
-    authService.scheduleRefresh();
+    // Schedule refresh in next tick to avoid blocking navigation
+    setTimeout(() => {
+      authService.scheduleRefresh();
+    }, 0);
   },
 
   setSession: (accessToken: string, refreshToken: string): void => {
@@ -43,8 +50,14 @@ export const authService = {
     const target = expiresAt - FIVE_MINUTES_IN_MS;
     const delay = target - Date.now();
 
+    console.log("target :>> ", target);
+    console.log("delay :>> ", delay);
+
     if (delay <= 0) {
-      authService.refreshToken();
+      authService.refreshToken().catch((error) => {
+        console.error("Failed to refresh token:", error);
+        authService.logout();
+      });
       return;
     }
 
@@ -52,7 +65,10 @@ export const authService = {
     const timeout = Math.min(delay, MAX_TIMEOUT);
 
     refreshTimeoutId = window.setTimeout(() => {
-      authService.scheduleRefresh();
+      authService.refreshToken().catch((error) => {
+        console.error("Failed to refresh token:", error);
+        authService.logout();
+      });
     }, timeout);
   },
 
@@ -69,6 +85,17 @@ export const authService = {
         .then((res) => {
           const { accessToken, refreshToken } = res.data;
           authService.setSession(accessToken, refreshToken);
+
+          const expiresAtMs = getExpiresAtFromToken(accessToken);
+          if (expiresAtMs) {
+            setStorageItem(EXPIRES_AT, expiresAtMs.toString());
+            authService.scheduleRefresh();
+          }
+        })
+        .catch((error) => {
+          console.error("Refresh token failed:", error);
+          authService.logout();
+          throw error;
         })
         .finally(() => {
           refreshPromise = null;
@@ -83,16 +110,25 @@ export const authService = {
     localStorage.clear();
   },
 
-  logout: (): void => {
+  logout: async (): Promise<void> => {
     const { setUser, setAuthenticated, setLoading } = useAuthStore.getState();
-    const queryClient = useQueryClient();
 
-    authService.clearSession();
-    queryClient.clear();
+    try {
+      const res = await authApi.logout();
 
-    setUser(null);
-    setAuthenticated(false);
-    setLoading(false);
+      if (res.success) {
+        toast.success(res.message);
+      }
+    } catch (error) {
+      console.error("Logout API failed:", error);
+    } finally {
+      authService.clearSession();
+      queryClient.clear();
+
+      setUser(null);
+      setAuthenticated(false);
+      setLoading(false);
+    }
   },
 
   getMe: async (): Promise<void> => {

@@ -1,5 +1,4 @@
 import { urls } from "@/app/routes/route.constant";
-import { authService } from "@/auth/services/auth.service";
 import { AppLoading } from "@/shared/components/common/AppLoading";
 import type { Role } from "@/shared/constants/role.constant";
 import { useAuthStore } from "@/shared/stores/auth/useAuthStore";
@@ -20,7 +19,6 @@ export default function ProtectedRoute({ children, permissions }: ProtectedRoute
   }
 
   if (!isAuthenticated) {
-    authService.logout();
     return <Navigate to={`${urls.auth}/${urls.login}`} replace state={{ from: location }} />;
   }
 

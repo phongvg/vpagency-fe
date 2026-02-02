@@ -4,7 +4,6 @@ export type LoginResponse = {
   user: User;
   accessToken: string;
   refreshToken: string;
-  expiresAt: Date;
   isOnboarding: boolean;
 };
 

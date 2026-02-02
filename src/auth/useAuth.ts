@@ -13,7 +13,10 @@ export const useAuth = () => {
     mutationFn: (params: { username: string; password: string }) => authApi.login(params),
     onSuccess: (res) => {
       authService.login(res.data);
-      navigate(redirect, { replace: true });
+
+      setTimeout(() => {
+        navigate(redirect, { replace: true });
+      }, 0);
     },
   });
 

@@ -32,3 +32,16 @@ export function getTokenExpiration(token: string): Date | null {
 
   return new Date(payload.exp * 1000);
 }
+
+/**
+ * Lấy thời gian hết hạn (expiresAt) từ JWT token dưới dạng timestamp (milliseconds)
+ */
+export function getExpiresAtFromToken(token: string): number | null {
+  const payload = decodeJWT<{ exp?: number }>(token);
+
+  if (!payload || !payload.exp) {
+    return null;
+  }
+
+  return payload.exp * 1000;
+}

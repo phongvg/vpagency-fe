@@ -1,10 +1,12 @@
 import ProtectedRoute from "@/app/routes/ProtectedRoute";
 import { urls } from "@/app/routes/route.constant";
+import { AppealAccountListPage } from "@/modules/appealAccount";
 import { LoginPage } from "@/modules/auth/login";
 import { CampaignListPage } from "@/modules/campaign";
 import { DashboardPage } from "@/modules/dashboard";
 import { GmailListPage } from "@/modules/gmail";
 import { GmailStatusListPage } from "@/modules/gmailStatus";
+import { ProjectListPage } from "@/modules/project";
 import { ProjectStatusListPage } from "@/modules/projectStatus";
 import { ProjectTypeListPage } from "@/modules/projectType";
 import { TaskListPage } from "@/modules/task";
@@ -12,7 +14,7 @@ import { UserListPage } from "@/modules/user";
 import { Role } from "@/shared/constants/role.constant";
 import BlankLayout from "@/shared/layouts/BlankLayout";
 import DashboardLayout from "@/shared/layouts/DashboardLayout";
-import { ClipboardList, LayoutGrid, LayoutList, Users } from "lucide-react";
+import { ClipboardList, FolderKanban, FolderTree, LayoutGrid, ListChecks, Mail, MailCheck, Megaphone, Users } from "lucide-react";
 import { Navigate } from "react-router-dom";
 import type { AppRoute } from "./route.type";
 
@@ -46,6 +48,14 @@ export const appRoutes: AppRoute[] = [
         showInSidebar: true,
       },
       {
+        path: urls.campaign,
+        title: "Quản lý chiến dịch",
+        pageTitle: "Danh sách chiến dịch",
+        element: <CampaignListPage />,
+        icon: Megaphone,
+        showInSidebar: true,
+      },
+      {
         path: urls.user,
         title: "Quản lý tài khoản",
         pageTitle: "Danh sách tài khoản",
@@ -54,35 +64,19 @@ export const appRoutes: AppRoute[] = [
         showInSidebar: true,
       },
       {
-        path: urls.gmail,
-        title: "Quản lý gmail",
-        pageTitle: "Danh sách gmail",
-        element: <GmailListPage />,
+        path: urls.appealAccount,
+        title: "Quản lý tài khoản ads kháng giấy",
+        pageTitle: "Danh sách tài khoản ads kháng giấy",
+        element: <AppealAccountListPage />,
         icon: Users,
         showInSidebar: true,
       },
       {
-        path: urls.campaign,
-        title: "Quản lý chiến dịch",
-        pageTitle: "Danh sách chiến dịch",
-        element: <CampaignListPage />,
-        icon: LayoutList,
-        showInSidebar: true,
-      },
-      {
-        path: urls.projectType,
-        title: "Quản lý loại dự án",
-        pageTitle: "Danh sách loại dự án",
-        element: <ProjectTypeListPage />,
-        icon: LayoutList,
-        showInSidebar: true,
-      },
-      {
-        path: urls.projectStatus,
-        title: "Quản lý trạng thái dự án",
-        pageTitle: "Danh sách trạng thái dự án",
-        element: <ProjectStatusListPage />,
-        icon: LayoutList,
+        path: urls.gmail,
+        title: "Quản lý gmail",
+        pageTitle: "Danh sách gmail",
+        element: <GmailListPage />,
+        icon: Mail,
         showInSidebar: true,
       },
       {
@@ -90,7 +84,31 @@ export const appRoutes: AppRoute[] = [
         title: "Quản lý trạng thái gmail",
         pageTitle: "Danh sách trạng thái gmail",
         element: <GmailStatusListPage />,
-        icon: LayoutList,
+        icon: MailCheck,
+        showInSidebar: true,
+      },
+      {
+        path: urls.project,
+        title: "Quản lý dự án",
+        pageTitle: "Danh sách dự án",
+        element: <ProjectListPage />,
+        icon: FolderKanban,
+        showInSidebar: true,
+      },
+      {
+        path: urls.projectType,
+        title: "Quản lý loại dự án",
+        pageTitle: "Danh sách loại dự án",
+        element: <ProjectTypeListPage />,
+        icon: FolderTree,
+        showInSidebar: true,
+      },
+      {
+        path: urls.projectStatus,
+        title: "Quản lý trạng thái dự án",
+        pageTitle: "Danh sách trạng thái dự án",
+        element: <ProjectStatusListPage />,
+        icon: ListChecks,
         showInSidebar: true,
       },
     ],
