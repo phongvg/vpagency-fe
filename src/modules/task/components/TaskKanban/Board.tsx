@@ -80,7 +80,7 @@ export default function Board({
 
               <CardContent className='flex-1 p-3 min-h-0'>
                 <ScrollArea className='h-full'>
-                  <div className='space-y-3 pr-3'>
+                  <div className='space-y-3'>
                     {tasks.length > 0 ? (
                       tasks.map((task) => (
                         <div
@@ -93,7 +93,7 @@ export default function Board({
                         </div>
                       ))
                     ) : (
-                      <div className='py-8 text-muted-foreground text-sm text-center'>Không có task nào</div>
+                      <div className='py-8 text-white/50 text-center'>Không có task nào</div>
                     )}
                   </div>
                 </ScrollArea>
