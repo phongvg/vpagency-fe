@@ -14,8 +14,11 @@ export default function ImportGmailPreviewModal({ open, gmails, onClose }: Impor
   const createGmails = useCreateGmails();
 
   const handleImport = async () => {
-    await createGmails.mutateAsync(gmails);
-    onClose();
+    await createGmails.mutateAsync(gmails, {
+      onSuccess: () => {
+        onClose();
+      },
+    });
   };
 
   return (

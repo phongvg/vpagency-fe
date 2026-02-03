@@ -16,9 +16,11 @@ function App() {
 
     if (token && expiresAt && expiresAt > Date.now()) {
       authService.getMe();
-    } else if (token && (!expiresAt || expiresAt <= Date.now())) {
-      authService.logout();
     }
+
+    //  else if (token && (!expiresAt || expiresAt <= Date.now())) {
+    //   authService.logout();
+    // }
   }, []);
 
   return (

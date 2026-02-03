@@ -61,7 +61,7 @@ export default function GmailListPage() {
 
   return (
     <Fragment>
-      <div className='flex justify-between items-center mb-4'>
+      <div className='flex justify-between items-center mb-2'>
         <Input value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder='Tìm kiếm theo gmail' className='max-w-[300px]' />
 
         <div className='flex items-center gap-2'>

@@ -45,7 +45,7 @@ export default function UserListPage() {
 
   return (
     <Fragment>
-      <div className='mb-4'>
+      <div className='mb-2'>
         <Input
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}

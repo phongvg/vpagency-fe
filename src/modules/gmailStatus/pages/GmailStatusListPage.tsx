@@ -4,6 +4,7 @@ import type { GmailStatusListParams } from "@/modules/gmailStatus/types/gmailSta
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Input } from "@/shared/components/ui/input";
 import { useDebounce } from "@/shared/hooks/useDebounce";
+import { PlusCircle } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
 
 export default function GmailStatusListPage() {
@@ -39,9 +40,10 @@ export default function GmailStatusListPage() {
 
   return (
     <Fragment>
-      <div className='flex justify-between items-center gap-4 mb-4'>
+      <div className='flex justify-between items-center gap-4 mb-2'>
         <Input value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder='Tìm kiếm theo tên' className='max-w-[300px]' />
         <AppButton onClick={handleOpenCreate} variant='outline' size='sm'>
+          <PlusCircle />
           Tạo mới
         </AppButton>
       </div>

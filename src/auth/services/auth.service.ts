@@ -30,7 +30,6 @@ export const authService = {
     setAuthenticated(true);
     setLoading(false);
 
-    // Schedule refresh in next tick to avoid blocking navigation
     setTimeout(() => {
       authService.scheduleRefresh();
     }, 0);

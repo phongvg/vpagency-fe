@@ -11,6 +11,16 @@ const HEIGHT = 760;
 const ROW_HEIGHT = 80;
 const HEADER_HEIGHT = 56;
 
+const columns = [
+  { key: "gmail", align: "items-center" },
+  { key: "uid", align: "items-center" },
+];
+
+const headerColumns = [
+  { key: "gmail", label: "Email" },
+  { key: "uid", label: "UID" },
+];
+
 export default function VirtualGmailTable({ gmail }: VirtualGmailTableProps) {
   const tableHeight = useMemo(() => HEIGHT - HEADER_HEIGHT, []);
 
@@ -41,8 +51,22 @@ export default function VirtualGmailTable({ gmail }: VirtualGmailTableProps) {
           }}
           className='bg-white'>
           <div className='flex items-center px-4 border-r'>{index + 1}</div>
-          <div className='flex items-center px-4 border-r whitespace-nowrap'>{emailItem.gmail}</div>
-          <div className='flex items-center px-4 border-r whitespace-nowrap'>{addDash(emailItem.uid || "")}</div>
+
+          {columns.map((col) => {
+            const width = columnWidths[col.key as keyof typeof columnWidths];
+            let content: React.ReactNode = emailItem[col.key as keyof GmailUIDMapping];
+
+            // Format UID with dashes
+            if (col.key === "uid") {
+              content = addDash(emailItem.uid || "");
+            }
+
+            return (
+              <div key={col.key} className={`flex px-4 border-r whitespace-nowrap ${col.align}`}>
+                {content}
+              </div>
+            );
+          })}
         </div>
       );
     },
@@ -58,12 +82,16 @@ export default function VirtualGmailTable({ gmail }: VirtualGmailTableProps) {
               <div style={{ width: columnWidths.stt, minWidth: columnWidths.stt }} className='flex items-center px-4 border-r font-semibold'>
                 STT
               </div>
-              <div style={{ width: columnWidths.email, minWidth: columnWidths.email }} className='flex items-center px-4 border-r font-semibold'>
-                Email
-              </div>
-              <div style={{ width: columnWidths.uid, minWidth: columnWidths.uid }} className='flex items-center px-4 border-r font-semibold'>
-                UID
-              </div>
+
+              {headerColumns.map((col) => {
+                const width = columnWidths[col.key as keyof typeof columnWidths];
+
+                return (
+                  <div key={col.key} style={{ width, minWidth: width }} className='flex items-center px-4 border-r font-semibold'>
+                    {col.label}
+                  </div>
+                );
+              })}
             </div>
           </div>
 

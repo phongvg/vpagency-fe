@@ -1,57 +1,66 @@
-import type { UpdateGmailRequest } from "@/modules/gmail/types/gmail.type";
+import type { UpdateAppealAccountRequest } from "@/modules/appealAccount/types/appealAccount.type";
 import { useCallback, useMemo } from "react";
 import { FixedSizeList } from "react-window";
 
-interface VirtualGmailTableProps {
-  gmails: UpdateGmailRequest[];
+interface VirtualAppealAccountTableProps {
+  appealAccounts: UpdateAppealAccountRequest[];
 }
 
-const HEIGHT = 760;
+const HEIGHT = 660;
 const ROW_HEIGHT = 80;
 const HEADER_HEIGHT = 56;
 
 const columns = [
   { key: "profileName", align: "items-center" },
-  { key: "name", align: "items-center" },
+  { key: "email", align: "items-center" },
   { key: "password", align: "items-center" },
-  { key: "recoverMail", align: "items-center" },
-  { key: "phone", align: "items-center" },
-  { key: "code2fa", align: "items-center" },
-  { key: "appPassword", align: "items-center" },
-  { key: "createdYear", align: "justify-center items-center" },
-  { key: "proxy", align: "items-center" },
-  { key: "price", align: "items-center" },
+  { key: "recoveryEmail", align: "items-center" },
+  { key: "twoFa", align: "items-center" },
+  { key: "mcc", align: "items-center" },
+  { key: "uid", align: "justify-center items-center" },
+  { key: "appealPlatform", align: "items-center" },
+  { key: "appealedBy", align: "items-center" },
+  { key: "usedBy", align: "items-center" },
+  { key: "note", align: "items-center" },
+  { key: "note2", align: "items-center" },
+  { key: "rarityLevel", align: "items-center" },
 ];
 
 const headerColumns = [
   { key: "profileName", label: "Tên hồ sơ" },
-  { key: "name", label: "Email" },
+  { key: "email", label: "Email" },
   { key: "password", label: "Mật khẩu" },
-  { key: "recoverMail", label: "Email khôi phục" },
-  { key: "phone", label: "Số điện thoại" },
-  { key: "code2fa", label: "Mã 2FA" },
-  { key: "appPassword", label: "Mật khẩu ứng dụng" },
-  { key: "createdYear", label: "Năm tạo" },
-  { key: "proxy", label: "Proxy" },
-  { key: "price", label: "Tiền" },
+  { key: "recoveryEmail", label: "Email khôi phục" },
+  { key: "twoFa", label: "Mã 2FA" },
+  { key: "mcc", label: "MCC" },
+  { key: "uid", label: "UID" },
+  { key: "appealPlatform", label: "Sàn kháng được" },
+  { key: "appealedBy", label: "Người kháng" },
+  { key: "usedBy", label: "Người sử dụng" },
+  { key: "note", label: "Ghi chú" },
+  { key: "note2", label: "Ghi chú 2" },
+  { key: "rarityLevel", label: "Mức độ hiếm" },
 ];
 
-export default function VirtualGmailTable({ gmails }: VirtualGmailTableProps) {
+export default function VirtualAppealAccountTable({ appealAccounts }: VirtualAppealAccountTableProps) {
   const tableHeight = useMemo(() => HEIGHT - HEADER_HEIGHT, []);
 
   const columnWidths = useMemo(
     () => ({
       stt: 60,
       profileName: 200,
-      name: 350,
+      email: 350,
       password: 250,
-      recoverMail: 350,
-      phone: 200,
-      code2fa: 200,
-      appPassword: 200,
-      createdYear: 120,
-      proxy: 200,
-      price: 120,
+      recoveryEmail: 350,
+      twoFa: 150,
+      mcc: 150,
+      uid: 150,
+      appealPlatform: 200,
+      appealedBy: 200,
+      usedBy: 200,
+      note: 300,
+      note2: 300,
+      rarityLevel: 150,
     }),
     []
   );
@@ -60,7 +69,7 @@ export default function VirtualGmailTable({ gmails }: VirtualGmailTableProps) {
 
   const Row = useCallback(
     ({ index, style }: { index: number; style: React.CSSProperties }) => {
-      const account = gmails[index];
+      const account = appealAccounts[index];
 
       return (
         <div
@@ -74,28 +83,22 @@ export default function VirtualGmailTable({ gmails }: VirtualGmailTableProps) {
             <span>{index + 1}</span>
           </div>
 
-          {columns.map((col, colIndex) => {
+          {columns.map((col, index) => {
             const width = columnWidths[col.key as keyof typeof columnWidths];
-            let content = account[col.key as keyof UpdateGmailRequest];
-
-            // Format price field
-            if (col.key === "price" && typeof content === "number") {
-              content = `$${content.toFixed(2)}` as any;
-            }
 
             return (
               <div
                 key={col.key}
                 style={{ width, minWidth: width }}
-                className={`flex px-4 ${col.align} ${colIndex !== columns.length - 1 ? "border-r" : ""}`}>
-                <span>{content}</span>
+                className={`flex px-4 ${col.align} ${index !== columns.length - 1 ? "border-r" : ""}`}>
+                <span>{account[col.key as keyof UpdateAppealAccountRequest]}</span>
               </div>
             );
           })}
         </div>
       );
     },
-    [gmails, columnWidths]
+    [appealAccounts, columnWidths]
   );
 
   return (
@@ -110,14 +113,14 @@ export default function VirtualGmailTable({ gmails }: VirtualGmailTableProps) {
                 STT
               </div>
 
-              {headerColumns.map((col, colIndex) => {
+              {headerColumns.map((col, index) => {
                 const width = columnWidths[col.key as keyof typeof columnWidths];
 
                 return (
                   <div
                     key={col.key}
                     style={{ width, minWidth: width }}
-                    className={`flex items-center px-4 font-semibold ${colIndex !== headerColumns.length - 1 ? "border-r" : ""}`}>
+                    className={`flex items-center px-4 font-semibold ${index !== columns.length - 1 ? "border-r" : ""}`}>
                     {col.label}
                   </div>
                 );
@@ -125,7 +128,12 @@ export default function VirtualGmailTable({ gmails }: VirtualGmailTableProps) {
             </div>
           </div>
 
-          <FixedSizeList height={tableHeight} itemCount={gmails.length} itemSize={ROW_HEIGHT} width={totalWidth} style={{ overflowX: "hidden" }}>
+          <FixedSizeList
+            height={tableHeight}
+            itemCount={appealAccounts.length}
+            itemSize={ROW_HEIGHT}
+            width={totalWidth}
+            style={{ overflowX: "hidden" }}>
             {Row}
           </FixedSizeList>
         </div>

@@ -3,6 +3,12 @@ import type { BaseParam } from "@/shared/types/common/param.type";
 
 export type AppealAccountListParams = BaseParam & {
   search?: string;
+  email?: string;
+  uid?: string;
+  appealedBy?: string;
+  usedBy?: string;
+  appealPlatform?: string;
+  rarityLevel?: string;
 };
 
 export type AppealAccount = {

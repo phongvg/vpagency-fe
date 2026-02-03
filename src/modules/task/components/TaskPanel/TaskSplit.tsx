@@ -50,7 +50,7 @@ export default function TaskSplit({
 
   return (
     <div className='flex flex-col flex-1 gap-2 h-full'>
-      <div className='flex items-center gap-2'>
+      <div>
         <Popover>
           <PopoverTrigger asChild>
             <AppButton type='button' variant='outline' size='sm'>

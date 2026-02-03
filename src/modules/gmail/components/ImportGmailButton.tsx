@@ -9,10 +9,10 @@ import toast from "react-hot-toast";
 
 export default function ImportGmailButton() {
   const [gmail, setGmail] = useState<UpdateGmailRequest[]>([]);
-  const [isGmailPreviewDialogOpen, setIsGmailPreviewDialogOpen] = useState(false);
+  const [isGmailPreviewModalOpen, setIsGmailPreviewModalOpen] = useState(false);
   const { processFile, isProcessing } = useImportGmailExcel();
 
-  const inputGmailRef = useRef<HTMLInputElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleGmailFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -22,8 +22,8 @@ export default function ImportGmailButton() {
       const data = await processFile(file);
 
       setGmail(data);
-      toast.success(`Đã nhập  ${data.length} email thành công`);
-      setIsGmailPreviewDialogOpen(true);
+      toast.success(`Đã nhập ${data.length} email thành công`);
+      setIsGmailPreviewModalOpen(true);
     } catch (err) {
       toast.error((err as Error).message ?? "Lỗi nhập dữ liệu");
     } finally {
@@ -35,14 +35,14 @@ export default function ImportGmailButton() {
 
   return (
     <Fragment>
-      <AppButton variant='outline' size='sm' onClick={() => inputGmailRef.current?.click()} loading={isProcessing}>
+      <AppButton variant='outline' size='sm' onClick={() => inputRef.current?.click()} loading={isProcessing}>
         <Download />
         Nhập dữ liệu
       </AppButton>
 
-      <input ref={inputGmailRef} hidden type='file' multiple={false} accept='.xlsx, .xls' onChange={handleGmailFileChange} />
+      <input ref={inputRef} hidden type='file' multiple={false} accept='.xlsx, .xls' onChange={handleGmailFileChange} />
 
-      <ImportGmailPreviewModal open={isGmailPreviewDialogOpen} gmails={gmail} onClose={() => setIsGmailPreviewDialogOpen(false)} />
+      <ImportGmailPreviewModal open={isGmailPreviewModalOpen} gmails={gmail} onClose={() => setIsGmailPreviewModalOpen(false)} />
     </Fragment>
   );
 }

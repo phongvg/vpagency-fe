@@ -1,3 +1,4 @@
+import type { AppealAccountListParams } from "@/modules/appealAccount/types/appealAccount.type";
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
 import type { GmailListParams } from "@/modules/gmail/types/gmail.type";
 import type { GmailStatusListParams } from "@/modules/gmailStatus/types/gmailStatus.type";
@@ -88,4 +89,14 @@ export const gmailStatusQueryKeys = {
   list: (params: GmailStatusListParams) => [...gmailStatusQueryKeys.lists(), normalizeParams(params)] as const,
 
   detail: (id: string) => [...gmailStatusQueryKeys.all, "detail", id] as const,
+};
+
+export const appealAccountQueryKeys = {
+  all: ["appeal-accounts"] as const,
+
+  lists: () => [...appealAccountQueryKeys.all, "list"] as const,
+
+  list: (params: AppealAccountListParams) => [...appealAccountQueryKeys.lists(), normalizeParams(params)] as const,
+
+  detail: (id: string) => [...appealAccountQueryKeys.all, "detail", id] as const,
 };
