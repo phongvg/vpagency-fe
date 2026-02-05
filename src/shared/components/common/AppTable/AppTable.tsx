@@ -4,17 +4,20 @@ import { Checkbox } from "@/shared/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/shared/components/ui/dropdown-menu";
 import { ScrollArea, ScrollBar } from "@/shared/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table";
+import { cn } from "@/shared/libs/utils";
 import {
   type ColumnDef,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
   type OnChangeFn,
   type RowSelectionState,
+  type SortingState,
   useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
-import { Settings2 } from "lucide-react";
-import { useMemo } from "react";
+import { ArrowDown, ArrowUp, ArrowUpDown, Settings2 } from "lucide-react";
+import { useMemo, useState } from "react";
 
 interface AppTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -56,6 +59,8 @@ export function AppTable<TData, TValue>({
 
   getRowClassName,
 }: AppTableProps<TData, TValue>) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+
   const selectColumn = useMemo<ColumnDef<TData> | null>(() => {
     if (!enableRowSelection) return null;
 
@@ -79,6 +84,7 @@ export function AppTable<TData, TValue>({
     columns: resolvedColumns,
 
     state: {
+      sorting,
       pagination: {
         pageIndex: page,
         pageSize,
@@ -94,6 +100,8 @@ export function AppTable<TData, TValue>({
       onPageChange?.(next.pageIndex, next.pageSize);
     },
 
+    onSortingChange: setSorting,
+
     getRowId: (row) => String(row[rowIdKey]),
     enableRowSelection,
     onRowSelectionChange: enableRowSelection ? onRowSelectionChange : undefined,
@@ -101,6 +109,7 @@ export function AppTable<TData, TValue>({
     onColumnVisibilityChange: enableColumnVisibility ? onColumnVisibilityChange : undefined,
 
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   });
 
   if (table.getRowModel().rows?.length === 0) {
@@ -142,7 +151,24 @@ export function AppTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id} style={{ minWidth: header.column.columnDef.minSize }}>
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    {header.isPlaceholder ? null : (
+                      <div
+                        className={cn(header.column.getCanSort() && header.column.id !== "index" && "flex items-center gap-2 cursor-pointer select-none")}
+                        onClick={header.column.id !== "index" ? header.column.getToggleSortingHandler() : undefined}>
+                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        {header.column.getCanSort() && header.column.id !== "index" && (
+                          <span className='ml-auto'>
+                            {header.column.getIsSorted() === "asc" ? (
+                              <ArrowUp className='w-4 h-4' />
+                            ) : header.column.getIsSorted() === "desc" ? (
+                              <ArrowDown className='w-4 h-4' />
+                            ) : (
+                              <ArrowUpDown className='opacity-50 w-4 h-4' />
+                            )}
+                          </span>
+                        )}
+                      </div>
+                    )}
                   </TableHead>
                 ))}
               </TableRow>
