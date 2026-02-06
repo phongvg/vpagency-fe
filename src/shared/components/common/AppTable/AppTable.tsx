@@ -19,6 +19,8 @@ import {
 import { ArrowDown, ArrowUp, ArrowUpDown, Settings2 } from "lucide-react";
 import { useMemo, useState } from "react";
 
+const INDEX_COLUMN_ID = "index";
+
 interface AppTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -153,10 +155,12 @@ export function AppTable<TData, TValue>({
                   <TableHead key={header.id} style={{ minWidth: header.column.columnDef.minSize }}>
                     {header.isPlaceholder ? null : (
                       <div
-                        className={cn(header.column.getCanSort() && header.column.id !== "index" && "flex items-center gap-2 cursor-pointer select-none")}
-                        onClick={header.column.id !== "index" ? header.column.getToggleSortingHandler() : undefined}>
+                        className={cn(
+                          header.column.getCanSort() && header.column.id !== INDEX_COLUMN_ID && "flex items-center gap-2 cursor-pointer select-none"
+                        )}
+                        onClick={header.column.id !== INDEX_COLUMN_ID ? header.column.getToggleSortingHandler() : undefined}>
                         {flexRender(header.column.columnDef.header, header.getContext())}
-                        {header.column.getCanSort() && header.column.id !== "index" && (
+                        {header.column.getCanSort() && header.column.id !== INDEX_COLUMN_ID && (
                           <span className='ml-auto'>
                             {header.column.getIsSorted() === "asc" ? (
                               <ArrowUp className='w-4 h-4' />
@@ -176,7 +180,7 @@ export function AppTable<TData, TValue>({
           </TableHeader>
 
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {table.getRowModel().rows?.length &&
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={getRowClassName?.(row.original)}>
                   {row.getVisibleCells().map((cell) => (
@@ -185,14 +189,7 @@ export function AppTable<TData, TValue>({
                     </TableCell>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className='h-24 text-center'>
-                  Không có dữ liệu.
-                </TableCell>
-              </TableRow>
-            )}
+              ))}
           </TableBody>
         </Table>
 
