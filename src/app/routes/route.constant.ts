@@ -14,4 +14,5 @@ export const urls = {
   projectType: "project-types",
   projectStatus: "project-statuses",
   appealAccount: "appeal-accounts",
+  finance: "finance",
 };

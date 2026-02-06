@@ -2,6 +2,7 @@ import { AppButton } from "@/shared/components/common/AppButton";
 import AppPagination from "@/shared/components/common/AppPagination/AppPagination";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/shared/components/ui/dropdown-menu";
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/shared/components/ui/empty";
 import { ScrollArea, ScrollBar } from "@/shared/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table";
 import { cn } from "@/shared/libs/utils";
@@ -16,7 +17,7 @@ import {
   useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
-import { ArrowDown, ArrowUp, ArrowUpDown, Settings2 } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, FolderClosed, Settings2 } from "lucide-react";
 import { useMemo, useState } from "react";
 
 const INDEX_COLUMN_ID = "index";
@@ -117,7 +118,16 @@ export function AppTable<TData, TValue>({
   if (table.getRowModel().rows?.length === 0) {
     return (
       <div className='flex flex-col justify-center py-4 h-48'>
-        <div className='p-6 w-full text-white/50 text-center'>Không có dữ liệu.</div>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant='icon'>
+              <FolderClosed />
+            </EmptyMedia>
+
+            <EmptyTitle>Không có dữ liệu</EmptyTitle>
+            <EmptyDescription>Không tìm thấy dữ liệu</EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       </div>
     );
   }

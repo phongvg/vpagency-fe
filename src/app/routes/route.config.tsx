@@ -7,6 +7,7 @@ import { DashboardPage } from "@/modules/dashboard";
 import { GmailListPage } from "@/modules/gmail";
 import { GmailStatusListPage } from "@/modules/gmailStatus";
 import { ProjectListPage } from "@/modules/project";
+import { ProjectDailyStatsListPage } from "@/modules/projectDailyStats";
 import { ProjectStatusListPage } from "@/modules/projectStatus";
 import { ProjectTypeListPage } from "@/modules/projectType";
 import { TaskListPage } from "@/modules/task";
@@ -14,7 +15,18 @@ import { UserListPage } from "@/modules/user";
 import { Role } from "@/shared/constants/role.constant";
 import BlankLayout from "@/shared/layouts/BlankLayout";
 import DashboardLayout from "@/shared/layouts/DashboardLayout";
-import { ClipboardList, FolderKanban, FolderTree, LayoutGrid, ListChecks, Mail, MailCheck, Megaphone, Users } from "lucide-react";
+import {
+  ChartNoAxesCombined,
+  ClipboardList,
+  FolderKanban,
+  FolderTree,
+  LayoutGrid,
+  ListChecks,
+  Mail,
+  MailCheck,
+  Megaphone,
+  Users,
+} from "lucide-react";
 import { Navigate } from "react-router-dom";
 import type { AppRoute } from "./route.type";
 
@@ -53,6 +65,14 @@ export const appRoutes: AppRoute[] = [
         pageTitle: "Danh sách chiến dịch",
         element: <CampaignListPage />,
         icon: Megaphone,
+        showInSidebar: true,
+      },
+      {
+        path: urls.finance,
+        title: "Báo cáo tài chính",
+        pageTitle: "Báo cáo tài chính",
+        element: <ProjectDailyStatsListPage />,
+        icon: ChartNoAxesCombined,
         showInSidebar: true,
       },
       {

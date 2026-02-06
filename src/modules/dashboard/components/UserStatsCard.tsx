@@ -1,6 +1,9 @@
+import { useUserStats } from "@/modules/dashboard/hooks/useUserStats";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
 
 export default function UserStatsCard() {
+  const { data: userStats } = useUserStats();
+
   return (
     <Card>
       <CardHeader>
@@ -11,17 +14,22 @@ export default function UserStatsCard() {
         <div className='grid grid-cols-2 p-1'>
           <div className='p-1 text-[9px]'>
             <div className='text-white/50'>Tài khoản hệ thống</div>
-            <div className='font-bold'>12</div>
+            <div className='font-bold'>{userStats?.total}</div>
           </div>
 
           <div className='p-1 text-[9px]'>
             <div className='text-white/50'>Tài khoản hoạt động</div>
-            <div className='font-bold'>12</div>
+            <div className='font-bold'>{userStats?.byStatus.active}</div>
+          </div>
+
+          <div className='p-1 text-[9px]'>
+            <div className='text-white/50'>Tài khoản mới Onboard</div>
+            <div className='font-bold'>{userStats?.byStatus.onboarding}</div>
           </div>
 
           <div className='p-1 text-[9px]'>
             <div className='text-white/50'>Tài khoản bị khóa</div>
-            <div className='font-bold'>12</div>
+            <div className='font-bold'>{userStats?.byStatus.inactive}</div>
           </div>
         </div>
       </CardContent>

@@ -14,12 +14,12 @@ export type ApiBaseResponse<T> = {
   data: T;
 };
 
-export type ApiBaseListResponse<T> = {
+export type ApiBaseListResponse<T, TExtraData = {}> = {
   success: boolean;
   code?: string;
   message?: string;
   data: {
     items: T[];
     meta: Meta;
-  };
+  } & TExtraData;
 };

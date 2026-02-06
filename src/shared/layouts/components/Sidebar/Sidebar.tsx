@@ -8,7 +8,7 @@ export default function Sidebar() {
   const routes = getSidebarRoutes();
 
   return (
-    <aside className='bg-[rgba(var(--body-bg-rgb),.75)] min-w-64'>
+    <aside className='top-0 left-0 z-20 fixed bg-[rgba(var(--body-bg-rgb))] min-w-64 h-full'>
       <div className='flex flex-col h-full'>
         <div className='space-y-3'>
           <div className='flex items-center gap-2 p-2 border-border border-b'>
