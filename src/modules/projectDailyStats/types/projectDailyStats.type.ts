@@ -1,8 +1,8 @@
 import type { LocationStat } from "@/modules/campaign/types/campaign.type";
 import type { ApiBaseListResponse } from "@/shared/types/common/apiResponse.type";
-import type { BaseParam } from "@/shared/types/common/param.type";
+import type { BaseParams } from "@/shared/types/common/param.type";
 
-export type ProjectDailyStatsListParams = BaseParam & {
+export type ProjectDailyStatsListParams = BaseParams & {
   fromDate?: string;
   toDate?: string;
   projectName?: string;

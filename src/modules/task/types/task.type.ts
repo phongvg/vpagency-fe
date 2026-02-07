@@ -1,7 +1,7 @@
 import type { FinalUrl, FinalURLGroup } from "@/modules/finalUrl/types/finalUrl.type";
 import type { Project } from "@/modules/project/types/project.type";
 import type { User } from "@/modules/user/types/user.type";
-import type { BaseParam } from "@/shared/types/common/param.type";
+import type { BaseParams } from "@/shared/types/common/param.type";
 
 export const TaskStatus = {
   PENDING: "PENDING",
@@ -39,7 +39,7 @@ export const TaskPriority = {
 
 export type TaskPriority = (typeof TaskPriority)[keyof typeof TaskPriority];
 
-export type TaskListParams = BaseParam & {
+export type TaskListParams = BaseParams & {
   search?: string;
   status?: TaskStatus;
   type?: TaskType;

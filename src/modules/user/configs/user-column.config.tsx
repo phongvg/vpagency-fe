@@ -20,7 +20,7 @@ export const userColumnConfig = ({
 }): ColumnDef<User>[] => [
   {
     header: "STT",
-    accessorKey: "index",
+    id: "index",
     cell: (props) => props.row.index + 1,
   },
   {

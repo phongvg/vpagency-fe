@@ -1,4 +1,4 @@
-export type BaseParam = {
+export type BaseParams = {
   page?: number;
   limit?: number;
 };

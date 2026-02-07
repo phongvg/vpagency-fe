@@ -2,6 +2,7 @@ import type { AppealAccountListParams } from "@/modules/appealAccount/types/appe
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
 import type { GmailListParams } from "@/modules/gmail/types/gmail.type";
 import type { GmailStatusListParams } from "@/modules/gmailStatus/types/gmailStatus.type";
+import type { ProjectListParams } from "@/modules/project/types/project.type";
 import type { ProjectDailyStatsListParams } from "@/modules/projectDailyStats/types/projectDailyStats.type";
 import type { ProjectStatusListParams } from "@/modules/projectStatus/types/projectStatus.type";
 import type { ProjectTypeListParams } from "@/modules/projectType/types/projectType.type";
@@ -60,6 +61,16 @@ export const gmailQueryKeys = {
   list: (params: GmailListParams) => [...gmailQueryKeys.lists(), normalizeParams(params)] as const,
 
   detail: (id: string) => [...gmailQueryKeys.all, "detail", id] as const,
+};
+
+export const projectQueryKeys = {
+  all: ["projects"] as const,
+
+  lists: () => [...projectQueryKeys.all, "list"] as const,
+
+  list: (params: ProjectListParams) => [...projectQueryKeys.lists(), normalizeParams(params)] as const,
+
+  detail: (id: string) => [...projectQueryKeys.all, "detail", id] as const,
 };
 
 export const projectStatusQueryKeys = {

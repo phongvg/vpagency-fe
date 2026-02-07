@@ -11,7 +11,7 @@ import { Copy } from "lucide-react";
 export const campaignColumnConfig = (): ColumnDef<Campaign>[] => [
   {
     header: "STT",
-    accessorKey: "index",
+    id: "index",
     cell: (props) => props.row.index + 1,
   },
   {

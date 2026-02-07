@@ -7,7 +7,7 @@ import { Copy } from "lucide-react";
 export const finalUrlColumnConfig = (onCopy: (text: string) => void): ColumnDef<FinalUrl>[] => [
   {
     header: "STT",
-    accessorKey: "index",
+    id: "index",
     cell: (props) => props.row.index + 1,
   },
   {

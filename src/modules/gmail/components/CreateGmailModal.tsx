@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useCreateGmail } from "../hooks/useCreateGmail";
-import { transformTGmailFormToPayload } from "../utils/gmail.mapper";
+import { transformTGmailFormToPayload } from "../mappers/gmail.mapper";
 import GmailForm from "./GmailForm";
 
 interface CreateGmailModalProps {

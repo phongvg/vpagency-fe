@@ -1,7 +1,6 @@
 import type { ProjectType } from "@/modules/projectType/types/projectType.type";
 import { AppButton } from "@/shared/components/common/AppButton";
 import type { ColumnDef } from "@tanstack/react-table";
-import { formatDate } from "date-fns/format";
 import { SquarePen, Trash2 } from "lucide-react";
 
 export const projectTypeColumnConfig = ({
@@ -13,17 +12,12 @@ export const projectTypeColumnConfig = ({
 }): ColumnDef<ProjectType>[] => [
   {
     header: "STT",
-    accessorKey: "index",
+    id: "index",
     cell: (props) => props.row.index + 1,
   },
   {
     header: "Tên loại dự án",
     accessorKey: "name",
-  },
-  {
-    header: "Thời gian tạo",
-    accessorKey: "createdAt",
-    cell: (props) => formatDate(props.row.original.createdAt, "dd/MM/yyyy HH:mm"),
   },
   {
     id: "actions",

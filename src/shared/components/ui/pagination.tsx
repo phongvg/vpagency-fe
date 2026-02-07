@@ -5,7 +5,7 @@ import { type ButtonProps, buttonVariants } from "@/shared/components/ui/button"
 import { cn } from "@/shared/libs/utils";
 
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
-  <nav role='navigation' aria-label='pagination' className={cn("mx-auto flex w-full justify-center", className)} {...props} />
+  <nav role='navigation' aria-label='pagination' className={cn("flex justify-center mx-auto w-full", className)} {...props} />
 );
 Pagination.displayName = "Pagination";
 
@@ -40,22 +40,22 @@ const PaginationLink = ({ className, isActive, size = "icon", ...props }: Pagina
 PaginationLink.displayName = "PaginationLink";
 
 const PaginationPrevious = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink aria-label='Go to previous page' size='default' className={cn("gap-1 pl-2.5", className)} {...props}>
-    <ChevronLeft className='h-2 w-2' />
+  <PaginationLink aria-label='Go to previous page' size='default' className={cn("gap-1", className)} {...props}>
+    <ChevronLeft />
   </PaginationLink>
 );
 PaginationPrevious.displayName = "PaginationPrevious";
 
 const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink aria-label='Go to next page' size='default' className={cn("gap-1 pr-2.5", className)} {...props}>
-    <ChevronRight className='h-2 w-2' />
+  <PaginationLink aria-label='Go to next page' size='default' className={cn("gap-1", className)} {...props}>
+    <ChevronRight />
   </PaginationLink>
 );
 PaginationNext.displayName = "PaginationNext";
 
 const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => (
-  <span aria-hidden className={cn("flex h-9 w-9 items-center justify-center", className)} {...props}>
-    <MoreHorizontal className='h-2 w-2' />
+  <span aria-hidden className={cn("flex justify-center items-center w-9 h-9", className)} {...props}>
+    <MoreHorizontal className='w-1 h-1' />
     <span className='sr-only'>More pages</span>
   </span>
 );

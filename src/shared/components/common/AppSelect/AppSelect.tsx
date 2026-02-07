@@ -1,28 +1,49 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
+import { selectStyles } from "@/shared/components/common/AsyncSelect/async-select.config";
 import type { SelectOption } from "@/shared/types/common/select-option.type";
+import { useCallback, useMemo } from "react";
+import Select, { type SingleValue } from "react-select";
 
-interface AppSelectProps {
-  value?: string;
-  onValueChange?: (value: string) => void;
+export interface AppSelectProps {
+  value?: SelectOption | SelectOption[] | null;
+  onValueChange?: (value: string | SelectOption | SelectOption[] | null) => void;
   options: SelectOption[];
   placeholder?: string;
   disabled?: boolean;
+  isMulti?: boolean;
 }
 
-export default function AppSelect({ value, onValueChange, options, placeholder, disabled }: AppSelectProps) {
-  return (
-    <Select value={value} onValueChange={onValueChange} disabled={disabled}>
-      <SelectTrigger>
-        <SelectValue placeholder={placeholder} />
-      </SelectTrigger>
+export default function AppSelect({ value, onValueChange, options, placeholder = "", disabled, isMulti = false }: AppSelectProps) {
+  const selectedOption = useMemo(() => {
+    if (isMulti && Array.isArray(value)) {
+      return options.filter((opt) => value.some((val) => val.value === opt.value));
+    }
 
-      <SelectContent>
-        {options.map((opt) => (
-          <SelectItem key={opt.value} value={opt.value}>
-            {opt.label}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    return options.find((opt) => opt.value === (value as SelectOption)?.value) ?? null;
+  }, [options, value, isMulti]);
+
+  const handleChange = useCallback(
+    (option: SingleValue<SelectOption>) => {
+      if (isMulti) {
+        onValueChange?.(option);
+      } else {
+        const optionSelected = option?.value ?? null;
+        onValueChange?.(optionSelected);
+      }
+    },
+    [onValueChange, isMulti]
+  );
+
+  return (
+    <Select
+      styles={selectStyles}
+      value={selectedOption}
+      onChange={handleChange}
+      options={options}
+      placeholder={placeholder}
+      isDisabled={disabled}
+      noOptionsMessage={() => "KHÔNG CÓ DỮ LIỆU"}
+      components={{ IndicatorSeparator: null }}
+      isMulti={isMulti as any}
+    />
   );
 }

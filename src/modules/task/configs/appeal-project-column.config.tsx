@@ -5,7 +5,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 export const appealProjectColumnConfig: ColumnDef<Project>[] = [
   {
     header: "STT",
-    accessorKey: "index",
+    id: "index",
     cell: (props) => props.row.index + 1,
   },
   {

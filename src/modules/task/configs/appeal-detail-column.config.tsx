@@ -6,7 +6,7 @@ import { formatDate } from "date-fns";
 export const appealDetailColumnConfig: ColumnDef<TaskAppealDetail>[] = [
   {
     header: "STT",
-    accessorKey: "index",
+    id: "index",
     cell: (props) => props.row.index + 1,
   },
   {

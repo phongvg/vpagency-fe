@@ -1,7 +1,7 @@
 import type { User } from "@/modules/user/types/user.type";
-import type { BaseParam } from "@/shared/types/common/param.type";
+import type { BaseParams } from "@/shared/types/common/param.type";
 
-export type AppealAccountListParams = BaseParam & {
+export type AppealAccountListParams = BaseParams & {
   search?: string;
   email?: string;
   uid?: string;

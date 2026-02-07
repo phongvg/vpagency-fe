@@ -1,7 +1,7 @@
 import type { GmailFormType } from "../schemas/gmail-form.schema";
 import type { Gmail, UpdateGmailRequest } from "../types/gmail.type";
 
-export const transformGmailToForm = (gmail: Gmail | undefined): GmailFormType => {
+export const transformGmailToForm = (gmail?: Gmail | undefined): GmailFormType => {
   return {
     name: gmail?.name || "",
     password: gmail?.password || "",

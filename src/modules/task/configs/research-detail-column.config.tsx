@@ -14,7 +14,7 @@ export const researchDetailColumnConfig = ({
 }): ColumnDef<TaskResearchDetail>[] => [
   {
     header: "STT",
-    accessorKey: "index",
+    id: "index",
     cell: (props) => props.row.index + 1,
   },
   {

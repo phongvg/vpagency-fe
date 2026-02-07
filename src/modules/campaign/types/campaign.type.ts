@@ -1,8 +1,8 @@
 import type { FinalUrl } from "@/modules/finalUrl/types/finalUrl.type";
 import type { User } from "@/modules/user/types/user.type";
-import type { BaseParam } from "@/shared/types/common/param.type";
+import type { BaseParams } from "@/shared/types/common/param.type";
 
-export type CampaignListParams = BaseParam & {
+export type CampaignListParams = BaseParams & {
   importAtFrom?: string;
   importAtTo?: string;
   dateFrom?: string;

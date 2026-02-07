@@ -1,22 +1,13 @@
 import { AsyncSelect } from "@/shared/components/common/AsyncSelect";
+import type { AsyncSelectProps } from "@/shared/components/common/AsyncSelect/AsyncSelect";
 import { Field, FieldError, FieldLabel } from "@/shared/components/ui/field";
-import type { Meta } from "@/shared/types/common/apiResponse.type";
-import type { SelectOption } from "@/shared/types/common/select-option.type";
 import { Controller, useFormContext } from "react-hook-form";
 
-interface FormAsyncSelectProps<T> {
+interface FormAsyncSelectProps<T> extends AsyncSelectProps<T> {
   name: string;
   label?: string;
-  fetcher?: (params: { search: string; page: number }) => Promise<{
-    items: T[];
-    meta: Meta;
-  }>;
-  mapOption?: (item: T) => SelectOption;
-  placeholder?: string;
-  disabled?: boolean;
   required?: boolean;
   className?: string;
-  isMulti?: boolean;
 }
 
 export default function FormAsyncSelect<T>({

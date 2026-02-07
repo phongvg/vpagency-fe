@@ -25,6 +25,8 @@ export default function ProjectDailySummaryTable({ projectDailySummary }: Projec
 
   const pageCount = Math.ceil(projectDailySummary.length / PAGE_SIZE);
 
+  if (!user) return null;
+
   return (
     <AppTable
       data={paginatedData}

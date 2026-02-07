@@ -5,7 +5,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 export const taskProgressUrlColumnConfig = (onOpenCampaignStats: (finalUrlId: string) => void): ColumnDef<FinalURLGroup>[] => [
   {
     header: "STT",
-    accessorKey: "index",
+    id: "index",
     cell: (props) => props.row.index + 1,
   },
   {

@@ -2,6 +2,7 @@ import ProjectDailyStatsTable from "@/modules/projectDailyStats/components/Proje
 import ProjectDailySummaryTable from "@/modules/projectDailyStats/components/ProjectDailySummaryTable";
 import { useProjectDailyStats } from "@/modules/projectDailyStats/hooks/useProjectDailyStats";
 import type { ProjectDailyStatsListParams } from "@/modules/projectDailyStats/types/projectDailyStats.type";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
 import { AppLoading } from "@/shared/components/common/AppLoading";
 import { useState } from "react";
 
@@ -21,11 +22,18 @@ export default function ProjectDailyStatsListPage() {
   if (isLoading) return <AppLoading loading={isLoading} />;
 
   return (
-    <div className='flex flex-col gap-4 h-full'>
-      <div className='flex-1 h-0'>
-        <ProjectDailySummaryTable projectDailySummary={data.data.summary} />
-        <ProjectDailyStatsTable projectDailyStats={data} params={params} setParams={setParams} />
-      </div>
+    <div className='space-y-4'>
+      <Card>
+        <CardHeader>
+          <CardTitle>Tổng quan dự án</CardTitle>
+        </CardHeader>
+
+        <CardContent>
+          <ProjectDailySummaryTable projectDailySummary={data.data.summary} />
+        </CardContent>
+      </Card>
+
+      <ProjectDailyStatsTable projectDailyStats={data} params={params} setParams={setParams} />
     </div>
   );
 }

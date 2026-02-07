@@ -4,7 +4,7 @@ import { ClipboardList } from "lucide-react";
 export default function EmptyTaskDetailPanel() {
   return (
     <div className='flex-1'>
-      <div className='w-full h-[720px] flex items-center justify-center p-4 border-border border'>
+      <div className='flex justify-center items-center p-4 border border-border w-full h-full'>
         <Empty>
           <EmptyHeader className='max-w-full'>
             <EmptyMedia variant='icon'>

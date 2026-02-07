@@ -1,8 +1,8 @@
 import type { GmailStatus } from "@/modules/gmailStatus/types/gmailStatus.type";
 import type { User } from "@/modules/user/types/user.type";
-import type { BaseParam } from "@/shared/types/common/param.type";
+import type { BaseParams } from "@/shared/types/common/param.type";
 
-export type GmailListParams = BaseParam & {
+export type GmailListParams = BaseParams & {
   search?: string;
 };
 

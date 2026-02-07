@@ -13,7 +13,7 @@ interface GmailColumnHandlers {
 export const gmailColumnConfig = (handlers?: GmailColumnHandlers): ColumnDef<Gmail>[] => [
   {
     header: "STT",
-    accessorKey: "index",
+    id: "index",
     cell: (props) => props.row.index + 1,
   },
   {

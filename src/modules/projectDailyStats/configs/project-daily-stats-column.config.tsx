@@ -19,8 +19,8 @@ export const projectDailyStatsColumnConfig = ({
   onDelete: (id: string) => void;
 }): ColumnDef<ProjectDailyStats>[] => [
   {
+    id: "index",
     header: "STT",
-    accessorKey: "index",
     cell: (props) => props.row.index + 1,
   },
   {
@@ -39,89 +39,91 @@ export const projectDailyStatsColumnConfig = ({
     minSize: 180,
     cell: (props) => <BadgeStatus status={props.row.original.projectStatus} />,
   },
-  ...((isAdminOrAccounting(roles) && [
-    {
-      header: "Lợi nhuận",
-      accessorKey: "profit",
-      enableHiding: isAdminOrAccounting(roles),
-      cell: (props) => formatDollarAmount(props.row.original.profit),
-    },
-    {
-      id: "roi",
-      header: "ROI (%)",
-      accessorKey: "roi",
-      enableHiding: isAdminOrAccounting(roles),
-      cell: (props) => `${fixedNumber(props.row.original.roi)}%`,
-    },
-    {
-      header: "Hoa hồng tạm giữ",
-      accessorKey: "holdRevenue",
-      enableHiding: isAdminOrAccounting(roles),
-      cell: (props) => formatDollarAmount(props.row.original.holdRevenue),
-    },
-    {
-      header: "Hoa hồng rút về",
-      accessorKey: "receivedRevenue",
-      enableHiding: isAdminOrAccounting(roles),
-      cell: (props) => formatDollarAmount(props.row.original.receivedRevenue),
-    },
-    {
-      header: "Tổng Ref",
-      accessorKey: "totalRef",
-      enableHiding: isAdminOrAccounting(roles),
-    },
-    {
-      header: "Chi phí mỗi Ref",
-      accessorKey: "costPerRef",
-      enableHiding: isAdminOrAccounting(roles),
-      cell: (props) => formatDollarAmount(props.row.original.costPerRef),
-    },
-    {
-      header: "Tỷ lệ Ref/Click (%)",
-      accessorKey: "rateRefPerClick",
-      enableHiding: isAdminOrAccounting(roles),
-      cell: (props) => `${fixedNumber(props.row.original.rateRefPerClick)}%`,
-    },
-    {
-      header: "Số FTD",
-      accessorKey: "totalFtd",
-      enableHiding: isAdminOrAccounting(roles),
-    },
-    {
-      header: "Chi phí mỗi FTD",
-      accessorKey: "costPerFtd",
-      enableHiding: isAdminOrAccounting(roles),
-      cell: (props) => formatDollarAmount(props.row.original.costPerFtd),
-    },
-    {
-      header: "Tỷ lệ FTD/Ref (%)",
-      accessorKey: "costFtdPerRef",
-      enableHiding: isAdminOrAccounting(roles),
-      cell: (props) => `${fixedNumber(props.row.original.costFtdPerRef)}%`,
-    },
-    {
-      header: "Volume key/ngày",
-      accessorKey: "totalTargetDailyKeyVolume",
-      enableHiding: isAdminOrAccounting(roles),
-    },
-    {
-      header: "Dự tính Ref/ngày",
-      accessorKey: "totalTargetRef",
-      enableHiding: isAdminOrAccounting(roles),
-    },
-    {
-      header: "% Click đạt được",
-      accessorKey: "totalClickPerVolume",
-      enableHiding: isAdminOrAccounting(roles),
-      cell: (props) => `${fixedNumber(props.row.original.totalClickPerVolume)}%`,
-    },
-    {
-      header: "% Ref đạt được",
-      accessorKey: "totalRefPerVolume",
-      enableHiding: isAdminOrAccounting(roles),
-      cell: (props) => `${fixedNumber(props.row.original.totalRefPerVolume)}%`,
-    },
-  ]) as ColumnDef<ProjectDailyStats>[]),
+  ...((isAdminOrAccounting(roles)
+    ? [
+        {
+          header: "Lợi nhuận",
+          accessorKey: "profit",
+          enableHiding: isAdminOrAccounting(roles),
+          cell: (props) => formatDollarAmount(props.row.original.profit),
+        },
+        {
+          id: "roi",
+          header: "ROI (%)",
+          accessorKey: "roi",
+          enableHiding: isAdminOrAccounting(roles),
+          cell: (props) => `${fixedNumber(props.row.original.roi)}%`,
+        },
+        {
+          header: "Hoa hồng tạm giữ",
+          accessorKey: "holdRevenue",
+          enableHiding: isAdminOrAccounting(roles),
+          cell: (props) => formatDollarAmount(props.row.original.holdRevenue),
+        },
+        {
+          header: "Hoa hồng rút về",
+          accessorKey: "receivedRevenue",
+          enableHiding: isAdminOrAccounting(roles),
+          cell: (props) => formatDollarAmount(props.row.original.receivedRevenue),
+        },
+        {
+          header: "Tổng Ref",
+          accessorKey: "totalRef",
+          enableHiding: isAdminOrAccounting(roles),
+        },
+        {
+          header: "Chi phí mỗi Ref",
+          accessorKey: "costPerRef",
+          enableHiding: isAdminOrAccounting(roles),
+          cell: (props) => formatDollarAmount(props.row.original.costPerRef),
+        },
+        {
+          header: "Tỷ lệ Ref/Click (%)",
+          accessorKey: "rateRefPerClick",
+          enableHiding: isAdminOrAccounting(roles),
+          cell: (props) => `${fixedNumber(props.row.original.rateRefPerClick)}%`,
+        },
+        {
+          header: "Số FTD",
+          accessorKey: "totalFtd",
+          enableHiding: isAdminOrAccounting(roles),
+        },
+        {
+          header: "Chi phí mỗi FTD",
+          accessorKey: "costPerFtd",
+          enableHiding: isAdminOrAccounting(roles),
+          cell: (props) => formatDollarAmount(props.row.original.costPerFtd),
+        },
+        {
+          header: "Tỷ lệ FTD/Ref (%)",
+          accessorKey: "costFtdPerRef",
+          enableHiding: isAdminOrAccounting(roles),
+          cell: (props) => `${fixedNumber(props.row.original.costFtdPerRef)}%`,
+        },
+        {
+          header: "Volume key/ngày",
+          accessorKey: "totalTargetDailyKeyVolume",
+          enableHiding: isAdminOrAccounting(roles),
+        },
+        {
+          header: "Dự tính Ref/ngày",
+          accessorKey: "totalTargetRef",
+          enableHiding: isAdminOrAccounting(roles),
+        },
+        {
+          header: "% Click đạt được",
+          accessorKey: "totalClickPerVolume",
+          enableHiding: isAdminOrAccounting(roles),
+          cell: (props) => `${fixedNumber(props.row.original.totalClickPerVolume)}%`,
+        },
+        {
+          header: "% Ref đạt được",
+          accessorKey: "totalRefPerVolume",
+          enableHiding: isAdminOrAccounting(roles),
+          cell: (props) => `${fixedNumber(props.row.original.totalRefPerVolume)}%`,
+        },
+      ]
+    : []) as ColumnDef<ProjectDailyStats>[]),
   {
     header: "Tổng chi tiêu",
     accessorKey: "totalCost",
@@ -160,24 +162,26 @@ export const projectDailyStatsColumnConfig = ({
       );
     },
   },
-  ...((isAdminOrAccounting(roles) && [
-    {
-      id: "actions",
-      header: "Thao tác",
-      enableHiding: isAdminOrAccounting(roles),
-      cell: (props) => {
-        return (
-          <div className='flex items-center'>
-            <AppButton size='sm' onClick={() => onOpenEdit(props.row.original.id)}>
-              <SquarePen />
-            </AppButton>
+  ...((isAdminOrAccounting(roles)
+    ? [
+        {
+          id: "actions",
+          header: "Thao tác",
+          enableHiding: isAdminOrAccounting(roles),
+          cell: (props) => {
+            return (
+              <div className='flex items-center'>
+                <AppButton size='sm' onClick={() => onOpenEdit(props.row.original.id)}>
+                  <SquarePen />
+                </AppButton>
 
-            <AppButton size='sm' onClick={() => onDelete(props.row.original.id)}>
-              <Trash2 />
-            </AppButton>
-          </div>
-        );
-      },
-    },
-  ]) as ColumnDef<ProjectDailyStats>[]),
+                <AppButton size='sm' onClick={() => onDelete(props.row.original.id)}>
+                  <Trash2 />
+                </AppButton>
+              </div>
+            );
+          },
+        },
+      ]
+    : []) as ColumnDef<ProjectDailyStats>[]),
 ];

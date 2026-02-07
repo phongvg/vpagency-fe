@@ -12,7 +12,7 @@ export const appealAccountColumnConfig = ({
 }): ColumnDef<AppealAccount>[] => [
   {
     header: "STT",
-    accessorKey: "index",
+    id: "index",
     cell: (props) => props.row.index + 1,
   },
   {

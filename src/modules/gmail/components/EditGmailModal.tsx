@@ -1,3 +1,7 @@
+import { useCreateGmail } from "@/modules/gmail/hooks/useCreateGmail";
+import { useGmailDetail } from "@/modules/gmail/hooks/useGmailDetail";
+import { useUpdateGmail } from "@/modules/gmail/hooks/useUpdateGmail";
+import { transformGmailToForm, transformTGmailFormToPayload } from "@/modules/gmail/mappers/gmail.mapper";
 import { gmailFormSchema, type GmailFormType } from "@/modules/gmail/schemas/gmail-form.schema";
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
@@ -6,9 +10,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useGmailDetail } from "../hooks/useGmailDetail";
-import { useUpdateGmail } from "../hooks/useUpdateGmail";
-import { transformGmailToForm, transformTGmailFormToPayload } from "../utils/gmail.mapper";
 import GmailForm from "./GmailForm";
 
 interface EditGmailModalProps {
@@ -19,7 +20,10 @@ interface EditGmailModalProps {
 
 export default function EditGmailModal({ open, onClose, gmailId }: EditGmailModalProps) {
   const { data: gmail } = useGmailDetail(gmailId);
-  const { mutate: updateGmail, isPending } = useUpdateGmail();
+  const createGmail = useCreateGmail();
+  const updateGmail = useUpdateGmail();
+
+  const isEditMode = !!gmailId;
 
   const form = useForm<GmailFormType>({
     resolver: zodResolver(gmailFormSchema),
@@ -27,29 +31,37 @@ export default function EditGmailModal({ open, onClose, gmailId }: EditGmailModa
   });
 
   useEffect(() => {
-    if (gmail) {
+    if (gmail && open && isEditMode) {
       form.reset(transformGmailToForm(gmail));
+    } else {
+      form.reset(transformGmailToForm());
     }
-  }, [gmail, form]);
+  }, [gmail, form, open, isEditMode]);
 
-  const handleSubmit = (values: GmailFormType) => {
-    if (!gmailId) return;
-
-    updateGmail(
-      { id: gmailId, data: transformTGmailFormToPayload(values) },
-      {
+  const handleSubmit = async (values: GmailFormType) => {
+    if (isEditMode) {
+      await updateGmail.mutateAsync(
+        { id: gmailId as string, data: transformTGmailFormToPayload(values) },
+        {
+          onSuccess: () => {
+            onClose();
+          },
+        }
+      );
+    } else {
+      await createGmail.mutateAsync(transformTGmailFormToPayload(values), {
         onSuccess: () => {
           onClose();
         },
-      }
-    );
+      });
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className='max-w-2xl'>
         <DialogHeader>
-          <DialogTitle>Chỉnh sửa Gmail</DialogTitle>
+          <DialogTitle>{isEditMode ? "Chỉnh sửa Gmail" : "Thêm mới Gmail"}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -60,7 +72,7 @@ export default function EditGmailModal({ open, onClose, gmailId }: EditGmailModa
               <AppButton type='button' onClick={onClose}>
                 Hủy
               </AppButton>
-              <AppButton type='submit' variant='outline' loading={isPending}>
+              <AppButton type='submit' variant='outline' loading={createGmail.isPending || updateGmail.isPending}>
                 <Save />
                 Xác nhận
               </AppButton>

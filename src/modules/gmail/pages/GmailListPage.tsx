@@ -1,4 +1,3 @@
-import CreateGmailModal from "@/modules/gmail/components/CreateGmailModal";
 import EditGmailModal from "@/modules/gmail/components/EditGmailModal";
 import GmailTable from "@/modules/gmail/components/GmailTable";
 import ImportGmailButton from "@/modules/gmail/components/ImportGmailButton";
@@ -18,7 +17,6 @@ export default function GmailListPage() {
     search: undefined,
   });
   const [searchInput, setSearchInput] = useState<string | undefined>(undefined);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedGmailId, setSelectedGmailId] = useState<string | null>(null);
 
@@ -41,11 +39,8 @@ export default function GmailListPage() {
   };
 
   const handleOpenCreate = () => {
-    setIsCreateModalOpen(true);
-  };
-
-  const handleCloseCreate = () => {
-    setIsCreateModalOpen(false);
+    setSelectedGmailId(null);
+    setIsEditModalOpen(true);
   };
 
   const handleDelete = async (gmailId: string) => {
@@ -75,8 +70,6 @@ export default function GmailListPage() {
       </div>
 
       <GmailTable params={params} setParams={setParams} onEdit={handleOpenEdit} onDelete={handleDelete} />
-
-      <CreateGmailModal open={isCreateModalOpen} onClose={handleCloseCreate} />
 
       <EditGmailModal open={isEditModalOpen} onClose={handleCloseEdit} gmailId={selectedGmailId} />
     </Fragment>

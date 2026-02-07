@@ -1,6 +1,6 @@
-import type { BaseParam } from "@/shared/types/common/param.type";
+import type { BaseParams } from "@/shared/types/common/param.type";
 
-export type GmailStatusListParams = BaseParam & {
+export type GmailStatusListParams = BaseParams & {
   search?: string;
 };
 

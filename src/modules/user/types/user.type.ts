@@ -1,5 +1,5 @@
 import type { Role } from "@/shared/constants/role.constant";
-import type { BaseParam } from "@/shared/types/common/param.type";
+import type { BaseParams } from "@/shared/types/common/param.type";
 
 export const UserStatus = {
   OnBoarding: "ONBOARDING",
@@ -9,7 +9,7 @@ export const UserStatus = {
 
 export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus];
 
-export type UserListParams = BaseParam & {
+export type UserListParams = BaseParams & {
   search?: string;
 };
 

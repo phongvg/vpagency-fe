@@ -41,7 +41,12 @@ export default function ProjectStatusListPage() {
   return (
     <Fragment>
       <div className='flex justify-between items-center gap-4 mb-2'>
-        <Input value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder='Tìm kiếm theo tên' className='max-w-[300px]' />
+        <Input
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          placeholder='Tìm kiếm theo tên trạng thái'
+          className='max-w-[300px]'
+        />
         <AppButton onClick={handleOpenCreate} variant='outline' size='sm'>
           <PlusCircle />
           Tạo mới
