@@ -4,7 +4,7 @@ import ProjectForm from "@/modules/project/components/ProjectForm";
 import { useCreateProject } from "@/modules/project/hooks/useCreateProject";
 import { useProject } from "@/modules/project/hooks/useProject";
 import { useUpdateProject } from "@/modules/project/hooks/useUpdateProject";
-import { transformProjectToForm } from "@/modules/project/mappers/project.mapper";
+import { transformFormToProject, transformProjectToForm } from "@/modules/project/mappers/project.mapper";
 import { projectFormSchema, type ProjectFormType } from "@/modules/project/schemas/project-form.schema";
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
@@ -57,6 +57,8 @@ export default function EditProjectModal({ open, onClose, projectId }: EditProje
 
   useEffect(() => {
     if (project && open && isEditMode) {
+      const { deadline } = transformProjectToForm(project);
+      console.log("abc :>> ", typeof deadline, deadline);
       form.reset(transformProjectToForm(project));
     } else {
       form.reset(transformProjectToForm());
@@ -71,27 +73,27 @@ export default function EditProjectModal({ open, onClose, projectId }: EditProje
   const handleDeleteFinalUrl = (finalUrlId: string) => {};
 
   const onSubmit = async (values: ProjectFormType) => {
-    // if (isEditMode) {
-    //   await updateGmailStatus.mutateAsync(
-    //     {
-    //       id: gmailStatusId as string,
-    //       payload: values,
-    //     },
-    //     {
-    //       onSuccess: () => {
-    //         onClose();
-    //       },
-    //     }
-    //   );
-    // } else {
-    //   await createGmailStatus.mutateAsync(values, {
-    //     onSuccess: () => {
-    //       onClose();
-    //     },
-    //   });
-    // }
-
-    console.log("values :>> ", values);
+    if (isEditMode) {
+      await updateProject.mutateAsync(
+        {
+          id: projectId as string,
+          data: transformFormToProject(values),
+        },
+        {
+          onSuccess: () => {
+            onClose();
+          },
+        }
+      );
+    } else {
+      await createProject.mutateAsync(transformFormToProject(values), {
+        onSuccess: (res) => {
+          const { id } = res.data;
+          setProjectIdState(id);
+          setTabValue(TABS[1].value);
+        },
+      });
+    }
   };
 
   return (
@@ -126,7 +128,7 @@ export default function EditProjectModal({ open, onClose, projectId }: EditProje
 
               {tabValue === TABS[1].value && (
                 <div className='space-y-2'>
-                  <AppButton size='sm' variant='outline' onClick={() => handleEditFinalUrl(null)}>
+                  <AppButton type='button' size='sm' variant='outline' onClick={() => handleEditFinalUrl(null)}>
                     <CirclePlus />
                     Thêm mới
                   </AppButton>
@@ -150,7 +152,12 @@ export default function EditProjectModal({ open, onClose, projectId }: EditProje
         </DialogContent>
       </Dialog>
 
-      <EditProjectFinalUrlModal open={isFinalUrlModalOpen} onClose={() => setIsFinalUrlModalOpen(false)} finalUrlId={finalUrlIdSelected} />
+      <EditProjectFinalUrlModal
+        open={isFinalUrlModalOpen}
+        onClose={() => setIsFinalUrlModalOpen(false)}
+        finalUrlId={finalUrlIdSelected}
+        projectId={projectIdState}
+      />
     </Fragment>
   );
 }

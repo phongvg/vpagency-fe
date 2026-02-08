@@ -1,6 +1,8 @@
+import { useCreateFinalUrl } from "@/modules/finalUrl/hooks/useCreateFinalUrl";
 import { useFinalUrl } from "@/modules/finalUrl/hooks/useFinalUrl";
+import { useUpdateFinalUrl } from "@/modules/finalUrl/hooks/useUpdateFinalUrl";
 import ProjectFinalUrlForm from "@/modules/project/components/ProjectFinalUrlForm";
-import { transformProjectToFinalUrlForm } from "@/modules/project/mappers/project-final-url.mapper";
+import { transformFormToFinalUrl, transformProjectToFinalUrlForm } from "@/modules/project/mappers/project-final-url.mapper";
 import { projectFinalUrlFormSchema, type ProjectFinalUrlFormType } from "@/modules/project/schemas/project-final-url-form.schema";
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
@@ -10,17 +12,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 interface EditProjectFinalUrlModalProps {
   open: boolean;
   onClose: () => void;
   finalUrlId: string | null;
+  projectId: string | null;
 }
 
-export default function EditProjectFinalUrlModal({ open, onClose, finalUrlId }: EditProjectFinalUrlModalProps) {
+export default function EditProjectFinalUrlModal({ open, onClose, finalUrlId, projectId }: EditProjectFinalUrlModalProps) {
   const isEditMode = !!finalUrlId;
 
   const { data: finalUrl } = useFinalUrl(finalUrlId);
+
+  const createFinalUrl = useCreateFinalUrl();
+  const updateFinalUrl = useUpdateFinalUrl();
 
   const form = useForm<ProjectFinalUrlFormType>({
     resolver: zodResolver(projectFinalUrlFormSchema),
@@ -35,11 +42,36 @@ export default function EditProjectFinalUrlModal({ open, onClose, finalUrlId }: 
     }
   }, [finalUrl, form, open, isEditMode]);
 
-  const onSubmit = async (values: any) => {};
+  const onSubmit = async (values: ProjectFinalUrlFormType) => {
+    if (!projectId) {
+      toast.error("ID dự án không hợp lệ.");
+      return;
+    }
+
+    if (isEditMode) {
+      updateFinalUrl.mutate(
+        {
+          id: finalUrlId as string,
+          data: transformFormToFinalUrl(values, projectId),
+        },
+        {
+          onSuccess: () => {
+            onClose();
+          },
+        }
+      );
+    } else {
+      createFinalUrl.mutate(transformFormToFinalUrl(values, projectId), {
+        onSuccess: () => {
+          onClose();
+        },
+      });
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className='w-full max-w-full sm:max-w-3xl'>
+      <DialogContent className='w-full max-w-full sm:max-w-7xl'>
         <Form {...form}>
           <DialogHeader>
             <DialogTitle>{getModalTitle(isEditMode, "URL")}</DialogTitle>

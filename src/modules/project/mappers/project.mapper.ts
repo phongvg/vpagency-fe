@@ -6,14 +6,14 @@ export const transformProjectToForm = (project?: Project | undefined): ProjectFo
   typeId: project?.type ? { label: project.type.name, value: project.typeId } : null,
   statusId: project?.status ? { label: project.status.name, value: project.statusId } : null,
   totalBudget: project?.totalBudget ?? null,
-  ageRange: project?.ageRange ? project.ageRange.map((age) => ({ label: age, value: age })) : null,
+  ageRange: project?.ageRange ? project.ageRange.map((age) => ({ label: age, value: age })) : [],
   gender: project?.gender ?? null,
   title: project?.title ?? null,
   description: project?.description ?? null,
   note: project?.note ?? null,
   content: project?.content ?? null,
-  deadline: project?.deadline ?? null,
-  startedAt: project?.startedAt ?? null,
+  deadline: project?.deadline ? new Date(project.deadline) : null,
+  startedAt: project?.startedAt ? new Date(project.startedAt) : null,
 });
 
 export const transformFormToProject = (form: ProjectFormType): UpdateProjectRequest => ({
@@ -21,7 +21,7 @@ export const transformFormToProject = (form: ProjectFormType): UpdateProjectRequ
   typeId: form.typeId?.value ?? "",
   statusId: form.statusId?.value ?? "",
   totalBudget: form.totalBudget,
-  ageRange: form.ageRange?.map((age) => age.value) ?? null,
+  ageRange: form.ageRange?.map((age) => age.value) ?? [],
   gender: form.gender,
   title: form.title,
   description: form.description,

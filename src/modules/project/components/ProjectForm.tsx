@@ -25,6 +25,7 @@ export default function ProjectForm() {
         fetcher={fetchProjectTypes}
         mapOption={(type) => ({ value: type.id, label: type.name })}
         placeholder='Chọn loại dự án'
+        required
       />
 
       <FormAsyncSelect<ProjectStatus>
@@ -33,13 +34,14 @@ export default function ProjectForm() {
         fetcher={fetchProjectStatuses}
         mapOption={(status) => ({ value: status.id, label: status.name })}
         placeholder='Chọn trạng thái'
+        required
       />
 
       <FormInput name='title' label='Tiêu đề' />
 
       <FormDatePicker name='deadline' label='Deadline' placeholder='Chọn ngày' />
 
-      <FormDatePicker name='startDate' label='Ngày bắt đầu' placeholder='Chọn ngày' />
+      <FormDatePicker name='startedAt' label='Ngày bắt đầu' placeholder='Chọn ngày' />
 
       <FormTextarea name='description' label='Mô tả' />
 

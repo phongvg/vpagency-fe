@@ -34,3 +34,23 @@ export type FinalURLGroup = {
   finalURL: string;
   totalCampaignDailyStats: number;
 };
+
+export type UpdateFinalUrlRequest = {
+  projectId: string;
+  name?: string;
+  finalURL?: string;
+  countriesTier1?: string[];
+  countriesTier2?: string[];
+  countriesTier3?: string[];
+  excludeCountries?: string[];
+  title?: string | null;
+  content?: string | null;
+  targetRef?: number | null;
+  targetCostPerRef?: number | null;
+  targetFtd?: number | null;
+  targetCostPerFtd?: number | null;
+  targetDailyKeyVolume?: number | null;
+  targetCpc?: number | null;
+  budget?: number | null;
+  suggestedBid?: number | null;
+};

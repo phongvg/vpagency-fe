@@ -9,7 +9,8 @@ export const useUpdateProject = () => {
 
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: UpdateProjectRequest }) => projectApi.updateProject(id, data),
-    onSuccess: (res) => {
+    onSuccess: (res, variables) => {
+      queryClient.invalidateQueries({ queryKey: projectQueryKeys.detail(variables.id) });
       queryClient.invalidateQueries({ queryKey: projectQueryKeys.lists() });
       toast.success(res.message);
     },
