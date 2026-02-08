@@ -15,14 +15,14 @@ export default function ListTooltip<T>({ data, columns }: ListTooltipProps<T>) {
         <Badge variant='outline'>+{data.length}</Badge>
       </HoverCardTrigger>
 
-      <HoverCardContent className='flex flex-col gap-0.5 w-64'>
+      <HoverCardContent className='flex flex-col gap-0.5 w-64' side='right' align='center'>
         <ScrollArea className='w-full'>
           <div className='p-2'>
             <table className='w-full'>
-              <thead className='bg-black'>
-                <tr className='border-gray-600 border-b'>
+              <thead className='bg-white/5 mb-2'>
+                <tr className='border-gray-600'>
                   {columns.map((col) => (
-                    <th key={String(col.key)} className='px-3 py-1 text-left whitespace-nowrap'>
+                    <th key={String(col.key)} className='px-3 py-1 text-primary text-left whitespace-nowrap'>
                       {col.label}
                     </th>
                   ))}

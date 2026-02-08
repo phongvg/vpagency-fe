@@ -7,6 +7,7 @@ import { projectStatusFormSchema, type ProjectStatusFormType } from "@/modules/p
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
+import { getModalTitle } from "@/shared/utils/common.util";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
 import { useEffect } from "react";
@@ -66,14 +67,14 @@ export default function EditProjectStatusModal({ open, onClose, projectStatusId 
       <DialogContent>
         <Form {...form}>
           <DialogHeader>
-            <DialogTitle>{isEditMode ? "Cập nhật trạng thái dự án" : "Tạo trạng thái dự án"}</DialogTitle>
+            <DialogTitle>{getModalTitle(isEditMode, "trạng thái dự án")}</DialogTitle>
           </DialogHeader>
 
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
             <ProjectStatusForm />
 
             <DialogFooter>
-              <AppButton size='sm' onClick={onClose}>
+              <AppButton type='button' size='sm' onClick={onClose}>
                 Đóng
               </AppButton>
               <AppButton type='submit' variant='outline' size='sm'>

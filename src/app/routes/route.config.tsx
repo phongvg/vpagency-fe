@@ -68,7 +68,7 @@ export const appRoutes: AppRoute[] = [
         showInSidebar: true,
       },
       {
-        path: urls.finance,
+        path: urls.projectDailyReport,
         title: "Báo cáo tài chính",
         pageTitle: "Báo cáo tài chính",
         element: <ProjectDailyStatsListPage />,

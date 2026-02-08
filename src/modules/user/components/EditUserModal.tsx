@@ -60,7 +60,7 @@ export default function EditUserModal({ open, onClose, userId }: EditUserModalPr
             <UserForm />
 
             <DialogFooter>
-              <AppButton size='sm' onClick={onClose}>
+              <AppButton type='button' size='sm' onClick={onClose}>
                 Đóng
               </AppButton>
               <AppButton type='submit' variant='outline' size='sm'>

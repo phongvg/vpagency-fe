@@ -51,7 +51,7 @@ export default function ChangePasswordModal({ open, onClose, userId }: ChangePas
             <ChangePasswordForm />
 
             <DialogFooter>
-              <AppButton size='sm' onClick={onClose}>
+              <AppButton type='button' size='sm' onClick={onClose}>
                 Đóng
               </AppButton>
               <AppButton type='submit' variant='outline' size='sm'>

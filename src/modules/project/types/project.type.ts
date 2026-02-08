@@ -57,9 +57,4 @@ export type UpdateProjectRequest = {
   content: string | null;
   deadline: Date | null;
   startedAt: Date | null;
-  finalUrls: Array<{
-    name: string;
-    finalURL: string;
-    countries: string[] | null;
-  }> | null;
 };

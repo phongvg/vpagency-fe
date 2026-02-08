@@ -120,3 +120,7 @@ export const copyTextToClipboard = (text: string | null | undefined) => {
     }
   );
 };
+
+export const getModalTitle = (isEditMode: boolean, entity: string) => {
+  return isEditMode ? `Cập nhật ${entity}` : `Thêm mới ${entity}`;
+};

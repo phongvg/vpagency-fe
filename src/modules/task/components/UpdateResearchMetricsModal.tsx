@@ -7,6 +7,7 @@ import { FormDatePicker } from "@/shared/components/form/FormDatePicker";
 import { FormInput } from "@/shared/components/form/FormInput";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
+import { getModalTitle } from "@/shared/utils/common.util";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formatDate } from "date-fns";
 import { Save } from "lucide-react";
@@ -88,7 +89,7 @@ export default function UpdateResearchMetricsModal({ open, onClose, researchDeta
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className='sm:max-w-sm'>
         <DialogHeader>
-          <DialogTitle>{isEditMode ? "Chỉnh sửa kết quả nghiên cứu" : "Cập nhật kết quả nghiên cứu"}</DialogTitle>
+          <DialogTitle>{getModalTitle(isEditMode, "kết quả nghiên cứu")}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>

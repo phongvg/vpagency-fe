@@ -14,6 +14,7 @@ import { FormInput } from "@/shared/components/form/FormInput";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
 import { createAsyncSelectFetcher } from "@/shared/utils/async-select.util";
+import { getModalTitle } from "@/shared/utils/common.util";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formatDate } from "date-fns";
 import { Save } from "lucide-react";
@@ -103,7 +104,7 @@ export default function UpdateDocumentAppealMetricsModal({ open, onClose, task, 
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{isEditMode ? "Chỉnh sửa chỉ số kháng giấy" : "Cập nhật chỉ số kháng giấy"}</DialogTitle>
+          <DialogTitle>{getModalTitle(isEditMode, "chỉ số kháng giấy")}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>

@@ -1,12 +1,12 @@
 import type { ProjectFormType } from "@/modules/project/schemas/project-form.schema";
-import type { Project } from "@/modules/project/types/project.type";
+import type { Project, UpdateProjectRequest } from "@/modules/project/types/project.type";
 
 export const transformProjectToForm = (project?: Project | undefined): ProjectFormType => ({
   name: project?.name ?? "",
-  typeId: project?.typeId ? { label: project.type.name, value: project.typeId } : null,
-  statusId: project?.statusId ? { label: project.status.name, value: project.statusId } : null,
+  typeId: project?.type ? { label: project.type.name, value: project.typeId } : null,
+  statusId: project?.status ? { label: project.status.name, value: project.statusId } : null,
   totalBudget: project?.totalBudget ?? null,
-  ageRange: project?.ageRange ?? null,
+  ageRange: project?.ageRange ? project.ageRange.map((age) => ({ label: age, value: age })) : null,
   gender: project?.gender ?? null,
   title: project?.title ?? null,
   description: project?.description ?? null,
@@ -14,13 +14,19 @@ export const transformProjectToForm = (project?: Project | undefined): ProjectFo
   content: project?.content ?? null,
   deadline: project?.deadline ?? null,
   startedAt: project?.startedAt ?? null,
-  finalUrls:
-    project?.finalUrls?.map((url) => ({
-      name: url.name,
-      finalURL: url.finalURL,
-      countriesTier1: url.countriesTier1 ?? null,
-      countriesTier2: url.countriesTier2 ?? null,
-      countriesTier3: url.countriesTier3 ?? null,
-      excludeCountries: url.excludeCountries ?? null,
-    })) ?? null,
+});
+
+export const transformFormToProject = (form: ProjectFormType): UpdateProjectRequest => ({
+  name: form.name,
+  typeId: form.typeId?.value ?? "",
+  statusId: form.statusId?.value ?? "",
+  totalBudget: form.totalBudget,
+  ageRange: form.ageRange?.map((age) => age.value) ?? null,
+  gender: form.gender,
+  title: form.title,
+  description: form.description,
+  note: form.note,
+  content: form.content,
+  deadline: form.deadline,
+  startedAt: form.startedAt,
 });

@@ -7,6 +7,7 @@ import { appealAccountFormSchema, type AppealAccountFormType } from "@/modules/a
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
+import { getModalTitle } from "@/shared/utils/common.util";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
 import { useEffect } from "react";
@@ -66,7 +67,7 @@ export default function EditAppealAccountModal({ open, onClose, appealAccountId 
       <DialogContent className='max-w-3xl max-h-[90vh] overflow-y-auto'>
         <Form {...form}>
           <DialogHeader>
-            <DialogTitle>{isEditMode ? "Cập nhật tài khoản kháng cáo" : "Tạo tài khoản kháng cáo"}</DialogTitle>
+            <DialogTitle>{getModalTitle(isEditMode, "tài khoản kháng cáo")}</DialogTitle>
           </DialogHeader>
 
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>

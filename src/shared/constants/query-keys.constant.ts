@@ -33,6 +33,8 @@ export const finalUrlQueryKeys = {
   lists: () => [...finalUrlQueryKeys.all, "list"] as const,
 
   listByProject: (projectId: string) => [...finalUrlQueryKeys.lists(), "by-project", projectId] as const,
+
+  detail: (id: string) => [...finalUrlQueryKeys.all, "detail", id] as const,
 };
 
 export const campaignQueryKeys = {

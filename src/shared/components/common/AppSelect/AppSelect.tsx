@@ -4,7 +4,7 @@ import { useCallback, useMemo } from "react";
 import Select, { type SingleValue } from "react-select";
 
 export interface AppSelectProps {
-  value?: SelectOption | SelectOption[] | null;
+  value?: string | SelectOption | SelectOption[] | null;
   onValueChange?: (value: string | SelectOption | SelectOption[] | null) => void;
   options: SelectOption[];
   placeholder?: string;
@@ -18,7 +18,7 @@ export default function AppSelect({ value, onValueChange, options, placeholder =
       return options.filter((opt) => value.some((val) => val.value === opt.value));
     }
 
-    return options.find((opt) => opt.value === (value as SelectOption)?.value) ?? null;
+    return options.find((opt) => opt.value === value) ?? null;
   }, [options, value, isMulti]);
 
   const handleChange = useCallback(

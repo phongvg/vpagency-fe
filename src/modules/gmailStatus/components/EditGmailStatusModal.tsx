@@ -7,6 +7,7 @@ import { gmailStatusFormSchema, type GmailStatusFormType } from "@/modules/gmail
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
+import { getModalTitle } from "@/shared/utils/common.util";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
 import { useEffect } from "react";
@@ -66,14 +67,14 @@ export default function EditGmailStatusModal({ open, onClose, gmailStatusId }: E
       <DialogContent>
         <Form {...form}>
           <DialogHeader>
-            <DialogTitle>{isEditMode ? "Cập nhật trạng thái Gmail" : "Tạo trạng thái Gmail"}</DialogTitle>
+            <DialogTitle>{getModalTitle(isEditMode, "trạng thái Gmail")}</DialogTitle>
           </DialogHeader>
 
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
             <GmailStatusForm />
 
             <DialogFooter>
-              <AppButton size='sm' onClick={onClose}>
+              <AppButton type='button' size='sm' onClick={onClose}>
                 Đóng
               </AppButton>
               <AppButton type='submit' variant='outline' size='sm'>

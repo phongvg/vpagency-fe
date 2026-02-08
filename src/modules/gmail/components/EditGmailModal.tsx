@@ -6,6 +6,7 @@ import { gmailFormSchema, type GmailFormType } from "@/modules/gmail/schemas/gma
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
+import { getModalTitle } from "@/shared/utils/common.util";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save } from "lucide-react";
 import { useEffect } from "react";
@@ -61,7 +62,7 @@ export default function EditGmailModal({ open, onClose, gmailId }: EditGmailModa
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className='max-w-2xl'>
         <DialogHeader>
-          <DialogTitle>{isEditMode ? "Chỉnh sửa Gmail" : "Thêm mới Gmail"}</DialogTitle>
+          <DialogTitle>{getModalTitle(isEditMode, "Gmail")}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>

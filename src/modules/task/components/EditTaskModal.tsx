@@ -8,6 +8,7 @@ import { AppLoading } from "@/shared/components/common/AppLoading";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
 import { taskQueryKeys } from "@/shared/constants/query-keys.constant";
+import { getModalTitle } from "@/shared/utils/common.util";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { Clipboard, Save } from "lucide-react";
@@ -71,7 +72,7 @@ export default function EditTaskModal({ open, onClose, taskId }: EditTaskModalPr
           <DialogTitle>
             <div className='flex items-center gap-1'>
               <Clipboard size={20} />
-              {isEditMode ? "Chỉnh sửa" : "Tạo mới"} công việc
+              {getModalTitle(isEditMode, "công việc")}
             </div>
           </DialogTitle>
         </DialogHeader>
