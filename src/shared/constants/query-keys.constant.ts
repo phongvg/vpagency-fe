@@ -121,6 +121,8 @@ export const dashboardQueryKeys = {
   userStats: () => [...dashboardQueryKeys.all, "user-stats"] as const,
 
   taskStats: () => [...dashboardQueryKeys.all, "task-stats"] as const,
+
+  topProjectByProfit: () => [...dashboardQueryKeys.all, "top-project-by-profit"] as const,
 };
 
 export const projectDailyStatsQueryKeys = {

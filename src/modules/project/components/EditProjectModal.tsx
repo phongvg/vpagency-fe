@@ -1,3 +1,4 @@
+import { useDeleteFinalUrl } from "@/modules/finalUrl/hooks/useDeleteFinalUrl";
 import EditProjectFinalUrlModal from "@/modules/project/components/EditProjectFinalUrlModal";
 import ProjectFinalUrlsTable from "@/modules/project/components/ProjectFinalUrlsTable";
 import ProjectForm from "@/modules/project/components/ProjectForm";
@@ -9,6 +10,7 @@ import { projectFormSchema, type ProjectFormType } from "@/modules/project/schem
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
+import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { cn } from "@/shared/libs/utils";
 import { getModalTitle } from "@/shared/utils/common.util";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,15 +32,18 @@ const TABS = [
 export default function EditProjectModal({ open, onClose, projectId }: EditProjectModalProps) {
   const isEditMode = !!projectId;
 
-  const [tabValue, setTabValue] = useState<string>("1");
+  const [tabValue, setTabValue] = useState<string>(TABS[0].value);
   const [projectIdState, setProjectIdState] = useState<string | null>(null);
   const [finalUrlIdSelected, setFinalUrlIdSelected] = useState<string | null>(null);
   const [isFinalUrlModalOpen, setIsFinalUrlModalOpen] = useState<boolean>(false);
+
+  const { confirm } = useConfirm();
 
   const { data: project } = useProject(projectId);
 
   const createProject = useCreateProject();
   const updateProject = useUpdateProject();
+  const deleteProjectFinalUrl = useDeleteFinalUrl();
 
   const form = useForm<ProjectFormType>({
     resolver: zodResolver(projectFormSchema),
@@ -57,8 +62,6 @@ export default function EditProjectModal({ open, onClose, projectId }: EditProje
 
   useEffect(() => {
     if (project && open && isEditMode) {
-      const { deadline } = transformProjectToForm(project);
-      console.log("abc :>> ", typeof deadline, deadline);
       form.reset(transformProjectToForm(project));
     } else {
       form.reset(transformProjectToForm());
@@ -70,7 +73,15 @@ export default function EditProjectModal({ open, onClose, projectId }: EditProje
     setIsFinalUrlModalOpen(true);
   };
 
-  const handleDeleteFinalUrl = (finalUrlId: string) => {};
+  const handleDeleteFinalUrl = async (finalUrlId: string) => {
+    const isConfirmed = await confirm({
+      description: "Bạn có chắc chắn muốn xóa URL này không? Hành động này không thể hoàn tác.",
+    });
+
+    if (isConfirmed) {
+      await deleteProjectFinalUrl.mutateAsync(finalUrlId);
+    }
+  };
 
   const onSubmit = async (values: ProjectFormType) => {
     if (isEditMode) {
@@ -109,17 +120,17 @@ export default function EditProjectModal({ open, onClose, projectId }: EditProje
               <div className='flex items-center pb-2'>
                 <button
                   type='button'
-                  className={cn(tabValue === "1" && "!text-primary border-primary", "border-b-2 px-2 pb-1 text-white/50")}
-                  onClick={() => setTabValue("1")}>
-                  Thông tin dự án
+                  className={cn(tabValue === TABS[0].value && "!text-primary border-primary", "border-b-2 px-2 pb-1 text-white/50")}
+                  onClick={() => setTabValue(TABS[0].value)}>
+                  {TABS[0].label}
                 </button>
 
                 {projectIdState && (
                   <button
                     type='button'
-                    className={cn(tabValue === "2" && "!text-primary border-primary", "border-b-2 px-2 pb-1 text-white/50")}
-                    onClick={() => setTabValue("2")}>
-                    Thông tin URL
+                    className={cn(tabValue === TABS[1].value && "!text-primary border-primary", "border-b-2 px-2 pb-1 text-white/50")}
+                    onClick={() => setTabValue(TABS[1].value)}>
+                    {TABS[1].label}
                   </button>
                 )}
               </div>

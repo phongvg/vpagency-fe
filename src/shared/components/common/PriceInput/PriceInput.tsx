@@ -20,7 +20,10 @@ export default function PriceInput({ id, value, onChange, placeholder, disabled,
       placeholder={placeholder}
       value={value ?? null}
       onValueChange={(values) => onChange?.(values.floatValue ?? null)}
-      className={cn("block w-full p-[10px] font-semibold appearance-none bg-transparent border-border border outline-none text-white/50", className)}
+      className={cn(
+        "block bg-transparent disabled:opacity-50 p-[10px] border border-border outline-none w-full font-semibold appearance-none disabled:cursor-not-allowed",
+        className
+      )}
       disabled={disabled}
     />
   );

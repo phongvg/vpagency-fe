@@ -16,8 +16,14 @@ export default function TaskResearchDetailTable({ researchDetails, onEdit, onDel
         <CardTitle>Chi tiết kết quả nghiên cứu</CardTitle>
       </CardHeader>
 
-      <CardContent>
-        <AppTable data={researchDetails} columns={researchDetailColumnConfig({ onEdit, onDelete })} />
+      <CardContent className='normal-case'>
+        <AppTable
+          data={researchDetails}
+          columns={researchDetailColumnConfig({ onEdit, onDelete })}
+          page={1}
+          pageCount={1}
+          pageSize={researchDetails.length}
+        />
       </CardContent>
     </Card>
   );

@@ -1,14 +1,16 @@
 import Logo from "@/shared/components/Logo";
 import NavUser from "@/shared/layouts/components/Sidebar/NavUser";
+import { useAuthStore } from "@/shared/stores/auth/useAuthStore";
 import { Box } from "lucide-react";
 import { getSidebarRoutes } from "./sidebar.config";
 import SidebarItem from "./SidebarItem";
 
 export default function Sidebar() {
-  const routes = getSidebarRoutes();
+  const { user } = useAuthStore();
+  const routes = getSidebarRoutes(user?.roles || []);
 
   return (
-    <aside className='top-0 left-0 z-20 fixed bg-[rgba(var(--body-bg-rgb))] min-w-64 h-full'>
+    <aside className='top-0 left-0 z-20 fixed bg-[rgba(var(--body-bg-rgb))] w-[300px] h-full'>
       <div className='flex flex-col h-full'>
         <div className='space-y-3'>
           <div className='flex items-center gap-2 p-2 border-border border-b'>

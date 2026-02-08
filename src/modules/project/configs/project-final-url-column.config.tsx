@@ -126,11 +126,11 @@ export const projectFinalUrlColumnConfig = (handlers: ProjectFinalUrlColumnHandl
     header: "Thao tác",
     cell: (props) => (
       <div className='flex items-center gap-2'>
-        <AppButton size='sm' onClick={() => handlers?.onEdit(props.row.original.id)}>
+        <AppButton type='button' size='sm' onClick={() => handlers?.onEdit(props.row.original.id)}>
           <SquarePen />
         </AppButton>
 
-        <AppButton size='sm' onClick={() => handlers?.onDelete(props.row.original.id)}>
+        <AppButton type='button' size='sm' onClick={() => handlers?.onDelete(props.row.original.id)}>
           <Trash2 />
         </AppButton>
       </div>

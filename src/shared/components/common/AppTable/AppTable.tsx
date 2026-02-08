@@ -17,7 +17,7 @@ import {
   useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
-import { ArrowDown, ArrowUp, ArrowUpDown, FolderClosed, Settings2 } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, SearchX, Settings2 } from "lucide-react";
 import { useMemo, useState } from "react";
 
 const INDEX_COLUMN_ID = "index";
@@ -121,11 +121,11 @@ export function AppTable<TData, TValue>({
         <Empty>
           <EmptyHeader>
             <EmptyMedia variant='icon'>
-              <FolderClosed />
+              <SearchX className='text-primary' />
             </EmptyMedia>
 
-            <EmptyTitle>Không có dữ liệu</EmptyTitle>
-            <EmptyDescription>Không tìm thấy dữ liệu</EmptyDescription>
+            <EmptyTitle className='font-bold uppercase'>Danh sách trống</EmptyTitle>
+            <EmptyDescription className='text-white/50'>Không có dữ liệu phù hợp với điều kiện đã chọn</EmptyDescription>
           </EmptyHeader>
         </Empty>
       </div>

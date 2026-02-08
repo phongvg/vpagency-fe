@@ -25,6 +25,7 @@ export const documentAppealDetailColumnConfig = ({
   {
     header: "Dự án",
     accessorKey: "projectName",
+    minSize: 200,
   },
   {
     header: "Số lượng đơn kháng",

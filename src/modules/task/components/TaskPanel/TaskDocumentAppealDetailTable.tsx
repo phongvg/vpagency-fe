@@ -16,8 +16,14 @@ export default function TaskDocumentAppealDetailTable({ documentAppealDetails, o
         <CardTitle>Danh sách Dự án kháng</CardTitle>
       </CardHeader>
 
-      <CardContent>
-        <AppTable data={documentAppealDetails} columns={documentAppealDetailColumnConfig({ onEdit, onDelete })} />
+      <CardContent className='normal-case'>
+        <AppTable
+          data={documentAppealDetails}
+          columns={documentAppealDetailColumnConfig({ onEdit, onDelete })}
+          page={1}
+          pageCount={1}
+          pageSize={documentAppealDetails.length}
+        />
       </CardContent>
     </Card>
   );

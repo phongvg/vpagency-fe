@@ -11,11 +11,11 @@ import { SquarePen, Trash2 } from "lucide-react";
 
 export const projectDailyStatsColumnConfig = ({
   roles,
-  onOpenEdit,
+  onEdit,
   onDelete,
 }: {
   roles: Role[] | undefined;
-  onOpenEdit: (id: string) => void;
+  onEdit: (id: string) => void;
   onDelete: (id: string) => void;
 }): ColumnDef<ProjectDailyStats>[] => [
   {
@@ -171,7 +171,7 @@ export const projectDailyStatsColumnConfig = ({
           cell: (props) => {
             return (
               <div className='flex items-center'>
-                <AppButton size='sm' onClick={() => onOpenEdit(props.row.original.id)}>
+                <AppButton size='sm' onClick={() => onEdit(props.row.original.id)}>
                   <SquarePen />
                 </AppButton>
 

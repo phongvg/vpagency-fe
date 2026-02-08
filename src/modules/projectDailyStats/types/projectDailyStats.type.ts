@@ -69,3 +69,20 @@ export type GenerateProjectDailyStatRequest = {
   projectId: string;
   date: string;
 };
+
+export type UpdateProjectDailyStatRequest = {
+  totalRef: number;
+  costPerRef: number;
+  rateRefPerClick: number;
+  totalFtd: number;
+  costPerFtd: number;
+  costFtdPerRef: number;
+  totalTargetDailyKeyVolume: number;
+  totalTargetRef: number;
+  totalClickPerVolume: number;
+  totalRefPerVolume: number;
+  receivedRevenue: number;
+  holdRevenue: number;
+  profit: number;
+  roi: number;
+};

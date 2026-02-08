@@ -14,8 +14,8 @@ export default function TaskAppealDetailTable({ appealDetails }: TaskAppealDetai
         <CardTitle>Danh sách kháng tài khoản</CardTitle>
       </CardHeader>
 
-      <CardContent>
-        <AppTable data={appealDetails} columns={appealDetailColumnConfig} />
+      <CardContent className='normal-case'>
+        <AppTable data={appealDetails} columns={appealDetailColumnConfig} page={1} pageCount={1} pageSize={appealDetails.length} />
       </CardContent>
     </Card>
   );

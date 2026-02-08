@@ -50,86 +50,137 @@ export const appRoutes: AppRoute[] = [
         ),
         icon: LayoutGrid,
         showInSidebar: true,
+        roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AGENCY, Role.MEMBER_AFF, Role.ACCOUNTING],
       },
       {
         path: urls.task,
         title: "Quản lý công việc",
         pageTitle: "Danh sách công việc",
-        element: <TaskListPage />,
+        element: (
+          <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING]}>
+            <TaskListPage />
+          </ProtectedRoute>
+        ),
         icon: ClipboardList,
         showInSidebar: true,
+        roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
       },
       {
         path: urls.campaign,
         title: "Quản lý chiến dịch",
         pageTitle: "Danh sách chiến dịch",
-        element: <CampaignListPage />,
+        element: (
+          <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING]}>
+            <CampaignListPage />
+          </ProtectedRoute>
+        ),
         icon: Megaphone,
         showInSidebar: true,
+        roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
       },
       {
         path: urls.projectDailyReport,
         title: "Báo cáo tài chính",
         pageTitle: "Báo cáo tài chính",
-        element: <ProjectDailyStatsListPage />,
+        element: (
+          <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.ACCOUNTING]}>
+            <ProjectDailyStatsListPage />
+          </ProtectedRoute>
+        ),
         icon: ChartNoAxesCombined,
         showInSidebar: true,
+        roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.ACCOUNTING],
       },
       {
         path: urls.user,
         title: "Quản lý tài khoản",
         pageTitle: "Danh sách tài khoản",
-        element: <UserListPage />,
+        element: (
+          <ProtectedRoute permissions={[Role.ADMIN]}>
+            <UserListPage />
+          </ProtectedRoute>
+        ),
         icon: Users,
         showInSidebar: true,
+        roles: [Role.ADMIN],
       },
       {
         path: urls.appealAccount,
         title: "Quản lý tài khoản ADS kháng giấy",
         pageTitle: "Danh sách tài khoản ADS kháng giấy",
-        element: <AppealAccountListPage />,
+        element: (
+          <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MEMBER_AFF, Role.ACCOUNTING]}>
+            <AppealAccountListPage />
+          </ProtectedRoute>
+        ),
         icon: Users,
         showInSidebar: true,
+        roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MEMBER_AFF, Role.ACCOUNTING],
       },
       {
         path: urls.gmail,
         title: "Quản lý Gmail",
         pageTitle: "Danh sách Gmail",
-        element: <GmailListPage />,
+        element: (
+          <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING]}>
+            <GmailListPage />
+          </ProtectedRoute>
+        ),
         icon: Mail,
         showInSidebar: true,
+        roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
       },
       {
         path: urls.gmailStatus,
         title: "Quản lý trạng thái Gmail",
         pageTitle: "Danh sách trạng thái Gmail",
-        element: <GmailStatusListPage />,
+        element: (
+          <ProtectedRoute permissions={[Role.ADMIN]}>
+            <GmailStatusListPage />
+          </ProtectedRoute>
+        ),
         icon: MailCheck,
         showInSidebar: true,
+        roles: [Role.ADMIN],
       },
       {
         path: urls.project,
         title: "Quản lý dự án",
         pageTitle: "Danh sách dự án",
-        element: <ProjectListPage />,
+        element: (
+          <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING]}>
+            <ProjectListPage />
+          </ProtectedRoute>
+        ),
         icon: FolderKanban,
         showInSidebar: true,
+        roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
       },
       {
         path: urls.projectType,
         title: "Quản lý loại dự án",
         pageTitle: "Danh sách loại dự án",
-        element: <ProjectTypeListPage />,
+        element: (
+          <ProtectedRoute permissions={[Role.ADMIN]}>
+            <ProjectTypeListPage />
+          </ProtectedRoute>
+        ),
         icon: FolderTree,
         showInSidebar: true,
+        roles: [Role.ADMIN],
       },
       {
         path: urls.projectStatus,
         title: "Quản lý trạng thái dự án",
         pageTitle: "Danh sách trạng thái dự án",
-        element: <ProjectStatusListPage />,
+        element: (
+          <ProtectedRoute permissions={[Role.ADMIN]}>
+            <ProjectStatusListPage />
+          </ProtectedRoute>
+        ),
         icon: ListChecks,
         showInSidebar: true,
+        roles: [Role.ADMIN],
       },
     ],
   },

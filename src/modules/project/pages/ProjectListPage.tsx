@@ -1,5 +1,6 @@
 import EditProjectModal from "@/modules/project/components/EditProjectModal";
 import ProjectTable from "@/modules/project/components/ProjectTable";
+import { useDeleteProject } from "@/modules/project/hooks/useDeleteProject";
 import type { ProjectListParams } from "@/modules/project/types/project.type";
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Input } from "@/shared/components/ui/input";
@@ -19,6 +20,8 @@ export default function ProjectListPage() {
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
   const debounceSearch = useDebounce(searchInput, 500);
+
+  const deleteProject = useDeleteProject();
 
   const { confirm } = useConfirm();
 
@@ -43,7 +46,7 @@ export default function ProjectListPage() {
     });
 
     if (confirmed) {
-      // await deleteGmail.mutateAsync(gmailId);
+      await deleteProject.mutateAsync(projectId);
     }
   };
 

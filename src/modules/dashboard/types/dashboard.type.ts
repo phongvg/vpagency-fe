@@ -28,3 +28,9 @@ export interface Series {
   name: string;
   data: number[];
 }
+
+export type TopProjectByProfit = {
+  projectId: string;
+  projectName: string;
+  profit: number;
+};
