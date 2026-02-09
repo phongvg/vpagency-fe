@@ -3,6 +3,7 @@ import type {
   Task,
   TaskListParams,
   TaskProgress,
+  TaskProgressDetail,
   TasksGroupedByStatus,
   UpdateAppealMetricsRequest,
   UpdateDocumentAppealMetricsRequest,
@@ -40,6 +41,10 @@ export const taskApi = {
 
   getTaskProgress: (id: string): Promise<ApiBaseResponse<TaskProgress>> => {
     return http.get(`/tasks/${id}/progress`);
+  },
+
+  getTaskProgressDetail: (id: string): Promise<ApiBaseResponse<TaskProgressDetail>> => {
+    return http.get(`/tasks/${id}/progress/detail`);
   },
 
   updateTaskStatus: (id: string, status: string): Promise<ApiBaseResponse<Task>> => {

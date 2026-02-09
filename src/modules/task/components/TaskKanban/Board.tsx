@@ -1,3 +1,4 @@
+import { urls } from "@/app/routes/route.constant";
 import TaskBoardCard from "@/modules/task/components/TaskKanban/TaskBoardCard";
 import TaskDetailModal from "@/modules/task/components/TaskKanban/TaskDetailModal";
 import { useTaskDragDrop } from "@/modules/task/hooks/useTaskDragDrop";
@@ -8,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Ca
 import { AppLoading } from "@/shared/components/common/AppLoading";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { Fragment, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const STATUS_COLUMNS: readonly { status: TaskStatus; label: string }[] = [
   { status: TaskStatus.PENDING, label: TaskStatusMap[TaskStatus.PENDING] },
@@ -39,6 +41,8 @@ export default function Board({
   const { data: tasksByStatus, isLoading } = useTasksByStatus();
   const { draggingTaskId, handleDragStart, handleDragOver, handleDrop, handleDragEnd } = useTaskDragDrop();
 
+  const navigate = useNavigate();
+
   const statusCounts = useMemo(() => {
     if (!tasksByStatus) return {};
 
@@ -58,6 +62,11 @@ export default function Board({
   const handleCloseTaskDetail = () => {
     setSelectedTaskId(null);
     setIsDetailModalOpen(false);
+  };
+
+  const handleViewProgress = (taskId: string) => {
+    handleCloseTaskDetail();
+    navigate(`/${urls.taskProgress}?id=${taskId}`);
   };
 
   if (isLoading) return <AppLoading loading={isLoading} />;
@@ -109,6 +118,7 @@ export default function Board({
         taskId={selectedTaskId}
         onEdit={onEdit}
         onDelete={onDelete}
+        onViewProgressDetail={handleViewProgress}
         onUpdateProgress={onUpdateProgress}
         onUpdateAppealMetrics={onUpdateAppealMetrics}
         onUpdateDocumentAppealMetrics={onUpdateDocumentAppealMetrics}

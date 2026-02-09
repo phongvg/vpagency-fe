@@ -1,5 +1,8 @@
 import { useTopProjectByProfit } from "@/modules/dashboard/hooks/useTopProjectByProfit";
-import { ScrollArea } from "@/shared/components/ui/scroll-area";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { cn } from "@/shared/libs/utils";
+import { formatDollarAmount } from "@/shared/utils/common.util";
+import { Fragment } from "react";
 
 const rankColor: Record<number, string> = {
   0: "bg-primary",
@@ -11,23 +14,26 @@ export default function ProjectRankingsCard() {
   const { data: topProjects } = useTopProjectByProfit();
 
   return (
-    <ScrollArea className='border rounded-md w-full h-full'>
-      {/* <div className='p-4'>
-        <h4 className='mb-4 font-bold text-primary text-xl leading-none'>BXH dự án theo lợi nhuận</h4>
+    <Card className='h-full'>
+      <CardHeader>
+        <CardTitle>BXH dự án theo lợi nhuận</CardTitle>
+      </CardHeader>
 
-        {topProjects?.map((project, index) => (
-          <React.Fragment key={project.projectId}>
-            <div className='flex items-center gap-2'>
-              <span className={clsx("flex justify-center items-center rounded-full w-6 h-6 font-semibold text-xs", rankColor[index])}>
-                {index + 1}
-              </span>
-              <span className='flex-1 font-medium truncate'>{project.projectName}</span>
-              <span className='ml-auto font-semibold text-green-500 text-lg'>{formatDollarAmount(project.profit)}</span>
-            </div>
-            <Separator className='my-2' />
-          </React.Fragment>
-        ))}
-      </div> */}
-    </ScrollArea>
+      <CardContent>
+        <div className='space-y-3'>
+          {topProjects?.map((project, index) => (
+            <Fragment key={project.projectId}>
+              <div className='flex items-center gap-2'>
+                <span className={cn("flex justify-center items-center rounded-full w-6 h-6 font-semibold", rankColor[index])}>{index + 1}</span>
+                <span className='flex-1 font-medium truncate'>{project.projectName}</span>
+                <span className='ml-auto font-semibold text-green-500'>{formatDollarAmount(project.profit)}</span>
+              </div>
+
+              {/* <Separator className='my-2' /> */}
+            </Fragment>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }

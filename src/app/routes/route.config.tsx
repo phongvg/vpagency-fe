@@ -10,7 +10,7 @@ import { ProjectListPage } from "@/modules/project";
 import { ProjectDailyStatsListPage } from "@/modules/projectDailyStats";
 import { ProjectStatusListPage } from "@/modules/projectStatus";
 import { ProjectTypeListPage } from "@/modules/projectType";
-import { TaskListPage } from "@/modules/task";
+import { TaskListPage, TaskProgressDetailPage } from "@/modules/task";
 import { UserListPage } from "@/modules/user";
 import { Role } from "@/shared/constants/role.constant";
 import BlankLayout from "@/shared/layouts/BlankLayout";
@@ -63,6 +63,17 @@ export const appRoutes: AppRoute[] = [
         ),
         icon: ClipboardList,
         showInSidebar: true,
+        roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
+      },
+      {
+        path: urls.taskProgress,
+        title: "Chi tiết tiến độ công việc",
+        pageTitle: "Chi tiết tiến độ công việc",
+        element: (
+          <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING]}>
+            <TaskProgressDetailPage />
+          </ProtectedRoute>
+        ),
         roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
       },
       {

@@ -34,3 +34,11 @@ export type TopProjectByProfit = {
   projectName: string;
   profit: number;
 };
+
+export type MonthlySpendingStat = {
+  cost: number[];
+  holdRevenue: number[];
+  profit: number[];
+  receivedRevenue: number[];
+  month: number;
+};

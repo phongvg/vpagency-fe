@@ -25,6 +25,8 @@ export const taskQueryKeys = {
 
   campaignStatsFinalUrl: (taskId: string, finalUrlId: string, params: CampaignListParams) =>
     [...taskQueryKeys.all, "campaign-stats", taskId, finalUrlId, normalizeParams(params)] as const,
+
+  taskProgressDetail: (id: string | null) => [...taskQueryKeys.all, "progress-detail", id] as const,
 };
 
 export const finalUrlQueryKeys = {
@@ -123,6 +125,8 @@ export const dashboardQueryKeys = {
   taskStats: () => [...dashboardQueryKeys.all, "task-stats"] as const,
 
   topProjectByProfit: () => [...dashboardQueryKeys.all, "top-project-by-profit"] as const,
+
+  monthlySpendingStats: () => [...dashboardQueryKeys.all, "monthly-spending-stats"] as const,
 };
 
 export const projectDailyStatsQueryKeys = {

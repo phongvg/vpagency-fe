@@ -124,3 +124,10 @@ export const copyTextToClipboard = (text: string | null | undefined) => {
 export const getModalTitle = (isEditMode: boolean, entity: string) => {
   return isEditMode ? `Cập nhật ${entity}` : `Thêm mới ${entity}`;
 };
+
+export const getDaysInMonth = (month: number | undefined): number => {
+  if (!month) return 0;
+
+  const year = new Date().getFullYear();
+  return new Date(year, month, 0).getDate();
+};

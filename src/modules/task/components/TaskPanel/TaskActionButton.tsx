@@ -12,6 +12,7 @@ interface TaskActionButtonProps {
   userRoles: Role[];
   onEdit: () => void;
   onDelete: () => void;
+  onViewProgressDetail: () => void;
   onUpdateProgress: () => void;
   onUpdateAppealMetrics: () => void;
   onUpdateDocumentAppealMetrics: () => void;
@@ -26,6 +27,7 @@ export default function TaskActionButton({
   userRoles,
   onEdit,
   onDelete,
+  onViewProgressDetail,
   onUpdateProgress,
   onUpdateAppealMetrics,
   onUpdateDocumentAppealMetrics,
@@ -49,7 +51,7 @@ export default function TaskActionButton({
 
       {isCampaignTask && (
         <Fragment>
-          <AppButton variant='outline' size='sm'>
+          <AppButton variant='outline' size='sm' onClick={onViewProgressDetail}>
             <Eye />
             Xem tiến độ
           </AppButton>

@@ -28,6 +28,7 @@ interface TaskDetailPanelProps {
   taskId?: string | null;
   onEdit: (taskId?: string) => void;
   onDelete: (taskId: string) => void;
+  onViewProgressDetail: (taskId: string) => void;
   onUpdateProgress: (taskId: string) => void;
   onUpdateAppealMetrics: (task: Task) => void;
   onUpdateDocumentAppealMetrics: (task: Task, documentAppealDetail?: TaskDocumentAppealDetail) => void;
@@ -37,6 +38,7 @@ interface TaskDetailPanelProps {
 export default function TaskDetailPanel({
   onEdit,
   onDelete,
+  onViewProgressDetail,
   onUpdateProgress,
   onUpdateAppealMetrics,
   onUpdateDocumentAppealMetrics,
@@ -108,6 +110,7 @@ export default function TaskDetailPanel({
               userRoles={user?.roles || []}
               onEdit={() => onEdit(task.id)}
               onDelete={() => onDelete(task.id)}
+              onViewProgressDetail={() => onViewProgressDetail(task.id)}
               onUpdateProgress={() => onUpdateProgress(task.id)}
               onUpdateAppealMetrics={() => onUpdateAppealMetrics(task)}
               onUpdateDocumentAppealMetrics={() => onUpdateDocumentAppealMetrics(task)}

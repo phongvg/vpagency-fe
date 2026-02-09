@@ -1,4 +1,4 @@
-import type { TaskStatistic, TopProjectByProfit, UserStatistic } from "@/modules/dashboard/types/dashboard.type";
+import type { MonthlySpendingStat, TaskStatistic, TopProjectByProfit, UserStatistic } from "@/modules/dashboard/types/dashboard.type";
 import { http } from "@/shared/libs/http";
 import type { ApiBaseResponse } from "@/shared/types/common/apiResponse.type";
 
@@ -13,5 +13,9 @@ export const dashboardApi = {
 
   getTopProjectsByProfit: (): Promise<ApiBaseResponse<TopProjectByProfit[]>> => {
     return http.get("/dashboard/top-projects-by-profit");
+  },
+
+  getMonthlySpendingStats: (): Promise<ApiBaseResponse<MonthlySpendingStat>> => {
+    return http.get("/dashboard/monthly-spending");
   },
 };

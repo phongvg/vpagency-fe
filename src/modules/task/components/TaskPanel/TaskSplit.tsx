@@ -12,6 +12,7 @@ import { useMemo, useState } from "react";
 interface TaskSplitProps {
   onEdit: (taskId?: string) => void;
   onDelete: (taskId: string) => void;
+  onViewProgressDetail: (taskId: string) => void;
   onUpdateProgress: (taskId: string) => void;
   onUpdateAppealMetrics: (task: Task) => void;
   onUpdateDocumentAppealMetrics: (task: Task, documentAppealDetail?: TaskDocumentAppealDetail) => void;
@@ -21,6 +22,7 @@ interface TaskSplitProps {
 export default function TaskSplit({
   onEdit,
   onDelete,
+  onViewProgressDetail,
   onUpdateProgress,
   onUpdateAppealMetrics,
   onUpdateDocumentAppealMetrics,
@@ -79,6 +81,7 @@ export default function TaskSplit({
         <TaskDetailPanel
           onEdit={onEdit}
           onDelete={onDelete}
+          onViewProgressDetail={onViewProgressDetail}
           onUpdateProgress={onUpdateProgress}
           onUpdateAppealMetrics={onUpdateAppealMetrics}
           onUpdateDocumentAppealMetrics={onUpdateDocumentAppealMetrics}

@@ -109,6 +109,10 @@ export default function TaskListPage() {
     setUpdateResearchMetricsOpen(false);
   };
 
+  const handleViewProgress = (taskId: string) => {
+    navigate(`/${urls.taskProgress}?id=${taskId}`);
+  };
+
   return (
     <Fragment>
       <Tabs value={tabValue} onValueChange={setTabValue} className='flex flex-col h-full'>
@@ -131,6 +135,7 @@ export default function TaskListPage() {
           <TaskSplit
             onEdit={handleOpenEditModal}
             onDelete={handleDeleteTask}
+            onViewProgressDetail={handleViewProgress}
             onUpdateProgress={handleOpenUpdateProgress}
             onUpdateAppealMetrics={handleOpenAppealMetricsModal}
             onUpdateDocumentAppealMetrics={handleOpenDocumentAppealMetricsModal}

@@ -8,6 +8,7 @@ interface TaskDetailModalProps {
   taskId: string | null;
   onEdit: (taskId?: string) => void;
   onDelete: (taskId: string) => void;
+  onViewProgressDetail: (taskId: string) => void;
   onUpdateProgress: (taskId: string) => void;
   onUpdateAppealMetrics: (Task: Task) => void;
   onUpdateDocumentAppealMetrics: (Task: Task) => void;
@@ -20,6 +21,7 @@ export default function TaskDetailModal({
   taskId,
   onEdit,
   onDelete,
+  onViewProgressDetail,
   onUpdateProgress,
   onUpdateAppealMetrics,
   onUpdateDocumentAppealMetrics,
@@ -32,6 +34,7 @@ export default function TaskDetailModal({
           onEdit={onEdit}
           onDelete={onDelete}
           onUpdateProgress={onUpdateProgress}
+          onViewProgressDetail={onViewProgressDetail}
           onUpdateAppealMetrics={onUpdateAppealMetrics}
           onUpdateDocumentAppealMetrics={onUpdateDocumentAppealMetrics}
           onUpdateResearchMetrics={onUpdateResearchMetrics}

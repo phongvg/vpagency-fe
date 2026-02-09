@@ -6,6 +6,7 @@ export const urls = {
   login: "login",
   dashboard: "dashboard",
   task: "tasks",
+  taskProgress: "tasks/progress",
   user: "users",
   campaign: "campaigns",
   gmail: "gmails",
