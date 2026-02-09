@@ -31,7 +31,6 @@ export default function TaskProgressDetailPage() {
 
             <CardContent className='space-y-2'>
               <InfoRow label='Tên URL' value={finalUrl.name} />
-              <InfoRow label='URL' value={finalUrl.finalURL} />
               <InfoRow label='Mục tiêu Ref' value={finalUrl.targetRef} />
               <InfoRow label='Mục tiêu Ftd' value={finalUrl.targetFtd} />
               <InfoRow label='Mục tiêu chi phí Ref' value={finalUrl.targetCostPerRef} />
