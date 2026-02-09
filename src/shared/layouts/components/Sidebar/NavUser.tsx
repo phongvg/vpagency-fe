@@ -1,4 +1,6 @@
+import { urls } from "@/app/routes/route.constant";
 import { authService } from "@/auth/services/auth.service";
+import UpdateProfileModal from "@/modules/me/components/UpdateProfileModal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
 import {
   DropdownMenu,
@@ -10,16 +12,18 @@ import {
 } from "@/shared/components/ui/dropdown-menu";
 import { useAuthStore } from "@/shared/stores/auth/useAuthStore";
 import { getInitials } from "@/shared/utils/common.util";
-import { ChevronDown, LogOut } from "lucide-react";
+import { ChevronDown, LogOut, User } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function NavUser() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   const handleLogout = async () => {
     await authService.logout();
-    navigate("/auth/login");
+    navigate(urls.auth + "/" + urls.login);
   };
 
   return (
@@ -46,12 +50,21 @@ export default function NavUser() {
             <p className='text-muted-foreground text-xs leading-none'>{user?.email}</p>
           </div>
         </DropdownMenuLabel>
+
         <DropdownMenuSeparator />
-        <DropdownMenuItem className='cursor-pointer' onClick={handleLogout}>
+
+        <DropdownMenuItem className='hover:bg-white/10 cursor-pointer' onClick={() => setIsProfileModalOpen(true)}>
+          <User />
+          Thông tin cá nhân
+        </DropdownMenuItem>
+
+        <DropdownMenuItem className='hover:bg-white/10 cursor-pointer' onClick={handleLogout}>
           <LogOut />
           Đăng xuất
         </DropdownMenuItem>
       </DropdownMenuContent>
+
+      <UpdateProfileModal open={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} />
     </DropdownMenu>
   );
 }
