@@ -32,7 +32,7 @@ export default function MonthlySpendingChart() {
   }, [monthlySpendingStats]);
 
   return (
-    <Card>
+    <Card className='hover:shadow-xl transition-shadow duration-300'>
       <CardHeader>
         <CardTitle>Thống kê chi tiêu tháng {monthlySpendingStats?.month}</CardTitle>
       </CardHeader>
@@ -40,14 +40,60 @@ export default function MonthlySpendingChart() {
       <CardContent>
         <ResponsiveContainer width='100%' height={400}>
           <AreaChart data={chartData}>
-            <CartesianGrid strokeDasharray='3 3' />
-            <XAxis dataKey='day' label={{ value: "Ngày", position: "insideBottom", offset: -5 }} />
-            <YAxis label={{ value: "USD", angle: -90, position: "insideLeft" }} tickFormatter={(value) => formatDollarAmount(value)} />
-            <Tooltip formatter={(value: number | undefined) => formatDollarAmount(value ?? 0)} labelFormatter={(label) => `Ngày ${label}`} />
-            <Legend />
-            <Area type='monotone' dataKey='receivedRevenue' stackId='1' stroke='#10b981' fill='#10b981' name='Hoa hồng rút về' />
-            <Area type='monotone' dataKey='holdRevenue' stackId='1' stroke='#f59e0b' fill='#f59e0b' name='Hoa hồng tạm giữ' />
-            <Area type='monotone' dataKey='cost' stackId='2' stroke='#ef4444' fill='#ef4444' name='Tổng chi tiêu' />
+            <defs>
+              <linearGradient id='receivedRevenue' x1='0' y1='0' x2='0' y2='1'>
+                <stop offset='5%' stopColor='#10b981' stopOpacity={0.8} />
+                <stop offset='95%' stopColor='#10b981' stopOpacity={0.1} />
+              </linearGradient>
+              <linearGradient id='holdRevenue' x1='0' y1='0' x2='0' y2='1'>
+                <stop offset='5%' stopColor='#f59e0b' stopOpacity={0.8} />
+                <stop offset='95%' stopColor='#f59e0b' stopOpacity={0.1} />
+              </linearGradient>
+              <linearGradient id='cost' x1='0' y1='0' x2='0' y2='1'>
+                <stop offset='5%' stopColor='#ef4444' stopOpacity={0.8} />
+                <stop offset='95%' stopColor='#ef4444' stopOpacity={0.1} />
+              </linearGradient>
+              <linearGradient id='profit' x1='0' y1='0' x2='0' y2='1'>
+                <stop offset='5%' stopColor='#3b82f6' stopOpacity={0.8} />
+                <stop offset='95%' stopColor='#3b82f6' stopOpacity={0.1} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray='3 3' stroke='#ffffff10' />
+            <XAxis dataKey='day' label={{ value: "Ngày", position: "insideBottom", offset: -5 }} stroke='#ffffff50' />
+            <YAxis
+              label={{ value: "USD", angle: -90, position: "insideLeft" }}
+              tickFormatter={(value) => formatDollarAmount(value)}
+              stroke='#ffffff50'
+            />
+            <Tooltip
+              formatter={(value: number | undefined) => formatDollarAmount(value ?? 0)}
+              labelFormatter={(label) => `Ngày ${label}`}
+              contentStyle={{
+                backgroundColor: "rgba(0, 0, 0, 0.8)",
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+                borderRadius: "8px",
+              }}
+            />
+            <Legend wrapperStyle={{ paddingTop: "20px" }} />
+            <Area
+              type='monotone'
+              dataKey='receivedRevenue'
+              stackId='1'
+              stroke='#10b981'
+              fill='url(#receivedRevenue)'
+              name='Hoa hồng rút về'
+              animationDuration={1500}
+            />
+            <Area
+              type='monotone'
+              dataKey='holdRevenue'
+              stackId='1'
+              stroke='#f59e0b'
+              fill='url(#holdRevenue)'
+              name='Hoa hồng tạm giữ'
+              animationDuration={1500}
+            />
+            <Area type='monotone' dataKey='cost' stackId='2' stroke='#ef4444' fill='url(#cost)' name='Tổng chi tiêu' animationDuration={1500} />
             <Area type='monotone' dataKey='profit' stackId='3' stroke='#3b82f6' fill='#3b82f6' name='Lợi nhuận' />
           </AreaChart>
         </ResponsiveContainer>

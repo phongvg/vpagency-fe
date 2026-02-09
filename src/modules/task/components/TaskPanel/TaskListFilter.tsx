@@ -62,21 +62,21 @@ export default function TaskListFilter({
             options={statusOptions}
             placeholder='Trạng thái công việc'
             value={params.status}
-            onValueChange={(value) => setParams((prev) => ({ ...prev, status: value, page: 1 }))}
+            onValueChange={(value) => setParams((prev) => ({ ...prev, status: typeof value === "string" ? value : undefined, page: 1 }))}
           />
 
           <AppSelect
             options={typeOptions}
             placeholder='Loại công việc'
             value={params.type}
-            onValueChange={(value) => setParams((prev) => ({ ...prev, type: value, page: 1 }))}
+            onValueChange={(value) => setParams((prev) => ({ ...prev, type: typeof value === "string" ? value : undefined, page: 1 }))}
           />
 
           <AppSelect
             options={priorityOptions}
             placeholder='Mức độ ưu tiên'
             value={params.priority}
-            onValueChange={(value) => setParams((prev) => ({ ...prev, priority: value, page: 1 }))}
+            onValueChange={(value) => setParams((prev) => ({ ...prev, priority: typeof value === "string" ? value : undefined, page: 1 }))}
           />
 
           <AsyncSelect<Project>

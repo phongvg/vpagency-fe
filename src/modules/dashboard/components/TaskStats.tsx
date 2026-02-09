@@ -4,6 +4,7 @@ import { useTasks } from "@/modules/task/hooks/useTasks";
 import type { TaskListParams } from "@/modules/task/types/task.type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
 import { AppTable } from "@/shared/components/common/AppTable";
+import { useCountUp } from "@/shared/hooks/useCountUp";
 import { useAuthStore } from "@/shared/stores/auth/useAuthStore";
 import { useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
@@ -28,6 +29,8 @@ export default function TaskStats() {
 
   const { user } = useAuthStore();
 
+  const onGoingCount = useCountUp(taskStats?.onGoing || 0, { duration: 1500, enableScrollSpy: true });
+
   const chartData = useMemo(() => {
     if (!taskStats?.series || !taskStats?.range) return [];
 
@@ -44,15 +47,23 @@ export default function TaskStats() {
 
   return (
     <div className='space-y-4'>
-      <Card>
+      <Card className='hover:shadow-lg transition-all animate-in duration-500 fade-in-50'>
         <CardHeader>
           <CardTitle>Xin chào, {`${user?.firstName} ${user?.lastName}`}!</CardTitle>
         </CardHeader>
 
-        <CardContent>Bạn có {taskStats?.onGoing} công việc cần xử lý.</CardContent>
+        <CardContent>
+          <div className='text-lg'>
+            Bạn có{" "}
+            <span className='font-bold text-orange-400 text-2xl' ref={onGoingCount.ref}>
+              {onGoingCount.count}
+            </span>{" "}
+            công việc cần xử lý.
+          </div>
+        </CardContent>
       </Card>
 
-      <Card>
+      <Card className='slide-in-from-bottom-4 hover:shadow-lg transition-all animate-in duration-700 fade-in-50'>
         <CardHeader>
           <CardTitle>Tổng quan công việc 7 ngày gần nhất</CardTitle>
         </CardHeader>
@@ -60,14 +71,20 @@ export default function TaskStats() {
         <CardContent>
           <ResponsiveContainer width='100%' height={350}>
             <BarChart data={chartData}>
-              <CartesianGrid strokeDasharray='3 3' />
-              <XAxis dataKey='date' tick={{ fontSize: 12 }} />
-              <YAxis label={{ value: "Số lượng", angle: -90, position: "insideLeft" }} allowDecimals={false} />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey='Đang hoàn thiện' fill='#f59e0b' radius={[4, 4, 0, 0]} />
-              <Bar dataKey='Hoàn thành' fill='#10b981' radius={[4, 4, 0, 0]} />
-              <Bar dataKey='Trễ' fill='#ef4444' radius={[4, 4, 0, 0]} />
+              <CartesianGrid strokeDasharray='3 3' stroke='#ffffff10' />
+              <XAxis dataKey='date' tick={{ fontSize: 12 }} stroke='#ffffff50' />
+              <YAxis label={{ value: "Số lượng", angle: -90, position: "insideLeft" }} allowDecimals={false} stroke='#ffffff50' />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "rgba(0, 0, 0, 0.8)",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                  borderRadius: "8px",
+                }}
+              />
+              <Legend wrapperStyle={{ paddingTop: "20px" }} />
+              <Bar dataKey='Đang hoàn thiện' fill='#f59e0b' radius={[8, 8, 0, 0]} animationDuration={1500} />
+              <Bar dataKey='Hoàn thành' fill='#10b981' radius={[8, 8, 0, 0]} animationDuration={1500} />
+              <Bar dataKey='Trễ' fill='#ef4444' radius={[8, 8, 0, 0]} animationDuration={1500} />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>

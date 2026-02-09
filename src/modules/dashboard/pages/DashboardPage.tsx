@@ -14,16 +14,22 @@ export default function DashboardPage() {
 
   if (isAdminOrManagerOrAccounting(user?.roles)) {
     return (
-      <div className='space-y-4'>
-        <div className='gap-1 grid grid-cols-3'>
+      <div className='space-y-6'>
+        <div className='gap-4 grid grid-cols-3'>
           <UserStatsCard />
           <ProjectStatsCard />
           <FinancialStatsCard />
         </div>
 
-        <ProjectDailyStatsListPage />
+        <div className='slide-in-from-bottom-4 animate-in duration-700 fade-in-50'>
+          <ProjectDailyStatsListPage />
+        </div>
 
-        <div className={cn("gap-4 grid", isAdminOrAccounting(user?.roles) ? "grid-cols-4" : "grid-cols-1")}>
+        <div
+          className={cn(
+            "slide-in-from-bottom-4 gap-4 grid animate-in duration-1000 fade-in-50",
+            isAdminOrAccounting(user?.roles) ? "grid-cols-4" : "grid-cols-1"
+          )}>
           {isAdminOrAccounting(user?.roles) && (
             <div className='col-span-1'>
               <ProjectRankingsCard />
