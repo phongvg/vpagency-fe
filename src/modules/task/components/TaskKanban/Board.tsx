@@ -8,6 +8,7 @@ import { TaskStatusMap } from "@/modules/task/utils/task.util";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
 import { AppLoading } from "@/shared/components/common/AppLoading";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
+import { cn } from "@/shared/libs/utils";
 import { Fragment, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -74,16 +75,32 @@ export default function Board({
   return (
     <Fragment>
       <div className='gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4'>
-        {STATUS_COLUMNS.map(({ status, label }) => {
+        {STATUS_COLUMNS.map(({ status, label }, columnIndex) => {
           const tasks = tasksByStatus?.[status as keyof typeof tasksByStatus] || [];
           const count = statusCounts[status] || 0;
 
           return (
-            <Card key={status} className='flex flex-col h-[calc(100vh-12rem)]' onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, status)}>
+            <Card
+              key={status}
+              className={cn(
+                "flex flex-col h-[calc(100vh-12rem)] transition-all duration-300",
+                "animate-in fade-in-50 slide-in-from-bottom-4",
+                draggingTaskId && "hover:ring-2 hover:ring-primary/50 hover:shadow-lg"
+              )}
+              style={{ animationDelay: `${columnIndex * 100}ms` }}
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, status)}>
               <CardHeader className='pb-3'>
                 <CardTitle className='flex justify-between items-center'>
                   <span>{label}</span>
-                  <span className='font-normal text-muted-foreground text-sm'>({count})</span>
+                  <span
+                    className={cn(
+                      "px-2.5 py-1 rounded-full font-normal text-sm transition-all duration-300",
+                      "bg-primary/10 text-primary",
+                      count > 0 && "animate-in zoom-in-50"
+                    )}>
+                    {count}
+                  </span>
                 </CardTitle>
               </CardHeader>
 
@@ -91,18 +108,19 @@ export default function Board({
                 <ScrollArea className='h-full'>
                   <div className='space-y-3'>
                     {tasks.length > 0 ? (
-                      tasks.map((task) => (
+                      tasks.map((task, index) => (
                         <div
                           key={task.id}
                           draggable
                           onDragStart={() => handleDragStart(task.id, status)}
                           onDragEnd={handleDragEnd}
-                          className={draggingTaskId === task.id ? "opacity-50" : ""}>
+                          className={cn("transition-all duration-300", draggingTaskId === task.id && "opacity-50 scale-95 rotate-2")}
+                          style={{ animationDelay: `${index * 50}ms` }}>
                           <TaskBoardCard task={task} onClick={() => handleOpenTaskDetail(task.id)} />
                         </div>
                       ))
                     ) : (
-                      <div className='py-8 text-white/50 text-center'>Không có task nào</div>
+                      <div className='py-8 text-white/50 text-sm text-center animate-in duration-700 fade-in-50'>Không có task nào</div>
                     )}
                   </div>
                 </ScrollArea>

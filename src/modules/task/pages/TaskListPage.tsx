@@ -116,17 +116,21 @@ export default function TaskListPage() {
   return (
     <Fragment>
       <Tabs value={tabValue} onValueChange={setTabValue} className='flex flex-col h-full'>
-        <div className='flex justify-between items-center'>
-          <TabsList>
+        <div className='flex justify-between items-center slide-in-from-top-4 animate-in duration-500 fade-in-50'>
+          <TabsList className='bg-card/50 backdrop-blur-sm'>
             {TABS.map((tab) => (
-              <TabsTrigger key={tab.value} value={tab.value}>
+              <TabsTrigger key={tab.value} value={tab.value} className='data-[state=active]:shadow-lg transition-all duration-300'>
                 {tab.label}
               </TabsTrigger>
             ))}
           </TabsList>
 
-          <AppButton variant='outline' size='sm' onClick={() => handleOpenEditModal()}>
-            <ClipboardPlus />
+          <AppButton
+            variant='outline'
+            size='sm'
+            onClick={() => handleOpenEditModal()}
+            className='group hover:shadow-lg hover:scale-105 transition-all duration-300'>
+            <ClipboardPlus className='group-hover:rotate-12 transition-transform duration-300' />
             Tạo mới công việc
           </AppButton>
         </div>
