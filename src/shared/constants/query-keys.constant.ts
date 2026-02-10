@@ -127,6 +127,8 @@ export const dashboardQueryKeys = {
   topProjectByProfit: () => [...dashboardQueryKeys.all, "top-project-by-profit"] as const,
 
   monthlySpendingStats: () => [...dashboardQueryKeys.all, "monthly-spending-stats"] as const,
+
+  projectStats: () => [...dashboardQueryKeys.all, "project-stats"] as const,
 };
 
 export const projectDailyStatsQueryKeys = {

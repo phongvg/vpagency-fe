@@ -7,10 +7,6 @@ import { Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, X
 export default function MonthlySpendingChart() {
   const { data: monthlySpendingStats } = useMonthlySpendingStats();
 
-  const totalSpentMonth = useMemo(() => {
-    return monthlySpendingStats?.cost?.reduce((acc, curr) => acc + curr, 0) || 0;
-  }, [monthlySpendingStats]);
-
   const chartData = useMemo(() => {
     if (!monthlySpendingStats) return [];
 

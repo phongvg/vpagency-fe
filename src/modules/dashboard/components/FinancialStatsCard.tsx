@@ -1,12 +1,31 @@
+import { useMonthlySpendingStats } from "@/modules/dashboard/hooks/useMonthlySpendingStats";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
 import { useCountUp } from "@/shared/hooks/useCountUp";
 import { formatDollarAmount } from "@/shared/utils/common.util";
 
 export default function FinancialStatsCard() {
-  const totalSpending = useCountUp(12000, { duration: 2000, decimals: 2, enableScrollSpy: true });
-  const receivedRevenue = useCountUp(12000, { duration: 2000, decimals: 2, enableScrollSpy: true });
-  const holdRevenue = useCountUp(12000, { duration: 2000, decimals: 2, enableScrollSpy: true });
-  const profit = useCountUp(12000, { duration: 2000, decimals: 2, enableScrollSpy: true });
+  const { data: monthlySpendingStats } = useMonthlySpendingStats();
+
+  const totalSpending = useCountUp(monthlySpendingStats?.cost?.reduce((acc, curr) => acc + curr, 0) || 0, {
+    duration: 2000,
+    decimals: 2,
+    enableScrollSpy: true,
+  });
+  const receivedRevenue = useCountUp(monthlySpendingStats?.receivedRevenue?.reduce((acc, curr) => acc + curr, 0) || 0, {
+    duration: 2000,
+    decimals: 2,
+    enableScrollSpy: true,
+  });
+  const holdRevenue = useCountUp(monthlySpendingStats?.holdRevenue?.reduce((acc, curr) => acc + curr, 0) || 0, {
+    duration: 2000,
+    decimals: 2,
+    enableScrollSpy: true,
+  });
+  const profit = useCountUp(monthlySpendingStats?.profit?.reduce((acc, curr) => acc + curr, 0) || 0, {
+    duration: 2000,
+    decimals: 2,
+    enableScrollSpy: true,
+  });
 
   return (
     <Card className='hover:shadow-lg transition-all animate-in duration-1000 fade-in-50'>
@@ -17,7 +36,7 @@ export default function FinancialStatsCard() {
       <CardContent className='p-0'>
         <div className='grid grid-cols-2 p-1'>
           <div className='group p-1 text-[9px]'>
-            <div className='text-white/50 group-hover:text-white/70 transition-colors'>Tổng chi tiêu tháng 1</div>
+            <div className='text-white/50 group-hover:text-white/70 transition-colors'>Tổng chi tiêu tháng {monthlySpendingStats?.month}</div>
             <div className='font-bold text-red-400 text-lg' ref={totalSpending.ref as React.RefObject<HTMLDivElement>}>
               {formatDollarAmount(totalSpending.count)}
             </div>

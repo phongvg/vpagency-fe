@@ -35,10 +35,20 @@ export type TopProjectByProfit = {
   profit: number;
 };
 
-export type MonthlySpendingStat = {
+export type MonthlySpendingStats = {
   cost: number[];
   holdRevenue: number[];
   profit: number[];
   receivedRevenue: number[];
   month: number;
+};
+
+export type ProjectStats = {
+  totalProjects: number;
+  activeProjects: number;
+  activeProjectsRate: number;
+  totalTasksAssignedToday: number;
+  totalTasksDueToday: number;
+  totalTasksCompletedToday: number;
+  totalSpentToday: number;
 };
