@@ -5,6 +5,7 @@ import { ACCESS_TOKEN, EXPIRES_AT, FIVE_MINUTES_IN_MS, REFRESH_TOKEN, USER_ID } 
 import { useAuthStore } from "@/shared/stores/auth/useAuthStore";
 import { getExpiresAtFromToken } from "@/shared/utils/jwt.util";
 import { getStorageItem, setStorageItem } from "@/shared/utils/storage.util";
+import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 
 let refreshTimeoutId: number | null = null;
@@ -37,7 +38,11 @@ export const authService = {
 
   setSession: (accessToken: string, refreshToken: string): void => {
     setStorageItem(ACCESS_TOKEN, accessToken);
-    setStorageItem(REFRESH_TOKEN, refreshToken);
+    // setStorageItem(REFRESH_TOKEN, refreshToken);
+    Cookies.set(REFRESH_TOKEN, refreshToken, {
+      secure: true,
+      sameSite: "strict",
+    });
   },
 
   scheduleRefresh: () => {
@@ -49,14 +54,12 @@ export const authService = {
     const target = expiresAt - FIVE_MINUTES_IN_MS;
     const delay = target - Date.now();
 
-    console.log("target :>> ", target);
-    console.log("delay :>> ", delay);
-
     if (delay <= 0) {
       authService.refreshToken().catch((error) => {
         console.error("Failed to refresh token:", error);
         authService.logout();
       });
+
       return;
     }
 

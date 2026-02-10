@@ -2,14 +2,15 @@ import type { LoginPayload, LoginResponse, RefreshTokenResponse } from "@/auth/t
 import type { User } from "@/modules/user/types/user.type";
 import { http } from "@/shared/libs/http";
 import type { ApiBaseResponse } from "@/shared/types/common/apiResponse.type";
+import { convertQueryParams } from "@/shared/utils/common.util";
 
 export const authApi = {
-  login: async (payload: LoginPayload): Promise<ApiBaseResponse<LoginResponse>> => {
-    return await http.post("/auth/login", payload, { skipAuth: true });
+  login: (payload: LoginPayload): Promise<ApiBaseResponse<LoginResponse>> => {
+    return http.post("/auth/login", payload, { skipAuth: true });
   },
 
-  refreshToken: async (userId: string): Promise<ApiBaseResponse<RefreshTokenResponse>> => {
-    return await http.post(
+  refreshToken: (userId: string): Promise<ApiBaseResponse<RefreshTokenResponse>> => {
+    return http.post(
       "/auth/refresh",
       { userId },
       {
@@ -18,13 +19,17 @@ export const authApi = {
     );
   },
 
-  logout: async (): Promise<ApiBaseResponse<null>> => {
-    return await http.post("/auth/logout", undefined, {
+  logout: (): Promise<ApiBaseResponse<null>> => {
+    return http.post("/auth/logout", undefined, {
       withCredentials: true,
     });
   },
 
-  getMe: async (): Promise<ApiBaseResponse<User>> => {
-    return await http.get("/users/me");
+  getMe: (): Promise<ApiBaseResponse<User>> => {
+    return http.get("/users/me");
+  },
+
+  loginTelegram: (code: string): Promise<ApiBaseResponse<LoginResponse>> => {
+    return http.get(`/auth/telegram${convertQueryParams({ code })}`, { skipAuth: true });
   },
 };

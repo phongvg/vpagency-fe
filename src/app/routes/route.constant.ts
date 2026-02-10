@@ -4,6 +4,7 @@ export const urls = {
 
   forbidden: "/forbidden",
   login: "login",
+  telegram: "telegram",
   dashboard: "dashboard",
   task: "tasks",
   taskProgress: "tasks/progress",

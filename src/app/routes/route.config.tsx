@@ -2,6 +2,7 @@ import ProtectedRoute from "@/app/routes/ProtectedRoute";
 import { urls } from "@/app/routes/route.constant";
 import { AppealAccountListPage } from "@/modules/appealAccount";
 import { LoginPage } from "@/modules/auth/login";
+import { LoginTelegramPage } from "@/modules/auth/loginTelegram";
 import { CampaignListPage } from "@/modules/campaign";
 import { DashboardPage } from "@/modules/dashboard";
 import { GmailListPage } from "@/modules/gmail";
@@ -202,6 +203,11 @@ export const appRoutes: AppRoute[] = [
       {
         path: urls.login,
         element: <LoginPage />,
+        showInSidebar: false,
+      },
+      {
+        path: urls.telegram,
+        element: <LoginTelegramPage />,
         showInSidebar: false,
       },
     ],
