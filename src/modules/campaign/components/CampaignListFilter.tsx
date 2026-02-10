@@ -13,15 +13,31 @@ interface CampaignListFilterProps {
 }
 
 export default function CampaignListFilter({ params, setParams }: CampaignListFilterProps) {
-  const [uidInput, setUidInput] = useState<string | undefined>(undefined);
-  const [campaignIdInput, setCampaignIdInput] = useState<string | undefined>(undefined);
-  const [gmailInput, setGmailInput] = useState<string | undefined>(undefined);
-  const [urlInput, setUrlInput] = useState<string | undefined>(undefined);
+  const [uidInput, setUidInput] = useState<string | undefined>(params.uid);
+  const [campaignIdInput, setCampaignIdInput] = useState<string | undefined>(params.externalId);
+  const [gmailInput, setGmailInput] = useState<string | undefined>(params.gmail);
+  const [urlInput, setUrlInput] = useState<string | undefined>(params.finalUrl);
 
   const debouncedUid = useDebounce(uidInput, 500);
   const debouncedCampaignId = useDebounce(campaignIdInput, 500);
   const debouncedGmail = useDebounce(gmailInput, 500);
   const debouncedUrl = useDebounce(urlInput, 500);
+
+  useEffect(() => {
+    setUidInput(params.uid);
+  }, [params.uid]);
+
+  useEffect(() => {
+    setCampaignIdInput(params.externalId);
+  }, [params.externalId]);
+
+  useEffect(() => {
+    setGmailInput(params.gmail);
+  }, [params.gmail]);
+
+  useEffect(() => {
+    setUrlInput(params.finalUrl);
+  }, [params.finalUrl]);
 
   useEffect(() => {
     if (removeDash(debouncedUid) !== params.uid) {

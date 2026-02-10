@@ -3,7 +3,7 @@ import { getDeadlineInfo } from "@/modules/task/utils/deadline.util";
 import { TaskTypeColorMap, TaskTypeMap } from "@/modules/task/utils/task.util";
 import { Card, CardContent } from "@/shared/components/Card/Card";
 import { Badge } from "@/shared/components/ui/badge";
-import UserAvatar from "@/shared/components/UserAvatar/UserAvatar";
+import UserAvatar from "@/shared/components/UserAvatar";
 import { cn } from "@/shared/libs/utils";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";

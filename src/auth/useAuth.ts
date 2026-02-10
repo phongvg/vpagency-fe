@@ -4,7 +4,6 @@ import { authService } from "@/auth/services/auth.service";
 import type { LoginPayload } from "@/auth/types/auth.type";
 import { useQueryParam } from "@/shared/hooks/useQueryParam";
 import { useMutation } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 export const useAuth = () => {
@@ -28,12 +27,15 @@ export const useAuth = () => {
       authService.login(res.data);
 
       setTimeout(() => {
-        navigate(redirect, { replace: true });
+        if (res.data.isOnboarding) {
+          navigate(`${urls.auth}/${urls.updateProfile}`, { replace: true });
+        } else {
+          navigate(redirect, { replace: true });
+        }
       }, 0);
     },
     onError: () => {
-      toast.error("Đăng nhập thất bại");
-      navigate(`${urls.auth}/${urls.login}`);
+      navigate(`${urls.auth}/${urls.login}`, { replace: true });
     },
   });
 

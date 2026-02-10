@@ -1,7 +1,7 @@
 import { urls } from "@/app/routes/route.constant";
 import { authService } from "@/auth/services/auth.service";
 import { env } from "@/configs/env";
-import { ACCESS_TOKEN, EXPIRES_AT } from "@/shared/constants/auth.constant";
+import { ACCESS_TOKEN } from "@/shared/constants/auth.constant";
 import { MESSAGE } from "@/shared/constants/message.constant";
 import { getStorageItem } from "@/shared/utils/storage.util";
 import axios, { AxiosError, HttpStatusCode, type AxiosInstance, type InternalAxiosRequestConfig } from "axios";
@@ -17,7 +17,7 @@ export const http: AxiosInstance = axios.create({
 
 http.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-    const expiresAt = Number(getStorageItem<string | null>(EXPIRES_AT, null));
+    // const expiresAt = Number(getStorageItem<string | null>(EXPIRES_AT, null));
 
     // if (expiresAt && expiresAt - Date.now() < FIVE_MINUTES_IN_MS) {
     //   await authService.refreshToken();

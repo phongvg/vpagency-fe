@@ -36,7 +36,7 @@ export default function TaskListPanel({ params, setParams, tasks, meta, loading 
   if (loading) return <AppLoading loading={loading} />;
 
   return (
-    <Card className='flex flex-col space-y-4 w-[360px]'>
+    <Card className='flex flex-col space-y-4 w-[360px] min-h-[750px]'>
       <CardHeader>
         <CardTitle>Danh sách công việc ({meta?.total || 0})</CardTitle>
       </CardHeader>

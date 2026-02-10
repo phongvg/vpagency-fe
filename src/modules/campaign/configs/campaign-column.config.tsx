@@ -2,13 +2,13 @@ import type { Campaign } from "@/modules/campaign/types/campaign.type";
 import BadgeStatus from "@/shared/components/BadgeStatus/BadgeStatus";
 import { AppButton } from "@/shared/components/common/AppButton";
 import ListTooltip from "@/shared/components/ListTooltip/ListTooltip";
-import UserAvatar from "@/shared/components/UserAvatar/UserAvatar";
+import UserAvatar from "@/shared/components/UserAvatar";
 import { addDash, copyTextToClipboard, fixedNumber, formatDollarAmount } from "@/shared/utils/common.util";
 import type { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "date-fns";
-import { Copy } from "lucide-react";
+import { Copy, Trash2 } from "lucide-react";
 
-export const campaignColumnConfig = (): ColumnDef<Campaign>[] => [
+export const campaignColumnConfig = (onDelete?: (id: string) => void): ColumnDef<Campaign>[] => [
   {
     header: "STT",
     id: "index",
@@ -253,21 +253,19 @@ export const campaignColumnConfig = (): ColumnDef<Campaign>[] => [
       );
     },
   },
-  // {
-  //       id: 'actions',
-  //       header: '',
-  //       cell: (props) => {
-  //         const row = props.row.original
-  //         return (
-  //           <div className="flex justify-end items-center gap-4">
-  //             <button type="button" onClick={() => handleEdit(row)}>
-  //               <HiOutlinePencilAlt size={24} />
-  //             </button>
-  //             <button type="button" onClick={() => handleDelete(row)}>
-  //               <HiOutlineTrash size={24} />
-  //             </button>
-  //           </div>
-  //         )
-  //       },
-  //     },
+  {
+    id: "actions",
+    header: "Thao tác",
+    cell: (props) => (
+      <div className='flex items-center gap-2'>
+        {/* <AppButton size='sm' onClick={() => handlers?.onEdit(props.row.original.id)}>
+          <SquarePen />
+        </AppButton> */}
+
+        <AppButton size='sm' onClick={() => onDelete?.(props.row.original.id)}>
+          <Trash2 />
+        </AppButton>
+      </div>
+    ),
+  },
 ];

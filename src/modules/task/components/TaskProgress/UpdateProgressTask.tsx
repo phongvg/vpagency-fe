@@ -1,3 +1,4 @@
+import AddFinalUrlModal from "@/modules/task/components/TaskProgress/AddFinalUrlModal";
 import CampaignStatsModal from "@/modules/task/components/TaskProgress/CampaignStatsModal";
 import FinalUrlsTable from "@/modules/task/components/TaskProgress/FinalUrlsTable";
 import { useTaskProgress } from "@/modules/task/hooks/useTaskProgress";
@@ -10,7 +11,7 @@ import { Form } from "@/shared/components/ui/form";
 import { taskQueryKeys } from "@/shared/constants/query-keys.constant";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
-import { Save } from "lucide-react";
+import { PlusCircle, Save } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -26,6 +27,7 @@ export default function UpdateProgressTask({ open, taskId, onClose }: UpdateProg
 
   const [isCampaignStatsOpen, setCampaignStatsOpen] = useState(false);
   const [selectedFinalUrlId, setSelectedFinalUrlId] = useState<string | null>(null);
+  const [isAddFinalUrlOpen, setAddFinalUrlOpen] = useState(false);
 
   const { data: progress } = useTaskProgress(taskId);
 
@@ -90,6 +92,11 @@ export default function UpdateProgressTask({ open, taskId, onClose }: UpdateProg
                   Hủy
                 </AppButton>
 
+                <AppButton type='button' variant='outline' size='sm' onClick={() => setAddFinalUrlOpen(true)}>
+                  <PlusCircle />
+                  Thêm mới URL
+                </AppButton>
+
                 <AppButton type='submit' variant='outline' size='sm'>
                   <Save />
                   Xác nhận
@@ -101,6 +108,14 @@ export default function UpdateProgressTask({ open, taskId, onClose }: UpdateProg
       </Dialog>
 
       <CampaignStatsModal finalUrlId={selectedFinalUrlId} taskId={taskId} open={isCampaignStatsOpen} onClose={() => setCampaignStatsOpen(false)} />
+
+      <AddFinalUrlModal
+        open={isAddFinalUrlOpen}
+        onClose={() => setAddFinalUrlOpen(false)}
+        taskId={taskId}
+        projectId={progress?.projectId}
+        finalUrlIds={progress?.finalUrls.map((url) => url.finalUrlId) ?? []}
+      />
     </Fragment>
   );
 }

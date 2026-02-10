@@ -1,5 +1,6 @@
 import ProtectedRoute from "@/app/routes/ProtectedRoute";
 import { urls } from "@/app/routes/route.constant";
+import { ForbiddenPage } from "@/modules/403";
 import { AppealAccountListPage } from "@/modules/appealAccount";
 import { LoginPage } from "@/modules/auth/login";
 import { LoginTelegramPage } from "@/modules/auth/loginTelegram";
@@ -7,6 +8,7 @@ import { CampaignListPage } from "@/modules/campaign";
 import { DashboardPage } from "@/modules/dashboard";
 import { GmailListPage } from "@/modules/gmail";
 import { GmailStatusListPage } from "@/modules/gmailStatus";
+import UpdateProfilePage from "@/modules/me/pages/UpdateProfilePage";
 import { ProjectListPage } from "@/modules/project";
 import { ProjectDailyStatsListPage } from "@/modules/projectDailyStats";
 import { ProjectStatusListPage } from "@/modules/projectStatus";
@@ -210,6 +212,15 @@ export const appRoutes: AppRoute[] = [
         element: <LoginTelegramPage />,
         showInSidebar: false,
       },
+      {
+        path: urls.updateProfile,
+        element: <UpdateProfilePage />,
+        showInSidebar: false,
+      },
     ],
+  },
+  {
+    path: urls.forbidden,
+    element: <ForbiddenPage />,
   },
 ];

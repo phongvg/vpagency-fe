@@ -18,6 +18,10 @@ export const campaignApi = {
     return await http.post(`/campaigns`, campaigns);
   },
 
+  deleteCampaign: async (id: string): Promise<ApiBaseResponse<null>> => {
+    return await http.delete(`/campaigns/${id}`);
+  },
+
   importGmail: async (payload: AssignToEmailRequest): Promise<ApiBaseResponse<null>> => {
     return await http.post(`/campaigns/import-gmail`, payload);
   },

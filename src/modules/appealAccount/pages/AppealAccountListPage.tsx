@@ -5,9 +5,8 @@ import ImportAppealAccountButton from "@/modules/appealAccount/components/Import
 import type { AppealAccountListParams } from "@/modules/appealAccount/types/appealAccount.type";
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
-import { useDebounce } from "@/shared/hooks/useDebounce";
 import { Funnel, PlusCircle } from "lucide-react";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 
 export default function AppealAccountListPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,14 +15,13 @@ export default function AppealAccountListPage() {
     page: 1,
     limit: 10,
     search: undefined,
+    email: undefined,
+    uid: undefined,
+    appealedBy: undefined,
+    usedBy: undefined,
+    appealPlatform: undefined,
+    rarityLevel: undefined,
   });
-  const [searchInput, setSearchInput] = useState<string | undefined>(undefined);
-
-  const debounceSearch = useDebounce(searchInput, 500);
-
-  useEffect(() => {
-    setParams((prev) => ({ ...prev, search: debounceSearch, page: 1 }));
-  }, [debounceSearch]);
 
   const handleOpenCreate = () => {
     setSelectedAppealAccountId(null);
@@ -61,7 +59,7 @@ export default function AppealAccountListPage() {
 
           <AppButton onClick={handleOpenCreate} variant='outline' size='sm'>
             <PlusCircle />
-            Tạo mới
+            Thêm mới
           </AppButton>
         </div>
       </div>

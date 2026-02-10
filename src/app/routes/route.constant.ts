@@ -17,4 +17,5 @@ export const urls = {
   projectStatus: "project-statuses",
   appealAccount: "appeal-accounts",
   projectDailyReport: "project-daily-reports",
+  updateProfile: "update-profile",
 };

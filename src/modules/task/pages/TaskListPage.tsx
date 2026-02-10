@@ -131,7 +131,7 @@ export default function TaskListPage() {
             onClick={() => handleOpenEditModal()}
             className='group hover:shadow-lg hover:scale-105 transition-all duration-300'>
             <ClipboardPlus className='group-hover:rotate-12 transition-transform duration-300' />
-            Tạo mới công việc
+            Thêm mới công việc
           </AppButton>
         </div>
 

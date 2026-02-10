@@ -39,8 +39,12 @@ export default function TaskListFilter({
   const fetchProjects = createAsyncSelectFetcher(projectApi.getProjects);
   const fetchUsers = createAsyncSelectFetcher(userApi.getUsers);
 
-  const [searchInput, setSearchInput] = useState<string | undefined>(undefined);
+  const [searchInput, setSearchInput] = useState<string | undefined>(params.search);
   const debouncedSearch = useDebounce(searchInput, 500);
+
+  useEffect(() => {
+    setSearchInput(params.search);
+  }, [params.search]);
 
   useEffect(() => {
     if (debouncedSearch !== params.search) {

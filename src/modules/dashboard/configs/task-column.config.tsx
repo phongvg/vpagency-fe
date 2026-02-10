@@ -1,7 +1,7 @@
 import TaskStatusChip from "@/modules/task/components/TaskStatusChip";
 import type { Task } from "@/modules/task/types/task.type";
 import { TaskPriorityMap } from "@/modules/task/utils/task.util";
-import UserAvatar from "@/shared/components/UserAvatar/UserAvatar";
+import UserAvatar from "@/shared/components/UserAvatar";
 import type { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "date-fns";
 

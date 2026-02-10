@@ -1,7 +1,7 @@
 import type { Gmail } from "@/modules/gmail/types/gmail.type";
 import BadgeStatus from "@/shared/components/BadgeStatus/BadgeStatus";
 import { AppButton } from "@/shared/components/common/AppButton";
-import UserAvatar from "@/shared/components/UserAvatar/UserAvatar";
+import UserAvatar from "@/shared/components/UserAvatar";
 import type { ColumnDef } from "@tanstack/react-table";
 import { SquarePen, Trash2 } from "lucide-react";
 

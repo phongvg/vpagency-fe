@@ -1,6 +1,7 @@
 import { useFinalUrlsByProjectId } from "@/modules/finalUrl/hooks/useFinalUrlsByProjectId";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
 import { Checkbox } from "@/shared/components/ui/checkbox";
+import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { useFormContext, useWatch } from "react-hook-form";
 
 export default function AddFinalUrlSection() {
@@ -49,44 +50,46 @@ export default function AddFinalUrlSection() {
         </CardHeader>
 
         <CardContent className='p-0'>
-          {finalUrls && finalUrls.length > 0 ? (
-            <table className='w-full align-middle'>
-              <thead>
-                <tr>
-                  <th className='px-2 py-2 w-[40px] font-semibold text-white text-center'></th>
-                  <th className='px-2 py-2 font-semibold text-white text-left'>Tên</th>
-                  <th className='px-2 py-2 w-[250px] font-semibold text-white text-left'>URL</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {finalUrls.map((url) => (
-                  <tr key={url.id} className='border-t'>
-                    <td className='px-2 py-4 w-[40px]'>
-                      <div className='flex justify-center items-center'>
-                        <Checkbox checked={selectedFinalUrlIds.includes(url.id)} onCheckedChange={(checked) => toggleFinalUrl(url.id, !!checked)} />
-                      </div>
-                    </td>
-
-                    <td className='px-2 py-4'>{url.name}</td>
-
-                    <td className='px-2 py-4 max-w-[250px] text-blue-500 truncate' title={url.finalURL}>
-                      <a
-                        href={url.finalURL}
-                        className='hover:underline'
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        onClick={(e) => e.stopPropagation()}>
-                        {url.finalURL}
-                      </a>
-                    </td>
+          <ScrollArea className='h-[150px]'>
+            {finalUrls && finalUrls.length > 0 ? (
+              <table className='w-full align-middle'>
+                <thead className='top-0 z-10 sticky bg-black/80 backdrop-blur-md'>
+                  <tr>
+                    <th className='px-2 py-2 w-[40px] font-semibold text-white text-center'></th>
+                    <th className='px-2 py-2 font-semibold text-white text-left'>Tên</th>
+                    <th className='px-2 py-2 w-[250px] font-semibold text-white text-left'>URL</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <p className='py-4 text-white text-center'>Không có URL nào trong dự án này.</p>
-          )}
+                </thead>
+
+                <tbody>
+                  {finalUrls.map((url) => (
+                    <tr key={url.id} className='border-t'>
+                      <td className='px-2 py-4 w-[40px]'>
+                        <div className='flex justify-center items-center'>
+                          <Checkbox checked={selectedFinalUrlIds.includes(url.id)} onCheckedChange={(checked) => toggleFinalUrl(url.id, !!checked)} />
+                        </div>
+                      </td>
+
+                      <td className='px-2 py-4'>{url.name}</td>
+
+                      <td className='px-2 py-4 max-w-[250px] text-blue-500 truncate' title={url.finalURL}>
+                        <a
+                          href={url.finalURL}
+                          className='hover:underline'
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          onClick={(e) => e.stopPropagation()}>
+                          {url.finalURL}
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p className='py-4 text-white text-center'>Không có URL nào trong dự án này.</p>
+            )}
+          </ScrollArea>
         </CardContent>
       </Card>
 

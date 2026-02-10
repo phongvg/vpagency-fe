@@ -8,7 +8,11 @@ import { getInitials } from "@/shared/utils/common.util";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 
-export default function UpdateProfileForm() {
+interface UpdateProfileFormProps {
+  showPasswordField?: boolean;
+}
+
+export default function UpdateProfileForm({ showPasswordField = false }: UpdateProfileFormProps) {
   const { control } = useFormContext<UpdateProfileFormType>();
   const { user } = useAuthStore();
   const avatarValue = useWatch({ control, name: "avatar" });
@@ -70,10 +74,13 @@ export default function UpdateProfileForm() {
         />
       </div>
 
-      <FormInput name='username' label='Tên đăng nhập' className='col-span-2' />
+      <FormInput name='username' label='Tên đăng nhập' className='col-span-2' required />
       <FormInput name='firstName' label='Họ và tên đệm' required />
       <FormInput name='lastName' label='Tên' required />
       <FormInput name='email' label='Email' className='col-span-2' required />
+      {showPasswordField && (
+        <FormInput type='password' name='password' label='Mật khẩu mới' placeholder='Nhập mật khẩu mới' className='col-span-2' required />
+      )}
     </div>
   );
 }

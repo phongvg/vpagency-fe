@@ -3,7 +3,7 @@ import { UserStatusBgColorMap, UserStatusColorMap, UserStatusLabelMap } from "@/
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Badge } from "@/shared/components/ui/badge";
 import { Switch } from "@/shared/components/ui/switch";
-import UserAvatar from "@/shared/components/UserAvatar/UserAvatar";
+import UserAvatar from "@/shared/components/UserAvatar";
 import { cn } from "@/shared/libs/utils";
 import type { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "date-fns";

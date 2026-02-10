@@ -7,8 +7,10 @@ import { projectFinalUrlFormSchema, type ProjectFinalUrlFormType } from "@/modul
 import { AppButton } from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
+import { finalUrlQueryKeys } from "@/shared/constants/query-keys.constant";
 import { getModalTitle } from "@/shared/utils/common.util";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { Save } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -23,6 +25,8 @@ interface EditProjectFinalUrlModalProps {
 
 export default function EditProjectFinalUrlModal({ open, onClose, finalUrlId, projectId }: EditProjectFinalUrlModalProps) {
   const isEditMode = !!finalUrlId;
+
+  const queryClient = useQueryClient();
 
   const { data: finalUrl } = useFinalUrl(finalUrlId);
 
@@ -55,14 +59,18 @@ export default function EditProjectFinalUrlModal({ open, onClose, finalUrlId, pr
           data: transformFormToFinalUrl(values, projectId),
         },
         {
-          onSuccess: () => {
+          onSuccess: (res) => {
+            queryClient.invalidateQueries({ queryKey: finalUrlQueryKeys.lists() });
+            toast.success(res.message);
             onClose();
           },
         }
       );
     } else {
       createFinalUrl.mutate(transformFormToFinalUrl(values, projectId), {
-        onSuccess: () => {
+        onSuccess: (res) => {
+          queryClient.invalidateQueries({ queryKey: finalUrlQueryKeys.lists() });
+          toast.success(res.message);
           onClose();
         },
       });

@@ -49,7 +49,7 @@ export default function ProjectTypeListPage() {
         />
         <AppButton onClick={handleOpenCreate} variant='outline' size='sm'>
           <PlusCircle />
-          Tạo mới
+          Thêm mới
         </AppButton>
       </div>
 

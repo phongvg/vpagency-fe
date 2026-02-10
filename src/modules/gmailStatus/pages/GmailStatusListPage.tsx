@@ -47,9 +47,10 @@ export default function GmailStatusListPage() {
           placeholder='Tìm kiếm theo tên trạng thái'
           className='max-w-[300px]'
         />
+
         <AppButton onClick={handleOpenCreate} variant='outline' size='sm'>
           <PlusCircle />
-          Tạo mới
+          Thêm mới
         </AppButton>
       </div>
 

@@ -12,10 +12,9 @@ interface FormArrayInputProps {
   disabled?: boolean;
   required?: boolean;
   className?: string;
-  addButtonText?: string;
 }
 
-export default function FormArrayInput({ name, label, placeholder, disabled, required, className, addButtonText = "Thêm" }: FormArrayInputProps) {
+export default function FormArrayInput({ name, label, placeholder, disabled, required, className }: FormArrayInputProps) {
   const { control } = useFormContext();
   const [inputValue, setInputValue] = useState("");
 

@@ -1,8 +1,10 @@
 import { campaignColumnConfig } from "@/modules/campaign/configs/campaign-column.config";
 import { useCampaigns } from "@/modules/campaign/hooks/useCampaigns";
+import { useDeleteCampaign } from "@/modules/campaign/hooks/useDeleteCampaign";
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
 import { AppLoading } from "@/shared/components/common/AppLoading";
 import { AppTable } from "@/shared/components/common/AppTable";
+import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { formatDollarAmount } from "@/shared/utils/common.util";
 import type { RowSelectionState, VisibilityState } from "@tanstack/react-table";
 import { Fragment, useMemo, useState } from "react";
@@ -16,6 +18,10 @@ export default function CampaignTable({ params, setParams }: CampaignTableProps)
   const { data, isLoading } = useCampaigns(params);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
+  const { confirm } = useConfirm();
+
+  const deleteCampaign = useDeleteCampaign();
 
   const campaigns = useMemo(() => data?.items || [], [data]);
   const meta = useMemo(() => data?.meta, [data]);
@@ -37,6 +43,16 @@ export default function CampaignTable({ params, setParams }: CampaignTableProps)
       totalCost,
     };
   }, [selectedCampaignsData]);
+
+  const handleDeleteCampaign = async (id: string) => {
+    const isConfirmed = await confirm({
+      description: "Bạn có chắc chắn muốn xóa chiến dịch này không?",
+    });
+
+    if (isConfirmed) {
+      await deleteCampaign.mutateAsync(id);
+    }
+  };
 
   if (isLoading) return <AppLoading loading={isLoading} />;
 
@@ -69,7 +85,7 @@ export default function CampaignTable({ params, setParams }: CampaignTableProps)
 
       <AppTable
         data={campaigns}
-        columns={campaignColumnConfig()}
+        columns={campaignColumnConfig(handleDeleteCampaign)}
         page={params.page}
         pageCount={meta?.totalPages}
         pageSize={params.limit}

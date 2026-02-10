@@ -9,8 +9,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/compo
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import type { RowSelectionState, VisibilityState } from "@tanstack/react-table";
-import { Funnel, Save } from "lucide-react";
+import { Funnel } from "lucide-react";
 import { useMemo, useState } from "react";
+import toast from "react-hot-toast";
 
 interface CampaignStatsModalProps {
   open: boolean;
@@ -54,13 +55,23 @@ export default function CampaignStatsModal({ open, onClose, taskId, finalUrlId }
     });
 
     if (confirmed) {
+      if (!taskId) {
+        toast.error("Task ID không hợp lệ");
+        return;
+      }
+
+      if (!finalUrlId) {
+        toast.error("URL ID không hợp lệ");
+        return;
+      }
+
       const campaignIds = Object.keys(rowSelection);
 
       await assignCampaignToFinalUrl.mutateAsync(
         {
-          id: taskId!,
+          id: taskId,
           payload: {
-            finalUrlId: finalUrlId!,
+            finalUrlId,
             campaignDailyStatIds: campaignIds,
           },
         },
@@ -82,13 +93,23 @@ export default function CampaignStatsModal({ open, onClose, taskId, finalUrlId }
     });
 
     if (confirmed) {
+      if (!taskId) {
+        toast.error("Task ID không hợp lệ");
+        return;
+      }
+
+      if (!finalUrlId) {
+        toast.error("URL ID không hợp lệ");
+        return;
+      }
+
       const campaignIds = Object.keys(rowSelection);
 
       await removeCampaignFromFinalUrl.mutateAsync(
         {
-          id: taskId!,
+          id: taskId,
           payload: {
-            finalUrlId: finalUrlId!,
+            finalUrlId,
             campaignDailyStatIds: campaignIds,
           },
         },
@@ -108,7 +129,7 @@ export default function CampaignStatsModal({ open, onClose, taskId, finalUrlId }
           <DialogTitle>Danh sách chiến dịch</DialogTitle>
         </DialogHeader>
 
-        <div className='space-y-4 min-w-0'>
+        <div className='space-y-2 min-w-0'>
           <div className='flex justify-between items-center'>
             <Popover open={isOpenFilter} onOpenChange={setIsOpenFilter}>
               <PopoverTrigger asChild>
@@ -125,7 +146,7 @@ export default function CampaignStatsModal({ open, onClose, taskId, finalUrlId }
           </div>
 
           {Object.keys(rowSelection).length > 0 && (
-            <div className='flex items-center gap-4 bg-gray-900 p-4 rounded-md'>
+            <div className='flex items-center gap-4 bg-gray-900 p-4'>
               <span className='font-medium'>Đã chọn {Object.keys(rowSelection).length} chiến dịch</span>
               <AppButton size='sm' variant='outline' onClick={handleBulkAssign}>
                 Gán chiến dịch
@@ -160,12 +181,7 @@ export default function CampaignStatsModal({ open, onClose, taskId, finalUrlId }
 
         <div className='flex justify-end gap-2'>
           <AppButton type='button' variant='outline' size='sm' onClick={onClose}>
-            Hủy
-          </AppButton>
-
-          <AppButton type='submit' variant='outline' size='sm'>
-            <Save />
-            Xác nhận
+            Đóng
           </AppButton>
         </div>
       </DialogContent>

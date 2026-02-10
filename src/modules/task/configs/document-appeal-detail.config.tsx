@@ -1,6 +1,6 @@
 import type { TaskDocumentAppealDetail } from "@/modules/task/types/task.type";
 import { Button } from "@/shared/components/ui/button";
-import UserAvatar from "@/shared/components/UserAvatar/UserAvatar";
+import UserAvatar from "@/shared/components/UserAvatar";
 import type { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "date-fns";
 import { Trash2 } from "lucide-react";

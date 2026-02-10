@@ -53,10 +53,8 @@ export default function VirtualGmailTable({ gmail }: VirtualGmailTableProps) {
           <div className='flex items-center px-4 border-r'>{index + 1}</div>
 
           {columns.map((col) => {
-            const width = columnWidths[col.key as keyof typeof columnWidths];
             let content: React.ReactNode = emailItem[col.key as keyof GmailUIDMapping];
 
-            // Format UID with dashes
             if (col.key === "uid") {
               content = addDash(emailItem.uid || "");
             }

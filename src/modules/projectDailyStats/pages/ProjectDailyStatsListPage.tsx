@@ -67,12 +67,7 @@ export default function ProjectDailyStatsListPage() {
     <div className='space-y-4'>
       <div className='flex justify-between items-center mb-4'>
         <div className='flex items-end gap-2'>
-          <Input
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            placeholder='Tìm kiếm theo tên dự án'
-            className='max-w-[300px]'
-          />
+          <Input value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder='Tìm kiếm theo tên dự án' className='w-[200px]' />
           <DatePicker
             value={params.fromDate ? format(new Date(params.fromDate), "yyyy-MM-dd") : undefined}
             onChange={(date) => setParams((prev) => ({ ...prev, fromDate: date ? format(date, "yyyy-MM-dd") : undefined, page: 1 }))}
