@@ -1,18 +1,14 @@
 import EditProjectDailyReportModal from "@/modules/projectDailyStats/components/EditProjectDailyReportModal";
+import ProjectDailyStatsFilter from "@/modules/projectDailyStats/components/ProjectDailyStatsFilter";
 import ProjectDailyStatsTable from "@/modules/projectDailyStats/components/ProjectDailyStatsTable";
 import ProjectDailySummaryTable from "@/modules/projectDailyStats/components/ProjectDailySummaryTable";
 import { useDeleteProjectDailyReport } from "@/modules/projectDailyStats/hooks/useDeleteProjectDailyReport";
 import { useProjectDailyStats } from "@/modules/projectDailyStats/hooks/useProjectDailyStats";
 import type { ProjectDailyStatsListParams } from "@/modules/projectDailyStats/types/projectDailyStats.type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
-import { AppButton } from "@/shared/components/common/AppButton";
 import { AppLoading } from "@/shared/components/common/AppLoading";
-import DatePicker from "@/shared/components/common/DatePicker/DatePicker";
-import { Input } from "@/shared/components/ui/input";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { useDebounce } from "@/shared/hooks/useDebounce";
-import { format } from "date-fns";
-import { CirclePlus } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function ProjectDailyStatsListPage() {
@@ -65,26 +61,13 @@ export default function ProjectDailyStatsListPage() {
 
   return (
     <div className='space-y-4'>
-      <div className='flex justify-between items-center mb-4'>
-        <div className='flex items-end gap-2'>
-          <Input value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder='Tìm kiếm theo tên dự án' className='w-[200px]' />
-          <DatePicker
-            value={params.fromDate ? format(new Date(params.fromDate), "yyyy-MM-dd") : undefined}
-            onChange={(date) => setParams((prev) => ({ ...prev, fromDate: date ? format(date, "yyyy-MM-dd") : undefined, page: 1 }))}
-            placeholder='Từ ngày'
-          />
-          <DatePicker
-            value={params.toDate ? format(new Date(params.toDate), "yyyy-MM-dd") : undefined}
-            onChange={(date) => setParams((prev) => ({ ...prev, toDate: date ? format(date, "yyyy-MM-dd") : undefined, page: 1 }))}
-            placeholder='Đến ngày'
-          />
-        </div>
-
-        <AppButton size='sm' variant='outline' onClick={() => handleOpenEditModal(null)}>
-          <CirclePlus />
-          Tạo báo cáo
-        </AppButton>
-      </div>
+      <ProjectDailyStatsFilter
+        searchInput={searchInput}
+        setSearchInput={setSearchInput}
+        params={params}
+        setParams={setParams}
+        onOpenModal={() => handleOpenEditModal(null)}
+      />
 
       <Card>
         <CardHeader>

@@ -1,6 +1,7 @@
 import { projectDailyMetricsConfig } from "@/modules/projectDailyStats/configs/project-daily-metrics.config";
 import type { AggregatedMetrics } from "@/modules/projectDailyStats/types/projectDailyMetrics.type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { cn } from "@/shared/libs/utils";
 import { useAuthStore } from "@/shared/stores/auth/useAuthStore";
 
 interface ProjectDailyMetricsProps {
@@ -18,17 +19,20 @@ export default function ProjectDailyMetrics({ aggregatedData }: ProjectDailyMetr
 
   return (
     <div className='gap-2 grid grid-cols-5'>
-      {visibleMetrics.map(({ key, label, format }) => {
+      {visibleMetrics.map(({ key, label, format, icon: Icon, color }) => {
         const rawValue = aggregatedData[key] ?? 0;
         const displayValue = format ? format(rawValue) : rawValue;
 
         return (
           <Card key={key}>
             <CardHeader>
-              <CardTitle>{label}</CardTitle>
+              <CardTitle className='flex items-center gap-1'>
+                <Icon className={`w-4 h-4 ${color}`} />
+                <span className={color}>{label}</span>
+              </CardTitle>
             </CardHeader>
 
-            <CardContent className='p-2'>{displayValue}</CardContent>
+            <CardContent className={cn("p-2 font-bold", color)}>{displayValue}</CardContent>
           </Card>
         );
       })}
