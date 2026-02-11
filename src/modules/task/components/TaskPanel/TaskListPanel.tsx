@@ -74,8 +74,7 @@ export default function TaskListPanel({ params, setParams, tasks, meta, loading 
                       <div
                         className={cn(
                           "flex flex-shrink-0 items-center gap-1 px-2 py-0.5 rounded-full text-[10px] transition-all duration-300",
-                          deadlineInfo.bgColor,
-                          deadlineInfo.color,
+                          TaskTypeColorMap[task.type],
                           deadlineInfo.shouldPulse && "animate-pulse-slow"
                         )}>
                         {deadlineInfo.isOverdue ? <Clock className='w-3 h-3' /> : <Calendar className='w-3 h-3' />}

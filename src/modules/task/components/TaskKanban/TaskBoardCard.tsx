@@ -6,7 +6,6 @@ import { Badge } from "@/shared/components/ui/badge";
 import UserAvatar from "@/shared/components/UserAvatar";
 import { cn } from "@/shared/libs/utils";
 import { format } from "date-fns";
-import { vi } from "date-fns/locale";
 import { Calendar, Clock } from "lucide-react";
 
 interface TaskBoardCardProps {
@@ -45,8 +44,7 @@ export default function TaskBoardCard({ task, onClick }: TaskBoardCardProps) {
             <div
               className={cn(
                 "flex items-center gap-1.5 px-2 py-1 rounded-full text-xs transition-all duration-300",
-                deadlineInfo.bgColor,
-                deadlineInfo.color,
+                TaskTypeColorMap[task.type],
                 deadlineInfo.shouldPulse && "animate-pulse-slow"
               )}>
               {deadlineInfo.isOverdue ? <Clock className='w-3 h-3' /> : <Calendar className='w-3 h-3' />}
@@ -78,7 +76,7 @@ export default function TaskBoardCard({ task, onClick }: TaskBoardCardProps) {
               </div>
             )}
 
-            <div className='text-[10px] text-muted-foreground'>{format(new Date(task.deadline), "dd/MM/yyyy", { locale: vi })}</div>
+            <div className='text-[10px] text-muted-foreground'>{format(task.deadline, "dd/MM/yyyy")}</div>
           </div>
         </CardContent>
       </Card>

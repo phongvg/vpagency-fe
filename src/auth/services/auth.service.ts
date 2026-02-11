@@ -134,21 +134,26 @@ export const authService = {
   },
 
   getMe: async (): Promise<void> => {
+    const token = getStorageItem<string | null>(ACCESS_TOKEN, null);
+    const expiresAt = Number(getStorageItem<string | null>(EXPIRES_AT, null));
+
     const { setUser, setAuthenticated, setLoading } = useAuthStore.getState();
 
-    setLoading(true);
+    if (token && expiresAt && expiresAt > Date.now()) {
+      setLoading(true);
 
-    try {
-      const response = await authApi.getMe();
-      const user = response.data;
+      try {
+        const response = await authApi.getMe();
+        const user = response.data;
 
-      setUser(user);
-      setAuthenticated(true);
-    } catch {
-      setUser(null);
-      setAuthenticated(false);
-    } finally {
-      setLoading(false);
+        setUser(user);
+        setAuthenticated(true);
+      } catch {
+        setUser(null);
+        setAuthenticated(false);
+      } finally {
+        setLoading(false);
+      }
     }
   },
 };
