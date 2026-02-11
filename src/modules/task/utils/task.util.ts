@@ -70,3 +70,12 @@ export const TaskTypeColorMap: Record<TaskType, string> = {
   [TaskType.DOCUMENT_APPEAL]: "text-orange-600",
   [TaskType.RESEARCH]: "text-yellow-600",
 };
+
+export const TaskTypeBgColorMap: Record<TaskType, string> = {
+  [TaskType.SET_CAMPAIGN]: "bg-rose-400",
+  [TaskType.LAUNCH_CAMPAIGN]: "bg-green-600",
+  [TaskType.NURTURE_ACCOUNT]: "bg-fuchsia-300",
+  [TaskType.APPEAL_ACCOUNT]: "bg-red-600",
+  [TaskType.DOCUMENT_APPEAL]: "bg-orange-600",
+  [TaskType.RESEARCH]: "bg-yellow-600",
+};

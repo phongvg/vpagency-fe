@@ -1,7 +1,7 @@
 import { urls } from "@/app/routes/route.constant";
 import type { Task, TaskListParams } from "@/modules/task/types/task.type";
 import { getDeadlineInfo } from "@/modules/task/utils/deadline.util";
-import { TaskTypeColorMap, TaskTypeMap } from "@/modules/task/utils/task.util";
+import { TaskTypeBgColorMap, TaskTypeColorMap, TaskTypeMap } from "@/modules/task/utils/task.util";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
 import { AppLoading } from "@/shared/components/common/AppLoading";
 import AppPagination from "@/shared/components/common/AppPagination/AppPagination";
@@ -49,15 +49,7 @@ export default function TaskListPanel({ params, setParams, tasks, meta, loading 
 
               return (
                 <li key={task.id} className='relative' style={{ animationDelay: `${index * 50}ms` }}>
-                  <div
-                    className={cn(
-                      "top-0 bottom-0 left-0 absolute rounded-l w-1 transition-all duration-300",
-                      deadlineInfo.isOverdue && "bg-red-500",
-                      deadlineInfo.isUrgent && !deadlineInfo.isOverdue && "bg-orange-500",
-                      deadlineInfo.isWarning && "bg-yellow-500",
-                      !deadlineInfo.isOverdue && !deadlineInfo.isUrgent && !deadlineInfo.isWarning && "bg-green-500"
-                    )}
-                  />
+                  <div className={cn("top-0 bottom-0 left-0 absolute rounded-l w-1 transition-all duration-300", TaskTypeBgColorMap[task.type])} />
 
                   <div
                     className={cn(

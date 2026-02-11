@@ -1,6 +1,6 @@
 import type { Task } from "@/modules/task/types/task.type";
 import { getDeadlineInfo } from "@/modules/task/utils/deadline.util";
-import { TaskTypeColorMap, TaskTypeMap } from "@/modules/task/utils/task.util";
+import { TaskTypeBgColorMap, TaskTypeColorMap, TaskTypeMap } from "@/modules/task/utils/task.util";
 import { Card, CardContent } from "@/shared/components/Card/Card";
 import { Badge } from "@/shared/components/ui/badge";
 import UserAvatar from "@/shared/components/UserAvatar";
@@ -18,15 +18,7 @@ export default function TaskBoardCard({ task, onClick }: TaskBoardCardProps) {
 
   return (
     <div className='relative'>
-      <div
-        className={cn(
-          "top-0 bottom-0 left-0 absolute rounded-l-lg w-1 transition-all duration-300",
-          deadlineInfo.isOverdue && "bg-red-500",
-          deadlineInfo.isUrgent && !deadlineInfo.isOverdue && "bg-orange-500",
-          deadlineInfo.isWarning && "bg-yellow-500",
-          !deadlineInfo.isOverdue && !deadlineInfo.isUrgent && !deadlineInfo.isWarning && "bg-green-500"
-        )}
-      />
+      <div className={cn("top-0 bottom-0 left-0 absolute rounded-l-lg w-1 transition-all duration-300", TaskTypeBgColorMap[task.type])} />
 
       <Card
         className={cn(
