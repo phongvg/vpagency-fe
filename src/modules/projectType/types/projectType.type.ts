@@ -1,0 +1,23 @@
+import type { BaseParams } from "@/shared/types/common/param.type";
+
+export type ProjectTypeListParams = BaseParams & {
+  search?: string;
+};
+
+export type ProjectType = {
+  id: string;
+  name: string;
+  description: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type UpdateProjectTypeRequest = {
+  name?: string;
+  description?: string | null;
+};
+
+export type CreateProjectTypeRequest = {
+  name: string;
+  description?: string | null;
+};

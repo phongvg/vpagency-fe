@@ -1,7 +1,0 @@
-.tooltip {
-  @apply z-50 relative px-4 py-2 rounded-lg max-w-[350px] text-white;
-}
-
-.tooltip-wrapper {
-  @apply inline-flex;
-}

@@ -1,34 +1,21 @@
-import { Provider } from 'react-redux'
-import { BrowserRouter } from 'react-router-dom'
-import { PersistGate } from 'redux-persist/integration/react'
-import store, { persistor } from './store'
-import Theme from '@/components/template/Theme'
-import Layout from '@/components/layouts'
-import mockServer from './mock'
-import appConfig from '@/configs/app.config'
-import './locales'
-import { QueryProvider } from '@/components/providers/QueryProvider'
-
-const environment = process.env.NODE_ENV
-
-if (appConfig.enableMock) {
-  mockServer({ environment })
-}
+import AppProvider from "@/app/providers/AppProvider";
+import { AppRouter } from "@/app/providers/RouterProvider";
+import { authService } from "@/auth/services/auth.service";
+import { useEffect } from "react";
+import { BrowserRouter } from "react-router-dom";
 
 function App() {
+  useEffect(() => {
+    authService.getMe();
+  }, []);
+
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <QueryProvider>
-          <BrowserRouter>
-            <Theme>
-              <Layout />
-            </Theme>
-          </BrowserRouter>
-        </QueryProvider>
-      </PersistGate>
-    </Provider>
-  )
+    <BrowserRouter>
+      <AppProvider>
+        <AppRouter />
+      </AppProvider>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

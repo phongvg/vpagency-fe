@@ -1,0 +1,11 @@
+.yeti-login-form .svgContainer {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 1em;
+  border-radius: 50%;
+  background: none;
+  border: solid 2.5px #3a5e77;
+  overflow: hidden;
+  pointer-events: none;
+}

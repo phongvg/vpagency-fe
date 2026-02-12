@@ -1,0 +1,21 @@
+export const urls = {
+  root: "/",
+  auth: "/auth",
+
+  forbidden: "/forbidden",
+  login: "login",
+  telegram: "telegram",
+  dashboard: "dashboard",
+  task: "tasks",
+  taskProgress: "tasks/progress",
+  user: "users",
+  campaign: "campaigns",
+  gmail: "gmails",
+  gmailStatus: "gmail-statuses",
+  project: "projects",
+  projectType: "project-types",
+  projectStatus: "project-statuses",
+  appealAccount: "appeal-accounts",
+  projectDailyReport: "project-daily-reports",
+  updateProfile: "update-profile",
+};

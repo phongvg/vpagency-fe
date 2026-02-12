@@ -1,7 +1,8 @@
-import ReactDOM from 'react-dom/client'
-import App from './App'
-import './index.css'
+import App from "@/App";
+import "@/styles/app.css";
+import "@/styles/index.css";
+import { createRoot } from "react-dom/client";
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <App />,
-)
+document.documentElement.classList.add("dark");
+
+createRoot(document.getElementById("root")!).render(<App />);
