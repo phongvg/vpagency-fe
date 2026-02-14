@@ -64,11 +64,10 @@ export const authService = {
 
   getMe: async (): Promise<void> => {
     const token = getStorageItem<string | null>(ACCESS_TOKEN, null);
-    const expiresAt = Number(getStorageItem<string | null>(EXPIRES_AT, null));
 
     const { setUser, setAuthenticated, setLoading } = useAuthStore.getState();
 
-    if (token && expiresAt && expiresAt > Date.now()) {
+    if (token) {
       setLoading(true);
 
       try {
