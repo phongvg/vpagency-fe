@@ -21,7 +21,7 @@ export const campaignColumnConfig = (onDelete?: (id: string) => void): ColumnDef
       const row = props.row.original.importAt;
 
       if (!row) return null;
-      return formatDate(row, "dd/MM/yyyy HH:mm");
+      return formatDate(row, "dd/MM/yyyy");
     },
   },
   {
@@ -31,7 +31,7 @@ export const campaignColumnConfig = (onDelete?: (id: string) => void): ColumnDef
       const row = props.row.original.date;
 
       if (!row) return null;
-      return formatDate(row, "dd/MM/yyyy HH:mm");
+      return formatDate(row, "dd/MM/yyyy");
     },
   },
   {
