@@ -3,7 +3,6 @@ import { useAssignGmail } from "@/modules/gmail/hooks/useAssignGmail";
 import { useGmails } from "@/modules/gmail/hooks/useGmails";
 import type { GmailListParams } from "@/modules/gmail/types/gmail.type";
 import { AppButton } from "@/shared/components/common/AppButton";
-import { AppLoading } from "@/shared/components/common/AppLoading";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import type { RowSelectionState, VisibilityState } from "@tanstack/react-table";
@@ -46,8 +45,6 @@ export default function GmailTable({ params, setParams, onEdit, onDelete }: Gmai
     }
   };
 
-  if (isLoading) return <AppLoading loading={isLoading} />;
-
   return (
     <Fragment>
       {Object.keys(rowSelection).length > 0 && (
@@ -66,6 +63,7 @@ export default function GmailTable({ params, setParams, onEdit, onDelete }: Gmai
       <AppTable
         data={gmails}
         columns={columns}
+        loading={isLoading}
         page={params.page}
         pageCount={meta?.totalPages}
         pageSize={params.limit}

@@ -39,9 +39,9 @@ export default function CampaignStatsModal({ open, onClose, taskId, finalUrlId }
 
   const { confirm } = useConfirm();
 
-  const { data } = useCampaignStatsFinalUrl({ taskId, finalUrlId, params });
-  const campaigns = useMemo(() => data?.data.items || [], [data]);
-  const meta = useMemo(() => data?.data.meta, [data]);
+  const { data: campaignStats, isLoading } = useCampaignStatsFinalUrl({ taskId, finalUrlId, params });
+  const campaigns = useMemo(() => campaignStats?.data.items || [], [campaignStats]);
+  const meta = useMemo(() => campaignStats?.data.meta, [campaignStats]);
 
   const assignCampaignToFinalUrl = useAssignCampaignToFinalUrl();
   const removeCampaignFromFinalUrl = useAssignCampaignToFinalUrl();
@@ -165,6 +165,7 @@ export default function CampaignStatsModal({ open, onClose, taskId, finalUrlId }
           <AppTable
             data={campaigns}
             columns={campaignColumnConfig()}
+            loading={isLoading}
             page={params.page}
             pageCount={meta?.totalPages}
             pageSize={params.limit}

@@ -2,7 +2,6 @@ import { projectTypeColumnConfig } from "@/modules/projectType/configs/project-t
 import { useDeleteProjectType } from "@/modules/projectType/hooks/useDeleteProjectType";
 import { useProjectTypes } from "@/modules/projectType/hooks/useProjectTypes";
 import type { ProjectTypeListParams } from "@/modules/projectType/types/projectType.type";
-import { AppLoading } from "@/shared/components/common/AppLoading";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import type { VisibilityState } from "@tanstack/react-table";
@@ -36,12 +35,11 @@ export default function ProjectTypeTable({ params, setParams, onOpenEdit }: Proj
     }
   };
 
-  if (isLoading) return <AppLoading loading={isLoading} />;
-
   return (
     <AppTable
       data={projectTypes}
       columns={projectTypeColumnConfig({ onEdit: onOpenEdit, onDelete: handleDelete })}
+      loading={isLoading}
       page={params.page}
       pageCount={meta?.totalPages}
       pageSize={params.limit}

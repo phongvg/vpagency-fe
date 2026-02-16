@@ -6,7 +6,6 @@ import { useDeleteProjectDailyReport } from "@/modules/projectDailyStats/hooks/u
 import { useProjectDailyStats } from "@/modules/projectDailyStats/hooks/useProjectDailyStats";
 import type { ProjectDailyStatsListParams } from "@/modules/projectDailyStats/types/projectDailyStats.type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
-import { AppLoading } from "@/shared/components/common/AppLoading";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { useEffect, useState } from "react";
@@ -33,7 +32,7 @@ export default function ProjectDailyStatsListPage() {
     setParams((prev) => ({ ...prev, projectName: debounceSearch, page: 1 }));
   }, [debounceSearch]);
 
-  const { data, isLoading } = useProjectDailyStats(params);
+  const { data: projectDailyStats, isLoading } = useProjectDailyStats(params);
 
   const handleOpenEditModal = (reportId: string | null) => {
     setProjectDailyReportId(reportId ?? null);
@@ -55,10 +54,6 @@ export default function ProjectDailyStatsListPage() {
     }
   };
 
-  if (!data) return null;
-
-  if (isLoading) return <AppLoading loading={isLoading} />;
-
   return (
     <div className='space-y-4'>
       <ProjectDailyStatsFilter
@@ -75,13 +70,14 @@ export default function ProjectDailyStatsListPage() {
         </CardHeader>
 
         <CardContent className='normal-case'>
-          <ProjectDailySummaryTable projectDailySummary={data.data.summary} />
+          <ProjectDailySummaryTable projectDailySummary={projectDailyStats?.data?.summary} loading={isLoading} />
         </CardContent>
       </Card>
 
       <ProjectDailyStatsTable
-        projectDailyStats={data}
+        projectDailyStats={projectDailyStats}
         params={params}
+        loading={isLoading}
         setParams={setParams}
         onEdit={handleOpenEditModal}
         onDelete={handleDeleteReport}

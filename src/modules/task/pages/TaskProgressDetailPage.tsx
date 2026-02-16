@@ -4,19 +4,20 @@ import { campaignStatsColumnConfig } from "@/modules/task/configs/campaign-stats
 import { userStatsColumns } from "@/modules/task/configs/user-stats-column.config";
 import { useTaskProgressDetail } from "@/modules/task/hooks/useTaskProgressDetail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
-import { AppLoading } from "@/shared/components/common/AppLoading";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { useQueryParam } from "@/shared/hooks/useQueryParam";
+import type { VisibilityState } from "@tanstack/react-table";
+import { useState } from "react";
 
 export default function TaskProgressDetailPage() {
   const queryId = useQueryParam("id");
   const taskId = queryId ?? null;
 
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
   const { data: taskProgressDetail, isLoading } = useTaskProgressDetail(taskId);
 
-  if (isLoading) return <AppLoading loading={isLoading} />;
-
-  if (taskProgressDetail?.finalUrls.length === 0) {
+  if (taskProgressDetail?.finalUrls.length === 0 && !isLoading) {
     return <EmptyTaskProgressDetail />;
   }
 
@@ -29,7 +30,7 @@ export default function TaskProgressDetailPage() {
               <CardTitle>Thông tin URL</CardTitle>
             </CardHeader>
 
-            <CardContent className='space-y-2'>
+            <CardContent className='space-y-2 normal-case'>
               <InfoRow label='Tên URL' value={finalUrl.name} />
               <InfoRow label='Mục tiêu Ref' value={finalUrl.targetRef} />
               <InfoRow label='Mục tiêu Ftd' value={finalUrl.targetFtd} />
@@ -45,8 +46,15 @@ export default function TaskProgressDetailPage() {
                 <CardTitle>Thống kê tài khoản</CardTitle>
               </CardHeader>
 
-              <CardContent>
-                <AppTable columns={userStatsColumns} data={finalUrl.userStats} pageCount={1} page={1} pageSize={finalUrl.userStats.length} />
+              <CardContent className='normal-case'>
+                <AppTable
+                  columns={userStatsColumns}
+                  data={finalUrl.userStats}
+                  loading={isLoading}
+                  pageCount={1}
+                  page={1}
+                  pageSize={finalUrl.userStats.length}
+                />
               </CardContent>
             </Card>
           </div>
@@ -57,13 +65,17 @@ export default function TaskProgressDetailPage() {
                 <CardTitle>Thống kê chiến dịch</CardTitle>
               </CardHeader>
 
-              <CardContent>
+              <CardContent className='normal-case'>
                 <AppTable
                   columns={campaignStatsColumnConfig}
                   data={finalUrl.campaignStats}
+                  loading={isLoading}
                   pageCount={1}
                   page={1}
                   pageSize={finalUrl.campaignStats.length}
+                  enableColumnVisibility
+                  columnVisibility={columnVisibility}
+                  onColumnVisibilityChange={setColumnVisibility}
                 />
               </CardContent>
             </Card>

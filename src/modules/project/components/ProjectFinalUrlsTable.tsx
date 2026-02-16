@@ -9,12 +9,13 @@ interface ProjectFinalUrlsTableProps {
 }
 
 export default function ProjectFinalUrlsTable({ projectId, onEdit, onDelete }: ProjectFinalUrlsTableProps) {
-  const { data: finalUrls } = useFinalUrlsByProjectId(projectId);
+  const { data: finalUrls, isLoading } = useFinalUrlsByProjectId(projectId);
 
   return (
     <AppTable
       columns={projectFinalUrlColumnConfig({ onEdit, onDelete })}
       data={finalUrls ?? []}
+      loading={isLoading}
       page={1}
       pageCount={1}
       pageSize={finalUrls?.length ?? 0}

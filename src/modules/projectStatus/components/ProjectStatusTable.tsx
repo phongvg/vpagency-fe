@@ -3,7 +3,6 @@ import { useDeleteProjectStatus } from "@/modules/projectStatus/hooks/useDeleteP
 import { useProjectStatuses } from "@/modules/projectStatus/hooks/useProjectStatuses";
 import { useUpdateProjectStatus } from "@/modules/projectStatus/hooks/useUpdateProjectStatus";
 import type { ProjectStatusListParams } from "@/modules/projectStatus/types/projectStatus.type";
-import { AppLoading } from "@/shared/components/common/AppLoading";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import type { VisibilityState } from "@tanstack/react-table";
@@ -42,12 +41,11 @@ export default function ProjectStatusTable({ params, setParams, onOpenEdit }: Pr
     }
   };
 
-  if (isLoading) return <AppLoading loading={isLoading} />;
-
   return (
     <AppTable
       data={projectStatuses}
       columns={projectStatusColumnConfig({ onUpdateStatus: handleUpdateStatus, onEdit: onOpenEdit, onDelete: handleDelete })}
+      loading={isLoading}
       page={params.page}
       pageCount={meta?.totalPages}
       pageSize={params.limit}

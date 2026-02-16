@@ -2,7 +2,6 @@ import { appealAccountColumnConfig } from "@/modules/appealAccount/configs/appea
 import { useAppealAccounts } from "@/modules/appealAccount/hooks/useAppealAccounts";
 import { useDeleteAppealAccount } from "@/modules/appealAccount/hooks/useDeleteAppealAccount";
 import type { AppealAccountListParams } from "@/modules/appealAccount/types/appealAccount.type";
-import { AppLoading } from "@/shared/components/common/AppLoading";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import type { VisibilityState } from "@tanstack/react-table";
@@ -36,12 +35,11 @@ export default function AppealAccountTable({ params, setParams, onOpenEdit }: Ap
     }
   };
 
-  if (isLoading) return <AppLoading loading={isLoading} />;
-
   return (
     <AppTable
       data={appealAccounts}
       columns={appealAccountColumnConfig({ onEdit: onOpenEdit, onDelete: handleDelete })}
+      loading={isLoading}
       page={params.page}
       pageCount={meta?.totalPages}
       pageSize={params.limit}

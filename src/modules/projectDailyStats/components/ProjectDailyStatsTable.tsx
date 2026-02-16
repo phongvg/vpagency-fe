@@ -6,24 +6,26 @@ import type { VisibilityState } from "@tanstack/react-table";
 import { useState } from "react";
 
 interface ProjectDailyStatsTableProps {
-  projectDailyStats: ProjectDailyStatsResponse;
+  projectDailyStats: ProjectDailyStatsResponse | undefined;
+  loading: boolean;
   params: ProjectDailyStatsListParams;
   setParams: React.Dispatch<React.SetStateAction<ProjectDailyStatsListParams>>;
   onEdit: (reportId: string | null) => void;
   onDelete: (reportId: string) => void;
 }
 
-export default function ProjectDailyStatsTable({ projectDailyStats, params, setParams, onEdit, onDelete }: ProjectDailyStatsTableProps) {
+export default function ProjectDailyStatsTable({ projectDailyStats, loading, params, setParams, onEdit, onDelete }: ProjectDailyStatsTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
   const { user } = useAuthStore();
 
   return (
     <AppTable
-      data={projectDailyStats.data.items}
+      data={projectDailyStats?.data?.items || []}
       columns={projectDailyStatsColumnConfig({ roles: user?.roles, onEdit, onDelete })}
+      loading={loading}
       page={params.page}
-      pageCount={projectDailyStats.data.meta?.totalPages}
+      pageCount={projectDailyStats?.data?.meta?.totalPages}
       pageSize={params.limit}
       onPageChange={(page, pageSize) => setParams((prev) => ({ ...prev, page, limit: pageSize }))}
       enableColumnVisibility

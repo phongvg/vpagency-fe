@@ -1,5 +1,6 @@
 import { AppButton } from "@/shared/components/common/AppButton";
-import AppPagination from "@/shared/components/common/AppPagination/AppPagination";
+import { AppPagination } from "@/shared/components/common/AppPagination";
+import { SkeletonTable } from "@/shared/components/SkeletonTable";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/shared/components/ui/dropdown-menu";
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/shared/components/ui/empty";
@@ -25,6 +26,7 @@ const INDEX_COLUMN_ID = "index";
 interface AppTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  loading?: boolean;
 
   page?: number;
   pageCount?: number;
@@ -46,6 +48,7 @@ interface AppTableProps<TData, TValue> {
 export function AppTable<TData, TValue>({
   columns,
   data,
+  loading = false,
   page = 1,
   pageCount = 0,
   pageSize = 10,
@@ -115,7 +118,17 @@ export function AppTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
   });
 
-  if (table.getRowModel().rows?.length === 0) {
+  if (loading) {
+    const columnCount = resolvedColumns.length;
+
+    return (
+      <div className='w-full max-w-full'>
+        <SkeletonTable />
+      </div>
+    );
+  }
+
+  if (table.getRowModel().rows?.length === 0 && !loading) {
     return (
       <div className='flex flex-col justify-center py-4 h-48'>
         <Empty>

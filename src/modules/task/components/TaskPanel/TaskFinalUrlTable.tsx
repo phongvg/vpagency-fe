@@ -16,7 +16,7 @@ export default function TaskFinalUrlTable({ finalUrls }: TaskFinalUrlTableProps)
       </CardHeader>
 
       <CardContent>
-        <AppTable data={finalUrls} columns={finalUrlColumnConfig(copyToClipboard)} />
+        <AppTable data={finalUrls} columns={finalUrlColumnConfig(copyToClipboard)} page={1} pageCount={1} pageSize={finalUrls.length} />
       </CardContent>
     </Card>
   );

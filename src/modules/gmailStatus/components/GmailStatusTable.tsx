@@ -3,7 +3,6 @@ import { useDeleteGmailStatus } from "@/modules/gmailStatus/hooks/useDeleteGmail
 import { useGmailStatuses } from "@/modules/gmailStatus/hooks/useGmailStatuses";
 import { useUpdateGmailStatus } from "@/modules/gmailStatus/hooks/useUpdateGmailStatus";
 import type { GmailStatusListParams } from "@/modules/gmailStatus/types/gmailStatus.type";
-import { AppLoading } from "@/shared/components/common/AppLoading";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import type { VisibilityState } from "@tanstack/react-table";
@@ -42,12 +41,11 @@ export default function GmailStatusTable({ params, setParams, onOpenEdit }: Gmai
     }
   };
 
-  if (isLoading) return <AppLoading loading={isLoading} />;
-
   return (
     <AppTable
       data={gmailStatuses}
       columns={gmailStatusColumnConfig({ onUpdateStatus: handleUpdateStatus, onEdit: onOpenEdit, onDelete: handleDelete })}
+      loading={isLoading}
       page={params.page}
       pageCount={meta?.totalPages}
       pageSize={params.limit}

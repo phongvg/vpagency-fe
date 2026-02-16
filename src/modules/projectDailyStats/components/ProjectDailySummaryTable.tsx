@@ -8,12 +8,13 @@ import type { RowSelectionState, VisibilityState } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 
 interface ProjectDailySummaryTableProps {
-  projectDailySummary: ProjectDailyStatsSummary[];
+  projectDailySummary: ProjectDailyStatsSummary[] | undefined;
+  loading: boolean;
 }
 
 const PAGE_SIZE = 10;
 
-export default function ProjectDailySummaryTable({ projectDailySummary }: ProjectDailySummaryTableProps) {
+export default function ProjectDailySummaryTable({ projectDailySummary, loading }: ProjectDailySummaryTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [page, setPage] = useState(1);
@@ -23,13 +24,13 @@ export default function ProjectDailySummaryTable({ projectDailySummary }: Projec
   const paginatedData = useMemo(() => {
     const start = (page - 1) * PAGE_SIZE;
     const end = start + PAGE_SIZE;
-    return projectDailySummary.slice(start, end);
+    return projectDailySummary ? projectDailySummary.slice(start, end) : [];
   }, [projectDailySummary, page]);
 
-  const pageCount = Math.ceil(projectDailySummary.length / PAGE_SIZE);
+  const pageCount = projectDailySummary ? Math.ceil(projectDailySummary.length / PAGE_SIZE) : 0;
 
   const selectedProjectsData = useMemo(() => {
-    return projectDailySummary.filter((c) => Object.keys(rowSelection).includes(c.projectId));
+    return projectDailySummary ? projectDailySummary.filter((c) => Object.keys(rowSelection).includes(c.projectId)) : [];
   }, [projectDailySummary, rowSelection]);
 
   const aggregatedData = useMemo<AggregatedMetrics>(() => {
@@ -95,6 +96,7 @@ export default function ProjectDailySummaryTable({ projectDailySummary }: Projec
       <AppTable
         data={paginatedData}
         columns={projectDailySummaryColumnConfig(user?.roles)}
+        loading={loading}
         page={page}
         pageCount={pageCount}
         pageSize={PAGE_SIZE}

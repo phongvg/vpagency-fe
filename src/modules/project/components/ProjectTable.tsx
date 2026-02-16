@@ -1,7 +1,6 @@
 import { projectColumnConfig } from "@/modules/project/configs/project-column.config";
 import { useProjects } from "@/modules/project/hooks/useProjects";
 import type { ProjectListParams } from "@/modules/project/types/project.type";
-import { AppLoading } from "@/shared/components/common/AppLoading";
 import { AppTable } from "@/shared/components/common/AppTable";
 import type { VisibilityState } from "@tanstack/react-table";
 import type React from "react";
@@ -22,12 +21,11 @@ export default function ProjectTable({ params, setParams, onEdit, onDelete }: Pr
   const projects = useMemo(() => data?.items || [], [data]);
   const meta = useMemo(() => data?.meta, [data]);
 
-  if (isLoading) return <AppLoading loading={isLoading} />;
-
   return (
     <AppTable
       data={projects}
       columns={projectColumnConfig({ onEdit, onDelete })}
+      loading={isLoading}
       page={params.page}
       pageCount={meta?.totalPages}
       pageSize={params.limit}

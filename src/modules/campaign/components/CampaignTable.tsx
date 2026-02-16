@@ -2,7 +2,6 @@ import { campaignColumnConfig } from "@/modules/campaign/configs/campaign-column
 import { useCampaigns } from "@/modules/campaign/hooks/useCampaigns";
 import { useDeleteCampaign } from "@/modules/campaign/hooks/useDeleteCampaign";
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
-import { AppLoading } from "@/shared/components/common/AppLoading";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { formatDollarAmount } from "@/shared/utils/common.util";
@@ -15,7 +14,6 @@ interface CampaignTableProps {
 }
 
 export default function CampaignTable({ params, setParams }: CampaignTableProps) {
-  const { data, isLoading } = useCampaigns(params);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
@@ -23,6 +21,7 @@ export default function CampaignTable({ params, setParams }: CampaignTableProps)
 
   const deleteCampaign = useDeleteCampaign();
 
+  const { data, isLoading } = useCampaigns(params);
   const campaigns = useMemo(() => data?.items || [], [data]);
   const meta = useMemo(() => data?.meta, [data]);
 
@@ -54,8 +53,6 @@ export default function CampaignTable({ params, setParams }: CampaignTableProps)
     }
   };
 
-  if (isLoading) return <AppLoading loading={isLoading} />;
-
   return (
     <Fragment>
       {Object.keys(rowSelection).length > 0 && (
@@ -86,6 +83,7 @@ export default function CampaignTable({ params, setParams }: CampaignTableProps)
       <AppTable
         data={campaigns}
         columns={campaignColumnConfig(handleDeleteCampaign)}
+        loading={isLoading}
         page={params.page}
         pageCount={meta?.totalPages}
         pageSize={params.limit}

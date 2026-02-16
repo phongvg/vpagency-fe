@@ -16,7 +16,7 @@ export default function FinalUrlsTable({ finalUrls, onOpenCampaignStats }: Final
       </CardHeader>
 
       <CardContent>
-        <AppTable columns={taskProgressUrlColumnConfig(onOpenCampaignStats)} data={finalUrls} />
+        <AppTable columns={taskProgressUrlColumnConfig(onOpenCampaignStats)} data={finalUrls} page={1} pageCount={1} pageSize={finalUrls.length} />
       </CardContent>
     </Card>
   );
