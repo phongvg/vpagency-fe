@@ -1,4 +1,4 @@
-import { AsyncSelect } from "@/shared/components/common/AsyncSelect";
+import AsyncSelect from "@/shared/components/common/AsyncSelect";
 import type { AsyncSelectProps } from "@/shared/components/common/AsyncSelect/AsyncSelect";
 import { Field, FieldError, FieldLabel } from "@/shared/components/ui/field";
 import { Controller, useFormContext } from "react-hook-form";

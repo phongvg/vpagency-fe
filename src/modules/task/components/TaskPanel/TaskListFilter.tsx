@@ -5,8 +5,8 @@ import { priorityOptions, statusOptions, typeOptions } from "@/modules/task/util
 import { userApi } from "@/modules/user/api/user.api";
 import type { User } from "@/modules/user/types/user.type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
-import { AppSelect } from "@/shared/components/common/AppSelect";
-import { AsyncSelect } from "@/shared/components/common/AsyncSelect";
+import AppSelect from "@/shared/components/common/AppSelect";
+import AsyncSelect from "@/shared/components/common/AsyncSelect";
 import DatePicker from "@/shared/components/common/DatePicker/DatePicker";
 import { Input } from "@/shared/components/ui/input";
 import { useDebounce } from "@/shared/hooks/useDebounce";

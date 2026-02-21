@@ -1,7 +1,7 @@
 import ChangePasswordForm from "@/modules/user/components/ChangePasswordForm";
 import { useChangePassword } from "@/modules/user/hooks/useChangePassword";
 import { changePasswordFormSchema, type ChangePasswordFormType } from "@/modules/user/schemas/change-password-form.schema";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";

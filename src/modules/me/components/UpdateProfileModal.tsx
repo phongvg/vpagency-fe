@@ -2,7 +2,7 @@ import UpdateProfileForm from "@/modules/me/components/UpdateProfileForm";
 import { useUpdateProfile } from "@/modules/me/hooks/useUpdateProfile";
 import { transformUpdateProfileFormToFormData, transformUserToUpdateProfileForm } from "@/modules/me/mappers/me.mapper";
 import { updateProfileFormSchema, type UpdateProfileFormType } from "@/modules/me/schemas/update-profile-form.schema";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
 import { useAuthStore } from "@/shared/stores/auth/useAuthStore";

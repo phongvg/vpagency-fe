@@ -1,7 +1,7 @@
 import VirtualGmailTable from "@/modules/campaign/components/VirtualGmailTable";
 import { useCreateGmail } from "@/modules/campaign/hooks/useCreateGmail";
 import type { GmailUIDMapping } from "@/modules/campaign/types/campaign.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 
 interface ImportGmailPreviewModalProps {

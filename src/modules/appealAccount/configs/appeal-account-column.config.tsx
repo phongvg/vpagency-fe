@@ -1,5 +1,5 @@
 import type { AppealAccount } from "@/modules/appealAccount/types/appealAccount.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import type { ColumnDef } from "@tanstack/react-table";
 import { SquarePen, Trash2 } from "lucide-react";
 

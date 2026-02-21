@@ -17,7 +17,7 @@ import { useDeleteResearchDetail } from "@/modules/task/hooks/useDeleteResearchD
 import { useTaskDetail } from "@/modules/task/hooks/useTaskDetail";
 import { TaskType, type Task, type TaskDocumentAppealDetail, type TaskResearchDetail } from "@/modules/task/types/task.type";
 
-import { AppLoading } from "@/shared/components/common/AppLoading";
+import AppLoading from "@/shared/components/common/AppLoading";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { useQueryParam } from "@/shared/hooks/useQueryParam";

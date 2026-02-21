@@ -1,7 +1,7 @@
 import EditGmailStatusModal from "@/modules/gmailStatus/components/EditGmailStatusModal";
 import GmailStatusTable from "@/modules/gmailStatus/components/GmailStatusTable";
 import type { GmailStatusListParams } from "@/modules/gmailStatus/types/gmailStatus.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Input } from "@/shared/components/ui/input";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { PlusCircle } from "lucide-react";

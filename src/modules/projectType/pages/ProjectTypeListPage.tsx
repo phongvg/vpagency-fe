@@ -1,7 +1,7 @@
 import EditProjectTypeModal from "@/modules/projectType/components/EditProjectTypeModal";
 import ProjectTypeTable from "@/modules/projectType/components/ProjectTypeTable";
 import type { ProjectTypeListParams } from "@/modules/projectType/types/projectType.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Input } from "@/shared/components/ui/input";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { PlusCircle } from "lucide-react";

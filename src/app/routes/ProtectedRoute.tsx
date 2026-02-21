@@ -1,5 +1,5 @@
 import { urls } from "@/app/routes/route.constant";
-import { AppLoading } from "@/shared/components/common/AppLoading";
+import AppLoading from "@/shared/components/common/AppLoading";
 import { ACCESS_TOKEN } from "@/shared/constants/auth.constant";
 import type { Role } from "@/shared/constants/role.constant";
 import { useAuthStore } from "@/shared/stores/auth/useAuthStore";

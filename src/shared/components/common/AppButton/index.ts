@@ -1,1 +1,1 @@
-export { default as AppButton } from "./AppButton";
+export { default } from "./AppButton";

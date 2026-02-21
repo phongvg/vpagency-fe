@@ -17,7 +17,7 @@ import {
   projectDailyReportStep2Schema,
   type ProjectDailyReportStep2Type,
 } from "@/modules/projectDailyStats/schemas/project-daily-report-step-2.schema";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
 import { getModalTitle } from "@/shared/utils/common.util";

@@ -2,7 +2,7 @@ import { gmailColumnConfig } from "@/modules/gmail/configs/gmail-column.config";
 import { useAssignGmail } from "@/modules/gmail/hooks/useAssignGmail";
 import { useGmails } from "@/modules/gmail/hooks/useGmails";
 import type { GmailListParams } from "@/modules/gmail/types/gmail.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import type { RowSelectionState, VisibilityState } from "@tanstack/react-table";

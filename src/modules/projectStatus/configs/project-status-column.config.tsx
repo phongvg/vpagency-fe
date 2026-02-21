@@ -1,5 +1,5 @@
 import type { ProjectStatus } from "@/modules/projectStatus/types/projectStatus.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Switch } from "@/shared/components/ui/switch";
 import type { ColumnDef } from "@tanstack/react-table";
 import { SquarePen, Trash2 } from "lucide-react";

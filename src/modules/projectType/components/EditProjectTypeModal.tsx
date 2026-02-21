@@ -4,7 +4,7 @@ import { useProjectTypeDetail } from "@/modules/projectType/hooks/useProjectType
 import { useUpdateProjectType } from "@/modules/projectType/hooks/useUpdateProjectType";
 import { transformProjectTypeToForm } from "@/modules/projectType/mappers/projectType.mapper";
 import { projectTypeFormSchema, type ProjectTypeFormType } from "@/modules/projectType/schemas/project-type-form.schema";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
 import { getModalTitle } from "@/shared/utils/common.util";

@@ -1,6 +1,6 @@
 import { useAuth } from "@/auth/useAuth";
 import { loginFormSchema, type LoginFormType } from "@/modules/auth/login/schemas/login-form.schema";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { FormInput } from "@/shared/components/form/FormInput";
 import { Form } from "@/shared/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";

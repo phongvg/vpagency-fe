@@ -1,6 +1,6 @@
 import type { Project } from "@/modules/project/types/project.type";
-import BadgeStatus from "@/shared/components/BadgeStatus/BadgeStatus";
-import { AppButton } from "@/shared/components/common/AppButton";
+import BadgeStatus from "@/shared/components/BadgeStatus";
+import AppButton from "@/shared/components/common/AppButton";
 import UserAvatar from "@/shared/components/UserAvatar";
 import type { ColumnDef } from "@tanstack/react-table";
 import { SquarePen, Trash2 } from "lucide-react";

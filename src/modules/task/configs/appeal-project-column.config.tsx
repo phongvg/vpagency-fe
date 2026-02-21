@@ -1,5 +1,5 @@
 import type { Project } from "@/modules/project/types/project.type";
-import BadgeStatus from "@/shared/components/BadgeStatus/BadgeStatus";
+import BadgeStatus from "@/shared/components/BadgeStatus";
 import type { ColumnDef } from "@tanstack/react-table";
 
 export const appealProjectColumnConfig: ColumnDef<Project>[] = [

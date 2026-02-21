@@ -1,5 +1,5 @@
 import type { CurrencyRate } from "@/modules/campaign/types/campaign.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import PriceInput from "@/shared/components/common/PriceInput/PriceInput";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 

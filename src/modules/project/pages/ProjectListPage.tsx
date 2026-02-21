@@ -2,7 +2,7 @@ import EditProjectModal from "@/modules/project/components/EditProjectModal";
 import ProjectTable from "@/modules/project/components/ProjectTable";
 import { useDeleteProject } from "@/modules/project/hooks/useDeleteProject";
 import type { ProjectListParams } from "@/modules/project/types/project.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Input } from "@/shared/components/ui/input";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { useDebounce } from "@/shared/hooks/useDebounce";

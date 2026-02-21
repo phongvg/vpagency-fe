@@ -3,7 +3,7 @@ import AppealAccountTable from "@/modules/appealAccount/components/AppealAccount
 import EditAppealAccountModal from "@/modules/appealAccount/components/EditAppealAccountModal";
 import ImportAppealAccountButton from "@/modules/appealAccount/components/ImportAppealAccountButton";
 import type { AppealAccountListParams } from "@/modules/appealAccount/types/appealAccount.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
 import { Funnel, PlusCircle } from "lucide-react";
 import { Fragment, useState } from "react";

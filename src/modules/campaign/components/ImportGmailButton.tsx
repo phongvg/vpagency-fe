@@ -1,8 +1,8 @@
 import ImportGmailPreviewModal from "@/modules/campaign/components/ImportGmailPreviewModal";
 import { useImportGmailExcel } from "@/modules/campaign/hooks/useImportGmailExcel";
 import type { GmailUIDMapping } from "@/modules/campaign/types/campaign.type";
-import { AppButton } from "@/shared/components/common/AppButton";
-import { AppLoading } from "@/shared/components/common/AppLoading";
+import AppButton from "@/shared/components/common/AppButton";
+import AppLoading from "@/shared/components/common/AppLoading";
 import { Download } from "lucide-react";
 import { Fragment, useRef, useState, type ChangeEvent } from "react";
 import toast from "react-hot-toast";

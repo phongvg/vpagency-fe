@@ -3,7 +3,7 @@ import { useGmailDetail } from "@/modules/gmail/hooks/useGmailDetail";
 import { useUpdateGmail } from "@/modules/gmail/hooks/useUpdateGmail";
 import { transformGmailToForm, transformTGmailFormToPayload } from "@/modules/gmail/mappers/gmail.mapper";
 import { gmailFormSchema, type GmailFormType } from "@/modules/gmail/schemas/gmail-form.schema";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
 import { getModalTitle } from "@/shared/utils/common.util";

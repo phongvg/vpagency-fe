@@ -4,7 +4,7 @@ import { useProjectStatusDetail } from "@/modules/projectStatus/hooks/useProject
 import { useUpdateProjectStatus } from "@/modules/projectStatus/hooks/useUpdateProjectStatus";
 import { transformProjectStatusToForm } from "@/modules/projectStatus/mappers/projectStatus.mapper";
 import { projectStatusFormSchema, type ProjectStatusFormType } from "@/modules/projectStatus/schemas/project-status-form.schema";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
 import { getModalTitle } from "@/shared/utils/common.util";

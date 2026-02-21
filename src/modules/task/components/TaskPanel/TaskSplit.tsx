@@ -3,7 +3,7 @@ import TaskListFilter from "@/modules/task/components/TaskPanel/TaskListFilter";
 import TaskListPanel from "@/modules/task/components/TaskPanel/TaskListPanel";
 import { useTasks } from "@/modules/task/hooks/useTasks";
 import type { Task, TaskDocumentAppealDetail, TaskListParams, TaskResearchDetail } from "@/modules/task/types/task.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
 import type { SelectOption } from "@/shared/types/common/select-option.type";
 import { Funnel } from "lucide-react";

@@ -1,5 +1,5 @@
 import type { UpdateCampaignRequest } from "@/modules/campaign/types/campaign.type";
-import ListTooltip from "@/shared/components/ListTooltip/ListTooltip";
+import ListTooltip from "@/shared/components/ListTooltip";
 import { addDash } from "@/shared/utils/common.util";
 import { useCallback, useMemo } from "react";
 import { FixedSizeList } from "react-window";

@@ -1,6 +1,6 @@
 import { UserStatus, type User } from "@/modules/user/types/user.type";
 import { UserStatusBgColorMap, UserStatusColorMap, UserStatusLabelMap } from "@/modules/user/utils/user.util";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Badge } from "@/shared/components/ui/badge";
 import { Switch } from "@/shared/components/ui/switch";
 import UserAvatar from "@/shared/components/UserAvatar";

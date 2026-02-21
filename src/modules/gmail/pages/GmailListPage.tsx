@@ -3,7 +3,7 @@ import GmailTable from "@/modules/gmail/components/GmailTable";
 import ImportGmailButton from "@/modules/gmail/components/ImportGmailButton";
 import { useDeleteGmail } from "@/modules/gmail/hooks/useDeleteGmail";
 import type { GmailListParams } from "@/modules/gmail/types/gmail.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Input } from "@/shared/components/ui/input";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { useDebounce } from "@/shared/hooks/useDebounce";

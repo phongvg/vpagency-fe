@@ -3,7 +3,7 @@ import CampaignTable from "@/modules/campaign/components/CampaignTable";
 import ImportCampaignsButton from "@/modules/campaign/components/ImportCampaignsButton";
 import ImportGmailButton from "@/modules/campaign/components/ImportGmailButton";
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
 import { Funnel } from "lucide-react";
 import { Fragment, useState } from "react";

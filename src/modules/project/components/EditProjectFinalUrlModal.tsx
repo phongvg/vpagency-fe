@@ -4,7 +4,7 @@ import { useUpdateFinalUrl } from "@/modules/finalUrl/hooks/useUpdateFinalUrl";
 import ProjectFinalUrlForm from "@/modules/project/components/ProjectFinalUrlForm";
 import { transformFormToFinalUrl, transformProjectToFinalUrlForm } from "@/modules/project/mappers/project-final-url.mapper";
 import { projectFinalUrlFormSchema, type ProjectFinalUrlFormType } from "@/modules/project/schemas/project-final-url-form.schema";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
 import { finalUrlQueryKeys } from "@/shared/constants/query-keys.constant";

@@ -1,8 +1,8 @@
 import ImportAppealAccountPreviewModal from "@/modules/appealAccount/components/ImportAppealAccountPreviewModal";
 import { useImportAppealAccountExcel } from "@/modules/appealAccount/hooks/useImportAppealAccountExcel";
 import type { UpdateAppealAccountRequest } from "@/modules/appealAccount/types/appealAccount.type";
-import { AppButton } from "@/shared/components/common/AppButton";
-import { AppLoading } from "@/shared/components/common/AppLoading";
+import AppButton from "@/shared/components/common/AppButton";
+import AppLoading from "@/shared/components/common/AppLoading";
 import { Download } from "lucide-react";
 import { Fragment, useRef, useState, type ChangeEvent } from "react";
 import toast from "react-hot-toast";

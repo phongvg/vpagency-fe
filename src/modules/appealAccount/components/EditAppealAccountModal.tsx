@@ -4,7 +4,7 @@ import { useCreateAppealAccount } from "@/modules/appealAccount/hooks/useCreateA
 import { useUpdateAppealAccount } from "@/modules/appealAccount/hooks/useUpdateAppealAccount";
 import { transformAppealAccountToForm } from "@/modules/appealAccount/mappers/appealAccount.mapper";
 import { appealAccountFormSchema, type AppealAccountFormType } from "@/modules/appealAccount/schemas/appeal-account-form.schema";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
 import { getModalTitle } from "@/shared/utils/common.util";

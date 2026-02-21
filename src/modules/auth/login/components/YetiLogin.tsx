@@ -1,12 +1,14 @@
 import { useAuth } from "@/auth/useAuth";
 import { svgMarkup } from "@/modules/auth/login/components/svgMarkup";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import "@/styles/yeti-login.css";
 import { gsap } from "gsap";
 import { MorphSVGPlugin } from "gsap/MorphSVGPlugin";
+import { Lock, ShieldUser } from "lucide-react";
 import { type FormEvent, useEffect, useMemo, useRef } from "react";
+import toast from "react-hot-toast";
 
 export default function YetiLogin() {
   const { login } = useAuth();
@@ -292,8 +294,20 @@ export default function YetiLogin() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     const username = usernameRef.current?.value.trim() ?? "";
     const password = passwordRef.current?.value ?? "";
+
+    if (!username) {
+      toast.error("Tên đăng nhập không được để trống");
+      return;
+    }
+
+    if (!password) {
+      toast.error("Mật khẩu không được để trống");
+      return;
+    }
+
     await login(username, password);
   };
 
@@ -308,13 +322,19 @@ export default function YetiLogin() {
 
         <div className='space-y-2'>
           <Label htmlFor='username'>Tên đăng nhập</Label>
-          <Input ref={usernameRef} type='text' id='username' className='px-4 py-3 border-primary min-w-[300px]' maxLength={256} />
-          <span className='indicator'></span>
+          <Input
+            ref={usernameRef}
+            type='text'
+            id='username'
+            icon={<ShieldUser size={20} />}
+            className='py-3 pr-4 pl-10 border-primary min-w-[300px]'
+            maxLength={256}
+          />
         </div>
 
         <div className='space-y-2'>
           <Label htmlFor='password'>Mật khẩu</Label>
-          <Input ref={passwordRef} type='password' className='px-4 py-3 border-primary min-w-[300px]' id='password' />
+          <Input ref={passwordRef} type='password' id='password' icon={<Lock size={19} />} className='py-3 pr-4 pl-10 border-primary min-w-[300px]' />
         </div>
 
         <div className='grid'>

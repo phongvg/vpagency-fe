@@ -3,7 +3,7 @@ import { campaignColumnConfig } from "@/modules/campaign/configs/campaign-column
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
 import { useAssignCampaignToFinalUrl } from "@/modules/task/hooks/useAssignCampaignToFinalUrl";
 import { useCampaignStatsFinalUrl } from "@/modules/task/hooks/useCampaignStatsFinalUrl";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";

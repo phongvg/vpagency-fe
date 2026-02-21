@@ -6,7 +6,7 @@ import { TaskType } from "@/modules/task/types/task.type";
 import { frequencyOptions, priorityOptions, typeOptions } from "@/modules/task/utils/task.util";
 import { userApi } from "@/modules/user/api/user.api";
 import type { User } from "@/modules/user/types/user.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { FormAsyncSelect } from "@/shared/components/form/FormAsyncSelect";
 import { FormDatePicker } from "@/shared/components/form/FormDatePicker";
 import { FormInput } from "@/shared/components/form/FormInput";

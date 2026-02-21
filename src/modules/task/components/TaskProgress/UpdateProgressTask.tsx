@@ -4,7 +4,7 @@ import FinalUrlsTable from "@/modules/task/components/TaskProgress/FinalUrlsTabl
 import { useTaskProgress } from "@/modules/task/hooks/useTaskProgress";
 import { useUpdateTaskProgress } from "@/modules/task/hooks/useUpdateTaskProgress";
 import { taskProgressFormSchema, type TaskProgressFormSchema } from "@/modules/task/schemas/task-progress-form.schema";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { FormInput } from "@/shared/components/form/FormInput";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";

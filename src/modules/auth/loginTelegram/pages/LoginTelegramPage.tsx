@@ -1,6 +1,6 @@
 import { urls } from "@/app/routes/route.constant";
 import { useAuth } from "@/auth/useAuth";
-import { AppLoading } from "@/shared/components/common/AppLoading";
+import AppLoading from "@/shared/components/common/AppLoading";
 import { REFRESH_TOKEN } from "@/shared/constants/auth.constant";
 import { useQueryParam } from "@/shared/hooks/useQueryParam";
 import Cookies from "js-cookie";

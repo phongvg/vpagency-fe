@@ -1,1 +1,1 @@
-export { default as AppSelect } from "./AppSelect";
+export { default } from "./AppSelect";

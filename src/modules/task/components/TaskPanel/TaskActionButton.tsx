@@ -1,4 +1,4 @@
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import type { Role } from "@/shared/constants/role.constant";
 import { isAdminOrManager } from "@/shared/utils/permission.util";
 import { Eye, SquarePen, Trash2 } from "lucide-react";

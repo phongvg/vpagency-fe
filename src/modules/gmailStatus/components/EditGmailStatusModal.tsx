@@ -4,7 +4,7 @@ import { useGmailStatusDetail } from "@/modules/gmailStatus/hooks/useGmailStatus
 import { useUpdateGmailStatus } from "@/modules/gmailStatus/hooks/useUpdateGmailStatus";
 import { transformGmailStatusToForm } from "@/modules/gmailStatus/mappers/gmailStatus.mapper";
 import { gmailStatusFormSchema, type GmailStatusFormType } from "@/modules/gmailStatus/schemas/gmail-status-form.schema";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
 import { getModalTitle } from "@/shared/utils/common.util";

@@ -205,16 +205,19 @@ export const appRoutes: AppRoute[] = [
       {
         path: urls.login,
         element: <LoginPage />,
+        pageTitle: "Đăng nhập",
         showInSidebar: false,
       },
       {
         path: urls.telegram,
         element: <LoginTelegramPage />,
+        pageTitle: "Đăng nhập bằng Telegram",
         showInSidebar: false,
       },
       {
         path: urls.updateProfile,
         element: <UpdateProfilePage />,
+        pageTitle: "Cập nhật thông tin cá nhân",
         showInSidebar: false,
       },
     ],
@@ -222,5 +225,7 @@ export const appRoutes: AppRoute[] = [
   {
     path: urls.forbidden,
     element: <ForbiddenPage />,
+    pageTitle: "403 - Không có quyền truy cập",
+    showInSidebar: false,
   },
 ];

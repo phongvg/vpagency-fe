@@ -1,6 +1,6 @@
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
-import { AppInput } from "@/shared/components/common/AppInput";
+import AppInput from "@/shared/components/common/AppInput";
 import DatePicker from "@/shared/components/common/DatePicker/DatePicker";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { removeDash } from "@/shared/utils/common.util";

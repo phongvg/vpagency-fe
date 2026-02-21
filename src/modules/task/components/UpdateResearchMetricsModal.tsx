@@ -2,7 +2,7 @@ import { useUpdateResearchDetail } from "@/modules/task/hooks/useUpdateResearchD
 import { useUpdateResearchMetrics } from "@/modules/task/hooks/useUpdateResearchMetrics";
 import { taskResearchMetricsFormSchema, type TaskResearchMetricsFormType } from "@/modules/task/schemas/task-research-metrics-form.schema";
 import type { Task, TaskResearchDetail } from "@/modules/task/types/task.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { FormDatePicker } from "@/shared/components/form/FormDatePicker";
 import { FormInput } from "@/shared/components/form/FormInput";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";

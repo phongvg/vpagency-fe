@@ -1,7 +1,7 @@
 import VirtualCampaignTable from "@/modules/campaign/components/VirtualCampaignTable";
 import { useCreateCampaigns } from "@/modules/campaign/hooks/useCreateCampaign";
 import type { UpdateCampaignRequest } from "@/modules/campaign/types/campaign.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 
 interface ImportCampaignPreviewModalProps {

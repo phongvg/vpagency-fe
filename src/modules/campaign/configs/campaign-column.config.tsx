@@ -1,7 +1,7 @@
 import type { Campaign } from "@/modules/campaign/types/campaign.type";
-import BadgeStatus from "@/shared/components/BadgeStatus/BadgeStatus";
-import { AppButton } from "@/shared/components/common/AppButton";
-import ListTooltip from "@/shared/components/ListTooltip/ListTooltip";
+import BadgeStatus from "@/shared/components/BadgeStatus";
+import AppButton from "@/shared/components/common/AppButton";
+import ListTooltip from "@/shared/components/ListTooltip";
 import UserAvatar from "@/shared/components/UserAvatar";
 import { addDash, copyTextToClipboard, fixedNumber, formatDollarAmount } from "@/shared/utils/common.util";
 import type { ColumnDef } from "@tanstack/react-table";

@@ -8,7 +8,7 @@ import UpdateDocumentAppealMetricsModal from "@/modules/task/components/UpdateDo
 import UpdateResearchMetricsModal from "@/modules/task/components/UpdateResearchMetricsModal";
 import { useDeleteTask } from "@/modules/task/hooks/useDeleteTask";
 import type { Task, TaskDocumentAppealDetail, TaskResearchDetail } from "@/modules/task/types/task.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { cn } from "@/shared/libs/utils";

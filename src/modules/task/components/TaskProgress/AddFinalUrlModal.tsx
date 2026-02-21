@@ -1,7 +1,7 @@
 import { useCreateFinalUrl } from "@/modules/finalUrl/hooks/useCreateFinalUrl";
 import { useUpsertTask } from "@/modules/task/hooks/useUpsertTask";
 import { addFinalUrlFormSchema, type AddFinalUrlFormValues } from "@/modules/task/schemas/add-final-url-form.schema";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { FormInput } from "@/shared/components/form/FormInput";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";

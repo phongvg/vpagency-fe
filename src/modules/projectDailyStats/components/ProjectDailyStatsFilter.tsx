@@ -1,5 +1,5 @@
 import type { ProjectDailyStatsListParams } from "@/modules/projectDailyStats/types/projectDailyStats.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import DatePicker from "@/shared/components/common/DatePicker/DatePicker";
 import { Input } from "@/shared/components/ui/input";
 import { format } from "date-fns";

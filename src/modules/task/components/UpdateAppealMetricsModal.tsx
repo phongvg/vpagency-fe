@@ -1,7 +1,7 @@
 import { useUpdateAppealMetrics } from "@/modules/task/hooks/useUpdateAppealMetrics";
 import { taskAppealMetricsFormSchema, type TaskAppealMetricsFormType } from "@/modules/task/schemas/task-appeal-metrics-form.schema";
 import type { Task } from "@/modules/task/types/task.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { FormDatePicker } from "@/shared/components/form/FormDatePicker";
 import { FormInput } from "@/shared/components/form/FormInput";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";

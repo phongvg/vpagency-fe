@@ -1,6 +1,6 @@
 import { ConfirmProvider } from "@/app/providers/ConfirmProvider";
 import { queryClient } from "@/configs/queryClient";
-import { AppLoading } from "@/shared/components/common/AppLoading";
+import AppLoading from "@/shared/components/common/AppLoading";
 import { TooltipProvider } from "@/shared/components/ui/tooltip";
 import { QueryClientProvider } from "@tanstack/react-query";
 import React from "react";

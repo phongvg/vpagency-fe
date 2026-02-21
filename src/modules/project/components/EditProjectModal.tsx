@@ -7,7 +7,7 @@ import { useProject } from "@/modules/project/hooks/useProject";
 import { useUpdateProject } from "@/modules/project/hooks/useUpdateProject";
 import { transformFormToProject, transformProjectToForm } from "@/modules/project/mappers/project.mapper";
 import { projectFormSchema, type ProjectFormType } from "@/modules/project/schemas/project-form.schema";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";

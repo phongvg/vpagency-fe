@@ -1,7 +1,7 @@
 import type { ProjectDailyStats } from "@/modules/projectDailyStats/types/projectDailyStats.type";
-import BadgeStatus from "@/shared/components/BadgeStatus/BadgeStatus";
-import { AppButton } from "@/shared/components/common/AppButton";
-import ListTooltip from "@/shared/components/ListTooltip/ListTooltip";
+import BadgeStatus from "@/shared/components/BadgeStatus";
+import AppButton from "@/shared/components/common/AppButton";
+import ListTooltip from "@/shared/components/ListTooltip";
 import type { Role } from "@/shared/constants/role.constant";
 import { fixedNumber, formatDollarAmount } from "@/shared/utils/common.util";
 import { isAdminOrAccounting } from "@/shared/utils/permission.util";

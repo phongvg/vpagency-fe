@@ -1,5 +1,5 @@
 import type { FinalUrl } from "@/modules/finalUrl/types/finalUrl.type";
-import ListTooltip from "@/shared/components/ListTooltip/ListTooltip";
+import ListTooltip from "@/shared/components/ListTooltip";
 import { formatDollarAmount } from "@/shared/utils/common.util";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Copy } from "lucide-react";

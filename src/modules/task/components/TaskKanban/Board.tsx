@@ -6,7 +6,7 @@ import { useTasksByStatus } from "@/modules/task/hooks/useTasksByStatus";
 import { TaskStatus, type Task, type TaskDocumentAppealDetail, type TaskResearchDetail } from "@/modules/task/types/task.type";
 import { TaskStatusMap } from "@/modules/task/utils/task.util";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
-import { AppLoading } from "@/shared/components/common/AppLoading";
+import AppLoading from "@/shared/components/common/AppLoading";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { cn } from "@/shared/libs/utils";
 import { Fragment, useMemo, useState } from "react";

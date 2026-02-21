@@ -4,8 +4,8 @@ import ImportCampaignPreviewModal from "@/modules/campaign/components/ImportCamp
 import { useImportCampaignsExcel, type ImportCampaignData } from "@/modules/campaign/hooks/useImportCampaignsExcel";
 import type { UpdateCampaignRequest } from "@/modules/campaign/types/campaign.type";
 import { applyExchangeRate } from "@/modules/campaign/utils/campaign.util";
-import { AppButton } from "@/shared/components/common/AppButton";
-import { AppLoading } from "@/shared/components/common/AppLoading";
+import AppButton from "@/shared/components/common/AppButton";
+import AppLoading from "@/shared/components/common/AppLoading";
 import { Download } from "lucide-react";
 import { Fragment, useMemo, useRef, useState, type ChangeEvent } from "react";
 import toast from "react-hot-toast";

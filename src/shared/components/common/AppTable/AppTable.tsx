@@ -1,5 +1,5 @@
-import { AppButton } from "@/shared/components/common/AppButton";
-import { AppPagination } from "@/shared/components/common/AppPagination";
+import AppButton from "@/shared/components/common/AppButton";
+import AppPagination from "@/shared/components/common/AppPagination";
 import { SkeletonTable } from "@/shared/components/SkeletonTable";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/shared/components/ui/dropdown-menu";
@@ -119,8 +119,6 @@ export function AppTable<TData, TValue>({
   });
 
   if (loading) {
-    const columnCount = resolvedColumns.length;
-
     return (
       <div className='w-full max-w-full'>
         <SkeletonTable />
@@ -138,7 +136,7 @@ export function AppTable<TData, TValue>({
             </EmptyMedia>
 
             <EmptyTitle className='font-bold uppercase'>Danh sách trống</EmptyTitle>
-            <EmptyDescription className='text-white/50'>Không có dữ liệu phù hợp với điều kiện đã chọn</EmptyDescription>
+            <EmptyDescription className='text-white/50'>Không có dữ liệu phù hợp với tiêu chí tìm kiếm</EmptyDescription>
           </EmptyHeader>
         </Empty>
       </div>

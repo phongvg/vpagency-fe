@@ -7,7 +7,7 @@ import {
   type TaskDocumentAppealMetricsFormType,
 } from "@/modules/task/schemas/task-document-appeal-metrics-form.schema";
 import type { Task, TaskDocumentAppealDetail } from "@/modules/task/types/task.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { FormAsyncSelect } from "@/shared/components/form/FormAsyncSelect";
 import { FormDatePicker } from "@/shared/components/form/FormDatePicker";
 import { FormInput } from "@/shared/components/form/FormInput";

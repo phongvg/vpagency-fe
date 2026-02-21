@@ -1,7 +1,7 @@
 import EditProjectStatusModal from "@/modules/projectStatus/components/EditProjectStatusModal";
 import ProjectStatusTable from "@/modules/projectStatus/components/ProjectStatusTable";
 import type { ProjectStatusListParams } from "@/modules/projectStatus/types/projectStatus.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Input } from "@/shared/components/ui/input";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { PlusCircle } from "lucide-react";

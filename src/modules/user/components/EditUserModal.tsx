@@ -3,7 +3,7 @@ import { useUpdateUser } from "@/modules/user/hooks/useUpdateUser";
 import { useUserDetail } from "@/modules/user/hooks/useUserDetail";
 import { transformUserToForm } from "@/modules/user/mappers/user.mapper";
 import { userFormSchema, type UserFormType } from "@/modules/user/schemas/user-form.schema";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Form } from "@/shared/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";

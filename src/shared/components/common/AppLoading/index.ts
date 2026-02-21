@@ -1,1 +1,1 @@
-export { default as AppLoading } from "./AppLoading";
+export { default } from "./AppLoading";

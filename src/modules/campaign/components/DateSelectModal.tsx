@@ -1,5 +1,5 @@
-import { AppButton } from "@/shared/components/common/AppButton";
-import { DatePicker } from "@/shared/components/common/DatePicker";
+import AppButton from "@/shared/components/common/AppButton";
+import DatePicker from "@/shared/components/common/DatePicker";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { format } from "date-fns";
 

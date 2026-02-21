@@ -1,7 +1,7 @@
 import VirtualGmailTable from "@/modules/gmail/components/VirtualGmailTable";
 import { useCreateGmails } from "@/modules/gmail/hooks/useCreateGmails";
 import type { UpdateGmailRequest } from "@/modules/gmail/types/gmail.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 
 interface ImportGmailPreviewModalProps {

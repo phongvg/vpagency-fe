@@ -1,7 +1,7 @@
 import VirtualAppealAccountTable from "@/modules/appealAccount/components/VirtualAppealAccountTable";
 import { useCreateAppealAccounts } from "@/modules/appealAccount/hooks/useCreateAppealAccounts";
 import type { UpdateAppealAccountRequest } from "@/modules/appealAccount/types/appealAccount.type";
-import { AppButton } from "@/shared/components/common/AppButton";
+import AppButton from "@/shared/components/common/AppButton";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 
 interface ImportAppealAccountPreviewModalProps {

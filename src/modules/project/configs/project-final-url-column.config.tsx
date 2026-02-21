@@ -1,6 +1,6 @@
 import type { FinalUrl } from "@/modules/finalUrl/types/finalUrl.type";
-import { AppButton } from "@/shared/components/common/AppButton";
-import ListTooltip from "@/shared/components/ListTooltip/ListTooltip";
+import AppButton from "@/shared/components/common/AppButton";
+import ListTooltip from "@/shared/components/ListTooltip";
 import { copyTextToClipboard, formatDollarAmount } from "@/shared/utils/common.util";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Copy, SquarePen, Trash2 } from "lucide-react";

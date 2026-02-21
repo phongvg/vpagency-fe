@@ -1,4 +1,4 @@
-import { AppSelect } from "@/shared/components/common/AppSelect";
+import AppSelect from "@/shared/components/common/AppSelect";
 import type { AppSelectProps } from "@/shared/components/common/AppSelect/AppSelect";
 import { Field, FieldError, FieldLabel } from "@/shared/components/ui/field";
 import { Controller, useFormContext } from "react-hook-form";
