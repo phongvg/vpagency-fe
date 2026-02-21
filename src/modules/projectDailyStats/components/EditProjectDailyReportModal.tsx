@@ -93,6 +93,9 @@ export default function EditProjectDailyReportModal({ open, onClose, reportId }:
       },
       {
         onSuccess: () => {
+          setStep(1);
+          step1Form.reset(transformProjectDailyReportToFormStep1());
+          step2Form.reset(transformProjectDailyReportToFormStep2());
           onClose();
         },
       }

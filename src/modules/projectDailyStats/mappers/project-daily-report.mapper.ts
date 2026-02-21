@@ -9,7 +9,7 @@ import { fixedNumber } from "@/shared/utils/common.util";
 import { format } from "date-fns";
 
 export const transformProjectDailyReportToFormStep1 = (): ProjectDailyReportStep1Type => ({
-  date: new Date(),
+  date: undefined,
   projectId: null,
 });
 

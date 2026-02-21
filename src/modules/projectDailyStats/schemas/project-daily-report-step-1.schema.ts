@@ -5,7 +5,8 @@ export const projectDailyReportStep1Schema = z.object({
   date: z
     .date()
     .nullable()
-    .refine((val) => val !== null, { message: "Ngày báo cáo không được để trống" }),
+    .optional()
+    .refine((val) => val !== null && val !== undefined, { message: "Ngày báo cáo không được để trống" }),
   projectId: z
     .object({ label: z.string(), value: z.string() })
     .nullable()
@@ -14,5 +15,5 @@ export const projectDailyReportStep1Schema = z.object({
 
 export type ProjectDailyReportStep1Type = Omit<z.infer<typeof projectDailyReportStep1Schema>, "projectId" | "date"> & {
   projectId: SelectOption | null;
-  date: Date | null;
+  date?: Date | null | undefined;
 };
