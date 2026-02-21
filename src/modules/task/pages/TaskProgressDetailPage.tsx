@@ -4,14 +4,18 @@ import { campaignStatsColumnConfig } from "@/modules/task/configs/campaign-stats
 import { userStatsColumns } from "@/modules/task/configs/user-stats-column.config";
 import { useTaskProgressDetail } from "@/modules/task/hooks/useTaskProgressDetail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import AppButton from "@/shared/components/common/AppButton";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { useQueryParam } from "@/shared/hooks/useQueryParam";
 import type { VisibilityState } from "@tanstack/react-table";
+import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function TaskProgressDetailPage() {
   const queryId = useQueryParam("id");
   const taskId = queryId ?? null;
+  const navigate = useNavigate();
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
@@ -23,6 +27,11 @@ export default function TaskProgressDetailPage() {
 
   return (
     <div className='space-y-4'>
+      <AppButton variant='ghost' size='sm' onClick={() => navigate(-1)} className='gap-1 p-0'>
+        <ArrowLeft className='w-4 h-4' />
+        Quay lại
+      </AppButton>
+
       {taskProgressDetail?.finalUrls.map((finalUrl) => (
         <div key={finalUrl.id} className='gap-4 grid grid-cols-3'>
           <Card>
