@@ -14,6 +14,7 @@ export const finalUrlColumnConfig = (onCopy: (text: string) => void): ColumnDef<
     header: "Tên URL",
     accessorKey: "name",
     minSize: 150,
+    cell: (props) => <span className='font-semibold text-primary'>{props.row.original.name}</span>,
   },
   {
     header: "URL",
@@ -22,7 +23,11 @@ export const finalUrlColumnConfig = (onCopy: (text: string) => void): ColumnDef<
       const row = props.row.original;
 
       return (
-        <a href={row.finalURL} target='_blank' rel='noopener noreferrer' className='block max-w-[250px] hover:underline truncate'>
+        <a
+          href={row.finalURL}
+          target='_blank'
+          rel='noopener noreferrer'
+          className='block max-w-[250px] font-medium text-blue-600 dark:text-blue-400 hover:underline truncate'>
           {row.finalURL}
         </a>
       );
@@ -37,8 +42,14 @@ export const finalUrlColumnConfig = (onCopy: (text: string) => void): ColumnDef<
 
       return (
         <div className='flex items-center gap-2'>
-          <ListTooltip data={countriesTier1.map((l) => ({ name: l }))} columns={[{ key: "name", label: "Quốc gia" }]} />
-          <button type='button' title='Sao chép' onClick={() => onCopy(countriesTier1.join("\n"))}>
+          <span className='font-medium text-yellow-700 dark:text-yellow-400'>
+            <ListTooltip data={countriesTier1.map((l) => ({ name: l }))} columns={[{ key: "name", label: "Quốc gia" }]} />
+          </span>
+          <button
+            type='button'
+            title='Sao chép'
+            onClick={() => onCopy(countriesTier1.join("\n"))}
+            className='text-muted-foreground hover:text-primary'>
             <Copy size={12} />
           </button>
         </div>
@@ -54,8 +65,14 @@ export const finalUrlColumnConfig = (onCopy: (text: string) => void): ColumnDef<
 
       return (
         <div className='flex items-center gap-2'>
-          <ListTooltip data={countriesTier2.map((l) => ({ name: l }))} columns={[{ key: "name", label: "Quốc gia" }]} />
-          <button type='button' title='Sao chép' onClick={() => onCopy(countriesTier2.join("\n"))}>
+          <span className='font-medium text-blue-700 dark:text-blue-400'>
+            <ListTooltip data={countriesTier2.map((l) => ({ name: l }))} columns={[{ key: "name", label: "Quốc gia" }]} />
+          </span>
+          <button
+            type='button'
+            title='Sao chép'
+            onClick={() => onCopy(countriesTier2.join("\n"))}
+            className='text-muted-foreground hover:text-primary'>
             <Copy size={12} />
           </button>
         </div>
@@ -71,8 +88,14 @@ export const finalUrlColumnConfig = (onCopy: (text: string) => void): ColumnDef<
 
       return (
         <div className='flex items-center gap-2'>
-          <ListTooltip data={countriesTier3.map((l) => ({ name: l }))} columns={[{ key: "name", label: "Quốc gia" }]} />
-          <button type='button' title='Sao chép' onClick={() => onCopy(countriesTier3.join("\n"))}>
+          <span className='font-medium text-green-700 dark:text-green-400'>
+            <ListTooltip data={countriesTier3.map((l) => ({ name: l }))} columns={[{ key: "name", label: "Quốc gia" }]} />
+          </span>
+          <button
+            type='button'
+            title='Sao chép'
+            onClick={() => onCopy(countriesTier3.join("\n"))}
+            className='text-muted-foreground hover:text-primary'>
             <Copy size={12} />
           </button>
         </div>
@@ -82,24 +105,30 @@ export const finalUrlColumnConfig = (onCopy: (text: string) => void): ColumnDef<
   {
     header: "Mục tiêu Ref",
     accessorKey: "targetRef",
+    cell: (props) => <span className='font-semibold text-purple-600 dark:text-purple-400'>{props.row.original.targetRef}</span>,
   },
   {
     header: "Mục tiêu chi phí Ref",
     accessorKey: "targetCostPerRef",
-    cell: (props) => formatDollarAmount(props.row.original.targetCostPerRef),
+    cell: (props) => (
+      <span className='font-semibold text-green-700 dark:text-green-400'>{formatDollarAmount(props.row.original.targetCostPerRef)}</span>
+    ),
   },
   {
     header: "Mục tiêu FTD",
     accessorKey: "targetFtd",
+    cell: (props) => <span className='font-semibold text-purple-600 dark:text-purple-400'>{props.row.original.targetFtd}</span>,
   },
   {
     header: "Mục tiêu chi phí FTD",
     accessorKey: "targetCostPerFtd",
-    cell: (props) => formatDollarAmount(props.row.original.targetCostPerFtd),
+    cell: (props) => (
+      <span className='font-semibold text-green-700 dark:text-green-400'>{formatDollarAmount(props.row.original.targetCostPerFtd)}</span>
+    ),
   },
   {
     header: "Mục tiêu CPC",
     accessorKey: "targetCpc",
-    cell: (props) => formatDollarAmount(props.row.original.targetCpc),
+    cell: (props) => <span className='font-semibold text-green-700 dark:text-green-400'>{formatDollarAmount(props.row.original.targetCpc)}</span>,
   },
 ];

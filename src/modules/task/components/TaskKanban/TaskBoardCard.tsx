@@ -1,4 +1,4 @@
-import type { Task } from "@/modules/task/types/task.type";
+import { TaskStatus, type Task } from "@/modules/task/types/task.type";
 import { getDeadlineInfo } from "@/modules/task/utils/deadline.util";
 import { TaskTypeBgColorMap, TaskTypeColorMap, TaskTypeMap } from "@/modules/task/utils/task.util";
 import { Card, CardContent } from "@/shared/components/Card/Card";
@@ -29,19 +29,21 @@ export default function TaskBoardCard({ task, onClick }: TaskBoardCardProps) {
         onClick={onClick}>
         <CardContent className='space-y-3 p-4'>
           <div className='flex justify-between items-center gap-2'>
-            <Badge variant='outline' className={cn(TaskTypeColorMap[task.type], "transition-all duration-300 group-hover:scale-110")}>
+            <Badge variant='outline' className={cn(TaskTypeColorMap[task.type], "transition-all duration-300 text-[9px] group-hover:scale-110")}>
               {TaskTypeMap[task.type]}
             </Badge>
 
-            <div
-              className={cn(
-                "flex items-center gap-1.5 px-2 py-1 rounded-full text-xs transition-all duration-300",
-                TaskTypeColorMap[task.type],
-                deadlineInfo.shouldPulse && "animate-pulse-slow"
-              )}>
-              {deadlineInfo.isOverdue ? <Clock className='w-3 h-3' /> : <Calendar className='w-3 h-3' />}
-              <span className='font-medium'>{deadlineInfo.label}</span>
-            </div>
+            {task.status !== TaskStatus.COMPLETED && (
+              <div
+                className={cn(
+                  "flex items-center gap-1.5 px-2 py-1 rounded-full text-xs transition-all duration-300",
+                  TaskTypeColorMap[task.type],
+                  deadlineInfo.shouldPulse && "animate-pulse-slow"
+                )}>
+                {deadlineInfo.isOverdue ? <Clock className='w-3 h-3' /> : <Calendar className='w-3 h-3' />}
+                <span className='font-medium text-[9px]'>{deadlineInfo.label}</span>
+              </div>
+            )}
           </div>
 
           <h4 className='font-medium group-hover:text-primary text-sm line-clamp-2 transition-colors duration-300'>{task.name}</h4>
