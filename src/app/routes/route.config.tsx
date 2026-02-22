@@ -4,7 +4,7 @@ import { ForbiddenPage } from "@/modules/403";
 import { AppealAccountListPage } from "@/modules/appealAccount";
 import { LoginPage } from "@/modules/auth/login";
 import { LoginTelegramPage } from "@/modules/auth/loginTelegram";
-import { CampaignListPage } from "@/modules/campaign";
+import { CampaignEditPage, CampaignListPage } from "@/modules/campaign";
 import { DashboardPage } from "@/modules/dashboard";
 import { GmailListPage } from "@/modules/gmail";
 import { GmailStatusListPage } from "@/modules/gmailStatus";
@@ -90,6 +90,32 @@ export const appRoutes: AppRoute[] = [
         ),
         icon: Megaphone,
         showInSidebar: true,
+        roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
+      },
+      {
+        path: urls.editCampaign,
+        title: "Chỉnh sửa chiến dịch",
+        pageTitle: "Chỉnh sửa chiến dịch",
+        element: (
+          <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING]}>
+            <CampaignEditPage />
+          </ProtectedRoute>
+        ),
+        icon: Megaphone,
+        showInSidebar: false,
+        roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
+      },
+      {
+        path: urls.createCampaign,
+        title: "Tạo chiến dịch",
+        pageTitle: "Tạo chiến dịch",
+        element: (
+          <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING]}>
+            <CampaignEditPage />
+          </ProtectedRoute>
+        ),
+        icon: Megaphone,
+        showInSidebar: false,
         roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
       },
       {

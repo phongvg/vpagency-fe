@@ -1,3 +1,4 @@
+import { urls } from "@/app/routes/route.constant";
 import CampaignListFilter from "@/modules/campaign/components/CampaignListFilter";
 import CampaignTable from "@/modules/campaign/components/CampaignTable";
 import ImportCampaignsButton from "@/modules/campaign/components/ImportCampaignsButton";
@@ -5,10 +6,13 @@ import ImportGmailButton from "@/modules/campaign/components/ImportGmailButton";
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
 import AppButton from "@/shared/components/common/AppButton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
-import { Funnel } from "lucide-react";
+import { Funnel, Plus } from "lucide-react";
 import { Fragment, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function CampaignListPage() {
+  const navigate = useNavigate();
+
   const [isOpenFilter, setIsOpenFilter] = useState(false);
   const [params, setParams] = useState<CampaignListParams>({
     page: 1,
@@ -44,10 +48,10 @@ export default function CampaignListPage() {
 
           <ImportGmailButton />
 
-          {/* <AppButton variant='outline' size='sm'>
+          <AppButton variant='outline' size='sm' onClick={() => navigate(`/${urls.createCampaign}`)}>
             <Plus />
             Thêm mới
-          </AppButton> */}
+          </AppButton>
         </div>
       </div>
 

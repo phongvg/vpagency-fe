@@ -45,6 +45,8 @@ export const campaignQueryKeys = {
   lists: () => [...campaignQueryKeys.all, "list"] as const,
 
   list: (params: CampaignListParams) => [...campaignQueryKeys.lists(), normalizeParams(params)] as const,
+
+  detail: (id: string) => [...campaignQueryKeys.all, "detail", id] as const,
 };
 
 export const userQueryKeys = {

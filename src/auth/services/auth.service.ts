@@ -29,12 +29,15 @@ export const authService = {
     setLoading(false);
   },
 
-  setSession: (accessToken: string, refreshToken: string): void => {
+  setSession: (accessToken: string, refreshToken?: string): void => {
     setStorageItem(ACCESS_TOKEN, accessToken);
-    Cookies.set(REFRESH_TOKEN, refreshToken, {
-      secure: true,
-      sameSite: "strict",
-    });
+
+    if (refreshToken) {
+      Cookies.set(REFRESH_TOKEN, refreshToken, {
+        secure: true,
+        sameSite: "strict",
+      });
+    }
   },
 
   clearSession() {

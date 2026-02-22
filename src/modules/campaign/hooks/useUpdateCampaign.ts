@@ -6,25 +6,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-export const useCreateCampaigns = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (campaigns: UpdateCampaignRequest[]) => campaignApi.createCampaigns(campaigns),
-    onSuccess: (res) => {
-      queryClient.invalidateQueries({ queryKey: campaignQueryKeys.lists() });
-      toast.success(res.message);
-    },
-  });
-};
-
-export const useCreateCampaign = () => {
+export const useUpdateCampaign = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   return useMutation({
-    mutationFn: (campaign: UpdateCampaignRequest) => campaignApi.createCampaign(campaign),
-    onSuccess: (res) => {
+    mutationFn: (data: { id: string; campaign: UpdateCampaignRequest }) => campaignApi.updateCampaign(data.id, data.campaign),
+    onSuccess: (res, variables) => {
+      queryClient.invalidateQueries({ queryKey: campaignQueryKeys.detail(variables.id) });
       queryClient.invalidateQueries({ queryKey: campaignQueryKeys.lists() });
       toast.success(res.message);
       navigate(`/${urls.campaign}`);

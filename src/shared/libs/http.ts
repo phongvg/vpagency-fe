@@ -70,9 +70,9 @@ const handleRefreshToken = async (error: AxiosError) => {
 
     try {
       const res = await authApi.refreshToken(userId);
-      const { accessToken, refreshToken } = res.data;
+      const { accessToken } = res.data;
 
-      authService.setSession(accessToken, refreshToken);
+      authService.setSession(accessToken);
 
       originalRequest.headers.Authorization = `Bearer ${accessToken}`;
 

@@ -10,6 +10,8 @@ export const urls = {
   taskProgress: "tasks/progress",
   user: "users",
   campaign: "campaigns",
+  createCampaign: "campaigns/create",
+  editCampaign: "campaigns/edit",
   gmail: "gmails",
   gmailStatus: "gmail-statuses",
   project: "projects",

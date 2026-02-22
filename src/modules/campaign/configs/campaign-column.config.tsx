@@ -6,9 +6,9 @@ import UserAvatar from "@/shared/components/UserAvatar";
 import { addDash, copyTextToClipboard, fixedNumber, formatDollarAmount } from "@/shared/utils/common.util";
 import type { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "date-fns";
-import { Copy, Trash2 } from "lucide-react";
+import { Copy, SquarePen, Trash2 } from "lucide-react";
 
-export const campaignColumnConfig = (onDelete?: (id: string) => void): ColumnDef<Campaign>[] => [
+export const campaignColumnConfig = (onEdit?: (id: string) => void, onDelete?: (id: string) => void): ColumnDef<Campaign>[] => [
   {
     header: "STT",
     id: "index",
@@ -169,6 +169,12 @@ export const campaignColumnConfig = (onDelete?: (id: string) => void): ColumnDef
           columns={[
             { key: "keyword", label: "Từ khóa" },
             { key: "match", label: "Hình thức" },
+            { key: "clicks", label: "Click" },
+            { key: "impression", label: "Lượt hiển thị" },
+            { key: "ctr", label: "CTR" },
+            { key: "cpc", label: "CPC" },
+            { key: "cpm", label: "CPM" },
+            { key: "cost", label: "Chi phí" },
           ]}
         />
       );
@@ -258,9 +264,9 @@ export const campaignColumnConfig = (onDelete?: (id: string) => void): ColumnDef
     header: "Thao tác",
     cell: (props) => (
       <div className='flex items-center gap-2'>
-        {/* <AppButton size='sm' onClick={() => handlers?.onEdit(props.row.original.id)}>
+        <AppButton size='sm' onClick={() => onEdit?.(props.row.original.id)}>
           <SquarePen />
-        </AppButton> */}
+        </AppButton>
 
         <AppButton size='sm' onClick={() => onDelete?.(props.row.original.id)}>
           <Trash2 />

@@ -1,3 +1,4 @@
+import { urls } from "@/app/routes/route.constant";
 import { campaignColumnConfig } from "@/modules/campaign/configs/campaign-column.config";
 import { useCampaigns } from "@/modules/campaign/hooks/useCampaigns";
 import { useDeleteCampaign } from "@/modules/campaign/hooks/useDeleteCampaign";
@@ -7,6 +8,7 @@ import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { formatDollarAmount } from "@/shared/utils/common.util";
 import type { RowSelectionState, VisibilityState } from "@tanstack/react-table";
 import { Fragment, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface CampaignTableProps {
   params: CampaignListParams;
@@ -20,6 +22,8 @@ export default function CampaignTable({ params, setParams }: CampaignTableProps)
   const { confirm } = useConfirm();
 
   const deleteCampaign = useDeleteCampaign();
+
+  const navigate = useNavigate();
 
   const { data, isLoading } = useCampaigns(params);
   const campaigns = useMemo(() => data?.items || [], [data]);
@@ -42,6 +46,10 @@ export default function CampaignTable({ params, setParams }: CampaignTableProps)
       totalCost,
     };
   }, [selectedCampaignsData]);
+
+  const handleEditCampaign = (id: string) => {
+    navigate(`/${urls.editCampaign}?id=${id}`);
+  };
 
   const handleDeleteCampaign = async (id: string) => {
     const isConfirmed = await confirm({
@@ -82,7 +90,7 @@ export default function CampaignTable({ params, setParams }: CampaignTableProps)
 
       <AppTable
         data={campaigns}
-        columns={campaignColumnConfig(handleDeleteCampaign)}
+        columns={campaignColumnConfig(handleEditCampaign, handleDeleteCampaign)}
         loading={isLoading}
         page={params.page}
         pageCount={meta?.totalPages}

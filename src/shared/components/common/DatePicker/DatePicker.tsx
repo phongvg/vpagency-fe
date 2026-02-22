@@ -24,8 +24,8 @@ export default function DatePicker({ label, value, onChange, placeholder = "Chá»
             data-empty={!value}
             className='justify-start border-border font-normal data-[empty=true]:text-white/50 text-left normal-case'
             disabled={disabled}>
-            <CalendarIcon className='text-white/50' />
-            <span className='text-white/50'>{value ? format(new Date(value), "dd/MM/yyyy") : placeholder}</span>
+            <CalendarIcon />
+            <span>{value ? format(new Date(value), "dd/MM/yyyy") : placeholder}</span>
           </Button>
         </div>
       </PopoverTrigger>

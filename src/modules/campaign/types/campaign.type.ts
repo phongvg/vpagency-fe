@@ -99,7 +99,7 @@ export type UpdateCampaignRequest = {
   date: string | null;
   uid: string | null;
   mcc: string | null;
-  gmail: string | null;
+  gmail?: string | null;
   name: string | null;
   externalId: string | null;
   finalUrl: string | null;

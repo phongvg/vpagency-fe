@@ -9,7 +9,6 @@ export type LoginResponse = {
 
 export type RefreshTokenResponse = {
   accessToken: string;
-  refreshToken: string;
 };
 
 export type LoginPayload = {
