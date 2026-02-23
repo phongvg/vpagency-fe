@@ -20,7 +20,7 @@ import {
   type VisibilityState,
 } from "@tanstack/react-table";
 import { ArrowDown, ArrowUp, ArrowUpDown, SearchX, Settings2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 
 const INDEX_COLUMN_ID = "index";
 
@@ -168,13 +168,16 @@ export function AppTable<TData, TValue>({
         </DropdownMenu>
       )}
 
-      <ScrollArea className='w-full max-w-full h-[526px]'>
+      <ScrollArea className='w-full max-w-full max-h-[530px]'>
         <Table>
-          <TableHeader className='top-0 z-10 sticky backdrop-blur-sm'>
+          <TableHeader className='top-0 z-30 sticky backdrop-blur-sm'>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} style={{ minWidth: header.column.columnDef.minSize }}>
+                  <TableHead
+                    key={header.id}
+                    style={{ minWidth: header.column.columnDef.minSize }}
+                    className={cn(header.column.id === "__select" && "sticky left-0 z-20 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]")}>
                     {header.isPlaceholder ? null : (
                       <div
                         className={cn(
@@ -206,7 +209,10 @@ export function AppTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={getRowClassName?.(row.original)}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} style={{ minWidth: cell.column.columnDef.minSize }}>
+                    <TableCell
+                      key={cell.id}
+                      style={{ minWidth: cell.column.columnDef.minSize }}
+                      className={cn(cell.column.id === "__select" && "sticky left-0 z-10 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]")}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -218,30 +224,34 @@ export function AppTable<TData, TValue>({
         <ScrollBar orientation='horizontal' />
       </ScrollArea>
 
-      <div className='flex items-center'>
-        <div className='flex-1'>
-          <div className='flex items-center gap-2'>
-            <span>Hiển thị</span>
-            <div className='max-w-[120px]'>
-              <AppSelect
-                value={String(pageSize)}
-                onValueChange={(value) => onPageChange?.(1, Number(value))}
-                options={[
-                  { label: "10", value: "10" },
-                  { label: "30", value: "30" },
-                  { label: "50", value: "50" },
-                  { label: "100", value: "100" },
-                ]}
-              />
+      {onPageChange && (
+        <Fragment>
+          <div className='flex items-center'>
+            <div className='flex-1'>
+              <div className='flex items-center gap-2'>
+                <span>Hiển thị</span>
+                <div className='max-w-[120px]'>
+                  <AppSelect
+                    value={String(pageSize)}
+                    onValueChange={(value) => onPageChange(1, Number(value))}
+                    options={[
+                      { label: "10", value: "10" },
+                      { label: "30", value: "30" },
+                      { label: "50", value: "50" },
+                      { label: "100", value: "100" },
+                    ]}
+                  />
+                </div>
+                <span>bản ghi</span>
+              </div>
             </div>
-            <span>bản ghi</span>
-          </div>
-        </div>
 
-        <div className='flex-1'>
-          {onPageChange && <AppPagination page={page} totalPages={pageCount} onPageChange={(page) => onPageChange(page, pageSize)} />}
-        </div>
-      </div>
+            <div className='flex-1'>
+              <AppPagination page={page} totalPages={pageCount} onPageChange={(page) => onPageChange(page, pageSize)} />
+            </div>
+          </div>
+        </Fragment>
+      )}
     </div>
   );
 }

@@ -19,6 +19,7 @@ export default {
     },
     extend: {
       colors: {
+        background: "var(--background)",
         primary: "var(--primary)",
       },
       borderColor: {

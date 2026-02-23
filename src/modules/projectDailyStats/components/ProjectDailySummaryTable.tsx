@@ -18,16 +18,17 @@ export default function ProjectDailySummaryTable({ projectDailySummary, loading 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(PAGE_SIZE);
 
   const { user } = useAuthStore();
 
   const paginatedData = useMemo(() => {
-    const start = (page - 1) * PAGE_SIZE;
-    const end = start + PAGE_SIZE;
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
     return projectDailySummary ? projectDailySummary.slice(start, end) : [];
-  }, [projectDailySummary, page]);
+  }, [projectDailySummary, page, pageSize]);
 
-  const pageCount = projectDailySummary ? Math.ceil(projectDailySummary.length / PAGE_SIZE) : 0;
+  const pageCount = projectDailySummary ? Math.ceil(projectDailySummary.length / pageSize) : 0;
 
   const selectedProjectsData = useMemo(() => {
     return projectDailySummary ? projectDailySummary.filter((c) => Object.keys(rowSelection).includes(c.projectId)) : [];
@@ -99,8 +100,11 @@ export default function ProjectDailySummaryTable({ projectDailySummary, loading 
         loading={loading}
         page={page}
         pageCount={pageCount}
-        pageSize={PAGE_SIZE}
-        onPageChange={(page) => setPage(page)}
+        pageSize={pageSize}
+        onPageChange={(page, pageSize) => {
+          setPage(page);
+          setPageSize(pageSize);
+        }}
         rowIdKey='projectId'
         enableRowSelection
         rowSelection={rowSelection}

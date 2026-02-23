@@ -169,7 +169,7 @@ export default function CampaignStatsModal({ open, onClose, taskId, finalUrlId }
             page={params.page}
             pageCount={meta?.totalPages}
             pageSize={params.limit}
-            onPageChange={(page) => setParams((prev) => ({ ...prev, page }))}
+            onPageChange={(page, pageSize) => setParams((prev) => ({ ...prev, page, limit: pageSize }))}
             enableRowSelection
             rowSelection={rowSelection}
             onRowSelectionChange={setRowSelection}

@@ -5,6 +5,7 @@
 @layer base {
   :root {
     --body-bg-rgb: 10, 21, 26;
+    --background: #0a151a;
     --primary: #67ceff;
     --border: #4d4d4d;
   }

@@ -44,6 +44,7 @@ export default function AppSelect({ value, onValueChange, options, placeholder =
       noOptionsMessage={() => "KHÔNG CÓ DỮ LIỆU"}
       components={{ IndicatorSeparator: null }}
       isMulti={isMulti as any}
+      menuPlacement='top'
     />
   );
 }
