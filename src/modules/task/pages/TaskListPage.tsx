@@ -12,7 +12,7 @@ import AppButton from "@/shared/components/common/AppButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { cn } from "@/shared/libs/utils";
-import { ClipboardPlus } from "lucide-react";
+import { ClipboardList, ClipboardPlus } from "lucide-react";
 import { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -32,6 +32,7 @@ export default function TaskListPage() {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [selectedResearchDetail, setSelectedResearchDetail] = useState<TaskResearchDetail | null>(null);
   const [selectedDocumentAppealDetail, setSelectedDocumentAppealDetail] = useState<TaskDocumentAppealDetail | null>(null);
+  const [taskFilter, setTaskFilter] = useState<"all" | "mine">("all");
 
   const navigate = useNavigate();
 
@@ -113,6 +114,10 @@ export default function TaskListPage() {
     navigate(`/${urls.taskProgress}?id=${taskId}`);
   };
 
+  const toggleFilter = () => {
+    setTaskFilter((prev) => (prev === "all" ? "mine" : "all"));
+  };
+
   return (
     <Fragment>
       <Tabs value={tabValue} onValueChange={setTabValue} className='flex flex-col h-full'>
@@ -125,14 +130,27 @@ export default function TaskListPage() {
             ))}
           </TabsList>
 
-          <AppButton
-            variant='outline'
-            size='sm'
-            onClick={() => handleOpenEditModal()}
-            className='group hover:shadow-lg hover:scale-105 transition-all duration-300'>
-            <ClipboardPlus className='group-hover:rotate-12 transition-transform duration-300' />
-            Thêm mới công việc
-          </AppButton>
+          <div className='space-x-2'>
+            {tabValue === TABS[1].value && (
+              <AppButton
+                variant='outline'
+                size='sm'
+                onClick={toggleFilter}
+                className='group hover:shadow-lg hover:scale-105 transition-all duration-300'>
+                <ClipboardList className='group-hover:rotate-12 transition-transform duration-300' />
+                {taskFilter === "all" ? "Công việc của tôi" : "Tất cả công việc"}
+              </AppButton>
+            )}
+
+            <AppButton
+              variant='outline'
+              size='sm'
+              onClick={() => handleOpenEditModal()}
+              className='group hover:shadow-lg hover:scale-105 transition-all duration-300'>
+              <ClipboardPlus className='group-hover:rotate-12 transition-transform duration-300' />
+              Thêm mới công việc
+            </AppButton>
+          </div>
         </div>
 
         <TabsContent value={TABS[0].value} className={cn(tabValue === TABS[0].value && "flex flex-col flex-1 h-0")}>
@@ -155,6 +173,7 @@ export default function TaskListPage() {
             onUpdateAppealMetrics={handleOpenAppealMetricsModal}
             onUpdateDocumentAppealMetrics={handleOpenDocumentAppealMetricsModal}
             onUpdateResearchMetrics={handleOpenResearchMetricsModal}
+            taskFilter={taskFilter}
           />
         </TabsContent>
       </Tabs>

@@ -1,5 +1,6 @@
 import AppButton from "@/shared/components/common/AppButton";
 import AppPagination from "@/shared/components/common/AppPagination";
+import AppSelect from "@/shared/components/common/AppSelect";
 import { SkeletonTable } from "@/shared/components/SkeletonTable";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/shared/components/ui/dropdown-menu";
@@ -144,7 +145,7 @@ export function AppTable<TData, TValue>({
   }
 
   return (
-    <div className='space-y-4'>
+    <div className='space-y-2'>
       {enableColumnVisibility && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -167,7 +168,7 @@ export function AppTable<TData, TValue>({
         </DropdownMenu>
       )}
 
-      <ScrollArea className='w-full max-w-full'>
+      <ScrollArea className='w-full max-w-full h-[526px]'>
         <Table>
           <TableHeader className='top-0 z-10 sticky backdrop-blur-sm'>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -217,7 +218,30 @@ export function AppTable<TData, TValue>({
         <ScrollBar orientation='horizontal' />
       </ScrollArea>
 
-      {onPageChange && <AppPagination page={page} totalPages={pageCount} onPageChange={(page) => onPageChange(page, pageSize)} />}
+      <div className='flex items-center'>
+        <div className='flex-1'>
+          <div className='flex items-center gap-2'>
+            <span>Hiển thị</span>
+            <div className='max-w-[120px]'>
+              <AppSelect
+                value={String(pageSize)}
+                onValueChange={(value) => onPageChange?.(1, Number(value))}
+                options={[
+                  { label: "10", value: "10" },
+                  { label: "30", value: "30" },
+                  { label: "50", value: "50" },
+                  { label: "100", value: "100" },
+                ]}
+              />
+            </div>
+            <span>bản ghi</span>
+          </div>
+        </div>
+
+        <div className='flex-1'>
+          {onPageChange && <AppPagination page={page} totalPages={pageCount} onPageChange={(page) => onPageChange(page, pageSize)} />}
+        </div>
+      </div>
     </div>
   );
 }

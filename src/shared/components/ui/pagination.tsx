@@ -5,7 +5,7 @@ import { type ButtonProps, buttonVariants } from "@/shared/components/ui/button"
 import { cn } from "@/shared/libs/utils";
 
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
-  <nav role='navigation' aria-label='pagination' className={cn("flex justify-center mx-auto w-full", className)} {...props} />
+  <nav role='navigation' aria-label='pagination' className={cn("flex mx-auto w-full", className)} {...props} />
 );
 Pagination.displayName = "Pagination";
 

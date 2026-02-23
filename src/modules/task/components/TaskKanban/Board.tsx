@@ -26,6 +26,7 @@ interface BoardProps {
   onUpdateAppealMetrics: (task: Task) => void;
   onUpdateDocumentAppealMetrics: (task: Task, documentAppealDetail?: TaskDocumentAppealDetail) => void;
   onUpdateResearchMetrics: (task: Task, researchDetail?: TaskResearchDetail) => void;
+  taskFilter: "all" | "mine";
 }
 
 export default function Board({
@@ -35,11 +36,12 @@ export default function Board({
   onUpdateAppealMetrics,
   onUpdateDocumentAppealMetrics,
   onUpdateResearchMetrics,
+  taskFilter,
 }: BoardProps) {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
-  const { data: tasksByStatus, isLoading } = useTasksByStatus();
+  const { data: tasksByStatus, isLoading } = useTasksByStatus(taskFilter);
   const { draggingTaskId, handleDragStart, handleDragOver, handleDrop, handleDragEnd } = useTaskDragDrop();
 
   const navigate = useNavigate();

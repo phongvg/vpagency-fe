@@ -89,7 +89,7 @@ export default function TaskListPanel({ params, setParams, tasks, meta, loading 
         </ScrollArea>
 
         <div className='py-4'>
-          <AppPagination page={params.page} onPageChange={onPageChange} totalPages={meta?.totalPages || 1} />
+          <AppPagination page={params.page} onPageChange={onPageChange} totalPages={meta?.totalPages || 1} align='center' />
         </div>
       </CardContent>
     </Card>

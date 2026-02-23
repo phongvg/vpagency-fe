@@ -19,8 +19,8 @@ export const taskApi = {
     return http.get(`/tasks${convertQueryParams(params)}`);
   },
 
-  getTasksByStatus: (): Promise<ApiBaseResponse<TasksGroupedByStatus>> => {
-    return http.get("/tasks/by-status");
+  getTasksByStatus: (filterByCurrentUser: "all" | "mine"): Promise<ApiBaseResponse<TasksGroupedByStatus>> => {
+    return http.get(`/tasks/by-status${convertQueryParams({ filterByCurrentUser: filterByCurrentUser === "mine" ? true : false })}`);
   },
 
   getTaskById: (id: string): Promise<ApiBaseResponse<Task>> => {

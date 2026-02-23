@@ -15,9 +15,10 @@ interface PaginationProps {
   totalPages: number;
   onPageChange: (page: number) => void;
   siblingCount?: number;
+  align?: "left" | "center" | "right";
 }
 
-export default function AppPagination({ page = 1, totalPages, onPageChange, siblingCount = 1 }: PaginationProps) {
+export default function AppPagination({ page = 1, totalPages, onPageChange, siblingCount = 1, align = "right" }: PaginationProps) {
   const pages = getPaginationRange({
     currentPage: page,
     totalPages,
@@ -25,7 +26,13 @@ export default function AppPagination({ page = 1, totalPages, onPageChange, sibl
   });
 
   return (
-    <Pagination>
+    <Pagination
+      className={cn(
+        align === "left" && "justify-start",
+        align === "center" && "justify-center",
+        align === "right" && "justify-end",
+        page === 1 && "pointer-events-none opacity-50"
+      )}>
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious

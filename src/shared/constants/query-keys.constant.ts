@@ -17,7 +17,7 @@ export const taskQueryKeys = {
 
   list: (params: TaskListParams) => [...taskQueryKeys.lists(), normalizeParams(params)] as const,
 
-  byStatus: () => [...taskQueryKeys.all, "by-status"] as const,
+  byStatus: (taskFilter: "all" | "mine") => [...taskQueryKeys.all, "by-status", taskFilter] as const,
 
   detail: (id: string) => [...taskQueryKeys.all, "detail", id] as const,
 
