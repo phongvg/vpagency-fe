@@ -133,8 +133,8 @@ export const appRoutes: AppRoute[] = [
       },
       {
         path: urls.user,
-        title: "Quản lý tài khoản",
-        pageTitle: "Danh sách tài khoản",
+        title: "Quản lý tài khoản hệ thống",
+        pageTitle: "Danh sách tài khoản hệ thống",
         element: (
           <ProtectedRoute permissions={[Role.ADMIN]}>
             <UserListPage />

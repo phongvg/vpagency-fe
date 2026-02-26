@@ -2,7 +2,7 @@ import EditProjectStatusModal from "@/modules/projectStatus/components/EditProje
 import ProjectStatusTable from "@/modules/projectStatus/components/ProjectStatusTable";
 import type { ProjectStatusListParams } from "@/modules/projectStatus/types/projectStatus.type";
 import AppButton from "@/shared/components/common/AppButton";
-import { Input } from "@/shared/components/ui/input";
+import SearchInput from "@/shared/components/SearchInput";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { PlusCircle } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
@@ -41,12 +41,8 @@ export default function ProjectStatusListPage() {
   return (
     <Fragment>
       <div className='flex justify-between items-center gap-4 mb-2'>
-        <Input
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          placeholder='Tìm kiếm theo tên trạng thái'
-          className='max-w-[300px]'
-        />
+        <SearchInput searchInput={searchInput} setSearchInput={setSearchInput} placeholder='Tìm kiếm theo tên trạng thái' />
+
         <AppButton onClick={handleOpenCreate} variant='outline' size='sm'>
           <PlusCircle />
           Thêm mới

@@ -4,7 +4,7 @@ import ImportGmailButton from "@/modules/gmail/components/ImportGmailButton";
 import { useDeleteGmail } from "@/modules/gmail/hooks/useDeleteGmail";
 import type { GmailListParams } from "@/modules/gmail/types/gmail.type";
 import AppButton from "@/shared/components/common/AppButton";
-import { Input } from "@/shared/components/ui/input";
+import SearchInput from "@/shared/components/SearchInput";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { CirclePlus } from "lucide-react";
@@ -57,7 +57,7 @@ export default function GmailListPage() {
   return (
     <Fragment>
       <div className='flex justify-between items-center mb-2'>
-        <Input value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder='Tìm kiếm theo gmail' className='max-w-[300px]' />
+        <SearchInput searchInput={searchInput} setSearchInput={setSearchInput} placeholder='Tìm kiếm theo Email' />
 
         <div className='flex items-center gap-2'>
           <ImportGmailButton />

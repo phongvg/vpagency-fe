@@ -23,7 +23,7 @@ export const campaignStatsColumnConfig: ColumnDef<CampaignStats>[] = [
     accessorKey: "externalId",
   },
   {
-    header: "Người phụ trách (Tên đăng nhập)",
+    header: "Người phụ trách",
     accessorKey: "ownerUsername",
   },
   {

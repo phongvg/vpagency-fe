@@ -2,7 +2,7 @@ import ChangePasswordModal from "@/modules/user/components/ChangePasswordModal";
 import EditUserModal from "@/modules/user/components/EditUserModal";
 import UserTable from "@/modules/user/components/UserTable";
 import type { UserListParams } from "@/modules/user/types/user.type";
-import { Input } from "@/shared/components/ui/input";
+import SearchInput from "@/shared/components/SearchInput";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { Fragment, useEffect, useState } from "react";
 
@@ -46,12 +46,7 @@ export default function UserListPage() {
   return (
     <Fragment>
       <div className='mb-2'>
-        <Input
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          placeholder='Tìm kiếm theo tên đăng nhập, email'
-          className='max-w-[300px]'
-        />
+        <SearchInput searchInput={searchInput} setSearchInput={setSearchInput} placeholder='Tìm kiếm theo tên đăng nhập, email' />
       </div>
 
       <UserTable params={params} setParams={setParams} onOpenEdit={handleOpenEdit} onOpenChangePassword={handleOpenChangePassword} />

@@ -2,7 +2,7 @@ import EditGmailStatusModal from "@/modules/gmailStatus/components/EditGmailStat
 import GmailStatusTable from "@/modules/gmailStatus/components/GmailStatusTable";
 import type { GmailStatusListParams } from "@/modules/gmailStatus/types/gmailStatus.type";
 import AppButton from "@/shared/components/common/AppButton";
-import { Input } from "@/shared/components/ui/input";
+import SearchInput from "@/shared/components/SearchInput";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { PlusCircle } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
@@ -41,12 +41,7 @@ export default function GmailStatusListPage() {
   return (
     <Fragment>
       <div className='flex justify-between items-center gap-4 mb-2'>
-        <Input
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          placeholder='Tìm kiếm theo tên trạng thái'
-          className='max-w-[300px]'
-        />
+        <SearchInput searchInput={searchInput} setSearchInput={setSearchInput} placeholder='Tìm kiếm theo tên trạng thái' />
 
         <AppButton onClick={handleOpenCreate} variant='outline' size='sm'>
           <PlusCircle />

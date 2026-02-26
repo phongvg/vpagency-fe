@@ -3,7 +3,7 @@ import ProjectTable from "@/modules/project/components/ProjectTable";
 import { useDeleteProject } from "@/modules/project/hooks/useDeleteProject";
 import type { ProjectListParams } from "@/modules/project/types/project.type";
 import AppButton from "@/shared/components/common/AppButton";
-import { Input } from "@/shared/components/ui/input";
+import SearchInput from "@/shared/components/SearchInput";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { CirclePlus } from "lucide-react";
@@ -53,7 +53,7 @@ export default function ProjectListPage() {
   return (
     <Fragment>
       <div className='flex justify-between items-center mb-2'>
-        <Input value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder='Tìm kiếm theo tên dự án' className='max-w-[300px]' />
+        <SearchInput searchInput={searchInput} setSearchInput={setSearchInput} placeholder='Tìm kiếm theo tên dự án' />
 
         <AppButton size='sm' variant='outline' onClick={() => handleOpenEdit(null)}>
           <CirclePlus />

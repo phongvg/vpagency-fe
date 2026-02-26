@@ -1,13 +1,13 @@
 import type { ProjectDailyStatsListParams } from "@/modules/projectDailyStats/types/projectDailyStats.type";
 import AppButton from "@/shared/components/common/AppButton";
 import DatePicker from "@/shared/components/common/DatePicker/DatePicker";
-import { Input } from "@/shared/components/ui/input";
+import SearchInput from "@/shared/components/SearchInput";
 import { format } from "date-fns";
 import { CirclePlus } from "lucide-react";
 
 interface ProjectDailyStatsFilterProps {
   searchInput: string | undefined;
-  setSearchInput: (value: string | undefined) => void;
+  setSearchInput: React.Dispatch<React.SetStateAction<string | undefined>>;
   params: ProjectDailyStatsListParams;
   setParams: React.Dispatch<React.SetStateAction<ProjectDailyStatsListParams>>;
   onOpenModal: () => void;
@@ -17,7 +17,7 @@ export default function ProjectDailyStatsFilter({ searchInput, setSearchInput, p
   return (
     <div className='flex justify-between items-center mb-4'>
       <div className='flex items-end gap-2'>
-        <Input value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder='Tìm kiếm theo tên dự án' className='w-[200px]' />
+        <SearchInput searchInput={searchInput} setSearchInput={setSearchInput} placeholder='Tìm kiếm theo tên dự án' />
 
         <DatePicker
           value={params.fromDate ? format(new Date(params.fromDate), "yyyy-MM-dd") : undefined}

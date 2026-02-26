@@ -4,10 +4,10 @@
 
 @layer base {
   :root {
-    --body-bg-rgb: 10, 21, 26;
-    --background: #0a151a;
+    --body-bg-rgb: 30, 45, 55;
+    --background: #1e2d37;
     --primary: #67ceff;
-    --border: #4d4d4d;
+    --border: #6d6d6d;
   }
 }
 

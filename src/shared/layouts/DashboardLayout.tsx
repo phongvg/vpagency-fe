@@ -1,4 +1,3 @@
-import LightRays from "@/shared/components/LightRays/LightRays";
 import { useCurrentRoute } from "@/shared/hooks/useCurrentRoute";
 import Sidebar from "@/shared/layouts/components/Sidebar";
 import { useEffect } from "react";
@@ -21,7 +20,7 @@ export default function DashboardLayout() {
         </main>
       </div>
 
-      <LightRays
+      {/* <LightRays
         raysOrigin='top-center'
         raysColor='#ffffff'
         raysSpeed={1}
@@ -35,7 +34,7 @@ export default function DashboardLayout() {
         pulsating={false}
         fadeDistance={1}
         saturation={1}
-      />
+      /> */}
     </div>
   );
 }
