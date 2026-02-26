@@ -26,13 +26,7 @@ export default function AppPagination({ page = 1, totalPages, onPageChange, sibl
   });
 
   return (
-    <Pagination
-      className={cn(
-        align === "left" && "justify-start",
-        align === "center" && "justify-center",
-        align === "right" && "justify-end",
-        page === 1 && "pointer-events-none opacity-50"
-      )}>
+    <Pagination className={cn(align === "left" && "justify-start", align === "center" && "justify-center", align === "right" && "justify-end")}>
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious

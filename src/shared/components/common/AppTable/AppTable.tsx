@@ -168,7 +168,7 @@ export function AppTable<TData, TValue>({
         </DropdownMenu>
       )}
 
-      <ScrollArea className='w-full max-w-full max-h-[530px]'>
+      <ScrollArea className='w-full max-w-full max-h-[530px] overflow-auto'>
         <Table>
           <TableHeader className='top-0 z-30 sticky backdrop-blur-sm'>
             {table.getHeaderGroups().map((headerGroup) => (
