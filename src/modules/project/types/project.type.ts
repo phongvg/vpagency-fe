@@ -15,7 +15,7 @@ export type Project = {
   typeName: string;
   statusId: string;
   status: MasterData;
-  statusName: string;
+  statusName?: string;
   ownerId: string;
   owner: User;
   totalBudget: number | null;
@@ -40,8 +40,8 @@ export type Project = {
   deadline: Date | null;
   description: string | null;
   finalUrls: FinalUrl[];
-  createdAt: string | Date | null;
-  updatedAt: string | Date | null;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type UpdateProjectRequest = {

@@ -22,7 +22,7 @@ export const projectColumnConfig = (handlers: ProjectColumnHandlers): ColumnDef<
   },
   {
     header: "Loại dự án",
-    accessorKey: "typeName",
+    accessorKey: "type.name",
     cell: (props) => props.row.original.type?.name,
   },
   {
@@ -32,7 +32,7 @@ export const projectColumnConfig = (handlers: ProjectColumnHandlers): ColumnDef<
   },
   {
     header: "Trạng thái",
-    accessorKey: "statusName",
+    accessorKey: "status.name",
     cell: (props) => <BadgeStatus status={props.row.original.status?.name} />,
   },
   {
