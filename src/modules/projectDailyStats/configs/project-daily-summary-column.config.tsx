@@ -9,11 +9,19 @@ export const projectDailySummaryColumnConfig = (roles: Role[] | undefined): Colu
     id: "index",
     header: "STT",
     cell: (props) => props.row.index + 1,
+    meta: {
+      sticky: "left",
+      stickyOffset: 32,
+    },
   },
   {
     header: "Tên dự án",
     accessorKey: "projectName",
     minSize: 180,
+    meta: {
+      sticky: "left",
+      stickyOffset: 67,
+    },
   },
   {
     header: "Tổng chi tiêu",

@@ -89,6 +89,23 @@ export function AppTable<TData, TValue>({
     return selectColumn ? [selectColumn, ...columns] : columns;
   }, [selectColumn, columns]);
 
+  const getStickyStyle = (meta: { sticky?: "left" | "right"; stickyOffset?: number } | undefined) => {
+    if (!meta?.sticky) return {};
+
+    const styles: React.CSSProperties = {
+      position: "sticky",
+      zIndex: 20,
+    };
+
+    if (meta.sticky === "left") {
+      styles.left = meta.stickyOffset ?? 0;
+    } else if (meta.sticky === "right") {
+      styles.right = meta.stickyOffset ?? 0;
+    }
+
+    return styles;
+  };
+
   const table = useReactTable({
     data,
     columns: resolvedColumns,
@@ -176,36 +193,39 @@ export function AppTable<TData, TValue>({
           <TableHeader className='top-0 z-30 sticky'>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    style={{ minWidth: header.column.columnDef.minSize }}
-                    className={cn(
-                      isScrollVertical && "bg-black",
-                      header.column.id === "__select" && "sticky left-0 z-20 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]"
-                    )}>
-                    {header.isPlaceholder ? null : (
-                      <div
-                        className={cn(
-                          header.column.getCanSort() && header.column.id !== INDEX_COLUMN_ID && "flex items-center gap-2 cursor-pointer select-none"
-                        )}
-                        onClick={header.column.id !== INDEX_COLUMN_ID ? header.column.getToggleSortingHandler() : undefined}>
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                        {header.column.getCanSort() && header.column.id !== INDEX_COLUMN_ID && (
-                          <span className='ml-auto'>
-                            {header.column.getIsSorted() === "asc" ? (
-                              <ArrowUp className='w-4 h-4' />
-                            ) : header.column.getIsSorted() === "desc" ? (
-                              <ArrowDown className='w-4 h-4' />
-                            ) : (
-                              <ArrowUpDown className='opacity-50 w-4 h-4' />
-                            )}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </TableHead>
-                ))}
+                {headerGroup.headers.map((header) => {
+                  const meta = header.column.columnDef.meta as { sticky?: "left" | "right"; stickyOffset?: number } | undefined;
+                  const isSticky = meta?.sticky || header.column.id === "__select";
+                  const stickyStyle = header.column.id === "__select" ? { position: "sticky" as const, left: 0 } : getStickyStyle(meta);
+
+                  return (
+                    <TableHead
+                      key={header.id}
+                      style={{ minWidth: header.column.columnDef.minSize, ...stickyStyle }}
+                      className={cn(isScrollVertical && "bg-black", isSticky && "z-20 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]")}>
+                      {header.isPlaceholder ? null : (
+                        <div
+                          className={cn(
+                            header.column.getCanSort() && header.column.id !== INDEX_COLUMN_ID && "flex items-center gap-2 cursor-pointer select-none"
+                          )}
+                          onClick={header.column.id !== INDEX_COLUMN_ID ? header.column.getToggleSortingHandler() : undefined}>
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {header.column.getCanSort() && header.column.id !== INDEX_COLUMN_ID && (
+                            <span className='ml-auto'>
+                              {header.column.getIsSorted() === "asc" ? (
+                                <ArrowUp className='w-4 h-4' />
+                              ) : header.column.getIsSorted() === "desc" ? (
+                                <ArrowDown className='w-4 h-4' />
+                              ) : (
+                                <ArrowUpDown className='opacity-50 w-4 h-4' />
+                              )}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </TableHead>
+                  );
+                })}
               </TableRow>
             ))}
           </TableHeader>
@@ -214,14 +234,20 @@ export function AppTable<TData, TValue>({
             {table.getRowModel().rows?.length &&
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={getRowClassName?.(row.original)}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      style={{ minWidth: cell.column.columnDef.minSize }}
-                      className={cn(cell.column.id === "__select" && "sticky left-0 z-10 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]")}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
+                  {row.getVisibleCells().map((cell) => {
+                    const meta = cell.column.columnDef.meta as { sticky?: "left" | "right"; stickyOffset?: number } | undefined;
+                    const isSticky = meta?.sticky || cell.column.id === "__select";
+                    const stickyStyle = cell.column.id === "__select" ? { position: "sticky" as const, left: 0 } : getStickyStyle(meta);
+
+                    return (
+                      <TableCell
+                        key={cell.id}
+                        style={{ minWidth: cell.column.columnDef.minSize, ...stickyStyle }}
+                        className={cn(isSticky && "z-10 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]")}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
               ))}
           </TableBody>
