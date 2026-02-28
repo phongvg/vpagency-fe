@@ -5,6 +5,7 @@ import { TaskTypeBgColorMap, TaskTypeColorMap, TaskTypeMap } from "@/modules/tas
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
 import AppLoading from "@/shared/components/common/AppLoading";
 import AppPagination from "@/shared/components/common/AppPagination";
+import AppSelect from "@/shared/components/common/AppSelect";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { useQueryParam } from "@/shared/hooks/useQueryParam";
 import { cn } from "@/shared/libs/utils";
@@ -29,6 +30,10 @@ export default function TaskListPanel({ params, setParams, tasks, meta, loading 
     setParams((prev) => ({ ...prev, page }));
   };
 
+  const onPageSizeChange = (pageSize: number) => {
+    setParams((prev) => ({ ...prev, limit: pageSize, page: 1 }));
+  };
+
   const getTaskDetail = (id: string) => {
     navigate(`${urls.root}${urls.task}${convertQueryParams({ id })}`);
   };
@@ -36,13 +41,13 @@ export default function TaskListPanel({ params, setParams, tasks, meta, loading 
   if (loading) return <AppLoading loading={loading} />;
 
   return (
-    <Card className='flex flex-col space-y-4 w-[360px] min-h-[750px]'>
-      <CardHeader>
+    <Card className='flex flex-col w-[360px] max-h-full'>
+      <CardHeader className='flex-shrink-0'>
         <CardTitle>Danh sách công việc ({meta?.total || 0})</CardTitle>
       </CardHeader>
 
-      <CardContent className='flex flex-col flex-1 py-0'>
-        <ScrollArea className='p-1 border border-border w-full h-full'>
+      <CardContent className='flex flex-col flex-1 min-h-0'>
+        <ScrollArea className='flex-1 p-1 border border-border w-full'>
           <ul className='space-y-3'>
             {tasks.map((task, index) => {
               const deadlineInfo = getDeadlineInfo(task.deadline);
@@ -61,7 +66,7 @@ export default function TaskListPanel({ params, setParams, tasks, meta, loading 
                     onClick={() => getTaskDetail(task.id)}
                     title={task.name}>
                     <div className='flex justify-between items-start gap-2'>
-                      <h3 className='flex-1 font-semibold text-primary group-hover:text-primary/80 line-clamp-2 transition-colors'>{task.name}</h3>
+                      <h3 className='flex-1 font-semibold text-white group-hover:text-primary/80 line-clamp-2 transition-colors'>{task.name}</h3>
 
                       <div
                         className={cn(
@@ -88,7 +93,24 @@ export default function TaskListPanel({ params, setParams, tasks, meta, loading 
           </ul>
         </ScrollArea>
 
-        <div className='py-4'>
+        <div className='flex flex-col flex-shrink-0 gap-3 py-4 border-border border-t'>
+          <div className='flex justify-center items-center gap-2'>
+            <span className='text-sm'>Hiển thị</span>
+            <div className='w-20'>
+              <AppSelect
+                value={String(params.limit || 10)}
+                onValueChange={(value) => onPageSizeChange(Number(value))}
+                options={[
+                  { label: "10", value: "10" },
+                  { label: "20", value: "20" },
+                  { label: "30", value: "30" },
+                  { label: "50", value: "50" },
+                ]}
+              />
+            </div>
+            <span className='text-sm'>bản ghi</span>
+          </div>
+
           <AppPagination page={params.page} onPageChange={onPageChange} totalPages={meta?.totalPages || 1} align='center' />
         </div>
       </CardContent>

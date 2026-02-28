@@ -51,8 +51,8 @@ export default function TaskSplit({
   const meta = useMemo(() => data?.meta, [data]);
 
   return (
-    <div className='flex flex-col flex-1 gap-2 h-full'>
-      <div>
+    <div className='flex flex-col flex-1 gap-2 h-full max-h-[calc(100vh-100px)]'>
+      <div className='flex-shrink-0'>
         <Popover>
           <PopoverTrigger asChild>
             <AppButton type='button' variant='outline' size='sm'>
@@ -76,7 +76,7 @@ export default function TaskSplit({
         </Popover>
       </div>
 
-      <div className='flex flex-1 gap-3 h-0 min-h-0'>
+      <div className='flex flex-1 gap-3 min-h-0'>
         <TaskListPanel params={params} setParams={setParams} tasks={tasks} meta={meta} loading={isLoading} />
         <TaskDetailPanel
           onEdit={onEdit}
