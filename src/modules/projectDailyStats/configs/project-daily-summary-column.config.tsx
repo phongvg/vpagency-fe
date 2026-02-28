@@ -56,56 +56,56 @@ export const projectDailySummaryColumnConfig = (roles: Role[] | undefined): Colu
           accessorKey: "receivedRevenue",
           cell: (props) => <span className='font-bold text-emerald-500'>{formatDollarAmount(props.row.original.receivedRevenue)}</span>,
         },
-        {
-          header: "Tổng Ref",
-          accessorKey: "totalRef",
-          cell: (props) => <span className='font-bold text-cyan-500'>{props.row.original.totalRef}</span>,
-        },
-        {
-          header: "Chi phí mỗi Ref",
-          accessorKey: "costPerRef",
-          cell: (props) => <span className='font-bold text-pink-500'>{formatDollarAmount(props.row.original.costPerRef)}</span>,
-        },
-        {
-          header: "Tỷ lệ Ref/Click (%)",
-          accessorKey: "rateRefPerClick",
-          cell: (props) => <span className='font-bold text-teal-500'>{`${fixedNumber(props.row.original.rateRefPerClick)}%`}</span>,
-        },
-        {
-          header: "Số FTD",
-          accessorKey: "totalFtd",
-          cell: (props) => <span className='font-bold text-lime-500'>{props.row.original.totalFtd}</span>,
-        },
-        {
-          header: "Chi phí mỗi FTD",
-          accessorKey: "costPerFtd",
-          cell: (props) => <span className='font-bold text-rose-500'>{formatDollarAmount(props.row.original.costPerFtd)}</span>,
-        },
-        {
-          header: "Tỷ lệ FTD/Ref (%)",
-          accessorKey: "rateFtdPerRef",
-          cell: (props) => <span className='font-bold text-violet-500'>{`${fixedNumber(props.row.original.rateFtdPerRef)}%`}</span>,
-        },
-        {
-          header: "Volume key/ngày",
-          accessorKey: "totalTargetDailyKeyVolume",
-          cell: (props) => <span className='font-bold text-amber-500'>{props.row.original.totalTargetDailyKeyVolume}</span>,
-        },
-        {
-          header: "Dự tính Ref/ngày",
-          accessorKey: "totalTargetRef",
-          cell: (props) => <span className='font-bold text-indigo-500'>{props.row.original.totalTargetRef}</span>,
-        },
-        {
-          header: "% Click đạt được",
-          accessorKey: "clickAchievementRate",
-          cell: (props) => <span className='font-bold text-green-600'>{`${fixedNumber(props.row.original.clickAchievementRate)}%`}</span>,
-        },
-        {
-          header: "% Ref đạt được",
-          accessorKey: "refAchievementRate",
-          cell: (props) => <span className='font-bold text-emerald-600'>{`${fixedNumber(props.row.original.refAchievementRate)}%`}</span>,
-        },
       ]
     : []) as ColumnDef<ProjectDailyStatsSummary>[]),
+  {
+    header: "Tổng Ref",
+    accessorKey: "totalRef",
+    cell: (props) => <span className='font-bold text-cyan-500'>{props.row.original.totalRef}</span>,
+  },
+  {
+    header: "Chi phí mỗi Ref",
+    accessorKey: "costPerRef",
+    cell: (props) => <span className='font-bold text-pink-500'>{formatDollarAmount(props.row.original.costPerRef)}</span>,
+  },
+  {
+    header: "Tỷ lệ Ref/Click (%)",
+    accessorKey: "rateRefPerClick",
+    cell: (props) => <span className='font-bold text-teal-500'>{`${fixedNumber(props.row.original.rateRefPerClick)}%`}</span>,
+  },
+  {
+    header: "Số FTD",
+    accessorKey: "totalFtd",
+    cell: (props) => <span className='font-bold text-lime-500'>{props.row.original.totalFtd}</span>,
+  },
+  {
+    header: "Chi phí mỗi FTD",
+    accessorKey: "costPerFtd",
+    cell: (props) => <span className='font-bold text-rose-500'>{formatDollarAmount(props.row.original.costPerFtd)}</span>,
+  },
+  {
+    header: "Tỷ lệ FTD/Ref (%)",
+    accessorKey: "rateFtdPerRef",
+    cell: (props) => <span className='font-bold text-violet-500'>{`${fixedNumber(props.row.original.rateFtdPerRef)}%`}</span>,
+  },
+  {
+    header: "Volume key/ngày",
+    accessorKey: "totalTargetDailyKeyVolume",
+    cell: (props) => <span className='font-bold text-amber-500'>{props.row.original.totalTargetDailyKeyVolume}</span>,
+  },
+  {
+    header: "Dự tính Ref/ngày",
+    accessorKey: "totalTargetRef",
+    cell: (props) => <span className='font-bold text-indigo-500'>{props.row.original.totalTargetRef}</span>,
+  },
+  {
+    header: "% Click đạt được",
+    accessorKey: "clickAchievementRate",
+    cell: (props) => <span className='font-bold text-green-600'>{`${fixedNumber(props.row.original.clickAchievementRate)}%`}</span>,
+  },
+  {
+    header: "% Ref đạt được",
+    accessorKey: "refAchievementRate",
+    cell: (props) => <span className='font-bold text-emerald-600'>{`${fixedNumber(props.row.original.refAchievementRate)}%`}</span>,
+  },
 ];
