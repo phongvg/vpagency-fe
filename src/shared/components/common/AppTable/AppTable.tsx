@@ -182,7 +182,7 @@ export function AppTable<TData, TValue>({
                     style={{ minWidth: header.column.columnDef.minSize }}
                     className={cn(
                       isScrollVertical && "bg-black",
-                      header.column.id === "__select" && "sticky left-0 z-20 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]"
+                      header.column.id === "__select" && "sticky left-0 z-20 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]"
                     )}>
                     {header.isPlaceholder ? null : (
                       <div
