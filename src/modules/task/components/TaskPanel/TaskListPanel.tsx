@@ -7,6 +7,7 @@ import AppLoading from "@/shared/components/common/AppLoading";
 import AppPagination from "@/shared/components/common/AppPagination";
 import AppSelect from "@/shared/components/common/AppSelect";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
+import { DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS } from "@/shared/constants/pageSize.constant";
 import { useQueryParam } from "@/shared/hooks/useQueryParam";
 import { cn } from "@/shared/libs/utils";
 import type { Meta } from "@/shared/types/common/apiResponse.type";
@@ -98,14 +99,9 @@ export default function TaskListPanel({ params, setParams, tasks, meta, loading 
             <span className='text-sm'>Hiển thị</span>
             <div className='w-20'>
               <AppSelect
-                value={String(params.limit || 10)}
+                value={String(params.limit || DEFAULT_PAGE_SIZE)}
                 onValueChange={(value) => onPageSizeChange(Number(value))}
-                options={[
-                  { label: "10", value: "10" },
-                  { label: "20", value: "20" },
-                  { label: "30", value: "30" },
-                  { label: "50", value: "50" },
-                ]}
+                options={PAGE_SIZE_OPTIONS.map((size) => ({ label: String(size), value: String(size) }))}
               />
             </div>
             <span className='text-sm'>bản ghi</span>

@@ -6,6 +6,7 @@ import { Checkbox } from "@/shared/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/shared/components/ui/dropdown-menu";
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/shared/components/ui/empty";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table";
+import { DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS } from "@/shared/constants/pageSize.constant";
 import { cn } from "@/shared/libs/utils";
 import {
   type ColumnDef,
@@ -53,7 +54,7 @@ export function AppTable<TData, TValue>({
   loading = false,
   page = 1,
   pageCount = 0,
-  pageSize = 10,
+  pageSize = DEFAULT_PAGE_SIZE,
   onPageChange,
 
   enableRowSelection = false,
@@ -266,12 +267,7 @@ export function AppTable<TData, TValue>({
                 <AppSelect
                   value={String(pageSize)}
                   onValueChange={(value) => onPageChange(1, Number(value))}
-                  options={[
-                    { label: "10", value: "10" },
-                    { label: "30", value: "30" },
-                    { label: "50", value: "50" },
-                    { label: "100", value: "100" },
-                  ]}
+                  options={PAGE_SIZE_OPTIONS.map((size) => ({ label: String(size), value: String(size) }))}
                 />
               </div>
               <span>bản ghi</span>
