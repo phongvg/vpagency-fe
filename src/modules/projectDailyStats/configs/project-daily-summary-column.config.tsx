@@ -9,10 +9,6 @@ export const projectDailySummaryColumnConfig = (roles: Role[] | undefined): Colu
     id: "index",
     header: "STT",
     cell: (props) => props.row.index + 1,
-    meta: {
-      sticky: "left",
-      stickyOffset: 32,
-    },
   },
   {
     header: "Tên dự án",
@@ -20,7 +16,7 @@ export const projectDailySummaryColumnConfig = (roles: Role[] | undefined): Colu
     minSize: 180,
     meta: {
       sticky: "left",
-      stickyOffset: 67,
+      stickyOffset: 32,
     },
   },
   {

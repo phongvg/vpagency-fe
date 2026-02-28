@@ -202,7 +202,10 @@ export function AppTable<TData, TValue>({
                     <TableHead
                       key={header.id}
                       style={{ minWidth: header.column.columnDef.minSize, ...stickyStyle }}
-                      className={cn(isScrollVertical && "bg-black", isSticky && "z-20 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]")}>
+                      className={cn(
+                        isScrollVertical && "bg-black",
+                        isSticky && "z-20 bg-white/5 backdrop-blur-lg shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]"
+                      )}>
                       {header.isPlaceholder ? null : (
                         <div
                           className={cn(
@@ -243,7 +246,7 @@ export function AppTable<TData, TValue>({
                       <TableCell
                         key={cell.id}
                         style={{ minWidth: cell.column.columnDef.minSize, ...stickyStyle }}
-                        className={cn(isSticky && "z-10 bg-background shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]")}>
+                        className={cn(isSticky && "z-10 bg-white/5 backdrop-blur-lg shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]")}>
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     );

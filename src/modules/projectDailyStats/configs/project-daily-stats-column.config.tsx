@@ -22,6 +22,10 @@ export const projectDailyStatsColumnConfig = ({
     id: "index",
     header: "STT",
     cell: (props) => props.row.index + 1,
+    meta: {
+      sticky: "left",
+      stickyOffset: 0,
+    },
   },
   {
     header: "Ngày",
@@ -32,6 +36,10 @@ export const projectDailyStatsColumnConfig = ({
     header: "Tên dự án",
     accessorKey: "projectName",
     minSize: 180,
+    meta: {
+      sticky: "left",
+      stickyOffset: 30,
+    },
   },
   {
     header: "Trạng thái dự án",
