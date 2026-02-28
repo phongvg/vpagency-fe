@@ -3,6 +3,7 @@ import { campaignColumnConfig } from "@/modules/campaign/configs/campaign-column
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
 import { useAssignCampaignToFinalUrl } from "@/modules/task/hooks/useAssignCampaignToFinalUrl";
 import { useCampaignStatsFinalUrl } from "@/modules/task/hooks/useCampaignStatsFinalUrl";
+import { useRemoveCampaignFromFinalUrl } from "@/modules/task/hooks/useRemoveCampaignFromFinalUrl";
 import AppButton from "@/shared/components/common/AppButton";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
@@ -44,7 +45,7 @@ export default function CampaignStatsModal({ open, onClose, taskId, finalUrlId }
   const meta = useMemo(() => campaignStats?.data.meta, [campaignStats]);
 
   const assignCampaignToFinalUrl = useAssignCampaignToFinalUrl();
-  const removeCampaignFromFinalUrl = useAssignCampaignToFinalUrl();
+  const removeCampaignFromFinalUrl = useRemoveCampaignFromFinalUrl();
 
   const handleBulkAssign = async () => {
     const confirmed = await confirm({
