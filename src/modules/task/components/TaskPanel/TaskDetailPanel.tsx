@@ -10,6 +10,7 @@ import TaskFinalUrlTable from "@/modules/task/components/TaskPanel/TaskFinalUrlT
 import TaskOverviewCard from "@/modules/task/components/TaskPanel/TaskOverviewCard";
 import TaskPeopleCard from "@/modules/task/components/TaskPanel/TaskPeopleCard";
 import TaskProjectCard from "@/modules/task/components/TaskPanel/TaskProjectCard";
+import TaskResearchCard from "@/modules/task/components/TaskPanel/TaskResearchCard";
 import TaskResearchDetailTable from "@/modules/task/components/TaskPanel/TaskResearchDetailTable";
 import TaskTimelineCard from "@/modules/task/components/TaskPanel/TaskTimelineCard";
 import { useDeleteDocumentAppealDetail } from "@/modules/task/hooks/useDeleteDocumentAppealDetail";
@@ -176,6 +177,9 @@ export default function TaskDetailPanel({
 
             {isResearchTask && (
               <Fragment>
+                {/* Thông tin nghiên cứu */}
+                <TaskResearchCard task={task} />
+
                 {/* Chi tiết nghiên cứu */}
                 <div className='col-span-2'>
                   <TaskResearchDetailTable

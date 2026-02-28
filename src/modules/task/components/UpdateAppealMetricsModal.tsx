@@ -23,7 +23,7 @@ export default function UpdateAppealMetricsModal({ open, onClose, task }: Update
   const form = useForm<TaskAppealMetricsFormType>({
     resolver: zodResolver(taskAppealMetricsFormSchema),
     defaultValues: {
-      appealDate: new Date(),
+      appealDate: undefined,
       appealCount: 0,
       suspensionReason: "",
       successCount: 0,
@@ -32,11 +32,13 @@ export default function UpdateAppealMetricsModal({ open, onClose, task }: Update
   });
 
   const onSubmit = async (data: TaskAppealMetricsFormType) => {
+    if (!task) return;
+
     await updateAppealMetrics.mutateAsync(
       {
-        id: task?.id || "",
+        id: task.id,
         payload: {
-          appealDate: format(data.appealDate, "yyyy-MM-dd"),
+          appealDate: format(data.appealDate as Date, "yyyy-MM-dd"),
           appealCount: data.appealCount,
           suspensionReason: data.suspensionReason,
           successCount: data.successCount,
@@ -58,7 +60,7 @@ export default function UpdateAppealMetricsModal({ open, onClose, task }: Update
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
-              <DialogTitle>Cập nhật chỉ số kháng</DialogTitle>
+              <DialogTitle>Thêm mới chỉ số kháng</DialogTitle>
             </DialogHeader>
 
             <div className='gap-4 grid grid-cols-2 mb-4'>

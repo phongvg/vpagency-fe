@@ -22,6 +22,17 @@
   }
 }
 
+@layer utilities {
+  .scrollbar-custom {
+    @apply [&::-webkit-scrollbar-thumb]:bg-white/20
+           [&::-webkit-scrollbar-thumb]:hover:bg-white/30
+           [&::-webkit-scrollbar-track]:bg-transparent
+           [&::-webkit-scrollbar]:w-1
+           [&::-webkit-scrollbar]:h-1
+           [&::-webkit-scrollbar-thumb]:rounded-full;
+  }
+}
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;

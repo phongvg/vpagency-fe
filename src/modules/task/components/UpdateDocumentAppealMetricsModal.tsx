@@ -39,7 +39,7 @@ export default function UpdateDocumentAppealMetricsModal({ open, onClose, task, 
   const form = useForm<TaskDocumentAppealMetricsFormType>({
     resolver: zodResolver(taskDocumentAppealMetricsFormSchema),
     defaultValues: {
-      appealDate: new Date(),
+      appealDate: undefined,
       appealCount: 0,
       successCount: 0,
       note: "",
@@ -50,7 +50,7 @@ export default function UpdateDocumentAppealMetricsModal({ open, onClose, task, 
   useEffect(() => {
     if (open) {
       form.reset({
-        appealDate: documentAppealDetail?.appealDate ? new Date(documentAppealDetail.appealDate) : new Date(),
+        appealDate: documentAppealDetail?.appealDate ? new Date(documentAppealDetail.appealDate) : undefined,
         appealCount: documentAppealDetail?.appealCount ?? 0,
         successCount: documentAppealDetail?.successCount ?? 0,
         note: documentAppealDetail?.note ?? "",
@@ -63,7 +63,7 @@ export default function UpdateDocumentAppealMetricsModal({ open, onClose, task, 
     if (!task) return;
 
     const payload = {
-      appealDate: formatDate(data.appealDate, "yyyy-MM-dd"),
+      appealDate: formatDate(data.appealDate as Date, "yyyy-MM-dd"),
       appealCount: data.appealCount,
       successCount: data.successCount,
       note: data.note,

@@ -19,6 +19,7 @@ export default function ProjectFinalUrlsTable({ projectId, onEdit, onDelete }: P
       page={1}
       pageCount={1}
       pageSize={finalUrls?.length ?? 0}
+      isScrollVertical
     />
   );
 }

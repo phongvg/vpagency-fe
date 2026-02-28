@@ -1,7 +1,11 @@
 import * as z from "zod";
 
 export const taskDocumentAppealMetricsFormSchema = z.object({
-  appealDate: z.date({ error: "Ngày kháng tài khoản không được bỏ trống" }),
+  appealDate: z
+    .date()
+    .nullable()
+    .optional()
+    .refine((val) => val !== null && val !== undefined, { message: "Ngày kháng tài khoản không được bỏ trống" }),
   projectId: z
     .object(
       {
@@ -16,4 +20,6 @@ export const taskDocumentAppealMetricsFormSchema = z.object({
   note: z.string().optional(),
 });
 
-export type TaskDocumentAppealMetricsFormType = z.infer<typeof taskDocumentAppealMetricsFormSchema>;
+export type TaskDocumentAppealMetricsFormType = Omit<z.infer<typeof taskDocumentAppealMetricsFormSchema>, "appealDate"> & {
+  appealDate?: Date | null | undefined;
+};

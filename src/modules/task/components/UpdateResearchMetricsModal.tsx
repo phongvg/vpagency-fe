@@ -30,7 +30,7 @@ export default function UpdateResearchMetricsModal({ open, onClose, researchDeta
   const form = useForm<TaskResearchMetricsFormType>({
     resolver: zodResolver(taskResearchMetricsFormSchema),
     defaultValues: {
-      resultDate: new Date(),
+      resultDate: undefined,
       result: "",
       difficultyLevel: "",
     },
@@ -39,7 +39,7 @@ export default function UpdateResearchMetricsModal({ open, onClose, researchDeta
   useEffect(() => {
     if (open) {
       form.reset({
-        resultDate: researchDetail?.resultDate ? new Date(researchDetail.resultDate) : new Date(),
+        resultDate: researchDetail?.resultDate ? new Date(researchDetail.resultDate) : undefined,
         result: researchDetail?.result ?? "",
         difficultyLevel: researchDetail?.difficultyLevel ?? "",
       });
@@ -50,7 +50,7 @@ export default function UpdateResearchMetricsModal({ open, onClose, researchDeta
     if (!task) return;
 
     const payload = {
-      resultDate: formatDate(data.resultDate, "yyyy-MM-dd"),
+      resultDate: formatDate(data.resultDate as Date, "yyyy-MM-dd"),
       result: data.result,
       difficultyLevel: data.difficultyLevel,
     };

@@ -178,6 +178,7 @@ export default function CampaignStatsModal({ open, onClose, taskId, finalUrlId }
             columnVisibility={columnVisibility}
             onColumnVisibilityChange={setColumnVisibility}
             getRowClassName={(campaign) => (campaign.finalUrlId ? "font-bold bg-red-500/20" : "")}
+            isScrollVertical
           />
         </div>
 

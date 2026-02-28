@@ -66,21 +66,21 @@ export default function TaskActionButton({
       {isAppealTask && (
         <AppButton variant='outline' size='sm' onClick={onUpdateAppealMetrics}>
           <SquarePen />
-          Cập nhật tiến độ kháng
+          Thêm mới tiến độ kháng
         </AppButton>
       )}
 
       {isDocumentAppealTask && (
         <AppButton variant='outline' size='sm' onClick={onUpdateDocumentAppealMetrics}>
           <SquarePen />
-          Cập nhật tiến độ kháng giấy
+          Thêm mới tiến độ kháng giấy
         </AppButton>
       )}
 
       {isResearchTask && (
         <AppButton variant='outline' size='sm' onClick={onUpdateResearchMetrics}>
           <SquarePen />
-          Cập nhật kết quả nghiên cứu
+          Thêm mới kết quả nghiên cứu
         </AppButton>
       )}
     </div>
