@@ -214,7 +214,7 @@ export const appRoutes: AppRoute[] = [
         children: [
           {
             path: urls.project,
-            title: "Dự án",
+            title: "Danh sách dự án",
             pageTitle: "Danh sách dự án",
             element: (
               <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING]}>
