@@ -10,7 +10,7 @@ export default function Sidebar() {
   const routes = getSidebarRoutes(user?.roles || []);
 
   return (
-    <aside className='top-0 left-0 z-20 fixed bg-[rgba(var(--body-bg-rgb))] w-[300px] h-full'>
+    <aside className='top-0 left-0 z-20 fixed bg-[rgba(30,45,55,0.70)] backdrop-blur-md border-r border-[rgba(103,206,255,0.15)] w-[300px] h-full'>
       <div className='flex flex-col h-full'>
         <div className='space-y-3'>
           <div className='flex items-center gap-2 p-2 border-border border-b'>
