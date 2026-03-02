@@ -1,3 +1,5 @@
+import ClickSpark from "@/shared/components/ClickSpark/ClickSpark";
+import LightRays from "@/shared/components/LightRays/LightRays";
 import { useCurrentRoute } from "@/shared/hooks/useCurrentRoute";
 import Sidebar from "@/shared/layouts/components/Sidebar";
 import { useEffect } from "react";
@@ -16,11 +18,13 @@ export default function DashboardLayout() {
       <div className='flex min-h-dvh app'>
         <Sidebar />
         <main className='relative flex-1 ml-[300px] p-4 min-w-0 h-full'>
-          <Outlet />
+          <ClickSpark sparkColor='#fff' sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
+            <Outlet />
+          </ClickSpark>
         </main>
       </div>
 
-      {/* <LightRays
+      <LightRays
         raysOrigin='top-center'
         raysColor='#ffffff'
         raysSpeed={1}
@@ -34,7 +38,7 @@ export default function DashboardLayout() {
         pulsating={false}
         fadeDistance={1}
         saturation={1}
-      /> */}
+      />
     </div>
   );
 }
