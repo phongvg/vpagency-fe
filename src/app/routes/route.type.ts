@@ -10,6 +10,7 @@ export type AppRoute = {
   children?: AppRoute[];
   showInSidebar?: boolean;
   roles?: Role[];
-  element: ReactNode;
+  element?: ReactNode;
   isActive?: boolean;
+  isGroup?: boolean;
 };
