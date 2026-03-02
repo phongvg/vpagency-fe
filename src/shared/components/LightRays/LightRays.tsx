@@ -229,7 +229,13 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     fragColor.rgb *= (1.0 - noiseAmount + noiseAmount * n);
   }
 
-  float brightness = 1.0 - (coord.y / iResolution.y);
+  // Calculate brightness based on ray direction
+  vec2 toCoord = coord - rayPos;
+  float distFromSource = length(toCoord);
+  float maxDist = length(iResolution);
+  float brightness = 1.0 - (distFromSource / maxDist);
+  brightness = clamp(brightness, 0.0, 1.0);
+
   fragColor.x *= 0.1 + brightness * 0.8;
   fragColor.y *= 0.3 + brightness * 0.6;
   fragColor.z *= 0.5 + brightness * 0.5;

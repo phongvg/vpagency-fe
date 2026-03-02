@@ -1,5 +1,5 @@
-import ClickSpark from "@/shared/components/ClickSpark/ClickSpark";
-import LightRays from "@/shared/components/LightRays/LightRays";
+import ClickSpark from "@/shared/components/ClickSpark";
+import LightRays from "@/shared/components/LightRays";
 import { useCurrentRoute } from "@/shared/hooks/useCurrentRoute";
 import Sidebar from "@/shared/layouts/components/Sidebar";
 import { useEffect } from "react";
@@ -26,17 +26,16 @@ export default function DashboardLayout() {
 
       <LightRays
         raysOrigin='top-center'
-        raysColor='#ffffff'
         raysSpeed={1}
         lightSpread={0.5}
-        rayLength={3}
+        rayLength={2}
         followMouse={true}
         mouseInfluence={0.1}
         noiseAmount={0}
         distortion={0}
         className='custom-rays'
         pulsating={false}
-        fadeDistance={1}
+        fadeDistance={0.2}
         saturation={1}
       />
     </div>
