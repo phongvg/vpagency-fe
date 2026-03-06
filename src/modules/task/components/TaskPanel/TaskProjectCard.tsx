@@ -9,6 +9,8 @@ interface TaskProjectCardProps {
 }
 
 export default function TaskProjectCard({ task }: TaskProjectCardProps) {
+  if (!task.project) return null;
+
   return (
     <Card>
       <CardHeader>
