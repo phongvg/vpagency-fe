@@ -10,7 +10,7 @@ import type { ApiBaseResponse } from "@/shared/types/common/apiResponse.type";
 
 export const projectDailyStatsApi = {
   getProjectDailyStats: (params: ProjectDailyStatsListParams): Promise<ProjectDailyStatsResponse> => {
-    return http.post("/project-daily-stats", params);
+    return http.post("/project-daily-stats/final-url-stats", params);
   },
 
   generateProjectDailyStats: (payload: GenerateProjectDailyStatRequest): Promise<ApiBaseResponse<ProjectDailyStats>> => {

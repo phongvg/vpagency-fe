@@ -1,21 +1,8 @@
 export type AggregatedMetrics = {
-  totalCost: number;
   totalClicks: number;
+  totalCost: number;
+  totalImpression: number;
   avgCpc: number;
-  totalProfit: number;
-  avgRoi: number;
-  totalHoldRevenue: number;
-  totalReceivedRevenue: number;
-  totalRef: number;
-  avgCostPerRef: number;
-  avgRateRefPerClick: number;
-  totalFtd: number;
-  avgCostPerFtd: number;
-  avgRateFtdPerRef: number;
-  totalTargetDailyKeyVolume: number;
-  totalTargetRef: number;
-  avgClickAchievementRate: number;
-  avgRefAchievementRate: number;
 };
 
 type MetricKey = keyof AggregatedMetrics;

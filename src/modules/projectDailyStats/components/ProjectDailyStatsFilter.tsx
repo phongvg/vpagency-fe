@@ -69,6 +69,7 @@ export default function ProjectDailyStatsFilter({
             setRangePickerValue(String(value));
             handleDateRangeChange(String(value));
           }}
+          menuPlacement='bottom'
         />
       </div>
 

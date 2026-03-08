@@ -52,3 +52,14 @@ export type ProjectStats = {
   totalTasksCompletedToday: number;
   totalSpentToday: number;
 };
+
+export type TopFinalUrlByCost = {
+  finalUrlId: string;
+  finalUrlName: string;
+  finalURL: string;
+  projectId: string;
+  projectName: string;
+  totalCost: number;
+  totalClicks: number;
+  avgCpc: number;
+};

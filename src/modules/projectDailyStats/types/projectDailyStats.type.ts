@@ -1,4 +1,3 @@
-import type { LocationStat } from "@/modules/campaign/types/campaign.type";
 import type { ApiBaseListResponse } from "@/shared/types/common/apiResponse.type";
 import type { BaseParams } from "@/shared/types/common/param.type";
 
@@ -16,53 +15,28 @@ export type ProjectDailyStatsResponse = ApiBaseListResponse<
 >;
 
 export type ProjectDailyStats = {
-  id: string;
+  finalUrlId: string;
+  finalUrlName: string;
+  finalURL: string;
   projectId: string;
   projectName: string;
-  projectStatus: string;
-  date: Date;
+  date: string;
   totalClicks: number;
   totalCost: number;
-  totalTargetCpc: number;
-  activeCountries: LocationStat[];
-  createdAt: Date;
-  totalRef: number;
-  costPerRef: number;
-  rateRefPerClick: number;
-  totalFtd: number;
-  costPerFtd: number;
-  costFtdPerRef: number;
-  totalTargetDailyKeyVolume: number;
-  totalTargetRef: number;
-  totalClickPerVolume: number;
-  totalRefPerVolume: number;
-  receivedRevenue: number;
-  holdRevenue: number;
-  profit: number;
-  roi: number;
+  totalImpression: number;
+  avgCpc: number;
 };
 
 export type ProjectDailyStatsSummary = {
+  finalUrlId: string;
+  finalUrlName: string;
+  finalURL: string;
   projectId: string;
   projectName: string;
-  totalCost: number;
   totalClicks: number;
-  avgTargetCpc: number;
-  activeCountries: string[];
-  profit: number;
-  roi: number;
-  holdRevenue: number;
-  receivedRevenue: number;
-  totalRef: number;
-  costPerRef: number;
-  rateRefPerClick: number;
-  totalFtd: number;
-  costPerFtd: number;
-  rateFtdPerRef: number;
-  totalTargetDailyKeyVolume: number;
-  totalTargetRef: number;
-  clickAchievementRate: number;
-  refAchievementRate: number;
+  totalCost: number;
+  totalImpression: number;
+  avgCpc: number;
 };
 
 export type GenerateProjectDailyStatRequest = {
