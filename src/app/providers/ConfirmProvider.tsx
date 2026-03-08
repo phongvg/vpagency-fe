@@ -47,12 +47,12 @@ export function ConfirmProvider({ children }: { children: ReactNode }) {
       <AlertDialog open={state.open} onOpenChange={handleClose}>
         <AlertDialogContent className='max-w-[340px]'>
           <AlertDialogHeader>
-            <AlertDialogTitle className='font-bold text-red-600 text-center'>{state.title}</AlertDialogTitle>
+            <AlertDialogTitle className='font-bold text-white text-lg'>{state.title}</AlertDialogTitle>
 
-            <AlertDialogDescription className='text-center'>{state.description}</AlertDialogDescription>
+            <AlertDialogDescription className='text-gray-200 text-pretty'>{state.description}</AlertDialogDescription>
           </AlertDialogHeader>
 
-          <AlertDialogFooter className='grid grid-cols-2'>
+          <AlertDialogFooter className='flex justify-end gap-2'>
             <AlertDialogCancel onClick={() => handleClose(false)}>{state.cancelText}</AlertDialogCancel>
             <AlertDialogAction onClick={() => handleClose(true)} className='text-primary'>
               {state.confirmText}
