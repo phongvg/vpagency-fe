@@ -39,6 +39,7 @@ export default function AsyncSelect<T>({ value, onChange, fetcher, mapOption, pl
 
   return (
     <AsyncPaginate
+      className='scrollbar-custom'
       styles={selectStyles}
       value={value}
       loadOptions={loadOptions}

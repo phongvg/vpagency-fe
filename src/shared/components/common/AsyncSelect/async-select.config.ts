@@ -22,7 +22,7 @@ export const selectStyles: StylesConfig<SelectOption, false> = {
     fontSize: 10,
     borderRadius: 0,
     marginTop: 8,
-    backgroundColor: "black",
+    backgroundColor: "#000000",
     backdropFilter: "blur(6px)",
     zIndex: 50,
   }),
@@ -30,7 +30,7 @@ export const selectStyles: StylesConfig<SelectOption, false> = {
   option: (base, state) => ({
     ...base,
     backgroundColor: "transparent",
-    color: state.isSelected ? "white" : "rgb(255 255 255 / 0.5)",
+    color: state.isSelected ? "#ffffff" : "rgb(255 255 255 / 0.5)",
     cursor: "pointer",
   }),
 
@@ -44,7 +44,7 @@ export const selectStyles: StylesConfig<SelectOption, false> = {
   multiValue: (base) => ({
     ...base,
     color: "rgb(255 255 255 / 0.5)",
-    backgroundColor: "white",
+    backgroundColor: "#ffffff",
     fontSize: 10,
     fontWeight: "700",
   }),
@@ -69,5 +69,25 @@ export const selectStyles: StylesConfig<SelectOption, false> = {
     ...base,
     fontSize: 10,
     color: "white",
+  }),
+
+  menuList: (base) => ({
+    ...base,
+    maxHeight: 300,
+    overflowY: "auto",
+    "&::-webkit-scrollbar": {
+      width: "4px",
+      height: "4px",
+    },
+    "&::-webkit-scrollbar-track": {
+      backgroundColor: "transparent",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "rgba(255, 255, 255, 0.2)",
+      borderRadius: "9999px",
+    },
+    "&::-webkit-scrollbar-thumb:hover": {
+      backgroundColor: "rgba(255, 255, 255, 0.3)",
+    },
   }),
 };
