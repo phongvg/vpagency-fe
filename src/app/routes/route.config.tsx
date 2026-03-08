@@ -1,4 +1,3 @@
-import ProtectedRoute from "@/app/routes/ProtectedRoute";
 import { urls } from "@/app/routes/route.constant";
 import { ForbiddenPage } from "@/modules/403";
 import { AppealAccountListPage } from "@/modules/appealAccount";
@@ -47,11 +46,7 @@ export const appRoutes: AppRoute[] = [
         path: urls.dashboard,
         title: "Dashboard",
         pageTitle: "Tổng quan hệ thống",
-        element: (
-          <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AGENCY, Role.MEMBER_AFF, Role.ACCOUNTING]}>
-            <DashboardPage />
-          </ProtectedRoute>
-        ),
+        element: <DashboardPage />,
         icon: LayoutGrid,
         showInSidebar: true,
         roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AGENCY, Role.MEMBER_AFF, Role.ACCOUNTING],
@@ -60,11 +55,7 @@ export const appRoutes: AppRoute[] = [
         path: urls.task,
         title: "Công việc",
         pageTitle: "Danh sách công việc",
-        element: (
-          <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING]}>
-            <TaskListPage />
-          </ProtectedRoute>
-        ),
+        element: <TaskListPage />,
         icon: ClipboardList,
         showInSidebar: true,
         roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
@@ -73,22 +64,14 @@ export const appRoutes: AppRoute[] = [
         path: urls.taskProgress,
         title: "Chi tiết tiến độ công việc",
         pageTitle: "Chi tiết tiến độ công việc",
-        element: (
-          <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING]}>
-            <TaskProgressDetailPage />
-          </ProtectedRoute>
-        ),
+        element: <TaskProgressDetailPage />,
         roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
       },
       {
         path: urls.campaign,
         title: "Chiến dịch",
         pageTitle: "Danh sách chiến dịch",
-        element: (
-          <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING]}>
-            <CampaignListPage />
-          </ProtectedRoute>
-        ),
+        element: <CampaignListPage />,
         icon: Megaphone,
         showInSidebar: true,
         roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
@@ -97,11 +80,7 @@ export const appRoutes: AppRoute[] = [
         path: urls.editCampaign,
         title: "Chỉnh sửa chiến dịch",
         pageTitle: "Chỉnh sửa chiến dịch",
-        element: (
-          <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING]}>
-            <CampaignEditPage />
-          </ProtectedRoute>
-        ),
+        element: <CampaignEditPage />,
         icon: Megaphone,
         showInSidebar: false,
         roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
@@ -110,11 +89,7 @@ export const appRoutes: AppRoute[] = [
         path: urls.createCampaign,
         title: "Tạo chiến dịch",
         pageTitle: "Tạo chiến dịch",
-        element: (
-          <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING]}>
-            <CampaignEditPage />
-          </ProtectedRoute>
-        ),
+        element: <CampaignEditPage />,
         icon: Megaphone,
         showInSidebar: false,
         roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
@@ -123,11 +98,7 @@ export const appRoutes: AppRoute[] = [
         path: urls.projectDailyReport,
         title: "Báo cáo tài chính",
         pageTitle: "Báo cáo tài chính",
-        element: (
-          <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.ACCOUNTING]}>
-            <ProjectDailyStatsListPage />
-          </ProtectedRoute>
-        ),
+        element: <ProjectDailyStatsListPage />,
         icon: ChartNoAxesCombined,
         showInSidebar: true,
         roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.ACCOUNTING],
@@ -144,11 +115,7 @@ export const appRoutes: AppRoute[] = [
             path: urls.user,
             title: "Tài khoản hệ thống",
             pageTitle: "Danh sách tài khoản hệ thống",
-            element: (
-              <ProtectedRoute permissions={[Role.ADMIN]}>
-                <UserListPage />
-              </ProtectedRoute>
-            ),
+            element: <UserListPage />,
             icon: Users,
             showInSidebar: true,
             roles: [Role.ADMIN],
@@ -157,11 +124,7 @@ export const appRoutes: AppRoute[] = [
             path: urls.appealAccount,
             title: "Tài khoản ADS kháng giấy",
             pageTitle: "Danh sách tài khoản ADS kháng giấy",
-            element: (
-              <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MEMBER_AFF, Role.ACCOUNTING]}>
-                <AppealAccountListPage />
-              </ProtectedRoute>
-            ),
+            element: <AppealAccountListPage />,
             icon: Users,
             showInSidebar: true,
             roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MEMBER_AFF, Role.ACCOUNTING],
@@ -180,11 +143,7 @@ export const appRoutes: AppRoute[] = [
             path: urls.gmail,
             title: "Tài khoản Gmail",
             pageTitle: "Danh sách tài khoản Gmail",
-            element: (
-              <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING]}>
-                <GmailListPage />
-              </ProtectedRoute>
-            ),
+            element: <GmailListPage />,
             icon: Mail,
             showInSidebar: true,
             roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
@@ -193,11 +152,7 @@ export const appRoutes: AppRoute[] = [
             path: urls.gmailStatus,
             title: "Trạng thái Gmail",
             pageTitle: "Danh sách trạng thái Gmail",
-            element: (
-              <ProtectedRoute permissions={[Role.ADMIN]}>
-                <GmailStatusListPage />
-              </ProtectedRoute>
-            ),
+            element: <GmailStatusListPage />,
             icon: MailCheck,
             showInSidebar: true,
             roles: [Role.ADMIN],
@@ -216,11 +171,7 @@ export const appRoutes: AppRoute[] = [
             path: urls.project,
             title: "Danh sách dự án",
             pageTitle: "Danh sách dự án",
-            element: (
-              <ProtectedRoute permissions={[Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING]}>
-                <ProjectListPage />
-              </ProtectedRoute>
-            ),
+            element: <ProjectListPage />,
             icon: FolderKanban,
             showInSidebar: true,
             roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
@@ -229,11 +180,7 @@ export const appRoutes: AppRoute[] = [
             path: urls.projectType,
             title: "Loại dự án",
             pageTitle: "Danh sách loại dự án",
-            element: (
-              <ProtectedRoute permissions={[Role.ADMIN]}>
-                <ProjectTypeListPage />
-              </ProtectedRoute>
-            ),
+            element: <ProjectTypeListPage />,
             icon: FolderTree,
             showInSidebar: true,
             roles: [Role.ADMIN],
@@ -242,11 +189,7 @@ export const appRoutes: AppRoute[] = [
             path: urls.projectStatus,
             title: "Trạng thái dự án",
             pageTitle: "Danh sách trạng thái dự án",
-            element: (
-              <ProtectedRoute permissions={[Role.ADMIN]}>
-                <ProjectStatusListPage />
-              </ProtectedRoute>
-            ),
+            element: <ProjectStatusListPage />,
             icon: ListChecks,
             showInSidebar: true,
             roles: [Role.ADMIN],
