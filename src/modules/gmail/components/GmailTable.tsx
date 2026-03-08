@@ -2,7 +2,7 @@ import { gmailColumnConfig } from "@/modules/gmail/configs/gmail-column.config";
 import { useGmails } from "@/modules/gmail/hooks/useGmails";
 import type { GmailListParams } from "@/modules/gmail/types/gmail.type";
 import { AppTable } from "@/shared/components/common/AppTable";
-import type { RowSelectionState, VisibilityState } from "@tanstack/react-table";
+import type { VisibilityState } from "@tanstack/react-table";
 import type React from "react";
 import { useMemo, useState } from "react";
 
@@ -14,7 +14,6 @@ interface GmailTableProps {
 }
 
 export default function GmailTable({ params, setParams, onEdit, onDelete }: GmailTableProps) {
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
   const { data, isLoading } = useGmails(params);
@@ -33,9 +32,6 @@ export default function GmailTable({ params, setParams, onEdit, onDelete }: Gmai
       pageCount={meta?.totalPages}
       pageSize={params.limit}
       onPageChange={(page, pageSize) => setParams((prev) => ({ ...prev, page, limit: pageSize }))}
-      enableRowSelection
-      rowSelection={rowSelection}
-      onRowSelectionChange={setRowSelection}
       enableColumnVisibility
       columnVisibility={columnVisibility}
       onColumnVisibilityChange={setColumnVisibility}
