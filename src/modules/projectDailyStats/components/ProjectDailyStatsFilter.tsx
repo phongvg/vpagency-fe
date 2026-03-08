@@ -1,14 +1,11 @@
 import type { ProjectDailyStatsListParams } from "@/modules/projectDailyStats/types/projectDailyStats.type";
-import AppButton from "@/shared/components/common/AppButton";
 import AppSelect from "@/shared/components/common/AppSelect";
 import DatePicker from "@/shared/components/common/DatePicker/DatePicker";
 import SearchInput from "@/shared/components/SearchInput";
 import { DATE_RANGE_OPTIONS } from "@/shared/constants/dateRange.constant";
 import { getDateRangeFromValue } from "@/shared/helpers/getDateRangeFromValue";
 import { useAuthStore } from "@/shared/stores/auth/useAuthStore";
-import { isAdminOrAccounting } from "@/shared/utils/permission.util";
 import { format } from "date-fns";
-import { CirclePlus } from "lucide-react";
 
 interface ProjectDailyStatsFilterProps {
   searchInput: string | undefined;
@@ -73,12 +70,12 @@ export default function ProjectDailyStatsFilter({
         />
       </div>
 
-      {isAdminOrAccounting(user?.roles) && (
+      {/* {isAdminOrAccounting(user?.roles) && (
         <AppButton size='sm' variant='outline' onClick={onOpenModal}>
           <CirclePlus />
           Tạo báo cáo
         </AppButton>
-      )}
+      )} */}
     </div>
   );
 }

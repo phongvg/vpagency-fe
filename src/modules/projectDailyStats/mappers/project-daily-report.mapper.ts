@@ -5,7 +5,6 @@ import type {
   ProjectDailyStats,
   UpdateProjectDailyStatRequest,
 } from "@/modules/projectDailyStats/types/projectDailyStats.type";
-import { fixedNumber } from "@/shared/utils/common.util";
 import { format } from "date-fns";
 
 export const transformProjectDailyReportToFormStep1 = (): ProjectDailyReportStep1Type => ({
@@ -19,25 +18,43 @@ export const transformFormToProjectDailyReportStep1 = (formData: ProjectDailyRep
 });
 
 export const transformProjectDailyReportToFormStep2 = (report?: ProjectDailyStats | undefined): ProjectDailyReportStep2Type => ({
-  totalTargetDailyKeyVolume: report?.totalTargetDailyKeyVolume ?? 0,
-  totalClicks: report?.totalClicks ?? 0,
-  totalTargetCpc: report?.totalTargetCpc ?? 0,
-  totalCost: report?.totalCost ?? 0,
+  // totalTargetDailyKeyVolume: report?.totalTargetDailyKeyVolume ?? 0,
+  // totalClicks: report?.totalClicks ?? 0,
+  // totalTargetCpc: report?.totalTargetCpc ?? 0,
+  // totalCost: report?.totalCost ?? 0,
 
-  totalRef: report?.totalRef ?? 0,
-  totalFtd: report?.totalFtd ?? 0,
-  totalTargetRef: report?.totalTargetRef ?? 0,
-  receivedRevenue: report?.receivedRevenue ?? 0,
-  holdRevenue: report?.holdRevenue ?? 0,
+  // totalRef: report?.totalRef ?? 0,
+  // totalFtd: report?.totalFtd ?? 0,
+  // totalTargetRef: report?.totalTargetRef ?? 0,
+  // receivedRevenue: report?.receivedRevenue ?? 0,
+  // holdRevenue: report?.holdRevenue ?? 0,
 
-  costPerRef: fixedNumber(report?.costPerRef),
-  rateRefPerClick: fixedNumber(report?.rateRefPerClick),
-  costPerFtd: fixedNumber(report?.costPerFtd),
-  costFtdPerRef: fixedNumber(report?.costFtdPerRef),
-  totalClickPerVolume: fixedNumber(report?.totalClickPerVolume),
-  totalRefPerVolume: fixedNumber(report?.totalRefPerVolume),
-  profit: fixedNumber(report?.profit),
-  roi: fixedNumber(report?.roi),
+  // costPerRef: fixedNumber(report?.costPerRef),
+  // rateRefPerClick: fixedNumber(report?.rateRefPerClick),
+  // costPerFtd: fixedNumber(report?.costPerFtd),
+  // costFtdPerRef: fixedNumber(report?.costFtdPerRef),
+  // totalClickPerVolume: fixedNumber(report?.totalClickPerVolume),
+  // totalRefPerVolume: fixedNumber(report?.totalRefPerVolume),
+  // profit: fixedNumber(report?.profit),
+  // roi: fixedNumber(report?.roi),
+
+  totalTargetDailyKeyVolume: 0,
+  totalClicks: 0,
+  totalTargetCpc: 0,
+  totalCost: 0,
+  totalRef: 0,
+  totalFtd: 0,
+  totalTargetRef: 0,
+  receivedRevenue: 0,
+  holdRevenue: 0,
+  costPerRef: 0,
+  rateRefPerClick: 0,
+  costPerFtd: 0,
+  costFtdPerRef: 0,
+  totalClickPerVolume: 0,
+  totalRefPerVolume: 0,
+  profit: 0,
+  roi: 0,
 });
 
 export const transformProjectDailyReportToPayloadStep2 = (formData: ProjectDailyReportStep2Type): UpdateProjectDailyStatRequest => ({
