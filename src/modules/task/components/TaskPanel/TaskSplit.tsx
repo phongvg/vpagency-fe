@@ -5,6 +5,7 @@ import { useTasks } from "@/modules/task/hooks/useTasks";
 import type { Task, TaskDocumentAppealDetail, TaskListParams, TaskResearchDetail } from "@/modules/task/types/task.type";
 import AppButton from "@/shared/components/common/AppButton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
+import { DEFAULT_PAGE_SIZE } from "@/shared/constants/pageSize.constant";
 import type { SelectOption } from "@/shared/types/common/select-option.type";
 import { Funnel } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -30,7 +31,7 @@ export default function TaskSplit({
 }: TaskSplitProps) {
   const [params, setParams] = useState<TaskListParams>({
     page: 1,
-    limit: 10,
+    limit: DEFAULT_PAGE_SIZE,
     search: undefined,
     type: undefined,
     status: undefined,
@@ -45,10 +46,10 @@ export default function TaskSplit({
   const [assignedUserSelect, setAssignedUserSelect] = useState<SelectOption | null>(null);
   const [creatorSelect, setCreatorSelect] = useState<SelectOption | null>(null);
 
-  const { data, isLoading } = useTasks({ ...params });
+  const { data: taskData, isLoading } = useTasks({ ...params });
 
-  const tasks = useMemo(() => data?.items || [], [data]);
-  const meta = useMemo(() => data?.meta, [data]);
+  const tasks = useMemo(() => taskData?.items || [], [taskData]);
+  const meta = useMemo(() => taskData?.meta, [taskData]);
 
   return (
     <div className='flex flex-col flex-1 gap-2 h-full max-h-[calc(100vh-100px)]'>

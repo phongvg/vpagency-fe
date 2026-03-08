@@ -25,7 +25,7 @@ export const TaskStatusMap: Record<TaskStatus, string> = {
   [TaskStatus.PENDING]: "Chờ xử lý",
   [TaskStatus.IN_PROGRESS]: "Đang tiến hành",
   [TaskStatus.COMPLETED]: "Hoàn thành",
-  [TaskStatus.CANCELLED]: "Đã hủy",
+  [TaskStatus.OVERDUE]: "Trễ deadline",
 };
 
 export const statusOptions = Object.entries(TaskStatusMap).map(([value, label]) => ({
@@ -49,33 +49,33 @@ export const frequencyOptions = Object.entries(TaskFrequencyMap).map(([value, la
 }));
 
 export const TaskStatusBgClassMap: Record<TaskStatus, string> = {
-  [TaskStatus.PENDING]: "bg-gray-50",
-  [TaskStatus.IN_PROGRESS]: "bg-blue-50",
-  [TaskStatus.COMPLETED]: "bg-green-50",
-  [TaskStatus.CANCELLED]: "bg-red-50",
+  [TaskStatus.PENDING]: "bg-gray-400/10",
+  [TaskStatus.IN_PROGRESS]: "bg-yellow-400/10",
+  [TaskStatus.COMPLETED]: "bg-green-400/10",
+  [TaskStatus.OVERDUE]: "bg-red-400/10",
 };
 
 export const TaskStatusTextClassMap: Record<TaskStatus, string> = {
-  [TaskStatus.PENDING]: "text-gray-700",
-  [TaskStatus.IN_PROGRESS]: "text-blue-700",
-  [TaskStatus.COMPLETED]: "text-green-700",
-  [TaskStatus.CANCELLED]: "text-red-700",
+  [TaskStatus.PENDING]: "text-gray-400",
+  [TaskStatus.IN_PROGRESS]: "text-yellow-400",
+  [TaskStatus.COMPLETED]: "text-green-400",
+  [TaskStatus.OVERDUE]: "text-red-400",
 };
 
 export const TaskTypeColorMap: Record<TaskType, string> = {
-  [TaskType.SET_CAMPAIGN]: "text-rose-400",
-  [TaskType.LAUNCH_CAMPAIGN]: "text-green-600",
-  [TaskType.NURTURE_ACCOUNT]: "text-fuchsia-300",
-  [TaskType.APPEAL_ACCOUNT]: "text-red-600",
-  [TaskType.DOCUMENT_APPEAL]: "text-orange-600",
-  [TaskType.RESEARCH]: "text-yellow-600",
+  [TaskType.SET_CAMPAIGN]: "text-blue-400",
+  [TaskType.LAUNCH_CAMPAIGN]: "text-green-400",
+  [TaskType.NURTURE_ACCOUNT]: "text-fuchsia-400",
+  [TaskType.APPEAL_ACCOUNT]: "text-rose-400",
+  [TaskType.DOCUMENT_APPEAL]: "text-orange-400",
+  [TaskType.RESEARCH]: "text-yellow-400",
 };
 
 export const TaskTypeBgColorMap: Record<TaskType, string> = {
-  [TaskType.SET_CAMPAIGN]: "bg-rose-400",
-  [TaskType.LAUNCH_CAMPAIGN]: "bg-green-600",
-  [TaskType.NURTURE_ACCOUNT]: "bg-fuchsia-300",
-  [TaskType.APPEAL_ACCOUNT]: "bg-red-600",
-  [TaskType.DOCUMENT_APPEAL]: "bg-orange-600",
-  [TaskType.RESEARCH]: "bg-yellow-600",
+  [TaskType.SET_CAMPAIGN]: "bg-blue-400",
+  [TaskType.LAUNCH_CAMPAIGN]: "bg-green-400",
+  [TaskType.NURTURE_ACCOUNT]: "bg-fuchsia-400",
+  [TaskType.APPEAL_ACCOUNT]: "bg-rose-400",
+  [TaskType.DOCUMENT_APPEAL]: "bg-orange-400",
+  [TaskType.RESEARCH]: "bg-yellow-400",
 };

@@ -1,5 +1,5 @@
 import { TaskStatus, type Task } from "@/modules/task/types/task.type";
-import { getDeadlineInfo } from "@/modules/task/utils/deadline.util";
+import { getDeadlineColor, getDeadlineInfo } from "@/modules/task/utils/deadline.util";
 import { TaskTypeBgColorMap, TaskTypeColorMap, TaskTypeMap } from "@/modules/task/utils/task.util";
 import { Card, CardContent } from "@/shared/components/Card/Card";
 import { Badge } from "@/shared/components/ui/badge";
@@ -37,7 +37,7 @@ export default function TaskBoardCard({ task, onClick }: TaskBoardCardProps) {
               <div
                 className={cn(
                   "flex items-center gap-1.5 px-2 py-1 rounded-full text-xs transition-all duration-300",
-                  TaskTypeColorMap[task.type],
+                  getDeadlineColor(deadlineInfo.daysLeft, deadlineInfo.isOverdue),
                   deadlineInfo.shouldPulse && "animate-pulse-slow"
                 )}>
                 {deadlineInfo.isOverdue ? <Clock className='w-3 h-3' /> : <Calendar className='w-3 h-3' />}

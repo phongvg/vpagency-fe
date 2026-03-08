@@ -7,15 +7,15 @@ export const TaskStatus = {
   PENDING: "PENDING",
   IN_PROGRESS: "IN_PROGRESS",
   COMPLETED: "COMPLETED",
-  CANCELLED: "CANCELLED",
+  OVERDUE: "OVERDUE",
 };
 
 export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus];
 
 export const TaskType = {
-  SET_CAMPAIGN: "SET_CAMPAIGN",
-  LAUNCH_CAMPAIGN: "LAUNCH_CAMPAIGN",
-  NURTURE_ACCOUNT: "NURTURE_ACCOUNT",
+  SET_CAMPAIGN: "SET_CAMPAIGN", // Lên camp
+  LAUNCH_CAMPAIGN: "LAUNCH_CAMPAIGN", // Duy trì camp
+  NURTURE_ACCOUNT: "NURTURE_ACCOUNT", // Nuôi tài khoản
   APPEAL_ACCOUNT: "APPEAL_ACCOUNT", // Kháng tài khoản
   DOCUMENT_APPEAL: "DOCUMENT_APPEAL", // Kháng giấy
   RESEARCH: "RESEARCH", // Nghiên cứu
@@ -98,7 +98,7 @@ export type TasksGroupedByStatus = {
   PENDING: Task[];
   IN_PROGRESS: Task[];
   COMPLETED: Task[];
-  CANCELLED: Task[];
+  OVERDUE: Task[];
 };
 
 export type TaskAppealDetail = {

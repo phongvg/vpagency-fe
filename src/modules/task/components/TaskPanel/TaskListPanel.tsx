@@ -1,6 +1,6 @@
 import { urls } from "@/app/routes/route.constant";
 import type { Task, TaskListParams } from "@/modules/task/types/task.type";
-import { getDeadlineInfo } from "@/modules/task/utils/deadline.util";
+import { getDeadlineColor, getDeadlineInfo } from "@/modules/task/utils/deadline.util";
 import { TaskTypeBgColorMap, TaskTypeColorMap, TaskTypeMap } from "@/modules/task/utils/task.util";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
 import AppLoading from "@/shared/components/common/AppLoading";
@@ -72,7 +72,7 @@ export default function TaskListPanel({ params, setParams, tasks, meta, loading 
                       <div
                         className={cn(
                           "flex flex-shrink-0 items-center gap-1 px-2 py-0.5 rounded-full text-[10px] transition-all duration-300",
-                          TaskTypeColorMap[task.type],
+                          getDeadlineColor(deadlineInfo.daysLeft, deadlineInfo.isOverdue),
                           deadlineInfo.shouldPulse && "animate-pulse-slow"
                         )}>
                         {deadlineInfo.isOverdue ? <Clock className='w-3 h-3' /> : <Calendar className='w-3 h-3' />}

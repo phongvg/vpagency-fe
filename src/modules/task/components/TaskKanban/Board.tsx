@@ -16,7 +16,7 @@ const STATUS_COLUMNS: readonly { status: TaskStatus; label: string }[] = [
   { status: TaskStatus.PENDING, label: TaskStatusMap[TaskStatus.PENDING] },
   { status: TaskStatus.IN_PROGRESS, label: TaskStatusMap[TaskStatus.IN_PROGRESS] },
   { status: TaskStatus.COMPLETED, label: TaskStatusMap[TaskStatus.COMPLETED] },
-  { status: TaskStatus.CANCELLED, label: TaskStatusMap[TaskStatus.CANCELLED] },
+  { status: TaskStatus.OVERDUE, label: TaskStatusMap[TaskStatus.OVERDUE] },
 ] as const;
 
 interface BoardProps {
@@ -53,7 +53,7 @@ export default function Board({
       [TaskStatus.PENDING]: tasksByStatus.PENDING?.length || 0,
       [TaskStatus.IN_PROGRESS]: tasksByStatus.IN_PROGRESS?.length || 0,
       [TaskStatus.COMPLETED]: tasksByStatus.COMPLETED?.length || 0,
-      [TaskStatus.CANCELLED]: tasksByStatus.CANCELLED?.length || 0,
+      [TaskStatus.OVERDUE]: tasksByStatus.OVERDUE?.length || 0,
     };
   }, [tasksByStatus]);
 
@@ -92,16 +92,11 @@ export default function Board({
               style={{ animationDelay: `${columnIndex * 100}ms` }}
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, status)}>
-              <CardHeader className='pb-3'>
+              <CardHeader>
                 <CardTitle className='flex justify-between items-center'>
                   <span>{label}</span>
-                  <span
-                    className={cn(
-                      "px-2.5 py-1 rounded-full font-normal text-sm transition-all duration-300",
-                      "bg-primary/10 text-primary",
-                      count > 0 && "animate-in zoom-in-50"
-                    )}>
-                    {count}
+                  <span className={cn("py-1 rounded-full font-normal text-sm transition-all duration-300", count > 0 && "animate-in zoom-in-50")}>
+                    ({count})
                   </span>
                 </CardTitle>
               </CardHeader>
