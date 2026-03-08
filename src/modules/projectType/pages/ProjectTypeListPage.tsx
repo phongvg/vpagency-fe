@@ -3,6 +3,7 @@ import ProjectTypeTable from "@/modules/projectType/components/ProjectTypeTable"
 import type { ProjectTypeListParams } from "@/modules/projectType/types/projectType.type";
 import AppButton from "@/shared/components/common/AppButton";
 import SearchInput from "@/shared/components/SearchInput";
+import { DEFAULT_PAGE_SIZE } from "@/shared/constants/pageSize.constant";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { PlusCircle } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
@@ -12,7 +13,7 @@ export default function ProjectTypeListPage() {
   const [selectedProjectTypeId, setSelectedProjectTypeId] = useState<string | null>(null);
   const [params, setParams] = useState<ProjectTypeListParams>({
     page: 1,
-    limit: 10,
+    limit: DEFAULT_PAGE_SIZE,
     search: undefined,
   });
   const [searchInput, setSearchInput] = useState<string | undefined>(undefined);

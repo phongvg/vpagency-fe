@@ -6,6 +6,7 @@ import ImportGmailButton from "@/modules/campaign/components/ImportGmailButton";
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
 import AppButton from "@/shared/components/common/AppButton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
+import { DEFAULT_PAGE_SIZE } from "@/shared/constants/pageSize.constant";
 import { Funnel, Plus } from "lucide-react";
 import { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +17,7 @@ export default function CampaignListPage() {
   const [isOpenFilter, setIsOpenFilter] = useState(false);
   const [params, setParams] = useState<CampaignListParams>({
     page: 1,
-    limit: 10,
+    limit: DEFAULT_PAGE_SIZE,
     dateFrom: undefined,
     dateTo: undefined,
     externalId: undefined,
@@ -26,6 +27,8 @@ export default function CampaignListPage() {
     importAtTo: undefined,
     uid: undefined,
   });
+  const [importRangePickerValue, setImportRangePickerValue] = useState<string | null>(null);
+  const [rangePickerValue, setRangePickerValue] = useState<string | null>(null);
 
   return (
     <Fragment>
@@ -39,7 +42,14 @@ export default function CampaignListPage() {
           </PopoverTrigger>
 
           <PopoverContent className='p-0'>
-            <CampaignListFilter params={params} setParams={setParams} />
+            <CampaignListFilter
+              params={params}
+              setParams={setParams}
+              importRangePickerValue={importRangePickerValue}
+              setImportRangePickerValue={setImportRangePickerValue}
+              rangePickerValue={rangePickerValue}
+              setRangePickerValue={setRangePickerValue}
+            />
           </PopoverContent>
         </Popover>
 

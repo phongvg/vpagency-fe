@@ -5,6 +5,7 @@ import { useDeleteGmail } from "@/modules/gmail/hooks/useDeleteGmail";
 import type { GmailListParams } from "@/modules/gmail/types/gmail.type";
 import AppButton from "@/shared/components/common/AppButton";
 import SearchInput from "@/shared/components/SearchInput";
+import { DEFAULT_PAGE_SIZE } from "@/shared/constants/pageSize.constant";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { CirclePlus } from "lucide-react";
@@ -13,7 +14,7 @@ import { Fragment, useEffect, useState } from "react";
 export default function GmailListPage() {
   const [params, setParams] = useState<GmailListParams>({
     page: 1,
-    limit: 10,
+    limit: DEFAULT_PAGE_SIZE,
     search: undefined,
   });
   const [searchInput, setSearchInput] = useState<string | undefined>(undefined);

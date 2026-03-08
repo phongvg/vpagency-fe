@@ -8,6 +8,7 @@ import AppButton from "@/shared/components/common/AppButton";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
+import { DEFAULT_PAGE_SIZE } from "@/shared/constants/pageSize.constant";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import type { RowSelectionState, VisibilityState } from "@tanstack/react-table";
 import { Funnel } from "lucide-react";
@@ -27,7 +28,7 @@ export default function CampaignStatsModal({ open, onClose, taskId, finalUrlId }
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [params, setParams] = useState<CampaignListParams>({
     page: 1,
-    limit: 10,
+    limit: DEFAULT_PAGE_SIZE,
     uid: undefined,
     externalId: undefined,
     gmail: undefined,
@@ -37,6 +38,8 @@ export default function CampaignStatsModal({ open, onClose, taskId, finalUrlId }
     importAtFrom: undefined,
     importAtTo: undefined,
   });
+  const [importRangePickerValue, setImportRangePickerValue] = useState<string | null>(null);
+  const [rangePickerValue, setRangePickerValue] = useState<string | null>(null);
 
   const { confirm } = useConfirm();
 
@@ -146,8 +149,15 @@ export default function CampaignStatsModal({ open, onClose, taskId, finalUrlId }
                 </AppButton>
               </PopoverTrigger>
 
-              <PopoverContent className='p-0'>
-                <CampaignListFilter params={params} setParams={setParams} />
+              <PopoverContent className='p-0' side='right' align='center'>
+                <CampaignListFilter
+                  params={params}
+                  setParams={setParams}
+                  importRangePickerValue={importRangePickerValue}
+                  setImportRangePickerValue={setImportRangePickerValue}
+                  rangePickerValue={rangePickerValue}
+                  setRangePickerValue={setRangePickerValue}
+                />
               </PopoverContent>
             </Popover>
           </div>

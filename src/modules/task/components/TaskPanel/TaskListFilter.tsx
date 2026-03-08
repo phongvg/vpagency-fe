@@ -9,6 +9,8 @@ import AppInput from "@/shared/components/common/AppInput";
 import AppSelect from "@/shared/components/common/AppSelect";
 import AsyncSelect from "@/shared/components/common/AsyncSelect";
 import DatePicker from "@/shared/components/common/DatePicker/DatePicker";
+import { DATE_RANGE_OPTIONS } from "@/shared/constants/dateRange.constant";
+import { getDateRangeFromValue } from "@/shared/helpers/getDateRangeFromValue";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import type { SelectOption } from "@/shared/types/common/select-option.type";
 import { createAsyncSelectFetcher } from "@/shared/utils/async-select.util";
@@ -51,6 +53,19 @@ export default function TaskListFilter({
       setParams((prev) => ({ ...prev, search: debouncedSearch, page: 1 }));
     }
   }, [debouncedSearch, params.search, setParams]);
+
+  const handleDateRangeChange = (value: string | null) => {
+    if (!value) return;
+
+    const dateRange = getDateRangeFromValue(value);
+
+    setParams((prev) => ({
+      ...prev,
+      fromDate: dateRange.fromDate,
+      toDate: dateRange.toDate,
+      page: 1,
+    }));
+  };
 
   return (
     <Card>
@@ -128,6 +143,13 @@ export default function TaskListFilter({
               setAssignedUserSelect(value as SelectOption | null);
               setParams((prev) => ({ ...prev, assignedUserId: Array.isArray(value) ? undefined : value ? value.value : undefined, page: 1 }));
             }}
+          />
+
+          <AppSelect
+            label='Khoảng thời gian'
+            placeholder='Chọn khoảng thời gian'
+            options={DATE_RANGE_OPTIONS}
+            onValueChange={(value) => handleDateRangeChange(String(value))}
           />
 
           <DatePicker

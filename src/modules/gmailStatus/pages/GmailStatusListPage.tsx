@@ -3,6 +3,7 @@ import GmailStatusTable from "@/modules/gmailStatus/components/GmailStatusTable"
 import type { GmailStatusListParams } from "@/modules/gmailStatus/types/gmailStatus.type";
 import AppButton from "@/shared/components/common/AppButton";
 import SearchInput from "@/shared/components/SearchInput";
+import { DEFAULT_PAGE_SIZE } from "@/shared/constants/pageSize.constant";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { PlusCircle } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
@@ -12,7 +13,7 @@ export default function GmailStatusListPage() {
   const [selectedGmailStatusId, setSelectedGmailStatusId] = useState<string | null>(null);
   const [params, setParams] = useState<GmailStatusListParams>({
     page: 1,
-    limit: 10,
+    limit: DEFAULT_PAGE_SIZE,
     search: undefined,
   });
   const [searchInput, setSearchInput] = useState<string | undefined>(undefined);

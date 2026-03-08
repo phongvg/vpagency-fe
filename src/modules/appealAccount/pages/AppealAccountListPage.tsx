@@ -5,6 +5,7 @@ import ImportAppealAccountButton from "@/modules/appealAccount/components/Import
 import type { AppealAccountListParams } from "@/modules/appealAccount/types/appealAccount.type";
 import AppButton from "@/shared/components/common/AppButton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
+import { DEFAULT_PAGE_SIZE } from "@/shared/constants/pageSize.constant";
 import { Funnel, PlusCircle } from "lucide-react";
 import { Fragment, useState } from "react";
 
@@ -13,7 +14,7 @@ export default function AppealAccountListPage() {
   const [selectedAppealAccountId, setSelectedAppealAccountId] = useState<string | null>(null);
   const [params, setParams] = useState<AppealAccountListParams>({
     page: 1,
-    limit: 10,
+    limit: DEFAULT_PAGE_SIZE,
     search: undefined,
     email: undefined,
     uid: undefined,

@@ -1,7 +1,10 @@
 import type { ProjectDailyStatsListParams } from "@/modules/projectDailyStats/types/projectDailyStats.type";
 import AppButton from "@/shared/components/common/AppButton";
+import AppSelect from "@/shared/components/common/AppSelect";
 import DatePicker from "@/shared/components/common/DatePicker/DatePicker";
 import SearchInput from "@/shared/components/SearchInput";
+import { DATE_RANGE_OPTIONS } from "@/shared/constants/dateRange.constant";
+import { getDateRangeFromValue } from "@/shared/helpers/getDateRangeFromValue";
 import { useAuthStore } from "@/shared/stores/auth/useAuthStore";
 import { isAdminOrAccounting } from "@/shared/utils/permission.util";
 import { format } from "date-fns";
@@ -12,11 +15,34 @@ interface ProjectDailyStatsFilterProps {
   setSearchInput: React.Dispatch<React.SetStateAction<string | undefined>>;
   params: ProjectDailyStatsListParams;
   setParams: React.Dispatch<React.SetStateAction<ProjectDailyStatsListParams>>;
+  rangePickerValue: string | null;
+  setRangePickerValue: React.Dispatch<React.SetStateAction<string | null>>;
   onOpenModal: () => void;
 }
 
-export default function ProjectDailyStatsFilter({ searchInput, setSearchInput, params, setParams, onOpenModal }: ProjectDailyStatsFilterProps) {
+export default function ProjectDailyStatsFilter({
+  searchInput,
+  setSearchInput,
+  params,
+  setParams,
+  rangePickerValue,
+  setRangePickerValue,
+  onOpenModal,
+}: ProjectDailyStatsFilterProps) {
   const { user } = useAuthStore();
+
+  const handleDateRangeChange = (value: string | null) => {
+    if (!value) return;
+
+    const dateRange = getDateRangeFromValue(value);
+
+    setParams((prev) => ({
+      ...prev,
+      fromDate: dateRange.fromDate,
+      toDate: dateRange.toDate,
+      page: 1,
+    }));
+  };
 
   return (
     <div className='flex justify-between items-center mb-4'>
@@ -33,6 +59,16 @@ export default function ProjectDailyStatsFilter({ searchInput, setSearchInput, p
           value={params.toDate ? format(new Date(params.toDate), "yyyy-MM-dd") : undefined}
           onChange={(date) => setParams((prev) => ({ ...prev, toDate: date ? format(date, "yyyy-MM-dd") : undefined, page: 1 }))}
           placeholder='Đến ngày'
+        />
+
+        <AppSelect
+          placeholder='Chọn khoảng thời gian'
+          options={DATE_RANGE_OPTIONS}
+          value={rangePickerValue}
+          onValueChange={(value) => {
+            setRangePickerValue(String(value));
+            handleDateRangeChange(String(value));
+          }}
         />
       </div>
 

@@ -6,6 +6,7 @@ import { useDeleteProjectDailyReport } from "@/modules/projectDailyStats/hooks/u
 import { useProjectDailyStats } from "@/modules/projectDailyStats/hooks/useProjectDailyStats";
 import type { ProjectDailyStatsListParams } from "@/modules/projectDailyStats/types/projectDailyStats.type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { DEFAULT_PAGE_SIZE } from "@/shared/constants/pageSize.constant";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { useEffect, useState } from "react";
@@ -13,12 +14,13 @@ import { useEffect, useState } from "react";
 export default function ProjectDailyStatsListPage() {
   const [params, setParams] = useState<ProjectDailyStatsListParams>({
     page: 1,
-    limit: 10,
+    limit: DEFAULT_PAGE_SIZE,
     fromDate: undefined,
     toDate: undefined,
     projectName: undefined,
   });
   const [searchInput, setSearchInput] = useState<string | undefined>(undefined);
+  const [rangePickerValue, setRangePickerValue] = useState<string | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [projectDailyReportId, setProjectDailyReportId] = useState<string | null>(null);
 
@@ -59,6 +61,8 @@ export default function ProjectDailyStatsListPage() {
       <ProjectDailyStatsFilter
         searchInput={searchInput}
         setSearchInput={setSearchInput}
+        rangePickerValue={rangePickerValue}
+        setRangePickerValue={setRangePickerValue}
         params={params}
         setParams={setParams}
         onOpenModal={() => handleOpenEditModal(null)}

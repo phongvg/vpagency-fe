@@ -4,6 +4,7 @@ import { useDeleteProject } from "@/modules/project/hooks/useDeleteProject";
 import type { ProjectListParams } from "@/modules/project/types/project.type";
 import AppButton from "@/shared/components/common/AppButton";
 import SearchInput from "@/shared/components/SearchInput";
+import { DEFAULT_PAGE_SIZE } from "@/shared/constants/pageSize.constant";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { CirclePlus } from "lucide-react";
@@ -12,7 +13,7 @@ import { Fragment, useEffect, useState } from "react";
 export default function ProjectListPage() {
   const [params, setParams] = useState<ProjectListParams>({
     page: 1,
-    limit: 10,
+    limit: DEFAULT_PAGE_SIZE,
     search: undefined,
   });
   const [searchInput, setSearchInput] = useState<string | undefined>(undefined);

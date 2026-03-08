@@ -4,6 +4,7 @@ import { useTasks } from "@/modules/task/hooks/useTasks";
 import type { TaskListParams } from "@/modules/task/types/task.type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
 import { AppTable } from "@/shared/components/common/AppTable";
+import { DEFAULT_PAGE_SIZE } from "@/shared/constants/pageSize.constant";
 import { useCountUp } from "@/shared/hooks/useCountUp";
 import { useAuthStore } from "@/shared/stores/auth/useAuthStore";
 import { useMemo, useState } from "react";
@@ -12,7 +13,7 @@ import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAx
 export default function TaskStats() {
   const [params, setParams] = useState<TaskListParams>({
     page: 1,
-    limit: 10,
+    limit: DEFAULT_PAGE_SIZE,
     search: undefined,
     type: undefined,
     status: undefined,

@@ -3,6 +3,7 @@ import EditUserModal from "@/modules/user/components/EditUserModal";
 import UserTable from "@/modules/user/components/UserTable";
 import type { UserListParams } from "@/modules/user/types/user.type";
 import SearchInput from "@/shared/components/SearchInput";
+import { DEFAULT_PAGE_SIZE } from "@/shared/constants/pageSize.constant";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { Fragment, useEffect, useState } from "react";
 
@@ -12,7 +13,7 @@ export default function UserListPage() {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [params, setParams] = useState<UserListParams>({
     page: 1,
-    limit: 10,
+    limit: DEFAULT_PAGE_SIZE,
     search: undefined,
   });
   const [searchInput, setSearchInput] = useState<string | undefined>(undefined);

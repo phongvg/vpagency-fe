@@ -32,6 +32,7 @@ export const selectStyles: StylesConfig<SelectOption, false> = {
     backgroundColor: "transparent",
     color: state.isSelected ? "#ffffff" : "rgb(255 255 255 / 0.5)",
     cursor: "pointer",
+    textTransform: "none",
   }),
 
   placeholder: (base) => ({
@@ -63,6 +64,7 @@ export const selectStyles: StylesConfig<SelectOption, false> = {
     ...base,
     fontSize: 10,
     color: "rgb(255 255 255 / 0.5)",
+    textTransform: "none",
   }),
 
   input: (base) => ({

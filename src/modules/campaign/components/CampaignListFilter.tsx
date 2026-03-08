@@ -1,7 +1,10 @@
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
 import AppInput from "@/shared/components/common/AppInput";
+import AppSelect from "@/shared/components/common/AppSelect";
 import DatePicker from "@/shared/components/common/DatePicker/DatePicker";
+import { DATE_RANGE_OPTIONS } from "@/shared/constants/dateRange.constant";
+import { getDateRangeFromValue } from "@/shared/helpers/getDateRangeFromValue";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { removeDash } from "@/shared/utils/common.util";
 import { format } from "date-fns";
@@ -10,9 +13,20 @@ import { useEffect, useState } from "react";
 interface CampaignListFilterProps {
   params: CampaignListParams;
   setParams: React.Dispatch<React.SetStateAction<CampaignListParams>>;
+  importRangePickerValue: string | null;
+  setImportRangePickerValue: React.Dispatch<React.SetStateAction<string | null>>;
+  rangePickerValue: string | null;
+  setRangePickerValue: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export default function CampaignListFilter({ params, setParams }: CampaignListFilterProps) {
+export default function CampaignListFilter({
+  params,
+  setParams,
+  importRangePickerValue,
+  setImportRangePickerValue,
+  rangePickerValue,
+  setRangePickerValue,
+}: CampaignListFilterProps) {
   const [uidInput, setUidInput] = useState<string | undefined>(params.uid);
   const [campaignIdInput, setCampaignIdInput] = useState<string | undefined>(params.externalId);
   const [gmailInput, setGmailInput] = useState<string | undefined>(params.gmail);
@@ -63,6 +77,32 @@ export default function CampaignListFilter({ params, setParams }: CampaignListFi
     }
   }, [debouncedUrl, params.finalUrl, setParams]);
 
+  const handleImportDateRangeChange = (value: string | null) => {
+    if (!value) return;
+
+    const dateRange = getDateRangeFromValue(value);
+
+    setParams((prev) => ({
+      ...prev,
+      importAtFrom: dateRange.fromDate,
+      importAtTo: dateRange.toDate,
+      page: 1,
+    }));
+  };
+
+  const handleDateRangeChange = (value: string | null) => {
+    if (!value) return;
+
+    const dateRange = getDateRangeFromValue(value);
+
+    setParams((prev) => ({
+      ...prev,
+      dateFrom: dateRange.fromDate,
+      dateTo: dateRange.toDate,
+      page: 1,
+    }));
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -71,6 +111,18 @@ export default function CampaignListFilter({ params, setParams }: CampaignListFi
 
       <CardContent>
         <div className='flex flex-col gap-2'>
+          <AppSelect
+            label='Khoảng thời gian nhập dữ liệu'
+            placeholder='Chọn khoảng thời gian'
+            options={DATE_RANGE_OPTIONS}
+            value={importRangePickerValue}
+            onValueChange={(value) => {
+              setImportRangePickerValue(String(value));
+              handleImportDateRangeChange(String(value));
+            }}
+            menuPlacement='bottom'
+          />
+
           <DatePicker
             label='Ngày nhập dữ liệu từ'
             value={params.importAtFrom}
@@ -81,6 +133,18 @@ export default function CampaignListFilter({ params, setParams }: CampaignListFi
             label='Ngày nhập dữ liệu đến'
             value={params.importAtTo}
             onChange={(date) => setParams((prev) => ({ ...prev, importAtTo: date ? format(date, "yyyy-MM-dd") : undefined, page: 1 }))}
+          />
+
+          <AppSelect
+            label='Khoảng thời gian dữ liệu'
+            placeholder='Chọn khoảng thời gian'
+            options={DATE_RANGE_OPTIONS}
+            value={rangePickerValue}
+            onValueChange={(value) => {
+              setRangePickerValue(String(value));
+              handleDateRangeChange(String(value));
+            }}
+            menuPlacement='bottom'
           />
 
           <DatePicker
