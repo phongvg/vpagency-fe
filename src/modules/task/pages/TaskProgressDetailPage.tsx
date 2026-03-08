@@ -21,16 +21,14 @@ export default function TaskProgressDetailPage() {
 
   const { data: taskProgressDetail, isLoading } = useTaskProgressDetail(taskId);
 
-  if (taskProgressDetail?.finalUrls.length === 0 && !isLoading) {
-    return <EmptyTaskProgressDetail />;
-  }
-
   return (
     <div className='space-y-4'>
       <AppButton variant='ghost' size='sm' onClick={() => navigate(-1)} className='gap-1 p-0'>
         <ArrowLeft className='w-4 h-4' />
         Quay lại
       </AppButton>
+
+      {taskProgressDetail?.finalUrls.length === 0 && !isLoading && <EmptyTaskProgressDetail />}
 
       {taskProgressDetail?.finalUrls.map((finalUrl) => (
         <div key={finalUrl.id} className='gap-4 grid grid-cols-3'>
