@@ -11,7 +11,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/
 import { useConfirm } from "@/shared/contexts/ConfirmContext";
 import type { RowSelectionState, VisibilityState } from "@tanstack/react-table";
 import { Funnel } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
 interface CampaignStatsModalProps {
@@ -40,12 +40,18 @@ export default function CampaignStatsModal({ open, onClose, taskId, finalUrlId }
 
   const { confirm } = useConfirm();
 
-  const { data: campaignStats, isLoading } = useCampaignStatsFinalUrl({ taskId, finalUrlId, params });
+  const { data: campaignStats, refetch, isLoading } = useCampaignStatsFinalUrl({ taskId, finalUrlId, params });
   const campaigns = useMemo(() => campaignStats?.data.items || [], [campaignStats]);
   const meta = useMemo(() => campaignStats?.data.meta, [campaignStats]);
 
   const assignCampaignToFinalUrl = useAssignCampaignToFinalUrl();
   const removeCampaignFromFinalUrl = useRemoveCampaignFromFinalUrl();
+
+  useEffect(() => {
+    if (open && taskId && finalUrlId) {
+      refetch();
+    }
+  }, [open, taskId, finalUrlId, refetch]);
 
   const handleBulkAssign = async () => {
     const confirmed = await confirm({

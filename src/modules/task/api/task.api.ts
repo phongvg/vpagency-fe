@@ -39,6 +39,10 @@ export const taskApi = {
     return http.delete(`/tasks/${id}`);
   },
 
+  unassignCampaignMetrics: (id: string): Promise<ApiBaseResponse<null>> => {
+    return http.delete(`/tasks/${id}/campaigns`);
+  },
+
   getTaskProgress: (id: string): Promise<ApiBaseResponse<TaskProgress>> => {
     return http.get(`/tasks/${id}/progress`);
   },

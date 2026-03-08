@@ -7,6 +7,7 @@ import UpdateAppealMetricsModal from "@/modules/task/components/UpdateAppealMetr
 import UpdateDocumentAppealMetricsModal from "@/modules/task/components/UpdateDocumentAppealMetricsModal";
 import UpdateResearchMetricsModal from "@/modules/task/components/UpdateResearchMetricsModal";
 import { useDeleteTask } from "@/modules/task/hooks/useDeleteTask";
+import { useUnassignCampaignMetrics } from "@/modules/task/hooks/useUnassignCampaignMetrics";
 import type { Task, TaskDocumentAppealDetail, TaskResearchDetail } from "@/modules/task/types/task.type";
 import AppButton from "@/shared/components/common/AppButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
@@ -39,12 +40,12 @@ export default function TaskListPage() {
   const { confirm } = useConfirm();
 
   const deleteTask = useDeleteTask();
+  const unassignCampaignMetrics = useUnassignCampaignMetrics();
 
   const handleDeleteTask = async (taskId: string) => {
     const confirmed = await confirm({
       title: "Xóa công việc",
       description: "Bạn có chắc chắn muốn xóa công việc này không? Hành động này không thể hoàn tác.",
-      confirmText: "Xóa",
     });
 
     if (confirmed) {
@@ -53,6 +54,17 @@ export default function TaskListPage() {
           navigate(urls.root + urls.task);
         },
       });
+    }
+  };
+
+  const handleUnassignCampaignMetrics = async (taskId: string) => {
+    const confirmed = await confirm({
+      title: "Bỏ gán thống kê chiến dịch",
+      description: "Bạn có chắc chắn muốn bỏ gán thống kê chiến dịch cho công việc này không? Hành động này không thể hoàn tác.",
+    });
+
+    if (confirmed) {
+      await unassignCampaignMetrics.mutateAsync(taskId);
     }
   };
 
@@ -157,6 +169,7 @@ export default function TaskListPage() {
           <TaskSplit
             onEdit={handleOpenEditModal}
             onDelete={handleDeleteTask}
+            onUnassignCampaignMetrics={handleUnassignCampaignMetrics}
             onViewProgressDetail={handleViewProgress}
             onUpdateProgress={handleOpenUpdateProgress}
             onUpdateAppealMetrics={handleOpenAppealMetricsModal}
@@ -169,6 +182,7 @@ export default function TaskListPage() {
           <Board
             onEdit={handleOpenEditModal}
             onDelete={handleDeleteTask}
+            onUnassignCampaignMetrics={handleUnassignCampaignMetrics}
             onUpdateProgress={handleOpenUpdateProgress}
             onUpdateAppealMetrics={handleOpenAppealMetricsModal}
             onUpdateDocumentAppealMetrics={handleOpenDocumentAppealMetricsModal}

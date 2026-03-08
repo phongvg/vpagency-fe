@@ -13,8 +13,8 @@ export const useCampaignStatsFinalUrl = ({
   params: CampaignListParams;
 }) => {
   return useQuery({
-    queryKey: taskQueryKeys.campaignStatsFinalUrl(taskId!, finalUrlId!, params),
-    queryFn: () => taskApi.getCampaignStatsByFinalUrl({ taskId: taskId!, finalUrlId: finalUrlId!, params }),
     enabled: !!taskId && !!finalUrlId,
+    queryKey: taskQueryKeys.campaignStatsFinalUrl(taskId as string, finalUrlId as string, params),
+    queryFn: () => taskApi.getCampaignStatsByFinalUrl({ taskId: taskId as string, finalUrlId: finalUrlId as string, params }),
   });
 };

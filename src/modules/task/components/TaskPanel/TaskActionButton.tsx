@@ -1,7 +1,7 @@
 import AppButton from "@/shared/components/common/AppButton";
 import type { Role } from "@/shared/constants/role.constant";
 import { isAdminOrManager } from "@/shared/utils/permission.util";
-import { Eye, SquarePen, Trash2 } from "lucide-react";
+import { CircleX, Eye, SquarePen, Trash2 } from "lucide-react";
 import { Fragment } from "react/jsx-runtime";
 
 interface TaskActionButtonProps {
@@ -12,6 +12,7 @@ interface TaskActionButtonProps {
   userRoles: Role[];
   onEdit: () => void;
   onDelete: () => void;
+  onUnassignCampaignMetrics: () => void;
   onViewProgressDetail: () => void;
   onUpdateProgress: () => void;
   onUpdateAppealMetrics: () => void;
@@ -27,6 +28,7 @@ export default function TaskActionButton({
   userRoles,
   onEdit,
   onDelete,
+  onUnassignCampaignMetrics,
   onViewProgressDetail,
   onUpdateProgress,
   onUpdateAppealMetrics,
@@ -45,6 +47,11 @@ export default function TaskActionButton({
           <AppButton variant='outline' size='sm' onClick={onDelete}>
             <Trash2 />
             Xóa
+          </AppButton>
+
+          <AppButton variant='outline' size='sm' onClick={onUnassignCampaignMetrics}>
+            <CircleX />
+            Bỏ gán thống kê chiến dịch
           </AppButton>
         </Fragment>
       )}

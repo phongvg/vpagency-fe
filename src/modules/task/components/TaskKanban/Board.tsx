@@ -22,6 +22,7 @@ const STATUS_COLUMNS: readonly { status: TaskStatus; label: string }[] = [
 interface BoardProps {
   onEdit: (taskId?: string) => void;
   onDelete: (taskId: string) => void;
+  onUnassignCampaignMetrics: (taskId: string) => void;
   onUpdateProgress: (taskId: string) => void;
   onUpdateAppealMetrics: (task: Task) => void;
   onUpdateDocumentAppealMetrics: (task: Task, documentAppealDetail?: TaskDocumentAppealDetail) => void;
@@ -32,6 +33,7 @@ interface BoardProps {
 export default function Board({
   onEdit,
   onDelete,
+  onUnassignCampaignMetrics,
   onUpdateProgress,
   onUpdateAppealMetrics,
   onUpdateDocumentAppealMetrics,
@@ -133,6 +135,7 @@ export default function Board({
         taskId={selectedTaskId}
         onEdit={onEdit}
         onDelete={onDelete}
+        onUnassignCampaignMetrics={onUnassignCampaignMetrics}
         onViewProgressDetail={handleViewProgress}
         onUpdateProgress={onUpdateProgress}
         onUpdateAppealMetrics={onUpdateAppealMetrics}

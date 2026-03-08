@@ -23,8 +23,8 @@ export const taskQueryKeys = {
 
   progress: (id: string) => [...taskQueryKeys.all, "progress", id] as const,
 
-  campaignStatsFinalUrl: (taskId: string, finalUrlId: string, params: CampaignListParams) =>
-    [...taskQueryKeys.all, "campaign-stats", taskId, finalUrlId, normalizeParams(params)] as const,
+  campaignStatsFinalUrl: (taskId: string, finalUrlId?: string, params?: CampaignListParams) =>
+    [...taskQueryKeys.all, "campaign-stats", taskId, finalUrlId, normalizeParams(params ?? {})] as const,
 
   taskProgressDetail: (id: string | null) => [...taskQueryKeys.all, "progress-detail", id] as const,
 };

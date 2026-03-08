@@ -29,7 +29,7 @@ export default function UpdateProgressTask({ open, taskId, onClose }: UpdateProg
   const [selectedFinalUrlId, setSelectedFinalUrlId] = useState<string | null>(null);
   const [isAddFinalUrlOpen, setAddFinalUrlOpen] = useState(false);
 
-  const { data: progress } = useTaskProgress(taskId);
+  const { data: progress, refetch } = useTaskProgress(taskId);
 
   const updateProgress = useUpdateTaskProgress();
 
@@ -51,6 +51,12 @@ export default function UpdateProgressTask({ open, taskId, onClose }: UpdateProg
       });
     }
   }, [progress, form, open]);
+
+  useEffect(() => {
+    if (open && taskId) {
+      refetch();
+    }
+  }, [open, taskId, refetch]);
 
   const handleOpenCampaignStats = (finalUrlId: string) => {
     setSelectedFinalUrlId(finalUrlId);

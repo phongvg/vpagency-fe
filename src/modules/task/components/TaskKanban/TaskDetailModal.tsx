@@ -8,6 +8,7 @@ interface TaskDetailModalProps {
   taskId: string | null;
   onEdit: (taskId?: string) => void;
   onDelete: (taskId: string) => void;
+  onUnassignCampaignMetrics: (taskId: string) => void;
   onViewProgressDetail: (taskId: string) => void;
   onUpdateProgress: (taskId: string) => void;
   onUpdateAppealMetrics: (Task: Task) => void;
@@ -21,6 +22,7 @@ export default function TaskDetailModal({
   taskId,
   onEdit,
   onDelete,
+  onUnassignCampaignMetrics,
   onViewProgressDetail,
   onUpdateProgress,
   onUpdateAppealMetrics,
@@ -33,6 +35,7 @@ export default function TaskDetailModal({
         <TaskDetailPanel
           onEdit={onEdit}
           onDelete={onDelete}
+          onUnassignCampaignMetrics={onUnassignCampaignMetrics}
           onUpdateProgress={onUpdateProgress}
           onViewProgressDetail={onViewProgressDetail}
           onUpdateAppealMetrics={onUpdateAppealMetrics}
