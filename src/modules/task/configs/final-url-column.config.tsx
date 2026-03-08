@@ -103,6 +103,29 @@ export const finalUrlColumnConfig = (onCopy: (text: string) => void): ColumnDef<
     },
   },
   {
+    header: "Quốc gia loại",
+    accessorKey: "excludeCountries",
+    cell: (props) => {
+      const excludeCountries = props.row.original.excludeCountries ?? [];
+      if (excludeCountries.length === 0) return null;
+
+      return (
+        <div className='flex items-center gap-2'>
+          <span className='font-medium text-green-700 dark:text-green-400'>
+            <ListTooltip data={excludeCountries.map((l) => ({ name: l }))} columns={[{ key: "name", label: "Quốc gia" }]} />
+          </span>
+          <button
+            type='button'
+            title='Sao chép'
+            onClick={() => onCopy(excludeCountries.join("\n"))}
+            className='text-muted-foreground hover:text-primary'>
+            <Copy size={12} />
+          </button>
+        </div>
+      );
+    },
+  },
+  {
     header: "Mục tiêu Ref",
     accessorKey: "targetRef",
     cell: (props) => <span className='font-semibold text-purple-600 dark:text-purple-400'>{props.row.original.targetRef}</span>,

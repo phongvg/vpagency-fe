@@ -189,7 +189,13 @@ export function AppTable<TData, TValue>({
         </DropdownMenu>
       )}
 
-      <div className={cn("w-full max-w-full bg-[rgba(30,45,55,0.45)] backdrop-blur-sm", "overflow-x-auto", "scrollbar-custom", isScrollVertical && "max-h-96 overflow-y-auto")}>
+      <div
+        className={cn(
+          "bg-[rgba(30,45,55,0.45)] backdrop-blur-sm w-full max-w-full",
+          "overflow-x-auto",
+          "scrollbar-custom",
+          isScrollVertical && "max-h-96 overflow-y-auto"
+        )}>
         <Table>
           <TableHeader className='top-0 z-30 sticky'>
             {table.getHeaderGroups().map((headerGroup) => (

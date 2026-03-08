@@ -40,8 +40,15 @@ export default function EditProjectDailyReportModal({ open, onClose, reportId }:
   const [reportIdState, setReportIdState] = useState<string | null>(null);
 
   useEffect(() => {
-    setReportIdState(reportId);
-  }, [reportId]);
+    if (open) {
+      if (reportId) {
+        setReportIdState(reportId);
+      } else {
+        setReportIdState(null);
+        setStep(1);
+      }
+    }
+  }, [reportId, open]);
 
   const { data: projectDailyReport } = useProjectDailyReport(reportId);
 
@@ -59,16 +66,16 @@ export default function EditProjectDailyReportModal({ open, onClose, reportId }:
   });
 
   useEffect(() => {
-    step1Form.reset(transformProjectDailyReportToFormStep1());
-
-    if (projectDailyReport) {
+    if (open && projectDailyReport && reportId) {
+      step1Form.reset(transformProjectDailyReportToFormStep1());
       step2Form.reset(transformProjectDailyReportToFormStep2(projectDailyReport));
       setStep(2);
-    } else {
+    } else if (open && !reportId) {
+      step1Form.reset(transformProjectDailyReportToFormStep1());
       step2Form.reset(transformProjectDailyReportToFormStep2());
       setStep(1);
     }
-  }, [projectDailyReport]);
+  }, [projectDailyReport, open, reportId]);
 
   const onSubmitStep1 = async (values: ProjectDailyReportStep1Type) => {
     await generateProjectDailyReport.mutateAsync(transformFormToProjectDailyReportStep1(values), {

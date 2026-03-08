@@ -2,6 +2,8 @@ import type { ProjectDailyStatsListParams } from "@/modules/projectDailyStats/ty
 import AppButton from "@/shared/components/common/AppButton";
 import DatePicker from "@/shared/components/common/DatePicker/DatePicker";
 import SearchInput from "@/shared/components/SearchInput";
+import { useAuthStore } from "@/shared/stores/auth/useAuthStore";
+import { isAdminOrAccounting } from "@/shared/utils/permission.util";
 import { format } from "date-fns";
 import { CirclePlus } from "lucide-react";
 
@@ -14,6 +16,8 @@ interface ProjectDailyStatsFilterProps {
 }
 
 export default function ProjectDailyStatsFilter({ searchInput, setSearchInput, params, setParams, onOpenModal }: ProjectDailyStatsFilterProps) {
+  const { user } = useAuthStore();
+
   return (
     <div className='flex justify-between items-center mb-4'>
       <div className='flex items-end gap-2'>
@@ -32,10 +36,12 @@ export default function ProjectDailyStatsFilter({ searchInput, setSearchInput, p
         />
       </div>
 
-      <AppButton size='sm' variant='outline' onClick={onOpenModal}>
-        <CirclePlus />
-        Tạo báo cáo
-      </AppButton>
+      {isAdminOrAccounting(user?.roles) && (
+        <AppButton size='sm' variant='outline' onClick={onOpenModal}>
+          <CirclePlus />
+          Tạo báo cáo
+        </AppButton>
+      )}
     </div>
   );
 }

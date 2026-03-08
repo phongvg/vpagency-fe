@@ -51,22 +51,23 @@ export default function EditProjectModal({ open, onClose, projectId }: EditProje
   });
 
   useEffect(() => {
-    if (projectId) {
-      setProjectIdState(projectId);
-    } else {
-      setProjectIdState(null);
+    if (open) {
+      if (projectId) {
+        setProjectIdState(projectId);
+      } else {
+        setProjectIdState(null);
+      }
+      setTabValue(TABS[0].value);
     }
-
-    setTabValue(TABS[0].value);
-  }, [projectId, setTabValue]);
+  }, [projectId, open]);
 
   useEffect(() => {
     if (project && open && isEditMode) {
       form.reset(transformProjectToForm(project));
-    } else {
+    } else if (!projectIdState) {
       form.reset(transformProjectToForm());
     }
-  }, [project, form, open, isEditMode]);
+  }, [project, form, open, isEditMode, projectIdState]);
 
   const handleEditFinalUrl = (finalUrlId: string | null) => {
     setFinalUrlIdSelected(finalUrlId ?? null);
@@ -153,10 +154,12 @@ export default function EditProjectModal({ open, onClose, projectId }: EditProje
                   Đóng
                 </AppButton>
 
-                <AppButton type='submit' variant='outline' size='sm'>
-                  <Save />
-                  Xác nhận
-                </AppButton>
+                {tabValue === TABS[0].value && (
+                  <AppButton type='submit' variant='outline' size='sm'>
+                    <Save />
+                    Xác nhận
+                  </AppButton>
+                )}
               </DialogFooter>
             </form>
           </Form>
