@@ -5,6 +5,7 @@ import { type GroupBase } from "react-select";
 import { AsyncPaginate, type LoadOptions } from "react-select-async-paginate";
 
 export interface AsyncSelectProps<T> {
+  label?: string;
   value?: SelectOption | SelectOption[] | null;
   onChange?: (value: SelectOption | SelectOption[] | null) => void;
   fetcher?: (params: { search: string; page: number }) => Promise<{
@@ -17,7 +18,7 @@ export interface AsyncSelectProps<T> {
   isMulti?: boolean;
 }
 
-export default function AsyncSelect<T>({ value, onChange, fetcher, mapOption, placeholder = "", disabled, isMulti }: AsyncSelectProps<T>) {
+export default function AsyncSelect<T>({ label, value, onChange, fetcher, mapOption, placeholder = "", disabled, isMulti }: AsyncSelectProps<T>) {
   const loadOptions: LoadOptions<SelectOption, GroupBase<SelectOption>, { page: number }> = async (search, _, additional) => {
     if (!fetcher || !mapOption) return { options: [], hasMore: false };
 
@@ -38,20 +39,23 @@ export default function AsyncSelect<T>({ value, onChange, fetcher, mapOption, pl
   };
 
   return (
-    <AsyncPaginate
-      className='scrollbar-custom'
-      styles={selectStyles}
-      value={value}
-      loadOptions={loadOptions}
-      onChange={onChange}
-      additional={{ page: 1 }}
-      placeholder={placeholder}
-      isClearable={false}
-      isDisabled={disabled}
-      isMulti={isMulti as any}
-      loadingMessage={() => "ĐANG TẢI..."}
-      noOptionsMessage={() => "KHÔNG CÓ DỮ LIỆU"}
-      components={{ IndicatorSeparator: null }}
-    />
+    <div className='flex flex-col gap-1'>
+      {label && <span className='text-[8px] text-white/50'>{label}</span>}
+      <AsyncPaginate
+        className='scrollbar-custom'
+        styles={selectStyles}
+        value={value}
+        loadOptions={loadOptions}
+        onChange={onChange}
+        additional={{ page: 1 }}
+        placeholder={placeholder}
+        isClearable={false}
+        isDisabled={disabled}
+        isMulti={isMulti as any}
+        loadingMessage={() => "ĐANG TẢI..."}
+        noOptionsMessage={() => "KHÔNG CÓ DỮ LIỆU"}
+        components={{ IndicatorSeparator: null }}
+      />
+    </div>
   );
 }

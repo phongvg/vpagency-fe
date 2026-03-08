@@ -5,10 +5,10 @@ import { priorityOptions, statusOptions, typeOptions } from "@/modules/task/util
 import { userApi } from "@/modules/user/api/user.api";
 import type { User } from "@/modules/user/types/user.type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import AppInput from "@/shared/components/common/AppInput";
 import AppSelect from "@/shared/components/common/AppSelect";
 import AsyncSelect from "@/shared/components/common/AsyncSelect";
 import DatePicker from "@/shared/components/common/DatePicker/DatePicker";
-import { Input } from "@/shared/components/ui/input";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import type { SelectOption } from "@/shared/types/common/select-option.type";
 import { createAsyncSelectFetcher } from "@/shared/utils/async-select.util";
@@ -60,31 +60,43 @@ export default function TaskListFilter({
 
       <CardContent>
         <div className='flex flex-col gap-2'>
-          <Input placeholder='Tên công việc' value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
+          <AppInput
+            label='Tên công việc'
+            placeholder='Tìm kiếm theo tên công việc'
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+          />
 
           <AppSelect
+            label='Trạng thái'
             options={statusOptions}
-            placeholder='Trạng thái công việc'
+            placeholder='Chọn trạng thái công việc'
             value={params.status}
             onValueChange={(value) => setParams((prev) => ({ ...prev, status: typeof value === "string" ? value : undefined, page: 1 }))}
+            menuPlacement='bottom'
           />
 
           <AppSelect
+            label='Loại công việc'
             options={typeOptions}
-            placeholder='Loại công việc'
+            placeholder='Chọn loại công việc'
             value={params.type}
             onValueChange={(value) => setParams((prev) => ({ ...prev, type: typeof value === "string" ? value : undefined, page: 1 }))}
+            menuPlacement='bottom'
           />
 
           <AppSelect
+            label='Mức độ ưu tiên'
             options={priorityOptions}
-            placeholder='Mức độ ưu tiên'
+            placeholder='Chọn mức độ ưu tiên'
             value={params.priority}
             onValueChange={(value) => setParams((prev) => ({ ...prev, priority: typeof value === "string" ? value : undefined, page: 1 }))}
+            menuPlacement='bottom'
           />
 
           <AsyncSelect<Project>
-            placeholder='Dự án'
+            label='Dự án'
+            placeholder='Chọn dự án'
             fetcher={fetchProjects}
             mapOption={(item) => ({ label: item.name, value: item.id })}
             value={projectSelect}
@@ -95,7 +107,8 @@ export default function TaskListFilter({
           />
 
           <AsyncSelect<User>
-            placeholder='Người tạo việc'
+            label='Người tạo việc'
+            placeholder='Chọn người tạo việc'
             fetcher={fetchUsers}
             mapOption={(item) => ({ label: `${item.firstName} ${item.lastName}`, value: item.id })}
             value={creatorSelect}
@@ -106,7 +119,8 @@ export default function TaskListFilter({
           />
 
           <AsyncSelect<User>
-            placeholder='Người nhận việc'
+            label='Người nhận việc'
+            placeholder='Chọn người nhận việc'
             fetcher={fetchUsers}
             mapOption={(item) => ({ label: `${item.firstName} ${item.lastName}`, value: item.id })}
             value={assignedUserSelect}
@@ -117,12 +131,14 @@ export default function TaskListFilter({
           />
 
           <DatePicker
+            label='Ngày tạo từ'
             value={params.fromDate}
             onChange={(date) => setParams((prev) => ({ ...prev, fromDate: date ? format(date, "yyyy-MM-dd") : undefined, page: 1 }))}
             placeholder='Từ ngày'
           />
 
           <DatePicker
+            label='Ngày tạo đến'
             value={params.toDate}
             onChange={(date) => setParams((prev) => ({ ...prev, toDate: date ? format(date, "yyyy-MM-dd") : undefined, page: 1 }))}
             placeholder='Đến ngày'
