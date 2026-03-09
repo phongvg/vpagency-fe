@@ -1,4 +1,6 @@
 import type {
+  FinalUrlDailyStatsListParams,
+  FinalUrlDailyStatsResponse,
   GenerateProjectDailyStatRequest,
   ProjectDailyStats,
   ProjectDailyStatsListParams,
@@ -10,6 +12,10 @@ import type { ApiBaseResponse } from "@/shared/types/common/apiResponse.type";
 
 export const projectDailyStatsApi = {
   getProjectDailyStats: (params: ProjectDailyStatsListParams): Promise<ProjectDailyStatsResponse> => {
+    return http.post("/project-daily-stats", params);
+  },
+
+  getFinalUrlDailyStats: (params: FinalUrlDailyStatsListParams): Promise<FinalUrlDailyStatsResponse> => {
     return http.post("/project-daily-stats/final-url-stats", params);
   },
 

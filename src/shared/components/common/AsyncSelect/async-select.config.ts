@@ -6,6 +6,7 @@ export const selectStyles: StylesConfig<SelectOption, false> = {
     ...base,
     fontSize: 10,
     height: state.isMulti ? "auto" : 36,
+    minWidth: 180,
     minHeight: 36,
     borderWidth: 1,
     borderRadius: 0,

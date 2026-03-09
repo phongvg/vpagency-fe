@@ -3,7 +3,7 @@ import type { CampaignListParams } from "@/modules/campaign/types/campaign.type"
 import type { GmailListParams } from "@/modules/gmail/types/gmail.type";
 import type { GmailStatusListParams } from "@/modules/gmailStatus/types/gmailStatus.type";
 import type { ProjectListParams } from "@/modules/project/types/project.type";
-import type { ProjectDailyStatsListParams } from "@/modules/projectDailyStats/types/projectDailyStats.type";
+import type { FinalUrlDailyStatsListParams, ProjectDailyStatsListParams } from "@/modules/projectDailyStats/types/projectDailyStats.type";
 import type { ProjectStatusListParams } from "@/modules/projectStatus/types/projectStatus.type";
 import type { ProjectTypeListParams } from "@/modules/projectType/types/projectType.type";
 import type { TaskListParams } from "@/modules/task/types/task.type";
@@ -143,4 +143,12 @@ export const projectDailyStatsQueryKeys = {
   list: (params: ProjectDailyStatsListParams) => [...projectDailyStatsQueryKeys.lists(), normalizeParams(params)] as const,
 
   detail: (id: string) => [...projectDailyStatsQueryKeys.all, "detail", id] as const,
+};
+
+export const finalUrlDailyStatsQueryKeys = {
+  all: ["final-url-daily-stats"] as const,
+
+  lists: () => [...finalUrlDailyStatsQueryKeys.all, "list"] as const,
+
+  list: (params: FinalUrlDailyStatsListParams) => [...finalUrlDailyStatsQueryKeys.lists(), normalizeParams(params)] as const,
 };
