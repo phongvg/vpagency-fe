@@ -1,5 +1,5 @@
 import { useMonthlySpendingStats } from "@/modules/dashboard/hooks/useMonthlySpendingStats";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { formatDollarAmount, getDaysInMonth } from "@/shared/utils/common.util";
 import { useMemo } from "react";
 import { Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";

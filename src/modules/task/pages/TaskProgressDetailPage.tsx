@@ -3,7 +3,7 @@ import InfoRow from "@/modules/task/components/TaskPanel/InfoRow";
 import { campaignStatsColumnConfig } from "@/modules/task/configs/campaign-stats-column.config";
 import { userStatsColumns } from "@/modules/task/configs/user-stats-column.config";
 import { useTaskProgressDetail } from "@/modules/task/hooks/useTaskProgressDetail";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import AppButton from "@/shared/components/common/AppButton";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { useQueryParam } from "@/shared/hooks/useQueryParam";

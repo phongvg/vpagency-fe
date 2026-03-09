@@ -1,6 +1,6 @@
 import { projectDailyMetricsConfig } from "@/modules/projectDailyStats/configs/project-daily-metrics.config";
 import type { AggregatedMetrics } from "@/modules/projectDailyStats/types/projectDailyMetrics.type";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { cn } from "@/shared/libs/utils";
 import { useAuthStore } from "@/shared/stores/auth/useAuthStore";
 

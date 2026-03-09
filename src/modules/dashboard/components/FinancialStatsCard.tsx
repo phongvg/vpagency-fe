@@ -1,5 +1,5 @@
 import { useMonthlySpendingStats } from "@/modules/dashboard/hooks/useMonthlySpendingStats";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { useCountUp } from "@/shared/hooks/useCountUp";
 import { formatDollarAmount } from "@/shared/utils/common.util";
 

@@ -1,5 +1,5 @@
 import { useFinalUrlsByProjectId } from "@/modules/finalUrl/hooks/useFinalUrlsByProjectId";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { useFormContext, useWatch } from "react-hook-form";

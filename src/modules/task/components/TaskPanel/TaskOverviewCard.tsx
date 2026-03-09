@@ -2,7 +2,7 @@ import InfoRow from "@/modules/task/components/TaskPanel/InfoRow";
 import TaskStatusChip from "@/modules/task/components/TaskStatusChip";
 import type { Task } from "@/modules/task/types/task.type";
 import { TaskPriorityMap, TaskTypeMap } from "@/modules/task/utils/task.util";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { formatDate } from "date-fns";
 import { Calendar, FileText, Flag, FolderKanban, ListChecks, TrendingUp } from "lucide-react";
 

@@ -1,6 +1,6 @@
 import type { TopFinalUrlByCost } from "@/modules/dashboard/types/dashboard.type";
 import { topFinalUrlColumnConfig } from "@/modules/projectDailyStats/configs/top-final-url-column.config";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { AppTable } from "@/shared/components/common/AppTable";
 import type { VisibilityState } from "@tanstack/react-table";
 import { getMonth } from "date-fns";

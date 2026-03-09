@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 
 interface ProjectProgressProps {
   value: number; // 0 - 100
@@ -17,8 +17,8 @@ export default function ProjectProgressCard({ value, size = 200, strokeWidth = 1
         <CardTitle>Dự án đang chạy</CardTitle>
       </CardHeader>
 
-      <CardContent className='flex items-center justify-center'>
-        <div className='relative inline-flex items-center justify-center' style={{ width: size, height: size }}>
+      <CardContent className='flex justify-center items-center'>
+        <div className='inline-flex relative justify-center items-center' style={{ width: size, height: size }}>
           <svg width={size} height={size} className='rotate-[-90deg]'>
             <circle cx={size / 2} cy={size / 2} r={radius} strokeWidth={strokeWidth} className='fill-none stroke-muted-foreground/20' />
 
@@ -33,7 +33,7 @@ export default function ProjectProgressCard({ value, size = 200, strokeWidth = 1
             />
           </svg>
 
-          <span className='absolute text-xl font-semibold text-foreground'>{value}%</span>
+          <span className='absolute font-semibold text-foreground text-xl'>{value}%</span>
         </div>
       </CardContent>
     </Card>

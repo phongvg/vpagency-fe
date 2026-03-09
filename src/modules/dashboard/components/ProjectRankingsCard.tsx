@@ -1,5 +1,5 @@
 import { useTopProjectByProfit } from "@/modules/dashboard/hooks/useTopProjectByProfit";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { cn } from "@/shared/libs/utils";
 import { formatDollarAmount } from "@/shared/utils/common.util";
 import { Fragment } from "react";

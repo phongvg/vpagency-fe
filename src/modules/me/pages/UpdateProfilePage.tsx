@@ -2,7 +2,7 @@ import { urls } from "@/app/routes/route.constant";
 import UpdateProfileForm from "@/modules/me/components/UpdateProfileForm";
 import { useUpdateProfile } from "@/modules/me/hooks/useUpdateProfile";
 import { updateProfilePageFormSchema, type UpdateProfilePageFormType } from "@/modules/me/schemas/update-profile-form.schema";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import AppButton from "@/shared/components/common/AppButton";
 import { Form } from "@/shared/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";

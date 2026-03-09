@@ -1,5 +1,5 @@
 import { useUserStats } from "@/modules/dashboard/hooks/useUserStats";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { useCountUp } from "@/shared/hooks/useCountUp";
 
 export default function UserStatsCard() {

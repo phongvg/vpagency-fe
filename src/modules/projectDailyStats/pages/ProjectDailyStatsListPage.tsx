@@ -7,7 +7,7 @@ import TopFinalUrlTable from "@/modules/projectDailyStats/components/TopFinalUrl
 import { useDeleteProjectDailyReport } from "@/modules/projectDailyStats/hooks/useDeleteProjectDailyReport";
 import { useProjectDailyStats } from "@/modules/projectDailyStats/hooks/useProjectDailyStats";
 import type { ProjectDailyStatsListParams } from "@/modules/projectDailyStats/types/projectDailyStats.type";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { DEFAULT_PAGE_SIZE } from "@/shared/constants/pageSize.constant";
 import { useConfirm } from "@/shared/contexts/ConfirmContext";

@@ -1,6 +1,6 @@
 import type { FinalURLGroup } from "@/modules/finalUrl/types/finalUrl.type";
 import { taskProgressUrlColumnConfig } from "@/modules/task/configs/task-progress-url-column.config";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { AppTable } from "@/shared/components/common/AppTable";
 
 interface FinalUrlsTableProps {

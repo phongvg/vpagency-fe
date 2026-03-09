@@ -1,6 +1,6 @@
 import InfoRow from "@/modules/task/components/TaskPanel/InfoRow";
 import type { Task } from "@/modules/task/types/task.type";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { FileText } from "lucide-react";
 
 interface TaskResearchCardProps {

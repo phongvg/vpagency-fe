@@ -1,5 +1,5 @@
 import type { ProjectDailyReportStep2Type } from "@/modules/projectDailyStats/schemas/project-daily-report-step-2.schema";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { FormInput } from "@/shared/components/form/FormInput";
 import { FormPriceInput } from "@/shared/components/form/FormPriceInput";
 import { fixedNumber } from "@/shared/utils/common.util";

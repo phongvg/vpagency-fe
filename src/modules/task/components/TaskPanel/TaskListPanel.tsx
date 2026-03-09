@@ -2,7 +2,7 @@ import { urls } from "@/app/routes/route.constant";
 import type { Task, TaskListParams } from "@/modules/task/types/task.type";
 import { getDeadlineColor, getDeadlineInfo } from "@/modules/task/utils/deadline.util";
 import { TaskTypeBgColorMap, TaskTypeColorMap, TaskTypeMap } from "@/modules/task/utils/task.util";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import AppLoading from "@/shared/components/common/AppLoading";
 import AppPagination from "@/shared/components/common/AppPagination";
 import AppSelect from "@/shared/components/common/AppSelect";
