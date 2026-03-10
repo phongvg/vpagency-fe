@@ -12,18 +12,9 @@ interface ProjectDailyStatsTableProps {
   setParams: React.Dispatch<React.SetStateAction<ProjectDailyStatsListParams>>;
   onEdit: (reportId: string | null) => void;
   onDelete: (reportId: string) => void;
-  disableActions?: boolean;
 }
 
-export default function ProjectDailyStatsTable({
-  projectDailyStats,
-  loading,
-  params,
-  setParams,
-  onEdit,
-  onDelete,
-  disableActions = false,
-}: ProjectDailyStatsTableProps) {
+export default function ProjectDailyStatsTable({ projectDailyStats, loading, params, setParams, onEdit, onDelete }: ProjectDailyStatsTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
   const { user } = useAuthStore();
@@ -31,7 +22,7 @@ export default function ProjectDailyStatsTable({
   return (
     <AppTable
       data={projectDailyStats?.data?.items || []}
-      columns={projectDailyStatsColumnConfig({ roles: user?.roles, onEdit, onDelete, disableActions })}
+      columns={projectDailyStatsColumnConfig({ roles: user?.roles, onEdit, onDelete })}
       loading={loading}
       page={params.page}
       pageCount={projectDailyStats?.data?.meta?.totalPages}

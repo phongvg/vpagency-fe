@@ -13,12 +13,10 @@ export const projectDailyStatsColumnConfig = ({
   roles,
   onEdit,
   onDelete,
-  disableActions = false,
 }: {
   roles: Role[] | undefined;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
-  disableActions?: boolean;
 }): ColumnDef<ProjectDailyStats>[] => [
   {
     id: "index",
@@ -53,6 +51,12 @@ export const projectDailyStatsColumnConfig = ({
     accessorKey: "projectStatus",
     minSize: 180,
     cell: (props) => <BadgeStatus status={props.row.original.projectStatus} />,
+  },
+  {
+    header: "Trạng thái báo cáo",
+    accessorKey: "status",
+    minSize: 180,
+    cell: (props) => <BadgeStatus status={props.row.original.status} />,
   },
   ...((isAdminOrAccounting(roles)
     ? [
@@ -177,13 +181,16 @@ export const projectDailyStatsColumnConfig = ({
       );
     },
   },
-  ...((isAdminOrAccounting(roles) && !disableActions
+  ...((isAdminOrAccounting(roles)
     ? [
         {
           id: "actions",
           header: "Thao tác",
           enableHiding: isAdminOrAccounting(roles),
           cell: (props) => {
+            const isCompleted = props.row.original.status === "COMPLETED";
+            if (!isCompleted) return null;
+
             return (
               <div className='flex items-center'>
                 <AppButton size='sm' onClick={() => onEdit(props.row.original.id)}>
