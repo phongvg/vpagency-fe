@@ -18,13 +18,20 @@ export type ProjectDailyStatsResponse = ApiBaseListResponse<
   }
 >;
 
+export const ProjectDailyStatsStatus = {
+  Completed: "COMPLETED",
+  Pending: "PENDING",
+} as const;
+
+export type ProjectDailyStatsStatus = (typeof ProjectDailyStatsStatus)[keyof typeof ProjectDailyStatsStatus];
+
 export type ProjectDailyStats = {
   id: string;
   projectId: string;
   projectName: string;
   projectType: string;
   projectStatus: string;
-  status: "COMPLETED" | "PENDING";
+  status: ProjectDailyStatsStatus;
   date: Date;
   totalClicks: number;
   totalCost: number;

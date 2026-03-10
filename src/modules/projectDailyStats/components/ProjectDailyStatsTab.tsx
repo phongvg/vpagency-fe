@@ -4,7 +4,11 @@ import ProjectDailyStatsTable from "@/modules/projectDailyStats/components/Proje
 import ProjectDailySummaryTable from "@/modules/projectDailyStats/components/ProjectDailySummaryTable";
 import { useDeleteProjectDailyReport } from "@/modules/projectDailyStats/hooks/useDeleteProjectDailyReport";
 import { useProjectDailyStats } from "@/modules/projectDailyStats/hooks/useProjectDailyStats";
-import type { ProjectDailyStatsListParams, ProjectDailyStatsResponse } from "@/modules/projectDailyStats/types/projectDailyStats.type";
+import {
+  ProjectDailyStatsStatus,
+  type ProjectDailyStatsListParams,
+  type ProjectDailyStatsResponse,
+} from "@/modules/projectDailyStats/types/projectDailyStats.type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { DEFAULT_PAGE_SIZE } from "@/shared/constants/pageSize.constant";
@@ -14,8 +18,8 @@ import { formatDate, getMonth, startOfMonth } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 
 const STATUS_TABS = [
-  { value: "completed", label: "Hoàn thành", status: "COMPLETED" },
-  { value: "pending", label: "Chờ xử lý", status: "PENDING" },
+  { value: ProjectDailyStatsStatus.Completed, label: "Hoàn thành", status: ProjectDailyStatsStatus.Completed },
+  { value: ProjectDailyStatsStatus.Pending, label: "Chờ xử lý", status: ProjectDailyStatsStatus.Pending },
 ] as const;
 
 export default function ProjectDailyStatsTab() {
@@ -121,7 +125,7 @@ export default function ProjectDailyStatsTab() {
               setParams={setParams}
               onEdit={handleOpenEditModal}
               onDelete={handleDeleteReport}
-              disableActions={tab.status === "PENDING"}
+              disableActions={tab.status === ProjectDailyStatsStatus.Pending}
             />
           </TabsContent>
         ))}
