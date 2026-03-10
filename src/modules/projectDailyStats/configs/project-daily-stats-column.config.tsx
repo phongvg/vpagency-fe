@@ -13,10 +13,12 @@ export const projectDailyStatsColumnConfig = ({
   roles,
   onEdit,
   onDelete,
+  disableActions = false,
 }: {
   roles: Role[] | undefined;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
+  disableActions?: boolean;
 }): ColumnDef<ProjectDailyStats>[] => [
   {
     id: "index",
@@ -175,7 +177,7 @@ export const projectDailyStatsColumnConfig = ({
       );
     },
   },
-  ...((isAdminOrAccounting(roles)
+  ...((isAdminOrAccounting(roles) && !disableActions
     ? [
         {
           id: "actions",

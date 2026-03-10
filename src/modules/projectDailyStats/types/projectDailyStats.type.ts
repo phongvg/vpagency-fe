@@ -24,6 +24,7 @@ export type ProjectDailyStats = {
   projectName: string;
   projectType: string;
   projectStatus: string;
+  status: "COMPLETED" | "PENDING";
   date: Date;
   totalClicks: number;
   totalCost: number;
