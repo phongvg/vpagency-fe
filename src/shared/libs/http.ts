@@ -18,7 +18,7 @@ export const http: AxiosInstance = axios.create({
 });
 
 let isRefreshing = false;
-let refreshSubscribers: Array<(token: string) => void> = [];
+let refreshSubscribers: Array<(token: string | null) => void> = [];
 
 http.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
@@ -37,9 +37,10 @@ http.interceptors.request.use(
 http.interceptors.response.use(
   (response) => response.data,
   async (error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig;
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
-    if (!originalRequest.skipAuth && error.response?.status === HttpStatusCode.Unauthorized) {
+    if (!originalRequest.skipAuth && error.response?.status === HttpStatusCode.Unauthorized && !originalRequest._retry) {
+      originalRequest._retry = true;
       return handleRefreshToken(error);
     }
 
@@ -76,6 +77,7 @@ const handleRefreshToken = async (error: AxiosError) => {
 
       originalRequest.headers.Authorization = `Bearer ${accessToken}`;
 
+      // Process tất cả các request đang chờ
       processQueue(accessToken);
 
       isRefreshing = false;
@@ -83,14 +85,27 @@ const handleRefreshToken = async (error: AxiosError) => {
       return http(originalRequest);
     } catch (error) {
       isRefreshing = false;
+      processQueue(null); // Reject tất cả các request đang chờ
       refreshSubscribers = [];
       redirectToLogin();
       return Promise.reject(error);
     }
+  } else {
+    // Nếu đang refresh, add request vào queue để chờ
+    return new Promise((resolve, reject) => {
+      refreshSubscribers.push((token: string | null) => {
+        if (token) {
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          resolve(http(originalRequest));
+        } else {
+          reject(error);
+        }
+      });
+    });
   }
 };
 
-const processQueue = (newToken: string): void => {
+const processQueue = (newToken: string | null): void => {
   refreshSubscribers.forEach((callback) => callback(newToken));
   refreshSubscribers = [];
 };

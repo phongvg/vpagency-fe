@@ -59,7 +59,7 @@ export default function ProjectDailyStatsFilter({
           fetcher={fetchProjectTypes}
           mapOption={(type) => ({ value: type.id, label: type.name })}
           onChange={(value) => setParams((prev) => ({ ...prev, typeId: value && !Array.isArray(value) ? String(value.value) : undefined, page: 1 }))}
-          placeholder='Chọn loại dự án'
+          placeholder='Loại dự án'
         />
 
         <DatePicker

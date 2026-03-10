@@ -1,3 +1,4 @@
+import EmployeeComparison from "@/modules/dashboard/components/EmployeeComparison";
 import FinalUrlRankingsCard from "@/modules/dashboard/components/FinalUrlRankingsCard";
 import FinancialStatsCard from "@/modules/dashboard/components/FinancialStatsCard";
 import MonthlySpendingChart from "@/modules/dashboard/components/MonthlySpendingChart";
@@ -11,6 +12,8 @@ import { isAdminOrAccounting, isAdminOrManagerOrAccounting } from "@/shared/util
 
 export default function DashboardPage() {
   const { user } = useAuthStore();
+
+  if (!user) return null;
 
   if (isAdminOrManagerOrAccounting(user?.roles)) {
     return (
@@ -34,6 +37,10 @@ export default function DashboardPage() {
           )}
 
           <MonthlySpendingChart />
+        </div>
+
+        <div className='slide-in-from-bottom-4 animate-in duration-1000 fade-in-50'>
+          <EmployeeComparison />
         </div>
       </div>
     );
