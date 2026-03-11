@@ -1,4 +1,6 @@
 import EmployeeComparison from "@/modules/dashboard/components/EmployeeComparison";
+import EmployeeProject from "@/modules/dashboard/components/EmployeeProject";
+import EmployeeRanking from "@/modules/dashboard/components/EmployeeRanking";
 import FinalUrlRankingsCard from "@/modules/dashboard/components/FinalUrlRankingsCard";
 import FinancialStatsCard from "@/modules/dashboard/components/FinancialStatsCard";
 import MonthlySpendingChart from "@/modules/dashboard/components/MonthlySpendingChart";
@@ -41,6 +43,10 @@ export default function DashboardPage() {
 
         <div className='slide-in-from-bottom-4 animate-in duration-1000 fade-in-50'>
           <EmployeeComparison />
+
+          <EmployeeProject />
+
+          <EmployeeRanking />
         </div>
       </div>
     );
