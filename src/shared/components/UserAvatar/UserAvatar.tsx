@@ -5,10 +5,20 @@ import { getInitials } from "@/shared/utils/common.util";
 
 interface UserAvatarProps {
   data: User | User[] | null;
+  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
 }
 
-export default function UserAvatar({ data }: UserAvatarProps) {
+export default function UserAvatar({ data, size }: UserAvatarProps) {
   if (!data) return null;
+
+  const sizeClass = {
+    sm: "w-6 h-6",
+    md: "w-8 h-8",
+    lg: "w-12 h-12",
+    xl: "w-16 h-16",
+    "2xl": "w-20 h-20",
+    "3xl": "w-24 h-24",
+  }[size || "md"];
 
   if (Array.isArray(data)) {
     return (
@@ -16,7 +26,7 @@ export default function UserAvatar({ data }: UserAvatarProps) {
         {data.map((user) => (
           <Tooltip key={user.id}>
             <TooltipTrigger asChild>
-              <Avatar className='w-8 h-8'>
+              <Avatar className={sizeClass}>
                 <AvatarImage src={user.avatar || undefined} alt={user.username} />
                 <AvatarFallback>{getInitials(`${user.firstName} ${user.lastName}`)}</AvatarFallback>
               </Avatar>
@@ -34,7 +44,7 @@ export default function UserAvatar({ data }: UserAvatarProps) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Avatar className='w-8 h-8'>
+        <Avatar className={sizeClass}>
           <AvatarImage src={data.avatar || undefined} alt={data.username} />
           <AvatarFallback>{getInitials(`${data.firstName} ${data.lastName}`)}</AvatarFallback>
         </Avatar>

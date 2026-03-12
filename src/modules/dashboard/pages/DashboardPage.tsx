@@ -43,9 +43,13 @@ export default function DashboardPage() {
 
         <div className='slide-in-from-bottom-4 animate-in duration-1000 fade-in-50'>
           <EmployeeComparison />
+        </div>
 
+        <div className='slide-in-from-bottom-4 animate-in duration-1000 fade-in-50'>
           <EmployeeProject />
+        </div>
 
+        <div className='slide-in-from-bottom-4 animate-in duration-1000 fade-in-50'>
           <EmployeeRanking />
         </div>
       </div>
