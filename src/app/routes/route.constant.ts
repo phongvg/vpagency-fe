@@ -6,6 +6,7 @@ export const urls = {
   login: "login",
   telegram: "telegram",
   dashboard: "dashboard",
+  employeePerfomance: "employee-perfomance",
   task: "tasks",
   taskProgress: "tasks/progress",
   user: "users",
@@ -20,4 +21,4 @@ export const urls = {
   appealAccount: "appeal-accounts",
   projectDailyReport: "project-daily-reports",
   updateProfile: "update-profile",
-};
+} as const;
