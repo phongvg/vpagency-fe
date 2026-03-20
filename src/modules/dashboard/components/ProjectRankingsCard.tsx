@@ -1,5 +1,5 @@
 import { useTopProjectByProfit } from "@/modules/dashboard/hooks/useTopProjectByProfit";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { cn } from "@/shared/libs/utils";
 import { formatDollarAmount } from "@/shared/utils/common.util";
 import { Fragment } from "react";
@@ -28,8 +28,6 @@ export default function ProjectRankingsCard() {
                 <span className='flex-1 font-medium truncate'>{project.projectName}</span>
                 <span className='ml-auto font-semibold text-green-500'>{formatDollarAmount(project.profit)}</span>
               </div>
-
-              {/* <Separator className='my-2' /> */}
             </Fragment>
           ))}
         </div>

@@ -4,7 +4,7 @@ import type { TaskListParams } from "@/modules/task/types/task.type";
 import { priorityOptions, statusOptions, typeOptions } from "@/modules/task/utils/task.util";
 import { userApi } from "@/modules/user/api/user.api";
 import type { User } from "@/modules/user/types/user.type";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import AppInput from "@/shared/components/common/AppInput";
 import AppSelect from "@/shared/components/common/AppSelect";
 import AsyncSelect from "@/shared/components/common/AsyncSelect";

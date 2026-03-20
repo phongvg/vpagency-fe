@@ -1,6 +1,6 @@
 import InfoRow from "@/modules/task/components/TaskPanel/InfoRow";
 import type { Task } from "@/modules/task/types/task.type";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { fixedNumber } from "@/shared/utils/common.util";
 import { Ban, CheckCircle2, MessageSquareWarning, Percent, XCircle } from "lucide-react";
 

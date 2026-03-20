@@ -5,6 +5,7 @@ import { LoginPage } from "@/modules/auth/login";
 import { LoginTelegramPage } from "@/modules/auth/loginTelegram";
 import { CampaignEditPage, CampaignListPage } from "@/modules/campaign";
 import { DashboardPage } from "@/modules/dashboard";
+import { EmployeePerfomancePage } from "@/modules/employeePerfomance";
 import { GmailListPage } from "@/modules/gmail";
 import { GmailStatusListPage } from "@/modules/gmailStatus";
 import UpdateProfilePage from "@/modules/me/pages/UpdateProfilePage";
@@ -18,7 +19,8 @@ import { Role } from "@/shared/constants/role.constant";
 import BlankLayout from "@/shared/layouts/BlankLayout";
 import DashboardLayout from "@/shared/layouts/DashboardLayout";
 import {
-  ChartNoAxesCombined,
+  ChartNoAxesCombinedIcon,
+  ChartPie,
   ClipboardList,
   FolderKanban,
   FolderTree,
@@ -48,6 +50,15 @@ export const appRoutes: AppRoute[] = [
         pageTitle: "Tổng quan hệ thống",
         element: <DashboardPage />,
         icon: LayoutGrid,
+        showInSidebar: true,
+        roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AGENCY, Role.MEMBER_AFF, Role.ACCOUNTING],
+      },
+      {
+        path: urls.employeePerfomance,
+        title: "Hiệu suất nhân viên",
+        pageTitle: "Hiệu suất nhân viên",
+        element: <EmployeePerfomancePage />,
+        icon: ChartNoAxesCombinedIcon,
         showInSidebar: true,
         roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AGENCY, Role.MEMBER_AFF, Role.ACCOUNTING],
       },
@@ -99,7 +110,7 @@ export const appRoutes: AppRoute[] = [
         title: "Báo cáo tài chính",
         pageTitle: "Báo cáo tài chính",
         element: <ProjectDailyStatsListPage />,
-        icon: ChartNoAxesCombined,
+        icon: ChartPie,
         showInSidebar: true,
         roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.ACCOUNTING],
       },

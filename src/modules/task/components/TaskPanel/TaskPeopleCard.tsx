@@ -1,6 +1,6 @@
 import InfoRow from "@/modules/task/components/TaskPanel/InfoRow";
 import type { Task } from "@/modules/task/types/task.type";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import UserAvatar from "@/shared/components/UserAvatar";
 import { UserCircle, Users } from "lucide-react";
 

@@ -207,9 +207,13 @@ export function AppTable<TData, TValue>({
                   const isSticky = meta?.sticky || header.column.id === "__select";
                   const stickyStyle = header.column.id === "__select" ? { position: "sticky" as const, left: 0 } : getStickyStyle(meta);
 
+                  const isLeafColumn = !header.subHeaders || header.subHeaders.length === 0;
+                  const canSort = header.column.getCanSort() && isLeafColumn && header.column.id !== INDEX_COLUMN_ID;
+
                   return (
                     <TableHead
                       key={header.id}
+                      colSpan={header.colSpan}
                       style={{ minWidth: header.column.columnDef.minSize, ...stickyStyle }}
                       className={cn(
                         isScrollVertical && "bg-[#ba5825]",
@@ -219,12 +223,10 @@ export function AppTable<TData, TValue>({
                       )}>
                       {header.isPlaceholder ? null : (
                         <div
-                          className={cn(
-                            header.column.getCanSort() && header.column.id !== INDEX_COLUMN_ID && "flex items-center gap-2 cursor-pointer select-none"
-                          )}
-                          onClick={header.column.id !== INDEX_COLUMN_ID ? header.column.getToggleSortingHandler() : undefined}>
+                          className={cn(canSort && "flex items-center gap-2 cursor-pointer select-none")}
+                          onClick={canSort ? header.column.getToggleSortingHandler() : undefined}>
                           {flexRender(header.column.columnDef.header, header.getContext())}
-                          {header.column.getCanSort() && header.column.id !== INDEX_COLUMN_ID && (
+                          {canSort && (
                             <span className='ml-auto'>
                               {header.column.getIsSorted() === "asc" ? (
                                 <ArrowUp className='w-4 h-4' />

@@ -80,9 +80,9 @@ export default function EditProjectDailyReportModal({ open, onClose, reportId }:
   const onSubmitStep1 = async (values: ProjectDailyReportStep1Type) => {
     await generateProjectDailyReport.mutateAsync(transformFormToProjectDailyReportStep1(values), {
       onSuccess: (res) => {
-        // setReportIdState(res.data.id);
-        // step2Form.reset(transformProjectDailyReportToFormStep2(res.data));
-        // setStep(2);
+        setReportIdState(res.data.id);
+        step2Form.reset(transformProjectDailyReportToFormStep2(res.data));
+        setStep(2);
       },
     });
   };

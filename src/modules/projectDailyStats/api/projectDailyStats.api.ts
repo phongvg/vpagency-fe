@@ -1,4 +1,6 @@
 import type {
+  FinalUrlDailyStatsListParams,
+  FinalUrlDailyStatsResponse,
   GenerateProjectDailyStatRequest,
   ProjectDailyStats,
   ProjectDailyStatsListParams,
@@ -12,6 +14,10 @@ import { convertQueryParams } from "@/shared/utils/common.util";
 export const projectDailyStatsApi = {
   getProjectDailyStats: (params: ProjectDailyStatsListParams): Promise<ProjectDailyStatsResponse> => {
     return http.get(`/project-daily-stats${convertQueryParams(params)}`);
+  },
+
+  getFinalUrlDailyStats: (params: FinalUrlDailyStatsListParams): Promise<FinalUrlDailyStatsResponse> => {
+    return http.post("/project-daily-stats/final-url-stats", params);
   },
 
   generateProjectDailyStats: (payload: GenerateProjectDailyStatRequest): Promise<ApiBaseResponse<ProjectDailyStats>> => {

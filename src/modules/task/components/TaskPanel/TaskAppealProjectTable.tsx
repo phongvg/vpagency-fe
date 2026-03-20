@@ -1,6 +1,6 @@
 import type { Project } from "@/modules/project/types/project.type";
 import { appealProjectColumnConfig } from "@/modules/task/configs/appeal-project-column.config";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { AppTable } from "@/shared/components/common/AppTable";
 
 interface TaskAppealProjectTableProps {

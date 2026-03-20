@@ -1,6 +1,6 @@
 import { documentAppealDetailColumnConfig } from "@/modules/task/configs/document-appeal-detail.config";
 import type { TaskDocumentAppealDetail } from "@/modules/task/types/task.type";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { AppTable } from "@/shared/components/common/AppTable";
 
 interface TaskDocumentAppealDetailTableProps {

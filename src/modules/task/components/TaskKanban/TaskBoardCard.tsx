@@ -1,7 +1,7 @@
 import { TaskStatus, type Task } from "@/modules/task/types/task.type";
 import { getDeadlineColor, getDeadlineInfo } from "@/modules/task/utils/deadline.util";
 import { TaskTypeBgColorMap, TaskTypeColorMap, TaskTypeMap } from "@/modules/task/utils/task.util";
-import { Card, CardContent } from "@/shared/components/Card/Card";
+import { Card, CardContent } from "@/shared/components/Card";
 import { Badge } from "@/shared/components/ui/badge";
 import UserAvatar from "@/shared/components/UserAvatar";
 import { cn } from "@/shared/libs/utils";

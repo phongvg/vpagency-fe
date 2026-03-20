@@ -1,5 +1,5 @@
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import AppInput from "@/shared/components/common/AppInput";
 import AppSelect from "@/shared/components/common/AppSelect";
 import DatePicker from "@/shared/components/common/DatePicker/DatePicker";

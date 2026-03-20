@@ -2,7 +2,7 @@ import { taskColumnConfig } from "@/modules/dashboard/configs/task-column.config
 import { useTaskStats } from "@/modules/dashboard/hooks/useTaskStats";
 import { useTasks } from "@/modules/task/hooks/useTasks";
 import type { TaskListParams } from "@/modules/task/types/task.type";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { DEFAULT_PAGE_SIZE } from "@/shared/constants/pageSize.constant";
 import { useCountUp } from "@/shared/hooks/useCountUp";

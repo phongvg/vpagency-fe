@@ -1,6 +1,6 @@
 import InfoRow from "@/modules/task/components/TaskPanel/InfoRow";
 import type { Task } from "@/modules/task/types/task.type";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { formatDate } from "date-fns";
 import { CalendarClock, CalendarPlus } from "lucide-react";
 

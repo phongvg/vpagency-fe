@@ -1,6 +1,6 @@
 import type { FinalUrl } from "@/modules/finalUrl/types/finalUrl.type";
 import { finalUrlColumnConfig } from "@/modules/task/configs/final-url-column.config";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { copyToClipboard } from "@/shared/utils/common.util";
 

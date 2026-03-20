@@ -1,6 +1,6 @@
 import { researchDetailColumnConfig } from "@/modules/task/configs/research-detail-column.config";
 import type { TaskResearchDetail } from "@/modules/task/types/task.type";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { AppTable } from "@/shared/components/common/AppTable";
 
 interface TaskResearchDetailTableProps {
