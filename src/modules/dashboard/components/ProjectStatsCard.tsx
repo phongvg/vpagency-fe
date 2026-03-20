@@ -16,38 +16,38 @@ export default function ProjectStatsCard() {
         <CardTitle>Thống kê dự án</CardTitle>
       </CardHeader>
 
-      <CardContent className='p-0'>
+      <CardContent className='p-2'>
         <div className='grid grid-cols-2 p-1'>
           <div className='group p-1 text-[9px]'>
-            <div className='text-white/50 group-hover:text-white/70 transition-colors'>Tổng dự án</div>
+            <div className='text-[16px] font-semibold text-[#5D4037] mb-1 group-hover:text-[#4A4A4A] transition-colors'>Tổng dự án</div>
             <div className='font-bold text-lg' ref={totalCount.ref as React.RefObject<HTMLDivElement>}>
               {totalCount.count}
             </div>
           </div>
 
           <div className='group p-1 text-[9px]'>
-            <div className='text-white/50 group-hover:text-white/70 transition-colors'>Dự án đang hoạt động</div>
+            <div className='text-[16px] font-semibold text-[#5D4037] mb-1 group-hover:text-[#4A4A4A] transition-colors'>Dự án đang hoạt động</div>
             <div className='font-bold text-green-400 text-lg' ref={activeCount.ref as React.RefObject<HTMLDivElement>}>
               {activeCount.count}
             </div>
           </div>
 
           <div className='group p-1 text-[9px]'>
-            <div className='text-white/50 group-hover:text-white/70 transition-colors'>Tổng chi tiêu hôm nay</div>
+            <div className='text-[16px] font-semibold text-[#5D4037] mb-1 group-hover:text-[#4A4A4A] transition-colors'>Tổng chi tiêu hôm nay</div>
             <div className='font-bold text-yellow-400 text-lg' ref={spendingCount.ref as React.RefObject<HTMLDivElement>}>
               {spendingCount.count}
             </div>
           </div>
 
           <div className='group p-1 text-[9px]'>
-            <div className='text-white/50 group-hover:text-white/70 transition-colors'>Công việc được giao hôm nay</div>
+            <div className='text-[16px] font-semibold text-[#5D4037] mb-1 group-hover:text-[#4A4A4A] transition-colors'>Công việc được giao hôm nay</div>
             <div className='font-bold text-blue-400 text-lg' ref={assignedCount.ref as React.RefObject<HTMLDivElement>}>
               {assignedCount.count}
             </div>
           </div>
 
           <div className='group p-1 text-[9px]'>
-            <div className='text-white/50 group-hover:text-white/70 transition-colors'>Công việc hoàn thành hôm nay</div>
+            <div className='text-[16px] font-semibold text-[#5D4037] mb-1 group-hover:text-[#4A4A4A] transition-colors'>Công việc hoàn thành hôm nay</div>
             <div className='font-bold text-purple-400 text-lg' ref={completedCount.ref as React.RefObject<HTMLDivElement>}>
               {completedCount.count}
             </div>

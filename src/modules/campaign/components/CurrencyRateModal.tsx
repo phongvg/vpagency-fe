@@ -40,10 +40,10 @@ export default function CurrencyRateModal({ open, currencyRates, isInvalidForm, 
         </div>
 
         <DialogFooter>
-          <AppButton variant='outline' onClick={onClose}>
+          <AppButton variant='secondary' onClick={onClose}>
             Đóng
           </AppButton>
-          <AppButton variant='outline' disabled={isInvalidForm} onClick={onSubmit}>
+          <AppButton variant='default' disabled={isInvalidForm} onClick={onSubmit}>
             Xác nhận
           </AppButton>
         </DialogFooter>

@@ -51,10 +51,10 @@ export default function ChangePasswordModal({ open, onClose, userId }: ChangePas
             <ChangePasswordForm />
 
             <DialogFooter>
-              <AppButton type='button' size='sm' onClick={onClose}>
+              <AppButton type='button' variant='secondary' size='sm' onClick={onClose}>
                 Đóng
               </AppButton>
-              <AppButton type='submit' variant='outline' size='sm'>
+              <AppButton type='submit' variant='default' size='sm'>
                 Xác nhận
               </AppButton>
             </DialogFooter>

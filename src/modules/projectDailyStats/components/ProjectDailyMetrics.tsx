@@ -26,7 +26,7 @@ export default function ProjectDailyMetrics({ aggregatedData }: ProjectDailyMetr
         return (
           <Card key={key}>
             <CardHeader>
-              <CardTitle className='flex items-center gap-1'>
+              <CardTitle className='flex items-center gap-1 ml-20px'>
                 <Icon className={`w-4 h-4 ${color}`} />
                 <span className={color}>{label}</span>
               </CardTitle>

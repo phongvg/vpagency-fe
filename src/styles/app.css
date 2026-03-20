@@ -32,10 +32,10 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: url(/images/cover-2.jpg);
+  /* background: url(/images/cover-2.jpg); */
+  background-color: #5c94fc;
   background-size: cover;
   background-position: center;
-  filter: blur(6px) brightness(0.6);
 }
 
 .app-cover::after {
@@ -49,7 +49,7 @@
 }
 
 .glass {
-  background: rgba(var(--body-bg-rgb), 0.60);
+  background: rgba(var(--body-bg-rgb), 0.6);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-color: rgba(103, 206, 255, 0.25);

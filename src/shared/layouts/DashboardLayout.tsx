@@ -4,6 +4,7 @@ import { useCurrentRoute } from "@/shared/hooks/useCurrentRoute";
 import Sidebar from "@/shared/layouts/components/Sidebar";
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
+import Silk from "@/shared/components/Silk/index.tsx";
 
 export default function DashboardLayout() {
   const currentRoute = useCurrentRoute();
@@ -15,16 +16,18 @@ export default function DashboardLayout() {
   return (
     <div className='relative'>
       <div className='app-cover' />
+
+      {/* < speed={5} scale={1} color='#7B7481' noiseIntensity={1.5} rotation={0} /> */}
       <div className='flex min-h-dvh app'>
         <Sidebar />
-        <main className='relative flex-1 ml-[300px] p-4 min-w-0 h-full'>
+        <main className='relative flex-1 ml-[16px] p-4 min-w-0 h-full'>
           <ClickSpark sparkColor='#fff' sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
             <Outlet />
           </ClickSpark>
         </main>
       </div>
 
-      <LightRays
+      {/* <LightRays
         raysOrigin='top-center'
         raysSpeed={1}
         lightSpread={0.5}
@@ -37,7 +40,7 @@ export default function DashboardLayout() {
         pulsating={false}
         fadeDistance={0.2}
         saturation={1}
-      />
+      /> */}
     </div>
   );
 }

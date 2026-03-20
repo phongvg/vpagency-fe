@@ -31,11 +31,11 @@ export default function ImportAppealAccountPreviewModal({ open, appealAccounts, 
         <VirtualAppealAccountTable appealAccounts={appealAccounts} />
 
         <DialogFooter>
-          <AppButton type='button' variant='outline' onClick={onClose}>
+          <AppButton type='button' variant='secondary' onClick={onClose}>
             Đóng
           </AppButton>
 
-          <AppButton type='button' variant='outline' onClick={handleImport} loading={createAppealAccounts.isPending}>
+          <AppButton type='button' variant='default' onClick={handleImport} loading={createAppealAccounts.isPending}>
             Nhập dữ liệu
           </AppButton>
         </DialogFooter>

@@ -28,10 +28,10 @@ export default function ImportCampaignPreviewModal({ open, campaigns, onClose }:
         <VirtualCampaignTable campaigns={campaigns} />
 
         <DialogFooter>
-          <AppButton variant='outline' onClick={onClose}>
+          <AppButton variant='secondary' onClick={onClose}>
             Đóng
           </AppButton>
-          <AppButton variant='outline' onClick={handleImport} loading={createCampaigns.isPending}>
+          <AppButton variant='default' onClick={handleImport} loading={createCampaigns.isPending}>
             Nhập dữ liệu
           </AppButton>
         </DialogFooter>

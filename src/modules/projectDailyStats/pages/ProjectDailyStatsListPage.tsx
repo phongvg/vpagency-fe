@@ -71,9 +71,9 @@ export default function ProjectDailyStatsListPage() {
 
   return (
     <Tabs value={tabValue} onValueChange={setTabValue}>
-      <TabsList className='bg-card/50 backdrop-blur-sm'>
+      <TabsList className='bg-card/50 backdrop-blur-sm rounded-lg'>
         {TABS.map((tab) => (
-          <TabsTrigger key={tab.value} value={tab.value} className='data-[state=active]:shadow-lg transition-all duration-300'>
+          <TabsTrigger key={tab.value} value={tab.value} className='data-[state=active]:shadow-lg transition-all duration-300 '>
             {tab.label}
           </TabsTrigger>
         ))}

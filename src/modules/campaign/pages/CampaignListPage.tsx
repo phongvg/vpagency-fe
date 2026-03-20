@@ -32,7 +32,7 @@ export default function CampaignListPage() {
 
   return (
     <Fragment>
-      <div className='flex justify-between items-center mb-2'>
+      <div className='flex justify-between items-center mb-3'>
         <Popover open={isOpenFilter} onOpenChange={setIsOpenFilter}>
           <PopoverTrigger asChild>
             <AppButton type='button' variant='outline' size='sm' onClick={() => setIsOpenFilter(!isOpenFilter)}>

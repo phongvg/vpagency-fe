@@ -31,10 +31,10 @@ export default function ImportGmailPreviewModal({ open, gmails, onClose }: Impor
         <VirtualGmailTable gmails={gmails} />
 
         <DialogFooter>
-          <AppButton variant='outline' onClick={onClose}>
+          <AppButton variant='secondary' onClick={onClose}>
             Đóng
           </AppButton>
-          <AppButton variant='outline' onClick={handleImport} loading={createGmails.isPending}>
+          <AppButton variant='default' onClick={handleImport} loading={createGmails.isPending}>
             Nhập dữ liệu
           </AppButton>
         </DialogFooter>

@@ -40,11 +40,11 @@ export const projectColumnConfig = (handlers: ProjectColumnHandlers): ColumnDef<
     header: "Thao tác",
     cell: (props) => (
       <div className='flex items-center gap-2'>
-        <AppButton size='sm' onClick={() => handlers?.onEdit(props.row.original.id)}>
+        <AppButton size='sm' className='bg-[#fce0a6] text-black hover:bg-[#f5d08a]' onClick={() => handlers?.onEdit(props.row.original.id)}>
           <SquarePen />
         </AppButton>
 
-        <AppButton size='sm' onClick={() => handlers?.onDelete(props.row.original.id)}>
+        <AppButton size='sm' className='bg-[#e52521] text-white hover:bg-[#c41e1a]' onClick={() => handlers?.onDelete(props.row.original.id)}>
           <Trash2 />
         </AppButton>
       </div>

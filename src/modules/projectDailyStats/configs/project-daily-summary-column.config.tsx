@@ -40,7 +40,7 @@ export const projectDailySummaryColumnConfig = (roles: Role[] | undefined): Colu
   {
     header: "Tổng chi tiêu",
     accessorKey: "totalCost",
-    cell: (props) => <span className='font-bold text-red-500'>{formatDollarAmount(props.row.original.totalCost)}</span>,
+    cell: (props) => <span className='font-bold text-red-500 ml-20px'>{formatDollarAmount(props.row.original.totalCost)}</span>,
   },
   {
     header: "Tổng lượt click",

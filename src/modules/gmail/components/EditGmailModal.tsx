@@ -70,10 +70,10 @@ export default function EditGmailModal({ open, onClose, gmailId }: EditGmailModa
             <GmailForm />
 
             <DialogFooter>
-              <AppButton type='button' onClick={onClose}>
+              <AppButton type='button' variant='secondary' onClick={onClose}>
                 Hủy
               </AppButton>
-              <AppButton type='submit' variant='outline' loading={createGmail.isPending || updateGmail.isPending}>
+              <AppButton type='submit' variant='default' loading={createGmail.isPending || updateGmail.isPending}>
                 <Save />
                 Xác nhận
               </AppButton>

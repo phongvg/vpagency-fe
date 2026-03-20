@@ -11,11 +11,11 @@ import type { ApiBaseResponse } from "@/shared/types/common/apiResponse.type";
 
 export const dashboardApi = {
   getUserStats: (): Promise<ApiBaseResponse<UserStatistic>> => {
-    return http.get("/admin/users/stats");
+    return http.get("/dashboard/user-stats");
   },
 
   getTaskStats: (): Promise<ApiBaseResponse<TaskStatistic>> => {
-    return http.get("/tasks/stats/user");
+    return http.get("/dashboard/task-stats");
   },
 
   getTopProjectsByProfit: (): Promise<ApiBaseResponse<TopProjectByProfit[]>> => {
@@ -23,11 +23,11 @@ export const dashboardApi = {
   },
 
   getMonthlySpendingStats: (): Promise<ApiBaseResponse<MonthlySpendingStats>> => {
-    return http.get("/dashboard/monthly-spending");
+    return http.get("/dashboard/monthly-spending-stats");
   },
 
   getProjectStats: (): Promise<ApiBaseResponse<ProjectStats>> => {
-    return http.get("/dashboard/stats");
+    return http.get("/dashboard/project-stats");
   },
 
   getTopFinalUrlsByCost: (): Promise<ApiBaseResponse<TopFinalUrlByCost[]>> => {

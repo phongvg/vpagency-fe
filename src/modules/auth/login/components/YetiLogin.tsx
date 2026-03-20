@@ -4,6 +4,8 @@ import AppButton from "@/shared/components/common/AppButton";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import "@/styles/yeti-login.css";
+import bgVideo from "@/assets/video/Background Super Mario Bros - Francisco Henrique (Chico) (1080p, h264).mp4";
+import bannerLogin from "@/assets/image/banner_login_vp.png";
 import { gsap } from "gsap";
 import { MorphSVGPlugin } from "gsap/MorphSVGPlugin";
 import { Lock, ShieldUser } from "lucide-react";
@@ -16,6 +18,8 @@ export default function YetiLogin() {
   const usernameRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const memoizedSvg = useMemo(() => svgMarkup, []);
+
+
 
   useEffect(() => {
     const root = formRef.current;
@@ -313,12 +317,19 @@ export default function YetiLogin() {
 
   return (
     <div className='yeti-login-page'>
-      <form ref={formRef} className='space-y-4 p-10 border-2 border-primary rounded-lg yeti-login-form' onSubmit={handleSubmit}>
-        <div className='svgContainer'>
-          <div dangerouslySetInnerHTML={{ __html: memoizedSvg }} />
-        </div>
+      {/* Full-screen local video background */}
+      <div className='yeti-video-bg'>
+        <video autoPlay muted loop playsInline>
+          <source src={bgVideo} type='video/mp4' />
+        </video>
+      </div>
 
-        <h1 className='font-semibold text-2xl text-center uppercase'>Đăng nhập</h1>
+      {/* Dark overlay for readability */}
+      <div className='yeti-video-overlay' />
+
+      {/* Login form */}
+      <form ref={formRef} className='space-y-4 p-10 border-2 border-primary rounded-lg yeti-login-form' onSubmit={handleSubmit}>
+        <img src={bannerLogin} alt='VP Agency' className='w-full max-w-[350px] mx-auto mb-4 rounded-xl object-contain' />
 
         <div className='space-y-2'>
           <Label htmlFor='username'>Tên đăng nhập</Label>
@@ -326,22 +337,21 @@ export default function YetiLogin() {
             ref={usernameRef}
             type='text'
             id='username'
-            icon={<ShieldUser size={20} />}
-            className='py-3 pr-4 pl-10 border-primary min-w-[300px]'
+            className='py-3 px-4 border-gray-400 min-w-[300px]'
             maxLength={256}
           />
         </div>
 
         <div className='space-y-2'>
           <Label htmlFor='password'>Mật khẩu</Label>
-          <Input ref={passwordRef} type='password' id='password' icon={<Lock size={19} />} className='py-3 pr-4 pl-10 border-primary min-w-[300px]' />
+          <Input ref={passwordRef} type='password' id='password' className='py-3 px-4 border-gray-400 min-w-[300px]' />
         </div>
 
         <div className='grid'>
           <AppButton
             id='login'
             type='submit'
-            className='bg-primary hover:bg-primary/80 mt-4 py-3 focus:ring-4 focus:ring-primary-light/50 font-semibold text-white'>
+            className='bg-[#1DAD1F] hover:bg-[#178a19] mt-4 py-3 focus:ring-4 focus:ring-[#1DAD1F]/50 font-semibold text-white'>
             Đăng nhập
           </AppButton>
         </div>
