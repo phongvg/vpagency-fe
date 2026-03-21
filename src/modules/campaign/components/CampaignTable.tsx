@@ -64,7 +64,7 @@ export default function CampaignTable({ params, setParams }: CampaignTableProps)
   return (
     <Fragment>
       {Object.keys(rowSelection).length > 0 && (
-        <div className='flex items-center gap-4 bg-gray-900 mb-2 p-4'>
+        <div className='flex items-center gap-4 mb-2 p-4 bg-[#fce0a6] border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] font-roboto'>
           <div className='flex flex-wrap justify-between items-center gap-4'>
             <div className='flex items-center gap-6'>
               <div>

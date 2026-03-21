@@ -14,42 +14,52 @@ export const appealAccountColumnConfig = ({
     header: "STT",
     id: "index",
     cell: (props) => props.row.index + 1,
+    minSize: 40,
   },
   {
     header: "Tên Profile",
     accessorKey: "profileName",
+    minSize: 90,
   },
   {
     header: "Email",
     accessorKey: "email",
+    minSize: 110,
   },
   {
     header: "UID",
     accessorKey: "uid",
+    minSize: 70,
   },
   {
     header: "MCC",
     accessorKey: "mcc",
+    minSize: 70,
   },
   {
     header: "Nền tảng kháng cáo",
     accessorKey: "appealPlatform",
+    minSize: 90,
   },
   {
     header: "Người kháng cáo",
     accessorKey: "appealedBy",
+    minSize: 80,
   },
   {
     header: "Người sử dụng",
     accessorKey: "usedBy",
+    minSize: 80,
   },
   {
     header: "Mức độ hiếm",
     accessorKey: "rarityLevel",
+    minSize: 70,
   },
   {
     header: "Người tạo",
     accessorKey: "creator",
+    minSize: 80,
     cell: (props) => {
       const creator = props.row.original.creator;
       if (!creator) return null;
@@ -59,13 +69,14 @@ export const appealAccountColumnConfig = ({
   {
     id: "actions",
     header: "Thao tác",
+    minSize: 100,
     cell: (props) => (
-      <div className='flex items-center'>
-        <AppButton size='sm' onClick={() => onEdit(props.row.original.id)}>
+      <div className='flex items-center gap-2'>
+        <AppButton size='sm' className='bg-[#fce0a6] text-black hover:bg-[#f5d08a]' onClick={() => onEdit(props.row.original.id)}>
           <SquarePen />
         </AppButton>
 
-        <AppButton size='sm' onClick={() => onDelete(props.row.original.id)}>
+        <AppButton size='sm' className='bg-[#e52521] text-white hover:bg-[#c41e1a]' onClick={() => onDelete(props.row.original.id)}>
           <Trash2 />
         </AppButton>
       </div>

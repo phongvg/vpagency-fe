@@ -5,7 +5,7 @@ import { formatDollarAmount } from "@/shared/utils/common.util";
 import { Fragment } from "react";
 
 const rankColor: Record<number, string> = {
-  0: "bg-primary",
+  0: "bg-[#ffd213]",
   1: "bg-gray-400",
   2: "bg-amber-600",
 };

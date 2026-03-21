@@ -31,12 +31,12 @@ export const projectStatusColumnConfig = ({
     id: "actions",
     header: "Thao tác",
     cell: (props) => (
-      <div className='flex items-center'>
-        <AppButton size='sm' onClick={() => onEdit(props.row.original.id)}>
+      <div className='flex items-center gap-2'>
+        <AppButton size='sm' className='bg-[#fce0a6] text-black hover:bg-[#f5d08a]' onClick={() => onEdit(props.row.original.id)}>
           <SquarePen />
         </AppButton>
 
-        <AppButton size='sm' onClick={() => onDelete(props.row.original.id)}>
+        <AppButton size='sm' className='bg-[#e52521] text-white hover:bg-[#c41e1a]' onClick={() => onDelete(props.row.original.id)}>
           <Trash2 />
         </AppButton>
       </div>

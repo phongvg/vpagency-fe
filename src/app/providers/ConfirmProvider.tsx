@@ -53,8 +53,8 @@ export function ConfirmProvider({ children }: { children: ReactNode }) {
           </AlertDialogHeader>
 
           <AlertDialogFooter className='flex justify-end gap-2'>
-            <AlertDialogCancel onClick={() => handleClose(false)}>{state.cancelText}</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleClose(true)} className='text-primary'>
+            <AlertDialogCancel onClick={() => handleClose(false)} className='bg-[#e52521] text-white hover:bg-[#c41e1a] hover:text-white border-black'>{state.cancelText}</AlertDialogCancel>
+            <AlertDialogAction onClick={() => handleClose(true)} className='bg-[#22b14c] text-white hover:bg-[#1d9640] border-black'>
               {state.confirmText}
             </AlertDialogAction>
           </AlertDialogFooter>

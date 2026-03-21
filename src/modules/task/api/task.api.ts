@@ -20,7 +20,7 @@ export const taskApi = {
   },
 
   getTasksByStatus: (filterByCurrentUser: "all" | "mine"): Promise<ApiBaseResponse<TasksGroupedByStatus>> => {
-    return http.get(`/tasks/by-status${convertQueryParams({ filterByCurrentUser: filterByCurrentUser === "mine" ? true : false })}`);
+    return http.get(`/tasks/grouped-by-status${convertQueryParams({ filterByCurrentUser })}`);
   },
 
   getTaskById: (id: string): Promise<ApiBaseResponse<Task>> => {

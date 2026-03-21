@@ -29,25 +29,25 @@ export default function NavUser() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className='flex items-center gap-2 hover:bg-white/10 px-2 py-2 rounded-md transition-colors cursor-pointer'>
-          <Avatar>
-            <AvatarImage src={user?.avatar ?? undefined} alt={user?.lastName + " " + user?.firstName} />
-            <AvatarFallback>{getInitials(user?.lastName + " " + user?.firstName)}</AvatarFallback>
+        <div className='flex items-center gap-2 hover:bg-[#437de3] px-2 py-2 rounded-none transition-colors cursor-pointer border-b-2 border-dashed border-white/20 pb-4'>
+          <Avatar className="mario-border rounded-none w-10 h-10">
+            <AvatarImage src={user?.avatar ?? undefined} alt={user?.lastName + " " + user?.firstName} className="rounded-none object-cover" />
+            <AvatarFallback className="rounded-none bg-[#f83800] text-xs font-bold drop-shadow-md text-white">{getInitials(user?.lastName + " " + user?.firstName)}</AvatarFallback>
           </Avatar>
 
           <div className='flex-1'>
-            <div className='text-white uppercase'>
-              <span>Welcome back, {user?.lastName + " " + user?.firstName}</span>
+            <div className='text-white uppercase drop-shadow-md text-xs font-bold leading-relaxed'>
+              <span>HELLO, <br/><span className="text-[#fce0a6]">{user?.lastName + " " + user?.firstName}</span></span>
             </div>
           </div>
-          <ChevronDown className='text-white' size={16} />
+          <ChevronDown className='text-white drop-shadow-md ml-1' size={18} />
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end' className='w-56'>
+      <DropdownMenuContent align='end' className='w-56 font-roboto'>
         <DropdownMenuLabel>
           <div className='flex flex-col space-y-1'>
-            <p className='font-medium text-sm leading-none'>{user?.lastName + " " + user?.firstName}</p>
-            <p className='text-muted-foreground text-xs leading-none'>{user?.email}</p>
+            <p className='font-roboto font-medium text-sm leading-none'>{user?.lastName + " " + user?.firstName}</p>
+            <p className='font-roboto text-muted-foreground text-xs leading-none'>{user?.email}</p>
           </div>
         </DropdownMenuLabel>
 

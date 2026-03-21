@@ -291,12 +291,12 @@ export default function CampaignForm({ campaign }: CampaignFormProps) {
         </Tabs>
 
         <div className='flex items-center gap-2 mt-6'>
-          <AppButton type='submit' variant='outline' size='sm'>
+          <AppButton type='submit' variant='default' size='sm'>
             <Save />
             Xác nhận
           </AppButton>
 
-          <AppButton size='sm' type='button' onClick={() => navigate(-1)}>
+          <AppButton size='sm' type='button' className='bg-[#fce0a6] text-black hover:bg-[#f5d08a]' onClick={() => navigate(-1)}>
             Quay lại
           </AppButton>
         </div>

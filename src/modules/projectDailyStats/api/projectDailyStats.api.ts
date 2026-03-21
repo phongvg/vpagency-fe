@@ -9,10 +9,11 @@ import type {
 } from "@/modules/projectDailyStats/types/projectDailyStats.type";
 import { http } from "@/shared/libs/http";
 import type { ApiBaseResponse } from "@/shared/types/common/apiResponse.type";
+import { convertQueryParams } from "@/shared/utils/common.util";
 
 export const projectDailyStatsApi = {
   getProjectDailyStats: (params: ProjectDailyStatsListParams): Promise<ProjectDailyStatsResponse> => {
-    return http.post("/project-daily-stats", params);
+    return http.get(`/project-daily-stats${convertQueryParams(params)}`);
   },
 
   getFinalUrlDailyStats: (params: FinalUrlDailyStatsListParams): Promise<FinalUrlDailyStatsResponse> => {

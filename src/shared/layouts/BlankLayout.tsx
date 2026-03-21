@@ -1,15 +1,17 @@
 import LightRays from "@/shared/components/LightRays/LightRays";
 import { Outlet } from "react-router-dom";
+import Silk from "@/shared/components/Silk/index.tsx";
 
 export default function BlankLayout() {
   return (
     <div className='relative'>
-      <div className='app-cover'></div>
-      <div className='flex justify-center items-center p-6 md:p-10 w-full min-h-dvh app'>
+      <div className='app-cover' />
+      {/* <Silk speed={5} scale={1} color='#7B7481' noiseIntensity={1.5} rotation={0} /> */}
+      <div className='flex justify-center items-center '>
         <Outlet />
       </div>
 
-      <LightRays
+      {/* <LightRays
         raysOrigin='top-center'
         raysColor='#ffffff'
         raysSpeed={1}
@@ -23,7 +25,7 @@ export default function BlankLayout() {
         pulsating={false}
         fadeDistance={1}
         saturation={1}
-      />
+      /> */}
     </div>
   );
 }

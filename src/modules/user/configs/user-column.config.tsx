@@ -76,8 +76,8 @@ export const userColumnConfig = ({
     id: "actions",
     header: "Thao tác",
     cell: (props) => (
-      <div className='flex items-center'>
-        <AppButton size='sm' onClick={() => onOpenEdit(props.row.original.id)}>
+      <div className='flex items-center gap-2'>
+        <AppButton size='sm' className='bg-[#fce0a6] text-black hover:bg-[#f5d08a]' onClick={() => onOpenEdit(props.row.original.id)}>
           <SquarePen />
         </AppButton>
 

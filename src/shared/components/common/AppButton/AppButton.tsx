@@ -7,9 +7,9 @@ interface ButtonProps extends ComponentProps<typeof Button> {
   loading?: boolean;
 }
 
-export default function AppButton({ loading, children, className, ...props }: ButtonProps) {
+export default function AppButton({ loading, children, className, variant, ...props }: ButtonProps) {
   return (
-    <Button disabled={loading} className={cn("text-primary", className)} {...props}>
+    <Button disabled={loading} variant={variant} className={cn(variant === "outline" && "text-[#4A90E2]", className)} {...props}>
       {loading && <Spinner />}
       {children}
     </Button>

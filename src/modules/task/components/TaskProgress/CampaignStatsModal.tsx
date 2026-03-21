@@ -199,7 +199,7 @@ export default function CampaignStatsModal({ open, onClose, taskId, finalUrlId }
         </div>
 
         <div className='flex justify-end gap-2'>
-          <AppButton type='button' variant='outline' size='sm' onClick={onClose}>
+          <AppButton type='button' variant='secondary' size='sm' onClick={onClose}>
             Đóng
           </AppButton>
         </div>
