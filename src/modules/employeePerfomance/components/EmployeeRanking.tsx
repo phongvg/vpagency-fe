@@ -10,8 +10,8 @@ import { useCallback, useEffect, useRef } from "react";
 
 const rankingCards: { title: string; key: keyof { byCost: By[]; byRef: By[]; byActiveProjects: By[] }; formatValue: (v: number) => string }[] = [
   { title: "Top Chi Phí", key: "byCost", formatValue: (v) => formatDollarAmount(v) },
-  { title: "Top Ref", key: "byRef", formatValue: (v) => formatDollarAmount(v) },
-  { title: "Top Dự Án Active", key: "byActiveProjects", formatValue: (v) => formatDollarAmount(v) },
+  { title: "Top Ref", key: "byRef", formatValue: (v) => v.toString() },
+  { title: "Top Dự Án Active", key: "byActiveProjects", formatValue: (v) => v.toString() },
 ];
 
 export default function EmployeeRanking() {
