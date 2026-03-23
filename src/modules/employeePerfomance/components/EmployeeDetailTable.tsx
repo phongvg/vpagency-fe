@@ -1,5 +1,5 @@
 import { employeeDetailColumnConfig } from "@/modules/dashboard/configs/employee-detail-column.config";
-import type { EmployeeProject } from "@/modules/employeePerfomance/types/employeePerformance.type";
+import type { EmployeeProject, EmployeeProjectItem } from "@/modules/employeePerfomance/types/employeePerformance.type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { Checkbox } from "@/shared/components/ui/checkbox";
@@ -26,12 +26,13 @@ export default function EmployeeProjectTable({ employee }: EmployeeProjectTableP
     }
 
     const totals = {
-      id: "total-row",
+      projectId: "total-row",
       projectName: `Tổng dự án đã chọn (${selectedProjects.length})`,
       cost: 0,
       cpc: 0,
       clicks: 0,
       impressions: 0,
+      ctr: 0,
       ref: 0,
       ftd: 0,
       tasksAssigned: 0,
@@ -99,21 +100,21 @@ export default function EmployeeProjectTable({ employee }: EmployeeProjectTableP
     }
   };
 
-  const columnsWithCheckbox: ColumnDef<any>[] = [
+  const columnsWithCheckbox: ColumnDef<EmployeeProjectItem>[] = [
     {
       id: "__select",
       header: () => <Checkbox checked={allSelected} onCheckedChange={toggleAllProjects} />,
       cell: ({ row }) => {
-        if (row.original.id === "total-row") {
+        if (row.original.projectId === "total-row") {
           return null;
         }
         return (
           <Checkbox
-            checked={!!rowSelection[row.original.id]}
+            checked={!!rowSelection[row.original.projectId]}
             onCheckedChange={(checked) =>
               setRowSelection((prev) => ({
                 ...prev,
-                [row.original.id]: !!checked,
+                [row.original.projectId]: !!checked,
               }))
             }
           />
@@ -125,8 +126,8 @@ export default function EmployeeProjectTable({ employee }: EmployeeProjectTableP
     ...baseColumns,
   ];
 
-  const getRowClassName = (row: any) => {
-    if (row.id === "total-row") {
+  const getRowClassName = (row: EmployeeProjectItem) => {
+    if (row.projectId === "total-row") {
       return "bg-muted/50 font-semibold border-t-2";
     }
     return "";
@@ -141,7 +142,7 @@ export default function EmployeeProjectTable({ employee }: EmployeeProjectTableP
       </CardHeader>
 
       <CardContent className='normal-case'>
-        <AppTable columns={columnsWithCheckbox} data={dataWithTotals} rowIdKey='id' getRowClassName={getRowClassName} />
+        <AppTable columns={columnsWithCheckbox} data={dataWithTotals} rowIdKey='projectId' getRowClassName={getRowClassName} />
       </CardContent>
     </Card>
   );
