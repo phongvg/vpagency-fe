@@ -31,7 +31,7 @@ export default function Leaderboard({ data, formatValue }: LeaderboardProps) {
   }
 
   return (
-    <div className='flex justify-center items-center gap-10 pt-10 pb-5'>
+    <div className='gap-10 grid grid-cols-3 pt-10 pb-5'>
       {rank2 && <LeaderboardPodium rank={2} user={rank2} formatValue={formatValue} />}
       {rank1 && <LeaderboardPodium rank={1} user={rank1} formatValue={formatValue} />}
       {rank3 && <LeaderboardPodium rank={3} user={rank3} formatValue={formatValue} />}

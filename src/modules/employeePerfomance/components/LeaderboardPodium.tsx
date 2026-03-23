@@ -54,7 +54,7 @@ export default function LeaderboardPodium({ rank, user, formatValue }: Leaderboa
       </div>
 
       <div className='space-y-1 text-center'>
-        <p className={cn("font-semibold text-lg", textColorClass[rank])}>
+        <p className={cn("max-w-full font-semibold text-lg", textColorClass[rank])}>
           {user.firstName} {user.lastName}
         </p>
         <p className='font-bold text-[13px] text-primary'>{displayValue}</p>
