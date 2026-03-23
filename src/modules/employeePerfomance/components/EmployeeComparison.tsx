@@ -58,7 +58,7 @@ export default function EmployeeComparison() {
               fetcher={fetchProjectTypes}
               mapOption={(type) => ({ value: type.id, label: type.name })}
               onChange={(value) =>
-                setParams((prev) => ({ ...prev, typeId: value && !Array.isArray(value) ? String(value.value) : undefined, page: 1 }))
+                setParams((prev) => ({ ...prev, projectTypeId: value && !Array.isArray(value) ? String(value.value) : undefined, page: 1 }))
               }
               placeholder='Loại dự án'
             />
