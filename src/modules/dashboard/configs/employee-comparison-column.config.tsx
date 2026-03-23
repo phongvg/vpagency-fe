@@ -1,7 +1,9 @@
+import type { EmployeePerformance } from "@/modules/employeePerfomance/types/employeePerformance.type";
+import UserAvatar from "@/shared/components/UserAvatar";
 import { fixedNumber, formatDollarAmount } from "@/shared/utils/common.util";
 import type { ColumnDef } from "@tanstack/react-table";
 
-export const employeeComparisonColumnConfig = (): ColumnDef<any>[] => [
+export const employeeComparisonColumnConfig = (): ColumnDef<EmployeePerformance>[] => [
   {
     id: "index",
     header: "STT",
@@ -9,8 +11,11 @@ export const employeeComparisonColumnConfig = (): ColumnDef<any>[] => [
   },
   {
     id: "name",
-    header: "Tên nhân viên",
-    accessorKey: "name",
+    header: "Nhân viên",
+    cell: (props) => {
+      const { firstName, lastName, avatar } = props.row.original;
+      return <UserAvatar data={{ firstName, lastName, avatar }} />;
+    },
   },
   {
     id: "project-metrics",

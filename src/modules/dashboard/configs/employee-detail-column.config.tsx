@@ -1,7 +1,8 @@
+import type { EmployeeProjectItem } from "@/modules/employeePerfomance/types/employeePerformance.type";
 import { fixedNumber, formatDollarAmount } from "@/shared/utils/common.util";
 import type { ColumnDef } from "@tanstack/react-table";
 
-export const employeeDetailColumnConfig = (): ColumnDef<any>[] => [
+export const employeeDetailColumnConfig = (): ColumnDef<EmployeeProjectItem>[] => [
   {
     id: "project-name",
     header: "Tên dự án",

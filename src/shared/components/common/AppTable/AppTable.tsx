@@ -244,8 +244,8 @@ export function AppTable<TData, TValue>({
 
           <TableBody>
             {table.getRowModel().rows?.length &&
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={getRowClassName?.(row.original)}>
+              table.getRowModel().rows.map((row, index) => (
+                <TableRow key={row.id ?? index} data-state={row.getIsSelected() && "selected"} className={getRowClassName?.(row.original)}>
                   {row.getVisibleCells().map((cell) => {
                     const meta = cell.column.columnDef.meta as { sticky?: "left" | "right"; stickyOffset?: number } | undefined;
                     const isSticky = meta?.sticky || cell.column.id === "__select";

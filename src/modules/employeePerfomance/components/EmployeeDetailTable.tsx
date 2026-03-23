@@ -1,4 +1,5 @@
 import { employeeDetailColumnConfig } from "@/modules/dashboard/configs/employee-detail-column.config";
+import type { EmployeeProject } from "@/modules/employeePerfomance/types/employeePerformance.type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { Checkbox } from "@/shared/components/ui/checkbox";
@@ -6,11 +7,7 @@ import type { ColumnDef, RowSelectionState } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 
 interface EmployeeProjectTableProps {
-  employee: {
-    id: number;
-    name: string;
-    projects: any[];
-  };
+  employee: EmployeeProject | undefined;
 }
 
 export default function EmployeeProjectTable({ employee }: EmployeeProjectTableProps) {
@@ -18,11 +15,11 @@ export default function EmployeeProjectTable({ employee }: EmployeeProjectTableP
 
   const baseColumns = useMemo(() => employeeDetailColumnConfig(), []);
 
-  const allProjectIds = useMemo(() => employee.projects.map((p) => p.id), [employee.projects]);
+  const allProjectIds = useMemo(() => employee?.projects?.map((p) => p.projectId) || [], [employee?.projects]);
 
   const calculateSelectedTotals = (projects: any[], selection: RowSelectionState) => {
     const selectedIds = Object.keys(selection).filter((key) => selection[key]);
-    const selectedProjects = projects.filter((p) => selectedIds.includes(p.id));
+    const selectedProjects = projects.filter((p) => selectedIds.includes(p.projectId));
 
     if (selectedProjects.length === 0) {
       return null;
@@ -85,8 +82,8 @@ export default function EmployeeProjectTable({ employee }: EmployeeProjectTableP
     return totals;
   };
 
-  const totals = calculateSelectedTotals(employee.projects, rowSelection);
-  const dataWithTotals = totals ? [...employee.projects, totals] : employee.projects;
+  const totals = calculateSelectedTotals(employee?.projects || [], rowSelection);
+  const dataWithTotals = totals ? [...(employee?.projects || []), totals] : employee?.projects || [];
 
   const allSelected = allProjectIds.length > 0 && allProjectIds.every((id) => rowSelection[id]);
 
@@ -138,7 +135,9 @@ export default function EmployeeProjectTable({ employee }: EmployeeProjectTableP
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{employee.name}</CardTitle>
+        <CardTitle>
+          {employee?.firstName} {employee?.lastName}
+        </CardTitle>
       </CardHeader>
 
       <CardContent className='normal-case'>

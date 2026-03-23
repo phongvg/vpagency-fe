@@ -42,6 +42,7 @@ export const authService = {
 
   clearSession() {
     localStorage.clear();
+    sessionStorage.clear();
   },
 
   logout: async (): Promise<void> => {

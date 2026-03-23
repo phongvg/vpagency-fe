@@ -1,5 +1,6 @@
 import type { AppealAccountListParams } from "@/modules/appealAccount/types/appealAccount.type";
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
+import type { EmployeePerformanceParams } from "@/modules/employeePerfomance/types/employeePerformance.type";
 import type { GmailListParams } from "@/modules/gmail/types/gmail.type";
 import type { GmailStatusListParams } from "@/modules/gmailStatus/types/gmailStatus.type";
 import type { ProjectListParams } from "@/modules/project/types/project.type";
@@ -151,4 +152,14 @@ export const finalUrlDailyStatsQueryKeys = {
   lists: () => [...finalUrlDailyStatsQueryKeys.all, "list"] as const,
 
   list: (params: FinalUrlDailyStatsListParams) => [...finalUrlDailyStatsQueryKeys.lists(), normalizeParams(params)] as const,
+};
+
+export const employeePerformanceQueryKeys = {
+  all: ["employee-performance"] as const,
+
+  lists: () => [...employeePerformanceQueryKeys.all, "list"] as const,
+
+  list: (params: EmployeePerformanceParams) => [...employeePerformanceQueryKeys.lists(), normalizeParams(params)] as const,
+
+  ranking: (params: EmployeePerformanceParams) => [...employeePerformanceQueryKeys.all, "ranking", normalizeParams(params)] as const,
 };

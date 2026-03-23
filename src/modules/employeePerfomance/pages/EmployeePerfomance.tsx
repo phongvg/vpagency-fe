@@ -1,6 +1,6 @@
-import EmployeeComparison from "@/modules/dashboard/components/EmployeeComparison";
-import EmployeeProject from "@/modules/dashboard/components/EmployeeProject";
-import EmployeeRanking from "@/modules/dashboard/components/EmployeeRanking";
+import EmployeeComparison from "@/modules/employeePerfomance/components/EmployeeComparison";
+import EmployeeProject from "@/modules/employeePerfomance/components/EmployeeProject";
+import EmployeeRanking from "@/modules/employeePerfomance/components/EmployeeRanking";
 
 export default function EmployeePerfomance() {
   return (

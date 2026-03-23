@@ -1,13 +1,15 @@
 import Logo from "@/shared/components/Logo";
 import NavUser from "@/shared/layouts/components/Sidebar/NavUser";
 import { useAuthStore } from "@/shared/stores/auth/useAuthStore";
-import { Box } from "lucide-react";
+import { useRankingPopupStore } from "@/shared/stores/rankingPopup/useRankingPopupStore";
+import { Box, Trophy } from "lucide-react";
 import { getSidebarRoutes } from "./sidebar.config";
 import SidebarItem from "./SidebarItem";
 
 export default function Sidebar() {
   const { user } = useAuthStore();
   const routes = getSidebarRoutes(user?.roles || []);
+  const { setOpen } = useRankingPopupStore();
 
   return (
     <aside className='top-0 left-0 z-20 fixed bg-[rgba(30,45,55,0.70)] backdrop-blur-md border-[rgba(103,206,255,0.15)] border-r w-[300px] h-full'>
@@ -16,6 +18,13 @@ export default function Sidebar() {
           <div className='flex items-center gap-2 p-2 border-border border-b'>
             <Box className='text-2xl' />
             <Logo />
+            <button
+              type='button'
+              onClick={() => setOpen(true)}
+              className='hover:bg-white/10 ml-auto p-1.5 rounded-md text-yellow-400 transition-colors'
+              title='Top nhân viên tháng này'>
+              <Trophy size={18} />
+            </button>
           </div>
 
           <NavUser />

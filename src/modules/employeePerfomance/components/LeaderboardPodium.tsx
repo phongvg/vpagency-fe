@@ -2,14 +2,14 @@ import Crown from "@/assets/images/crown.png";
 import Medal1 from "@/assets/images/medal-1.png";
 import Medal2 from "@/assets/images/medal-2.png";
 import Medal3 from "@/assets/images/medal-3.png";
-import type { User } from "@/modules/user/types/user.type";
+import type { By } from "@/modules/employeePerfomance/types/employeePerformance.type";
 import UserAvatar from "@/shared/components/UserAvatar";
 import { cn } from "@/shared/libs/utils";
 
 interface LeaderboardPodiumProps {
   rank: number;
-  user: User;
-  points: number;
+  user: By;
+  formatValue?: (value: number) => string;
 }
 
 const textColorClass: Record<number, string> = {
@@ -24,9 +24,10 @@ const medalMap: Record<number, string> = {
   3: Medal3,
 };
 
-export default function LeaderboardPodium({ rank, user, points }: LeaderboardPodiumProps) {
+export default function LeaderboardPodium({ rank, user, formatValue }: LeaderboardPodiumProps) {
   const medal = medalMap[rank];
   const isTop1 = rank === 1;
+  const displayValue = formatValue ? formatValue(user.value) : user.value.toLocaleString();
 
   return (
     <div className={cn("flex flex-col items-center gap-4", isTop1 && "-translate-y-8")}>
@@ -40,7 +41,7 @@ export default function LeaderboardPodium({ rank, user, points }: LeaderboardPod
           />
         )}
 
-        <UserAvatar data={user} size='3xl' />
+        <UserAvatar data={{ firstName: user.firstName, lastName: user.lastName, avatar: user.avatar }} size='3xl' />
 
         {medal && (
           <img
@@ -56,7 +57,7 @@ export default function LeaderboardPodium({ rank, user, points }: LeaderboardPod
         <p className={cn("font-semibold text-lg", textColorClass[rank])}>
           {user.firstName} {user.lastName}
         </p>
-        <p className='font-bold text-[13px] text-primary'>{points} pts</p>
+        <p className='font-bold text-[13px] text-primary'>{displayValue}</p>
       </div>
     </div>
   );

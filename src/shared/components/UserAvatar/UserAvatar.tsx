@@ -4,7 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/components/ui/
 import { getInitials } from "@/shared/utils/common.util";
 
 interface UserAvatarProps {
-  data: User | User[] | null;
+  data: Partial<User> | Partial<User>[] | null;
   size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
 }
 
@@ -33,7 +33,7 @@ export default function UserAvatar({ data, size }: UserAvatarProps) {
             </TooltipTrigger>
 
             <TooltipContent side='top'>
-              {user.firstName} {user.lastName} ({user.username})
+              {user.firstName} {user.lastName} {user.username && `(${user.username})`}
             </TooltipContent>
           </Tooltip>
         ))}
@@ -51,7 +51,7 @@ export default function UserAvatar({ data, size }: UserAvatarProps) {
       </TooltipTrigger>
 
       <TooltipContent side='top'>
-        {data.firstName} {data.lastName} ({data.username})
+        {data.firstName} {data.lastName} {data.username && `(${data.username})`}
       </TooltipContent>
     </Tooltip>
   );
