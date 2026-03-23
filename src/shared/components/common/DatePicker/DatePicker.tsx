@@ -3,6 +3,7 @@ import { Calendar } from "@/shared/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
+import { useState } from "react";
 
 interface DatePickerProps {
   label?: string;
@@ -13,8 +14,10 @@ interface DatePickerProps {
 }
 
 export default function DatePicker({ label, value, onChange, placeholder = "Chọn ngày", disabled }: DatePickerProps) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <div className='flex flex-col gap-1'>
           {label && <span className='text-[8px] text-white/50'>{label}</span>}
@@ -31,7 +34,14 @@ export default function DatePicker({ label, value, onChange, placeholder = "Ch�
       </PopoverTrigger>
 
       <PopoverContent className='p-0 w-auto'>
-        <Calendar mode='single' selected={value ? new Date(value) : undefined} onSelect={onChange} />
+        <Calendar
+          mode='single'
+          selected={value ? new Date(value) : undefined}
+          onSelect={(date) => {
+            onChange?.(date);
+            setOpen(false);
+          }}
+        />
       </PopoverContent>
     </Popover>
   );

@@ -1,8 +1,9 @@
-import { employeeDetailColumnConfig } from "@/modules/dashboard/configs/employee-detail-column.config";
+import { employeeDetailColumnConfig } from "@/modules/employeePerfomance/configs/employee-detail-column.config";
 import type { EmployeeProject, EmployeeProjectItem } from "@/modules/employeePerfomance/types/employeePerformance.type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { AppTable } from "@/shared/components/common/AppTable";
 import { Checkbox } from "@/shared/components/ui/checkbox";
+import { useAuthStore } from "@/shared/stores/auth/useAuthStore";
 import type { ColumnDef, RowSelectionState } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 
@@ -13,7 +14,9 @@ interface EmployeeProjectTableProps {
 export default function EmployeeProjectTable({ employee }: EmployeeProjectTableProps) {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
-  const baseColumns = useMemo(() => employeeDetailColumnConfig(), []);
+  const { user } = useAuthStore();
+
+  const baseColumns = useMemo(() => employeeDetailColumnConfig(user?.roles), [user?.roles]);
 
   const allProjectIds = useMemo(() => employee?.projects?.map((p) => p.projectId) || [], [employee?.projects]);
 

@@ -1,9 +1,11 @@
 import type { EmployeePerformance } from "@/modules/employeePerfomance/types/employeePerformance.type";
 import UserAvatar from "@/shared/components/UserAvatar";
+import type { Role } from "@/shared/constants/role.constant";
 import { fixedNumber, formatDollarAmount } from "@/shared/utils/common.util";
+import { isAdminOrAccounting } from "@/shared/utils/permission.util";
 import type { ColumnDef } from "@tanstack/react-table";
 
-export const employeeComparisonColumnConfig = (): ColumnDef<EmployeePerformance>[] => [
+export const employeeComparisonColumnConfig = (roles: Role[] | undefined): ColumnDef<EmployeePerformance>[] => [
   {
     id: "index",
     header: "STT",
@@ -125,34 +127,38 @@ export const employeeComparisonColumnConfig = (): ColumnDef<EmployeePerformance>
       },
     ],
   },
-  {
-    id: "financial-metrics",
-    header: "Chỉ số tài chính",
-    columns: [
-      {
-        id: "hold-revenue",
-        header: "Hoa hồng tạm giữ",
-        accessorKey: "holdRevenue",
-        cell: (props) => <span className='font-bold text-orange-500'>{formatDollarAmount(props.row.original.holdRevenue)}</span>,
-      },
-      {
-        id: "received-revenue",
-        header: "Hoa hồng rút về",
-        accessorKey: "receivedRevenue",
-        cell: (props) => <span className='font-bold text-emerald-500'>{formatDollarAmount(props.row.original.receivedRevenue)}</span>,
-      },
-      {
-        id: "profit",
-        header: "Lợi nhuận",
-        accessorKey: "profit",
-        cell: (props) => <span className='font-bold text-green-500'>{formatDollarAmount(props.row.original.profit)}</span>,
-      },
-      {
-        id: "roi",
-        header: "ROI",
-        accessorKey: "roi",
-        cell: (props) => <span className='font-bold text-yellow-500'>{`${fixedNumber(props.row.original.roi)}%`}</span>,
-      },
-    ],
-  },
+  ...((isAdminOrAccounting(roles)
+    ? [
+        {
+          id: "financial-metrics",
+          header: "Chỉ số tài chính",
+          columns: [
+            {
+              id: "hold-revenue",
+              header: "Hoa hồng tạm giữ",
+              accessorKey: "holdRevenue",
+              cell: (props) => <span className='font-bold text-orange-500'>{formatDollarAmount(props.row.original.holdRevenue)}</span>,
+            },
+            {
+              id: "received-revenue",
+              header: "Hoa hồng rút về",
+              accessorKey: "receivedRevenue",
+              cell: (props) => <span className='font-bold text-emerald-500'>{formatDollarAmount(props.row.original.receivedRevenue)}</span>,
+            },
+            {
+              id: "profit",
+              header: "Lợi nhuận",
+              accessorKey: "profit",
+              cell: (props) => <span className='font-bold text-green-500'>{formatDollarAmount(props.row.original.profit)}</span>,
+            },
+            {
+              id: "roi",
+              header: "ROI",
+              accessorKey: "roi",
+              cell: (props) => <span className='font-bold text-yellow-500'>{`${fixedNumber(props.row.original.roi)}%`}</span>,
+            },
+          ],
+        },
+      ]
+    : []) as ColumnDef<EmployeePerformance>[]),
 ];

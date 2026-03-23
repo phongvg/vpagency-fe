@@ -12,6 +12,8 @@ export default function Leaderboard({ data, formatValue }: LeaderboardProps) {
   const rank1 = byRank(1);
   const rank3 = byRank(3);
 
+  if (!rank1 && !rank2 && !rank3) return null;
+
   return (
     <div className='flex justify-center items-center gap-10 pt-10 pb-5'>
       {rank2 && <LeaderboardPodium rank={2} user={rank2} formatValue={formatValue} />}
