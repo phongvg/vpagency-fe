@@ -17,7 +17,7 @@ export default function DatePicker({ label, value, onChange, placeholder = "Chá»
     <Popover>
       <PopoverTrigger asChild>
         <div className='flex flex-col gap-1'>
-          {label && <span className="text-[12px] font-['Inter',_sans-serif] font-medium text-black/60 mb-1">{label}</span>}
+          {label && <span className="text-[12px] font-['Inter',_sans-serif] font-medium text-black/60">{label}</span>}
           <Button
             type='button'
             variant='outline'

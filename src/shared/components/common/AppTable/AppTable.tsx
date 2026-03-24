@@ -216,10 +216,10 @@ export function AppTable<TData, TValue>({
                       colSpan={header.colSpan}
                       style={{ minWidth: header.column.columnDef.minSize, ...stickyStyle }}
                       className={cn(
-                        isScrollVertical && "bg-[#ba5825]",
-                        isSticky && header.column.id === "__select" 
-                          ? "z-20 bg-[#ba5825] shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]" 
-                          : isSticky && "z-20 bg-white/5 backdrop-blur-lg shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]"
+                        "bg-[#ba5825]",
+                        isSticky && header.column.id === "__select"
+                          ? "z-20 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]"
+                          : isSticky && "z-20 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]"
                       )}>
                       {header.isPlaceholder ? null : (
                         <div
