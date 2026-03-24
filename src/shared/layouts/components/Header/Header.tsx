@@ -13,6 +13,7 @@ import Mua4 from "@/assets/image/mua_4-removebg-preview.png";
 import Mua6 from "@/assets/image/mua_6-removebg-preview.png";
 import Mua8 from "@/assets/image/mua_8-removebg-preview (1).png";
 import Mua9 from "@/assets/image/mua_9-removebg-preview.png";
+import SunImage from "@/assets/image/sun-removebg-preview.png";
 import { useCurrentRoute } from "@/shared/hooks/useCurrentRoute";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -132,7 +133,28 @@ export default function Header() {
             from { transform: translateX(calc(100vw + 200px)); }
             to   { transform: translateX(-200px); }
           }
+          @keyframes sun-spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+          }
         `}</style>
+        {/* Mặt trời cố định góc trái trên - chỉ hiện khi nắng */}
+        {!weather?.rainy && (
+          <img
+            src={SunImage}
+            alt="sun"
+            style={{
+              position: "absolute",
+              top: "-8px",
+              left: "8px",
+              width: "72px",
+              height: "72px",
+              objectFit: "contain",
+              animation: "sun-spin 12s linear infinite",
+              filter: "drop-shadow(0 0 8px rgba(255,220,0,0.7))",
+            }}
+          />
+        )}
         {clouds.map((cloud, i) => (
           <img key={i} src={cloud.src} alt=""
             style={{

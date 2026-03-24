@@ -16,7 +16,11 @@ import { ChevronDown, LogOut, User } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function NavUser() {
+interface NavUserProps {
+  compact?: boolean;
+}
+
+export default function NavUser({ compact = false }: NavUserProps) {
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
@@ -29,19 +33,34 @@ export default function NavUser() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className='flex items-center gap-2 hover:bg-[#437de3] px-2 py-2 rounded-none transition-colors cursor-pointer border-b-2 border-dashed border-white/20 pb-4'>
-          <Avatar className="mario-border rounded-none w-10 h-10">
-            <AvatarImage src={user?.avatar ?? undefined} alt={user?.lastName + " " + user?.firstName} className="rounded-none object-cover" />
-            <AvatarFallback className="rounded-none bg-[#f83800] text-xs font-bold drop-shadow-md text-white">{getInitials(user?.lastName + " " + user?.firstName)}</AvatarFallback>
-          </Avatar>
-
-          <div className='flex-1'>
-            <div className='text-white uppercase drop-shadow-md text-xs font-bold leading-relaxed'>
-              <span>HELLO, <br/><span className="text-[#fce0a6]">{user?.lastName + " " + user?.firstName}</span></span>
-            </div>
+        {compact ? (
+          // Compact version for Header navbar
+          <div className='flex items-center gap-2 hover:bg-[#437de3] px-2 py-1.5 rounded-none transition-colors cursor-pointer'>
+            <Avatar className="mario-border rounded-none w-8 h-8">
+              <AvatarImage src={user?.avatar ?? undefined} alt={user?.lastName + " " + user?.firstName} className="rounded-none object-cover" />
+              <AvatarFallback className="rounded-none bg-[#f83800] text-[10px] font-bold drop-shadow-md text-white">{getInitials(user?.lastName + " " + user?.firstName)}</AvatarFallback>
+            </Avatar>
+            <span className='text-white text-xs font-bold drop-shadow-md uppercase hidden sm:block'>
+              {user?.lastName + " " + user?.firstName}
+            </span>
+            <ChevronDown className='text-white drop-shadow-md ml-1' size={14} />
           </div>
-          <ChevronDown className='text-white drop-shadow-md ml-1' size={18} />
-        </div>
+        ) : (
+          // Full version for Sidebar
+          <div className='flex items-center gap-2 hover:bg-[#437de3] px-2 py-2 rounded-none transition-colors cursor-pointer border-b-2 border-dashed border-white/20 pb-4'>
+            <Avatar className="mario-border rounded-none w-14 h-14">
+              <AvatarImage src={user?.avatar ?? undefined} alt={user?.lastName + " " + user?.firstName} className="rounded-none object-cover" />
+              <AvatarFallback className="rounded-none bg-[#f83800] text-xs font-bold drop-shadow-md text-white">{getInitials(user?.lastName + " " + user?.firstName)}</AvatarFallback>
+            </Avatar>
+
+            <div className='flex-1'>
+              <div className='text-white uppercase drop-shadow-md text-xs font-bold leading-relaxed'>
+                <span>HELLO, <br/><span className="text-[#fce0a6]">{user?.lastName + " " + user?.firstName}</span></span>
+              </div>
+            </div>
+            <ChevronDown className='text-white drop-shadow-md ml-1' size={18} />
+          </div>
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end' className='w-56 font-roboto'>
         <DropdownMenuLabel>

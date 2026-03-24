@@ -9,12 +9,12 @@ export default function Sidebar() {
   const routes = getSidebarRoutes(user?.roles || []);
 
   return (
-    <aside className='top-0 bottom-0 left-0 z-20 fixed bg-[#5c94fc] mario-border w-[300px] overflow-y-auto'>
+    <aside className='sticky top-0 shrink-0 z-10 bg-[#5c94fc] mario-border w-[300px] h-dvh overflow-y-auto'>
       <div className='flex flex-col min-h-full'>
         <div className='space-y-3 p-2'>
           <div className='flex items-center gap-2 p-2 mario-block mario-border mb-4'>
-            <img src={LogoImage} alt="VP Agency" className="w-8 h-8 object-contain drop-shadow-md" />
-            <div className='font-bold text-[#fce0a6] text-xl drop-shadow-md uppercase tracking-wider'>
+            <img src={LogoImage} alt="VP Agency" className="w-9 h-9 object-contain drop-shadow-md" />
+            <div style={{ fontFamily: "'Press Start 2P', monospace", fontSize: "18px" }} className='text-[#fce0a6] drop-shadow-md uppercase tracking-wider'>
               VP AGENCY
             </div>
           </div>

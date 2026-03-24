@@ -18,7 +18,8 @@ export default function AppLoading({ loading = false }: AppLoadingProps) {
             autoplay={true}
             className="w-full h-full"
           />
-          <span className='absolute bottom-20  text-center uppercase tracking-[.25rem] font-bold text-white drop-shadow-md'>
+          <span className='absolute bottom-20 text-center uppercase text-white drop-shadow-md'
+            style={{ fontFamily: "'Press Start 2P', monospace", fontSize: "12px", letterSpacing: "0.2rem" }}>
             VP Loading...
           </span>
         </div>
