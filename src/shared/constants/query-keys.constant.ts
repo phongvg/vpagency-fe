@@ -162,4 +162,7 @@ export const employeePerformanceQueryKeys = {
   list: (params: EmployeePerformanceParams) => [...employeePerformanceQueryKeys.lists(), normalizeParams(params)] as const,
 
   ranking: (params: EmployeePerformanceParams) => [...employeePerformanceQueryKeys.all, "ranking", normalizeParams(params)] as const,
+
+  projects: (userId: string, params: EmployeePerformanceParams) =>
+    [...employeePerformanceQueryKeys.all, "projects", userId, normalizeParams(params)] as const,
 };

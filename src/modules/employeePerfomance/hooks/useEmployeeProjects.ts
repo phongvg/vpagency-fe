@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 export const useEmployeeProjects = (userId: string, params: EmployeePerformanceParams) => {
   return useQuery({
     enabled: !!userId,
-    queryKey: employeePerformanceQueryKeys.ranking(params),
+    queryKey: employeePerformanceQueryKeys.projects(userId, params),
     queryFn: () => employeePerformanceApi.getEmployeeProjects(userId, params),
     select: (res) => res.data,
   });
