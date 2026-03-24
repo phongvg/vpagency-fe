@@ -7,8 +7,6 @@ import { formatDate, startOfMonth } from "date-fns";
 export default function EmployeeProject() {
   const { user } = useAuthStore();
 
-  console.log("user", user);
-
   const { data: employeeProjectsData } = useEmployeeProjects(user?.id as string, {
     dateFrom: formatDate(startOfMonth(new Date()), "yyyy-MM-dd"),
     dateTo: formatDate(new Date(), "yyyy-MM-dd"),
