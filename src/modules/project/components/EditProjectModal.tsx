@@ -150,12 +150,12 @@ export default function EditProjectModal({ open, onClose, projectId }: EditProje
               )}
 
               <DialogFooter>
-                <AppButton type='button' size='sm' onClick={onClose}>
+                <AppButton type='button' variant='secondary' size='sm' onClick={onClose}>
                   Đóng
                 </AppButton>
 
                 {tabValue === TABS[0].value && (
-                  <AppButton type='submit' variant='outline' size='sm'>
+                  <AppButton type='submit' variant='default' size='sm'>
                     <Save />
                     Xác nhận
                   </AppButton>

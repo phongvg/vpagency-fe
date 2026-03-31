@@ -5,21 +5,21 @@ import * as React from "react";
 import { cn } from "@/shared/libs/utils";
 
 const buttonVariants = cva(
-  "inline-flex justify-center items-center gap-2 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring [&_svg]:size-4 font-medium uppercase whitespace-nowrap transition-colors [&_svg]:pointer-events-none disabled:pointer-events-none [&_svg]:shrink-0",
+  "inline-flex justify-center items-center gap-2 rounded-[2px] disabled:opacity-50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring [&_svg]:size-4 font-bold uppercase whitespace-nowrap transition-transform active:translate-y-[2px] active:shadow-[0_0px_0_rgba(0,0,0,1)] [&_svg]:pointer-events-none disabled:pointer-events-none [&_svg]:shrink-0 drop-shadow-[0_4px_0_rgba(0,0,0,0.8)]",
   {
     variants: {
       variant: {
-        default: "bg-transparent text-primary shadow",
-        destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
-        outline: "border border-primary bg-transparent shadow-sm",
-        secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-accent",
-        link: "text-primary underline-offset-4 hover:underline",
+        default: "mario-border bg-[#22b14c] text-white hover:brightness-110",
+        destructive: "mario-border bg-[#e52521] text-white hover:brightness-110",
+        outline: "mario-border bg-white text-black hover:bg-[#fce0a6] hover:text-[#e52521]",
+        secondary: "mario-border bg-[#fce0a6] text-[#e52521] hover:brightness-110",
+        ghost: "hover:bg-[#437de3] hover:text-white rounded-none active:translate-y-0 active:shadow-none drop-shadow-none",
+        link: "text-[#fce0a6] underline-offset-4 hover:underline drop-shadow-none active:translate-y-0 active:shadow-none",
       },
       size: {
-        default: "h-9 px-4 py-2",
-        sm: "h-8 px-3",
-        lg: "h-10 px-8",
+        default: "h-9 px-4 py-2 text-xs",
+        sm: "h-8 px-3 text-[10px]",
+        lg: "h-10 px-8 text-sm",
         icon: "h-9 w-9",
       },
     },

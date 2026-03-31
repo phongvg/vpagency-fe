@@ -51,10 +51,10 @@ export default function UpdateProfileModal({ open, onClose }: UpdateProfileModal
             <UpdateProfileForm />
 
             <DialogFooter>
-              <AppButton type='button' onClick={onClose}>
+              <AppButton type='button' variant='secondary' onClick={onClose}>
                 Hủy
               </AppButton>
-              <AppButton type='submit' variant='outline' loading={updateProfile.isPending}>
+              <AppButton type='submit' variant='default' loading={updateProfile.isPending}>
                 <Save />
                 Xác nhận
               </AppButton>

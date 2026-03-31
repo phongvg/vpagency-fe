@@ -17,21 +17,56 @@
   }
 
   body {
-    @apply bg-[#0a151a] font-medium text-white text-sm antialiased tracking-[0.75px];
-    font-family: "Noto Sans", sans-serif;
+    @apply bg-[#5c94fc] text-white antialiased;
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
   }
 }
 
 @layer utilities {
   .scrollbar-custom {
-    @apply [&::-webkit-scrollbar-thumb]:bg-white/20
-           [&::-webkit-scrollbar-thumb]:hover:bg-white/30
-           [&::-webkit-scrollbar-track]:bg-transparent
-           [&::-webkit-scrollbar]:w-1
-           [&::-webkit-scrollbar]:h-1
-           [&::-webkit-scrollbar-thumb]:rounded-full;
+    @apply [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-thumb]:hover:bg-white/30 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-full;
+  }
+
+  .font-mario {
+    font-family: 'Press Start 2P', cursive;
+  }
+
+  .font-roboto {
+    font-family: 'Roboto', sans-serif;
+  }
+
+  /* Mario Pixelated Border effect using box-shadow */
+  .mario-border {
+    position: relative;
+    border: 3px solid black;
+    box-shadow:
+      inset 3px 3px 0px 0px rgba(255, 255, 255, 0.7),
+      inset -3px -3px 0px 0px rgba(0, 0, 0, 0.5),
+      4px 4px 0px 0px rgba(0, 0, 0, 0.8);
+    /* Heavier drop shadow */
+    border-radius: 0px;
+    /* Fully blocky */
+    image-rendering: auto;
+  }
+
+  .mario-block {
+    background-color: #f83800;
+    /* classic Mario brick red */
+    color: white;
+  }
+
+  .mario-item-active {
+    background-color: #fce0a6;
+    /* classic yellow text/active color */
+    color: #e52521;
+    /* Mario Red font */
+    box-shadow: inset 4px 4px 0px 0px rgba(255, 255, 255, 0.7), inset -4px -4px 0px 0px rgba(0, 0, 0, 0.2) !important;
   }
 }
+
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
@@ -39,6 +74,11 @@ input[type="number"]::-webkit-outer-spin-button {
   -moz-appearance: none;
   appearance: none;
   margin: 0;
+}
+
+*:focus,
+*:focus-visible {
+  outline: none !important;
 }
 
 *:focus,

@@ -67,7 +67,7 @@ export default function TaskListPanel({ params, setParams, tasks, meta, loading 
                     onClick={() => getTaskDetail(task.id)}
                     title={task.name}>
                     <div className='flex justify-between items-start gap-2'>
-                      <h3 className='flex-1 font-semibold text-white group-hover:text-primary/80 line-clamp-2 transition-colors'>{task.name}</h3>
+                      <h3 className='flex-1 font-semibold text-[11px] text-[#2C2C2C] group-hover:text-primary/80 line-clamp-2 transition-colors'>{task.name}</h3>
 
                       <div
                         className={cn(
@@ -82,7 +82,7 @@ export default function TaskListPanel({ params, setParams, tasks, meta, loading 
 
                     <p
                       className={cn(
-                        "inline-block font-medium text-xs group-hover:scale-105 transition-all duration-300",
+                        "inline-block font-medium text-[10px] group-hover:scale-105 transition-all duration-300",
                         TaskTypeColorMap[task.type]
                       )}>
                       {TaskTypeMap[task.type]}

@@ -1,8 +1,8 @@
-import Logo from "@/shared/components/Logo";
+import LogoImage from "@/assets/coins__1_-removebg-preview.png";
 import NavUser from "@/shared/layouts/components/Sidebar/NavUser";
 import { useAuthStore } from "@/shared/stores/auth/useAuthStore";
 import { useRankingPopupStore } from "@/shared/stores/rankingPopup/useRankingPopupStore";
-import { Box, Trophy } from "lucide-react";
+import { Trophy } from "lucide-react";
 import { getSidebarRoutes } from "./sidebar.config";
 import SidebarItem from "./SidebarItem";
 
@@ -12,12 +12,16 @@ export default function Sidebar() {
   const { setOpen } = useRankingPopupStore();
 
   return (
-    <aside className='top-0 left-0 z-20 fixed bg-[rgba(30,45,55,0.70)] backdrop-blur-md border-[rgba(103,206,255,0.15)] border-r w-[300px] h-full'>
-      <div className='flex flex-col h-full'>
-        <div className='space-y-3'>
-          <div className='flex items-center gap-2 p-2 border-border border-b'>
-            <Box className='text-2xl' />
-            <Logo />
+    <aside className='top-0 z-10 sticky bg-[#5c94fc] mario-border w-[300px] h-dvh overflow-y-auto shrink-0'>
+      <div className='flex flex-col min-h-full'>
+        <div className='space-y-3 p-2'>
+          <div className='mario-block flex items-center gap-2 mb-4 p-2 mario-border'>
+            <img src={LogoImage} alt='VP Agency' className='drop-shadow-md w-9 h-9 object-contain' />
+            <div
+              style={{ fontFamily: "'Press Start 2P', monospace", fontSize: "18px" }}
+              className='drop-shadow-md text-[#fce0a6] uppercase tracking-wider'>
+              VP AGENCY
+            </div>
             <button
               type='button'
               onClick={() => setOpen(true)}
@@ -29,20 +33,13 @@ export default function Sidebar() {
 
           <NavUser />
 
-          <div className='px-2'>
-            <div className='flex items-center text-[7.5px] text-white'>
-              <div className='font-bold'>MENU</div>
-              <div className='flex-1 ps-1 pt-[3px]'>
-                <div className='bg-white/25 h-[1px]'></div>
-                <div className='flex py-[3px]'>
-                  <div className='flex-1 opacity-50 h-[4px] hud-line'></div>
-                </div>
-              </div>
+          <div className='mt-4 px-2'>
+            <div className='flex items-center drop-shadow-md font-bold text-white text-xs uppercase tracking-wider'>
+              <span>WORLD MENU</span>
             </div>
-            <div className='bg-white/25 h-[1px]'></div>
           </div>
 
-          <div className='flex flex-col gap-1 px-1 w-full min-w-0'>
+          <div className='flex flex-col gap-2 mt-2 px-1 w-full min-w-0'>
             {routes.map((route, index) => (
               <SidebarItem key={index} route={route} />
             ))}

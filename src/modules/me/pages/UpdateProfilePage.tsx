@@ -62,7 +62,7 @@ export default function UpdateProfilePage() {
             <UpdateProfileForm showPasswordField={true} />
 
             <div className='flex justify-end gap-2'>
-              <AppButton type='submit' variant='outline' size='sm' disabled={updateProfile.isPending}>
+              <AppButton type='submit' variant='default' size='sm' disabled={updateProfile.isPending}>
                 <Save />
                 {updateProfile.isPending ? "Đang lưu..." : "Lưu thay đổi"}
               </AppButton>

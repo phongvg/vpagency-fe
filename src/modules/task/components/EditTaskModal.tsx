@@ -82,11 +82,11 @@ export default function EditTaskModal({ open, onClose, taskId }: EditTaskModalPr
             <TaskForm />
 
             <div className='flex justify-end gap-2'>
-              <AppButton type='button' variant='outline' size='sm' onClick={onClose} disabled={upsertTask.isPending}>
+              <AppButton type='button' variant='destructive' size='sm' onClick={onClose} disabled={upsertTask.isPending}>
                 Hủy
               </AppButton>
 
-              <AppButton type='submit' variant='outline' size='sm' loading={upsertTask.isPending}>
+              <AppButton type='submit' variant='default' size='sm' loading={upsertTask.isPending}>
                 <Save />
                 Xác nhận
               </AppButton>

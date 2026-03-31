@@ -22,10 +22,10 @@ export default function DateSelectModal({ open, selectedDate, onSelectDate, onSu
         <DatePicker value={selectedDate} onChange={(date) => onSelectDate(format(date!, "yyyy-MM-dd"))} />
 
         <DialogFooter>
-          <AppButton size='sm' onClick={onClose}>
+          <AppButton size='sm' variant='secondary' onClick={onClose}>
             Đóng
           </AppButton>
-          <AppButton variant='outline' size='sm' disabled={!selectedDate} onClick={onSubmit}>
+          <AppButton variant='default' size='sm' disabled={!selectedDate} onClick={onSubmit}>
             Xác nhận
           </AppButton>
         </DialogFooter>

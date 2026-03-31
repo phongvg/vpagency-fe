@@ -16,31 +16,31 @@ export default function UserStatsCard() {
         <CardTitle>Thống kê tài khoản</CardTitle>
       </CardHeader>
 
-      <CardContent className='p-0'>
+      <CardContent className='p-2'>
         <div className='grid grid-cols-2 p-1'>
           <div className='group p-1 text-[9px]'>
-            <div className='text-white/50 group-hover:text-white/70 transition-colors'>Tài khoản hệ thống</div>
+            <div className='text-[16px] font-semibold text-[#5D4037] mb-1 group-hover:text-[#4A4A4A] transition-colors'>Tài khoản hệ thống</div>
             <div className='font-bold text-lg' ref={totalCount.ref as React.RefObject<HTMLDivElement>}>
               {totalCount.count}
             </div>
           </div>
 
           <div className='group p-1 text-[9px]'>
-            <div className='text-white/50 group-hover:text-white/70 transition-colors'>Tài khoản hoạt động</div>
+            <div className='text-[16px] font-semibold text-[#5D4037] mb-1 group-hover:text-[#4A4A4A] transition-colors'>Tài khoản hoạt động</div>
             <div className='font-bold text-green-400 text-lg' ref={activeCount.ref as React.RefObject<HTMLDivElement>}>
               {activeCount.count}
             </div>
           </div>
 
           <div className='group p-1 text-[9px]'>
-            <div className='text-white/50 group-hover:text-white/70 transition-colors'>Tài khoản mới Onboard</div>
+            <div className='text-[16px] font-semibold text-[#5D4037] mb-1 group-hover:text-[#4A4A4A] transition-colors'>Tài khoản mới Onboard</div>
             <div className='font-bold text-blue-400 text-lg' ref={onboardingCount.ref as React.RefObject<HTMLDivElement>}>
               {onboardingCount.count}
             </div>
           </div>
 
           <div className='group p-1 text-[9px]'>
-            <div className='text-white/50 group-hover:text-white/70 transition-colors'>Tài khoản bị khóa</div>
+            <div className='text-[16px] font-semibold text-[#5D4037] mb-1 group-hover:text-[#4A4A4A] transition-colors'>Tài khoản bị khóa</div>
             <div className='font-bold text-red-400 text-lg' ref={inactiveCount.ref as React.RefObject<HTMLDivElement>}>
               {inactiveCount.count}
             </div>

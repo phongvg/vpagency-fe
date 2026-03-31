@@ -74,10 +74,10 @@ export default function EditAppealAccountModal({ open, onClose, appealAccountId 
             <AppealAccountForm />
 
             <DialogFooter>
-              <AppButton size='sm' onClick={onClose}>
+              <AppButton size='sm' variant='secondary' onClick={onClose}>
                 Đóng
               </AppButton>
-              <AppButton type='submit' variant='outline' size='sm'>
+              <AppButton type='submit' variant='default' size='sm'>
                 <Save />
                 Xác nhận
               </AppButton>

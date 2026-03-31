@@ -80,7 +80,7 @@ export function AppTable<TData, TValue>({
       header: ({ table }) => (
         <Checkbox checked={table.getIsAllPageRowsSelected()} onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)} />
       ),
-      cell: ({ row }) => <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} />,
+      cell: ({ row }) => <Checkbox className='translate-x-[8px]' checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} />,
       enableSorting: false,
       enableHiding: false,
     };
@@ -158,7 +158,7 @@ export function AppTable<TData, TValue>({
             </EmptyMedia>
 
             <EmptyTitle className='font-bold uppercase'>Danh sách trống</EmptyTitle>
-            <EmptyDescription className='text-white/50'>Không có dữ liệu phù hợp với tiêu chí tìm kiếm</EmptyDescription>
+            <EmptyDescription className='text-[#049cd8]'>Không có dữ liệu phù hợp với tiêu chí tìm kiếm</EmptyDescription>
           </EmptyHeader>
         </Empty>
       </div>
@@ -168,25 +168,27 @@ export function AppTable<TData, TValue>({
   return (
     <div className='space-y-2'>
       {enableColumnVisibility && (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <AppButton type='button' variant='outline' size='sm'>
-              <Settings2 />
-              Cấu hình cột
-            </AppButton>
-          </DropdownMenuTrigger>
+        <div className='pb-3'>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <AppButton type='button' variant='outline' size='sm'>
+                <Settings2 />
+                Cấu hình cột
+              </AppButton>
+            </DropdownMenuTrigger>
 
-          <DropdownMenuContent>
-            {table
-              .getAllLeafColumns()
-              .filter((col) => col.getCanHide())
-              .map((column) => (
-                <DropdownMenuCheckboxItem key={column.id} checked={column.getIsVisible()} onCheckedChange={() => column.toggleVisibility()}>
-                  {column.columnDef.header as string}
-                </DropdownMenuCheckboxItem>
-              ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+            <DropdownMenuContent>
+              {table
+                .getAllLeafColumns()
+                .filter((col) => col.getCanHide())
+                .map((column) => (
+                  <DropdownMenuCheckboxItem key={column.id} checked={column.getIsVisible()} onCheckedChange={() => column.toggleVisibility()}>
+                    {column.columnDef.header as string}
+                  </DropdownMenuCheckboxItem>
+                ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       )}
 
       <div
@@ -214,8 +216,10 @@ export function AppTable<TData, TValue>({
                       colSpan={header.colSpan}
                       style={{ minWidth: header.column.columnDef.minSize, ...stickyStyle }}
                       className={cn(
-                        isScrollVertical && "bg-black",
-                        isSticky && "z-20 bg-white/5 backdrop-blur-lg shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]"
+                        "bg-[#ba5825]",
+                        isSticky && header.column.id === "__select"
+                          ? "z-20 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]"
+                          : isSticky && "z-20 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]"
                       )}>
                       {header.isPlaceholder ? null : (
                         <div

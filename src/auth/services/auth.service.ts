@@ -8,6 +8,12 @@ import { getStorageItem, setStorageItem } from "@/shared/utils/storage.util";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 
+export type User = {
+  id: string;
+  email: string;
+  name: string;
+};
+
 export const authService = {
   login: (data: LoginResponse): void => {
     const { user, accessToken, refreshToken } = data;

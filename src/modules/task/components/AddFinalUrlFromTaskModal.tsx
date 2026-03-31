@@ -62,11 +62,11 @@ export default function AddFinalUrlFromTaskModal({ open, onClose, projectId }: A
             <FormInput type='text' name='finalUrl' label='URL' required />
 
             <div className='flex justify-end gap-2'>
-              <AppButton type='button' variant='outline' size='sm' onClick={onClose}>
+              <AppButton type='button' variant='secondary' size='sm' onClick={onClose}>
                 Hủy
               </AppButton>
 
-              <AppButton type='submit' variant='outline' size='sm'>
+              <AppButton type='submit' variant='default' size='sm'>
                 <Save />
                 Xác nhận
               </AppButton>
