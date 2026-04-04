@@ -1,4 +1,3 @@
-import type { User } from "@/modules/user/types/user.type";
 import type { BaseParams } from "@/shared/types/common/param.type";
 
 export type AppealAccountListParams = BaseParams & {
@@ -26,7 +25,6 @@ export type AppealAccount = {
   note: string;
   note2: string;
   rarityLevel: string;
-  creator: User;
 };
 
 export type UpdateAppealAccountRequest = {
