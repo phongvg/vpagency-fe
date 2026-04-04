@@ -17,6 +17,9 @@ export type AggregatedMetrics = {
   totalTargetRef?: number;
   avgClickAchievementRate?: number;
   avgRefAchievementRate?: number;
+  totalBudget?: number;
+  avgCtr?: number;
+  totalCampaignCount?: number;
 };
 
 type MetricKey = keyof AggregatedMetrics;

@@ -12,6 +12,7 @@ import {
   type ColumnDef,
   flexRender,
   getCoreRowModel,
+  getExpandedRowModel,
   getSortedRowModel,
   type OnChangeFn,
   type RowSelectionState,
@@ -19,8 +20,8 @@ import {
   useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
-import { ArrowDown, ArrowUp, ArrowUpDown, SearchX, Settings2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDown, ChevronRight, SearchX, Settings2 } from "lucide-react";
+import { Fragment, useMemo, useState } from "react";
 
 const INDEX_COLUMN_ID = "index";
 
@@ -46,6 +47,7 @@ interface AppTableProps<TData, TValue> {
   getRowClassName?: (row: TData) => string;
 
   isScrollVertical?: boolean;
+  renderExpandedRow?: (row: TData) => React.ReactNode;
 }
 
 export function AppTable<TData, TValue>({
@@ -69,6 +71,7 @@ export function AppTable<TData, TValue>({
   getRowClassName,
 
   isScrollVertical = false,
+  renderExpandedRow,
 }: AppTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -80,15 +83,39 @@ export function AppTable<TData, TValue>({
       header: ({ table }) => (
         <Checkbox checked={table.getIsAllPageRowsSelected()} onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)} />
       ),
-      cell: ({ row }) => <Checkbox className='translate-x-[8px]' checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} />,
+      cell: ({ row }) => (
+        <Checkbox className='translate-x-[8px]' checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} />
+      ),
       enableSorting: false,
       enableHiding: false,
     };
   }, [enableRowSelection]);
 
+  const expandColumn = useMemo<ColumnDef<TData> | null>(() => {
+    if (!renderExpandedRow) return null;
+    return {
+      id: "__expand",
+      header: "",
+      cell: ({ row }) => (
+        <button
+          type='button'
+          onClick={row.getToggleExpandedHandler()}
+          className='flex justify-center items-center hover:bg-white/10 rounded w-6 h-6 transition-colors'>
+          {row.getIsExpanded() ? <ChevronDown className='w-4 h-4' /> : <ChevronRight className='w-4 h-4' />}
+        </button>
+      ),
+      enableSorting: false,
+      enableHiding: false,
+      size: 32,
+    };
+  }, [renderExpandedRow]);
+
   const resolvedColumns = useMemo(() => {
-    return selectColumn ? [selectColumn, ...columns] : columns;
-  }, [selectColumn, columns]);
+    const extras: ColumnDef<TData>[] = [];
+    if (expandColumn) extras.push(expandColumn);
+    if (selectColumn) extras.push(selectColumn);
+    return [...extras, ...columns];
+  }, [expandColumn, selectColumn, columns]);
 
   const getStickyStyle = (meta: { sticky?: "left" | "right"; stickyOffset?: number } | undefined) => {
     if (!meta?.sticky) return {};
@@ -136,8 +163,11 @@ export function AppTable<TData, TValue>({
 
     onColumnVisibilityChange: enableColumnVisibility ? onColumnVisibilityChange : undefined,
 
+    getRowCanExpand: renderExpandedRow ? () => true : undefined,
+
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
   });
 
   if (loading) {
@@ -204,8 +234,13 @@ export function AppTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   const meta = header.column.columnDef.meta as { sticky?: "left" | "right"; stickyOffset?: number } | undefined;
-                  const isSticky = meta?.sticky || header.column.id === "__select";
-                  const stickyStyle = header.column.id === "__select" ? { position: "sticky" as const, left: 0 } : getStickyStyle(meta);
+                  const isSticky = meta?.sticky || header.column.id === "__select" || header.column.id === "__expand";
+                  const stickyStyle =
+                    header.column.id === "__expand"
+                      ? { position: "sticky" as const, left: 0 }
+                      : header.column.id === "__select"
+                        ? { position: "sticky" as const, left: renderExpandedRow ? 32 : 0 }
+                        : getStickyStyle(meta);
 
                   const isLeafColumn = !header.subHeaders || header.subHeaders.length === 0;
                   const canSort = header.column.getCanSort() && isLeafColumn && header.column.id !== INDEX_COLUMN_ID;
@@ -249,22 +284,36 @@ export function AppTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length &&
               table.getRowModel().rows.map((row, index) => (
-                <TableRow key={row.id ?? index} data-state={row.getIsSelected() && "selected"} className={getRowClassName?.(row.original)}>
-                  {row.getVisibleCells().map((cell) => {
-                    const meta = cell.column.columnDef.meta as { sticky?: "left" | "right"; stickyOffset?: number } | undefined;
-                    const isSticky = meta?.sticky || cell.column.id === "__select";
-                    const stickyStyle = cell.column.id === "__select" ? { position: "sticky" as const, left: 0 } : getStickyStyle(meta);
+                <Fragment key={row.id ?? index}>
+                  <TableRow data-state={row.getIsSelected() && "selected"} className={getRowClassName?.(row.original)}>
+                    {row.getVisibleCells().map((cell) => {
+                      const meta = cell.column.columnDef.meta as { sticky?: "left" | "right"; stickyOffset?: number } | undefined;
+                      const isSticky = meta?.sticky || cell.column.id === "__select" || cell.column.id === "__expand";
+                      const stickyStyle =
+                        cell.column.id === "__expand"
+                          ? { position: "sticky" as const, left: 0 }
+                          : cell.column.id === "__select"
+                            ? { position: "sticky" as const, left: renderExpandedRow ? 32 : 0 }
+                            : getStickyStyle(meta);
 
-                    return (
-                      <TableCell
-                        key={cell.id}
-                        style={{ minWidth: cell.column.columnDef.minSize, ...stickyStyle }}
-                        className={cn(isSticky && "z-10 bg-white/5 backdrop-blur-lg shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]")}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      return (
+                        <TableCell
+                          key={cell.id}
+                          style={{ minWidth: cell.column.columnDef.minSize, ...stickyStyle }}
+                          className={cn(isSticky && "z-10 bg-white/5 backdrop-blur-lg shadow-[2px_0_5px_-2px_rgba(0,0,0,0.2)]")}>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                  {row.getIsExpanded() && renderExpandedRow && (
+                    <TableRow>
+                      <TableCell colSpan={row.getVisibleCells().length} className='p-0 border-t-0'>
+                        {renderExpandedRow(row.original)}
                       </TableCell>
-                    );
-                  })}
-                </TableRow>
+                    </TableRow>
+                  )}
+                </Fragment>
               ))}
           </TableBody>
         </Table>

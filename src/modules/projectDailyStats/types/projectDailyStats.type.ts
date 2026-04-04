@@ -1,5 +1,3 @@
-import type { LocationStat } from "@/modules/campaign/types/campaign.type";
-import type { ApiBaseListResponse } from "@/shared/types/common/apiResponse.type";
 import type { BaseParams } from "@/shared/types/common/param.type";
 
 export type ProjectDailyStatsListParams = BaseParams & {
@@ -11,13 +9,6 @@ export type ProjectDailyStatsListParams = BaseParams & {
 
 export type FinalUrlDailyStatsListParams = ProjectDailyStatsListParams;
 
-export type ProjectDailyStatsResponse = ApiBaseListResponse<
-  ProjectDailyStats,
-  {
-    summary: ProjectDailyStatsSummary[];
-  }
->;
-
 export const ProjectDailyStatsStatus = {
   Completed: "COMPLETED",
   Pending: "PENDING",
@@ -28,16 +19,16 @@ export type ProjectDailyStatsStatus = (typeof ProjectDailyStatsStatus)[keyof typ
 export type ProjectDailyStats = {
   id: string;
   projectId: string;
-  projectName: string;
-  projectType: string;
-  projectStatus: string;
-  status: ProjectDailyStatsStatus;
   date: Date;
+  status: ProjectDailyStatsStatus;
   totalClicks: number;
   totalCost: number;
   totalTargetCpc: number;
-  activeCountries: LocationStat[];
+  activeCountries: string[];
   createdAt: Date;
+  projectName: string;
+  projectStatus: string;
+  projectType: string;
   totalRef: number;
   costPerRef: number;
   rateRefPerClick: number;
@@ -57,15 +48,11 @@ export type ProjectDailyStats = {
 export type ProjectDailyStatsSummary = {
   projectId: string;
   projectName: string;
-  projectStatus: string;
+  projectType: string;
   totalCost: number;
   totalClicks: number;
   avgTargetCpc: number;
   activeCountries: string[];
-  profit: number;
-  roi: number;
-  holdRevenue: number;
-  receivedRevenue: number;
   totalRef: number;
   costPerRef: number;
   rateRefPerClick: number;
@@ -76,14 +63,76 @@ export type ProjectDailyStatsSummary = {
   totalTargetRef: number;
   clickAchievementRate: number;
   refAchievementRate: number;
+  profit: number;
+  roi: number;
+  holdRevenue: number;
+  receivedRevenue: number;
+  finalUrls: FinalURL[];
 };
 
-export type FinalUrlDailyStatsResponse = ApiBaseListResponse<
-  FinalUrlDailyStats,
-  {
-    summary: FinalUrlDailyStatsSummary[];
-  }
->;
+export type FinalURL = {
+  finalUrlId: string;
+  finalUrlName: string;
+  finalURL: string;
+  projectId: string;
+  projectName: string;
+  targetRef: number;
+  targetCostPerRef: number;
+  targetFtd: number;
+  targetCostPerFtd: number;
+  targetDailyKeyVolume: number;
+  targetCpc: number;
+  budget: number;
+  suggestedBid: number;
+  totalClicks: number;
+  totalCost: number;
+  totalImpression: number;
+  avgCpc: number;
+  ctr: number;
+  campaignCount: number;
+  employeeCount: number;
+  activeDays: number;
+  gmails: string[];
+  uids: string[];
+  employees: Employee[];
+};
+
+export type Employee = {
+  userId: string;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  avatar: string;
+  roles: string[];
+  totalClicks: number;
+  totalCost: number;
+  totalImpression: number;
+  avgCpc: number;
+  ctr: number;
+  campaignCount: number;
+  activeDays: number;
+  latestImportAt: Date;
+  gmails: string[];
+  uids: string[];
+  campaigns?: FinalUrlEmployeeCampaignStat[];
+};
+
+export type FinalUrlEmployeeCampaignStat = {
+  campaignId: string;
+  campaignName: string;
+  externalId: string;
+  uid: string;
+  gmail: string | null;
+  status: string | null;
+  totalClicks: number;
+  totalCost: number;
+  totalImpression: number;
+  avgCpc: number;
+  ctr: number;
+  activeDays: number;
+  latestImportAt: Date | null;
+};
 
 export type FinalUrlDailyStats = {
   finalUrlId: string;
@@ -91,11 +140,25 @@ export type FinalUrlDailyStats = {
   finalURL: string;
   projectId: string;
   projectName: string;
-  date: string;
+  targetRef: number;
+  targetCostPerRef: number;
+  targetFtd: number;
+  targetCostPerFtd: number;
+  targetDailyKeyVolume: number;
+  targetCpc: number;
+  budget: number;
+  suggestedBid: number;
   totalClicks: number;
   totalCost: number;
   totalImpression: number;
   avgCpc: number;
+  ctr: number;
+  campaignCount: number;
+  employeeCount: number;
+  activeDays: number;
+  gmails: string[];
+  uids: string[];
+  employees: Employee[];
 };
 
 export type FinalUrlDailyStatsSummary = {
@@ -104,10 +167,25 @@ export type FinalUrlDailyStatsSummary = {
   finalURL: string;
   projectId: string;
   projectName: string;
+  targetRef: number;
+  targetCostPerRef: number;
+  targetFtd: number;
+  targetCostPerFtd: number;
+  targetDailyKeyVolume: number;
+  targetCpc: number;
+  budget: number;
+  suggestedBid: number;
   totalClicks: number;
   totalCost: number;
   totalImpression: number;
   avgCpc: number;
+  ctr: number;
+  campaignCount: number;
+  employeeCount: number;
+  activeDays: number;
+  gmails: string[];
+  uids: string[];
+  employees: Employee[];
 };
 
 export type GenerateProjectDailyStatRequest = {

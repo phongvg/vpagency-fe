@@ -33,6 +33,46 @@ export const finalUrlDailySummaryColumnConfig = (): ColumnDef<FinalUrlDailyStats
     ),
   },
   {
+    header: "Ngân sách",
+    accessorKey: "budget",
+    cell: (props) => <span className='font-bold text-orange-400'>{formatDollarAmount(props.row.original.budget)}</span>,
+  },
+  {
+    header: "Thầu đề xuất",
+    accessorKey: "suggestedBid",
+    cell: (props) => <span className='font-bold text-cyan-500'>{formatDollarAmount(props.row.original.suggestedBid)}</span>,
+  },
+  {
+    header: "Mục tiêu CPC",
+    accessorKey: "targetCpc",
+    cell: (props) => <span className='font-bold text-indigo-400'>{formatDollarAmount(props.row.original.targetCpc)}</span>,
+  },
+  {
+    header: "Mục tiêu Key Volume/ngày",
+    accessorKey: "targetDailyKeyVolume",
+    cell: (props) => <span className='font-bold text-teal-400'>{props.row.original.targetDailyKeyVolume}</span>,
+  },
+  {
+    header: "Mục tiêu Ref",
+    accessorKey: "targetRef",
+    cell: (props) => <span className='font-bold text-emerald-400'>{props.row.original.targetRef}</span>,
+  },
+  {
+    header: "Mục tiêu Cost/Ref",
+    accessorKey: "targetCostPerRef",
+    cell: (props) => <span className='font-bold text-lime-400'>{formatDollarAmount(props.row.original.targetCostPerRef)}</span>,
+  },
+  {
+    header: "Mục tiêu FTD",
+    accessorKey: "targetFtd",
+    cell: (props) => <span className='font-bold text-sky-400'>{props.row.original.targetFtd}</span>,
+  },
+  {
+    header: "Mục tiêu Cost/FTD",
+    accessorKey: "targetCostPerFtd",
+    cell: (props) => <span className='font-bold text-violet-400'>{formatDollarAmount(props.row.original.targetCostPerFtd)}</span>,
+  },
+  {
     header: "Tổng chi tiêu",
     accessorKey: "totalCost",
     cell: (props) => <span className='font-bold text-red-500'>{formatDollarAmount(props.row.original.totalCost)}</span>,
@@ -51,5 +91,25 @@ export const finalUrlDailySummaryColumnConfig = (): ColumnDef<FinalUrlDailyStats
     header: "CPC trung bình",
     accessorKey: "avgCpc",
     cell: (props) => <span className='font-bold text-purple-500'>{formatDollarAmount(props.row.original.avgCpc)}</span>,
+  },
+  {
+    header: "CTR",
+    accessorKey: "ctr",
+    cell: (props) => <span className='font-bold text-pink-400'>{props.row.original.ctr?.toFixed(2)}%</span>,
+  },
+  {
+    header: "Số chiến dịch",
+    accessorKey: "campaignCount",
+    cell: (props) => <span className='font-bold'>{props.row.original.campaignCount}</span>,
+  },
+  {
+    header: "Số nhân viên",
+    accessorKey: "employeeCount",
+    cell: (props) => <span className='font-bold'>{props.row.original.employeeCount}</span>,
+  },
+  {
+    header: "Ngày hoạt động",
+    accessorKey: "activeDays",
+    cell: (props) => <span className='font-bold'>{props.row.original.activeDays}</span>,
   },
 ];

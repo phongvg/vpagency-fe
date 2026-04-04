@@ -1,6 +1,6 @@
 import type { MetricCardConfig } from "@/modules/projectDailyStats/types/projectDailyMetrics.type";
-import { formatDollarAmount } from "@/shared/utils/common.util";
-import { DollarSign, MousePointerClick, TrendingUp } from "lucide-react";
+import { fixedNumber, formatDollarAmount } from "@/shared/utils/common.util";
+import { Activity, Briefcase, DollarSign, Eye, MousePointerClick, Percent, Target, TrendingUp, Wallet } from "lucide-react";
 
 export const finalUrlDailyMetricsConfig: MetricCardConfig[] = [
   {
@@ -8,7 +8,14 @@ export const finalUrlDailyMetricsConfig: MetricCardConfig[] = [
     label: "Tổng chi tiêu",
     format: (v) => formatDollarAmount(v),
     icon: DollarSign,
-    color: "text-red-500",
+    color: "text-red-800",
+  },
+  {
+    key: "totalBudget",
+    label: "Tổng ngân sách",
+    format: (v) => formatDollarAmount(v),
+    icon: Wallet,
+    color: "text-orange-400",
   },
   {
     key: "totalClicks",
@@ -19,7 +26,7 @@ export const finalUrlDailyMetricsConfig: MetricCardConfig[] = [
   {
     key: "totalImpression",
     label: "Tổng lượt hiển thị",
-    icon: TrendingUp,
+    icon: Eye,
     color: "text-yellow-500",
   },
   {
@@ -27,114 +34,31 @@ export const finalUrlDailyMetricsConfig: MetricCardConfig[] = [
     label: "CPC trung bình",
     format: (v) => formatDollarAmount(v),
     icon: TrendingUp,
-    color: "text-purple-500",
+    color: "text-purple-800",
   },
-  // {
-  //   key: "totalProfit",
-  //   label: "Lợi nhuận",
-  //   format: (v) => formatDollarAmount(v),
-  //   allowedRoles: [Role.ADMIN, Role.ACCOUNTING],
-  //   icon: TrendingUp,
-  //   color: "text-green-500",
-  // },
-  // {
-  //   key: "avgRoi",
-  //   label: "ROI trung bình",
-  //   format: (v) => `${fixedNumber(v)}%`,
-  //   allowedRoles: [Role.ADMIN, Role.ACCOUNTING],
-  //   icon: Percent,
-  //   color: "text-yellow-500",
-  // },
-  // {
-  //   key: "totalHoldRevenue",
-  //   label: "Hoa hồng tạm giữ",
-  //   format: (v) => formatDollarAmount(v),
-  //   allowedRoles: [Role.ADMIN, Role.ACCOUNTING],
-  //   icon: Wallet,
-  //   color: "text-orange-500",
-  // },
-  // {
-  //   key: "totalReceivedRevenue",
-  //   label: "Hoa hồng rút về",
-  //   format: (v) => formatDollarAmount(v),
-  //   allowedRoles: [Role.ADMIN, Role.ACCOUNTING],
-  //   icon: BadgeDollarSign,
-  //   color: "text-emerald-500",
-  // },
-  // {
-  //   key: "totalRef",
-  //   label: "Tổng Ref",
-  //   allowedRoles: [Role.ADMIN, Role.ACCOUNTING],
-  //   icon: Users,
-  //   color: "text-cyan-500",
-  // },
-  // {
-  //   key: "avgCostPerRef",
-  //   label: "Chi phí trung bình/Ref",
-  //   format: (v) => formatDollarAmount(v),
-  //   allowedRoles: [Role.ADMIN, Role.ACCOUNTING],
-  //   icon: Calculator,
-  //   color: "text-pink-500",
-  // },
-  // {
-  //   key: "avgRateRefPerClick",
-  //   label: "Tỷ lệ Ref/Click trung bình",
-  //   format: (v) => `${fixedNumber(v)}%`,
-  //   allowedRoles: [Role.ADMIN, Role.ACCOUNTING],
-  //   icon: Percent,
-  //   color: "text-teal-500",
-  // },
-  // {
-  //   key: "totalFtd",
-  //   label: "Tổng FTD",
-  //   allowedRoles: [Role.ADMIN, Role.ACCOUNTING],
-  //   icon: UserCheck,
-  //   color: "text-lime-500",
-  // },
-  // {
-  //   key: "avgCostPerFtd",
-  //   label: "Chi phí trung bình/FTD",
-  //   format: (v) => formatDollarAmount(v),
-  //   allowedRoles: [Role.ADMIN, Role.ACCOUNTING],
-  //   icon: Calculator,
-  //   color: "text-rose-500",
-  // },
-  // {
-  //   key: "avgRateFtdPerRef",
-  //   label: "Tỷ lệ FTD/Ref trung bình",
-  //   format: (v) => `${fixedNumber(v)}%`,
-  //   allowedRoles: [Role.ADMIN, Role.ACCOUNTING],
-  //   icon: Percent,
-  //   color: "text-violet-500",
-  // },
-  // {
-  //   key: "totalTargetDailyKeyVolume",
-  //   label: "Volume key/ngày ",
-  //   allowedRoles: [Role.ADMIN, Role.ACCOUNTING],
-  //   icon: Activity,
-  //   color: "text-amber-500",
-  // },
-  // {
-  //   key: "totalTargetRef",
-  //   label: "Tổng mục tiêu Ref",
-  //   allowedRoles: [Role.ADMIN, Role.ACCOUNTING],
-  //   icon: Target,
-  //   color: "text-indigo-500",
-  // },
-  // {
-  //   key: "avgClickAchievementRate",
-  //   label: "Tỷ lệ hoàn thành Click trung bình",
-  //   format: (v) => `${fixedNumber(v)}%`,
-  //   allowedRoles: [Role.ADMIN, Role.ACCOUNTING],
-  //   icon: CheckCircle,
-  //   color: "text-green-600",
-  // },
-  // {
-  //   key: "avgRefAchievementRate",
-  //   label: "Tỷ lệ hoàn thành Ref trung bình",
-  //   format: (v) => `${fixedNumber(v)}%`,
-  //   allowedRoles: [Role.ADMIN, Role.ACCOUNTING],
-  //   icon: CheckCircle,
-  //   color: "text-emerald-600",
-  // },
+  {
+    key: "avgCtr",
+    label: "CTR trung bình",
+    format: (v) => `${fixedNumber(v)}%`,
+    icon: Percent,
+    color: "text-pink-400",
+  },
+  {
+    key: "totalTargetDailyKeyVolume",
+    label: "Tổng mục tiêu key volume",
+    icon: Activity,
+    color: "text-teal-400",
+  },
+  {
+    key: "totalTargetRef",
+    label: "Tổng mục tiêu Ref",
+    icon: Target,
+    color: "text-emerald-400",
+  },
+  {
+    key: "totalCampaignCount",
+    label: "Tổng chiến dịch",
+    icon: Briefcase,
+    color: "text-indigo-400",
+  },
 ];

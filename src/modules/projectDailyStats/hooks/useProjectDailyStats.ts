@@ -3,9 +3,20 @@ import type { ProjectDailyStatsListParams } from "@/modules/projectDailyStats/ty
 import { projectDailyStatsQueryKeys } from "@/shared/constants/query-keys.constant";
 import { useQuery } from "@tanstack/react-query";
 
-export const useProjectDailyStats = (params: ProjectDailyStatsListParams) => {
+export const useProjectDailyStatsPending = (params: ProjectDailyStatsListParams, enabled = true) => {
   return useQuery({
-    queryKey: projectDailyStatsQueryKeys.list(params),
-    queryFn: () => projectDailyStatsApi.getProjectDailyStats(params),
+    queryKey: projectDailyStatsQueryKeys.pending(params),
+    queryFn: () => projectDailyStatsApi.getProjectDailyStatsPending(params),
+    select: (res) => res.data,
+    enabled,
+  });
+};
+
+export const useProjectDailyStatsCompleted = (params: ProjectDailyStatsListParams, enabled = true) => {
+  return useQuery({
+    queryKey: projectDailyStatsQueryKeys.completed(params),
+    queryFn: () => projectDailyStatsApi.getProjectDailyStatsCompleted(params),
+    select: (res) => res.data,
+    enabled,
   });
 };

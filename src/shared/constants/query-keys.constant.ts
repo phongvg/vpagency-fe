@@ -144,6 +144,12 @@ export const projectDailyStatsQueryKeys = {
   list: (params: ProjectDailyStatsListParams) => [...projectDailyStatsQueryKeys.lists(), normalizeParams(params)] as const,
 
   detail: (id: string) => [...projectDailyStatsQueryKeys.all, "detail", id] as const,
+
+  summary: (params: ProjectDailyStatsListParams) => [...projectDailyStatsQueryKeys.all, "summary", normalizeParams(params)] as const,
+
+  pending: (params: ProjectDailyStatsListParams) => [...projectDailyStatsQueryKeys.all, "pending", normalizeParams(params)] as const,
+
+  completed: (params: ProjectDailyStatsListParams) => [...projectDailyStatsQueryKeys.all, "completed", normalizeParams(params)] as const,
 };
 
 export const finalUrlDailyStatsQueryKeys = {
@@ -152,6 +158,8 @@ export const finalUrlDailyStatsQueryKeys = {
   lists: () => [...finalUrlDailyStatsQueryKeys.all, "list"] as const,
 
   list: (params: FinalUrlDailyStatsListParams) => [...finalUrlDailyStatsQueryKeys.lists(), normalizeParams(params)] as const,
+
+  summary: (params: FinalUrlDailyStatsListParams) => [...finalUrlDailyStatsQueryKeys.all, "summary", normalizeParams(params)] as const,
 };
 
 export const employeePerformanceQueryKeys = {

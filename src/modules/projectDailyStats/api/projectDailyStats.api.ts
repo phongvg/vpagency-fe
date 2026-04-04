@@ -1,22 +1,35 @@
 import type {
+  FinalUrlDailyStats,
   FinalUrlDailyStatsListParams,
-  FinalUrlDailyStatsResponse,
+  FinalUrlDailyStatsSummary,
   GenerateProjectDailyStatRequest,
   ProjectDailyStats,
   ProjectDailyStatsListParams,
-  ProjectDailyStatsResponse,
+  ProjectDailyStatsSummary,
   UpdateProjectDailyStatRequest,
 } from "@/modules/projectDailyStats/types/projectDailyStats.type";
 import { http } from "@/shared/libs/http";
-import type { ApiBaseResponse } from "@/shared/types/common/apiResponse.type";
+import type { ApiBaseListResponse, ApiBaseResponse } from "@/shared/types/common/apiResponse.type";
 
 export const projectDailyStatsApi = {
-  getProjectDailyStats: (params: ProjectDailyStatsListParams): Promise<ProjectDailyStatsResponse> => {
-    return http.post("/project-daily-stats", params);
+  getProjectDailyStatsSummary: (params: ProjectDailyStatsListParams): Promise<ApiBaseResponse<ProjectDailyStatsSummary[]>> => {
+    return http.post("/project-daily-stats/summary", params);
   },
 
-  getFinalUrlDailyStats: (params: FinalUrlDailyStatsListParams): Promise<FinalUrlDailyStatsResponse> => {
+  getProjectDailyStatsPending: (params: ProjectDailyStatsListParams): Promise<ApiBaseListResponse<ProjectDailyStats>> => {
+    return http.post("/project-daily-stats/pending", params);
+  },
+
+  getProjectDailyStatsCompleted: (params: ProjectDailyStatsListParams): Promise<ApiBaseListResponse<ProjectDailyStats>> => {
+    return http.post("/project-daily-stats/completed", params);
+  },
+
+  getFinalUrlDailyStats: (params: FinalUrlDailyStatsListParams): Promise<ApiBaseListResponse<FinalUrlDailyStats>> => {
     return http.post("/project-daily-stats/final-url-stats", params);
+  },
+
+  getFinalUrlDailyStatsSummary: (params: FinalUrlDailyStatsListParams): Promise<ApiBaseResponse<FinalUrlDailyStatsSummary[]>> => {
+    return http.post("/project-daily-stats/final-url-stats/summary", params);
   },
 
   generateProjectDailyStats: (payload: GenerateProjectDailyStatRequest): Promise<ApiBaseResponse<ProjectDailyStats>> => {

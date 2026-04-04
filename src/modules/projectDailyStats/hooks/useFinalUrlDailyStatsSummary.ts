@@ -3,10 +3,10 @@ import type { FinalUrlDailyStatsListParams } from "@/modules/projectDailyStats/t
 import { finalUrlDailyStatsQueryKeys } from "@/shared/constants/query-keys.constant";
 import { useQuery } from "@tanstack/react-query";
 
-export const useFinalUrlDailyStats = (params: FinalUrlDailyStatsListParams) => {
+export const useFinalUrlStatsSummary = (params: FinalUrlDailyStatsListParams) => {
   return useQuery({
-    queryKey: finalUrlDailyStatsQueryKeys.list(params),
-    queryFn: () => projectDailyStatsApi.getFinalUrlDailyStats(params),
+    queryKey: finalUrlDailyStatsQueryKeys.summary(params),
+    queryFn: () => projectDailyStatsApi.getFinalUrlDailyStatsSummary(params),
     select: (res) => res.data,
   });
 };

@@ -21,7 +21,7 @@ interface ProjectDailyStatsFilterProps {
   setParams: React.Dispatch<React.SetStateAction<ProjectDailyStatsListParams>>;
   rangePickerValue: string | null;
   setRangePickerValue: React.Dispatch<React.SetStateAction<string | null>>;
-  onOpenModal: () => void;
+  onOpenModal?: () => void;
 }
 
 export default function ProjectDailyStatsFilter({
@@ -86,7 +86,7 @@ export default function ProjectDailyStatsFilter({
         />
       </div>
 
-      {isAdminOrAccounting(user?.roles) && (
+      {isAdminOrAccounting(user?.roles) && onOpenModal && (
         <AppButton size='sm' variant='outline' onClick={onOpenModal}>
           <CirclePlus />
           Tạo báo cáo
