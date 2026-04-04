@@ -1,4 +1,5 @@
 import type { AppealAccountListParams } from "@/modules/appealAccount/types/appealAccount.type";
+import type { AppealedProxyListParams } from "@/modules/appealedProxy/types/appealedProxy.type";
 import type { CampaignListParams } from "@/modules/campaign/types/campaign.type";
 import type { EmployeePerformanceParams } from "@/modules/employeePerfomance/types/employeePerformance.type";
 import type { GmailListParams } from "@/modules/gmail/types/gmail.type";
@@ -118,6 +119,16 @@ export const appealAccountQueryKeys = {
   list: (params: AppealAccountListParams) => [...appealAccountQueryKeys.lists(), normalizeParams(params)] as const,
 
   detail: (id: string) => [...appealAccountQueryKeys.all, "detail", id] as const,
+};
+
+export const appealedProxyQueryKeys = {
+  all: ["appealed-proxies"] as const,
+
+  lists: () => [...appealedProxyQueryKeys.all, "list"] as const,
+
+  list: (params: AppealedProxyListParams) => [...appealedProxyQueryKeys.lists(), normalizeParams(params)] as const,
+
+  detail: (id: string) => [...appealedProxyQueryKeys.all, "detail", id] as const,
 };
 
 export const dashboardQueryKeys = {

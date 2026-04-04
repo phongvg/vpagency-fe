@@ -1,6 +1,7 @@
 import { urls } from "@/app/routes/route.constant";
 import { ForbiddenPage } from "@/modules/403";
 import { AppealAccountListPage } from "@/modules/appealAccount";
+import { AppealedProxyListPage } from "@/modules/appealedProxy";
 import { LoginPage } from "@/modules/auth/login";
 import { LoginTelegramPage } from "@/modules/auth/loginTelegram";
 import { CampaignEditPage, CampaignListPage } from "@/modules/campaign";
@@ -29,7 +30,6 @@ import {
   Mail,
   MailCheck,
   Megaphone,
-  UserCog,
   Users,
 } from "lucide-react";
 import { Navigate } from "react-router-dom";
@@ -114,38 +114,9 @@ export const appRoutes: AppRoute[] = [
         showInSidebar: true,
         roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.ACCOUNTING],
       },
-
       {
-        title: "Tài khoản",
-        icon: UserCog,
-        showInSidebar: true,
-        isGroup: true,
-        roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MEMBER_AFF, Role.ACCOUNTING],
-        children: [
-          {
-            path: urls.user,
-            title: "Tài khoản hệ thống",
-            pageTitle: "Danh sách tài khoản hệ thống",
-            element: <UserListPage />,
-            icon: Users,
-            showInSidebar: true,
-            roles: [Role.ADMIN],
-          },
-          {
-            path: urls.appealAccount,
-            title: "Tài khoản ADS kháng giấy",
-            pageTitle: "Danh sách tài khoản ADS kháng giấy",
-            element: <AppealAccountListPage />,
-            icon: Users,
-            showInSidebar: true,
-            roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MEMBER_AFF, Role.ACCOUNTING],
-          },
-        ],
-      },
-
-      {
-        title: "Gmail",
-        icon: Mail,
+        title: "Quản lý tài nguyên",
+        icon: FolderTree,
         showInSidebar: true,
         isGroup: true,
         roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
@@ -160,6 +131,51 @@ export const appRoutes: AppRoute[] = [
             roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
           },
           {
+            path: urls.appealAccount,
+            title: "Tài khoản ADS kháng giấy",
+            pageTitle: "Danh sách tài khoản ADS kháng giấy",
+            element: <AppealAccountListPage />,
+            icon: Users,
+            showInSidebar: true,
+            roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MEMBER_AFF, Role.ACCOUNTING],
+          },
+          {
+            path: urls.appealedProxy,
+            title: "Tài khoản Proxy",
+            pageTitle: "Danh sách tài khoản Proxy",
+            element: <AppealedProxyListPage />,
+            icon: Users,
+            showInSidebar: true,
+            roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MEMBER_AFF, Role.ACCOUNTING],
+          },
+        ],
+      },
+      {
+        path: urls.user,
+        title: "Tài khoản hệ thống",
+        pageTitle: "Danh sách tài khoản hệ thống",
+        element: <UserListPage />,
+        icon: Users,
+        showInSidebar: true,
+        roles: [Role.ADMIN],
+      },
+      {
+        path: urls.project,
+        title: "Danh sách dự án",
+        pageTitle: "Danh sách dự án",
+        element: <ProjectListPage />,
+        icon: FolderKanban,
+        showInSidebar: true,
+        roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
+      },
+      {
+        title: "Quản lý Master Data",
+        icon: Mail,
+        showInSidebar: true,
+        isGroup: true,
+        roles: [Role.ADMIN],
+        children: [
+          {
             path: urls.gmailStatus,
             title: "Trạng thái Gmail",
             pageTitle: "Danh sách trạng thái Gmail",
@@ -167,25 +183,6 @@ export const appRoutes: AppRoute[] = [
             icon: MailCheck,
             showInSidebar: true,
             roles: [Role.ADMIN],
-          },
-        ],
-      },
-
-      {
-        title: "Dự án",
-        icon: FolderKanban,
-        showInSidebar: true,
-        isGroup: true,
-        roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
-        children: [
-          {
-            path: urls.project,
-            title: "Danh sách dự án",
-            pageTitle: "Danh sách dự án",
-            element: <ProjectListPage />,
-            icon: FolderKanban,
-            showInSidebar: true,
-            roles: [Role.ADMIN, Role.MANAGER_AFF, Role.MANAGER_AGENCY, Role.MEMBER_AFF, Role.MEMBER_AGENCY, Role.ACCOUNTING],
           },
           {
             path: urls.projectType,

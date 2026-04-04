@@ -21,4 +21,5 @@ export const urls = {
   appealAccount: "appeal-accounts",
   projectDailyReport: "project-daily-reports",
   updateProfile: "update-profile",
+  appealedProxy: "appealed-proxies",
 } as const;

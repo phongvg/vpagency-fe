@@ -9,8 +9,9 @@ export const useUpdateAppealAccount = () => {
 
   return useMutation({
     mutationFn: (data: { id: string; payload: UpdateAppealAccountRequest }) => appealAccountApi.updateAppealAccount(data.id, data.payload),
-    onSuccess: (res) => {
+    onSuccess: (res, variables) => {
       queryClient.invalidateQueries({ queryKey: appealAccountQueryKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: appealAccountQueryKeys.detail(variables.id) });
       toast.success(res.message);
     },
   });
