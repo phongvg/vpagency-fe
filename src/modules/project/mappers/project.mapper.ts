@@ -14,6 +14,7 @@ export const transformProjectToForm = (project?: Project | undefined): ProjectFo
   content: project?.content ?? null,
   deadline: project?.deadline ? new Date(project.deadline) : null,
   startedAt: project?.startedAt ? new Date(project.startedAt) : null,
+  devices: project?.devices ?? [],
 });
 
 export const transformFormToProject = (form: ProjectFormType): UpdateProjectRequest => ({
@@ -29,4 +30,5 @@ export const transformFormToProject = (form: ProjectFormType): UpdateProjectRequ
   content: form.content,
   deadline: form.deadline,
   startedAt: form.startedAt,
+  devices: form.devices,
 });

@@ -18,6 +18,7 @@ export const projectFormSchema = z.object({
   description: z.string().nullable(),
   note: z.string().nullable(),
   content: z.string().nullable(),
+  devices: z.array(z.string()).nullable(),
   deadline: z.date().nullable(),
   startedAt: z.date().nullable(),
 });

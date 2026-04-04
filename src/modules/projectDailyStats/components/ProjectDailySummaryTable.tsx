@@ -96,6 +96,7 @@ export default function ProjectDailySummaryTable({ summary, loading }: ProjectDa
         pageSize={summary.length}
         rowIdKey='projectId'
         enableRowSelection
+        isScrollVertical
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
         enableColumnVisibility

@@ -22,20 +22,20 @@ export const projectDailyMetricsConfig: MetricCardConfig[] = [
     label: "Tổng chi tiêu",
     format: (v) => formatDollarAmount(v),
     icon: DollarSign,
-    color: "text-red-500",
+    color: "text-red-700",
   },
   {
     key: "totalClicks",
     label: "Tổng lượt click",
     icon: MousePointerClick,
-    color: "text-blue-500",
+    color: "text-blue-700",
   },
   {
     key: "avgCpc",
     label: "CPC trung bình",
     format: (v) => formatDollarAmount(v),
     icon: TrendingUp,
-    color: "text-purple-500",
+    color: "text-purple-700",
   },
   {
     key: "totalProfit",
@@ -82,7 +82,7 @@ export const projectDailyMetricsConfig: MetricCardConfig[] = [
     format: (v) => formatDollarAmount(v),
     allowedRoles: [Role.ADMIN, Role.ACCOUNTING],
     icon: Calculator,
-    color: "text-pink-500",
+    color: "text-pink-800",
   },
   {
     key: "avgRateRefPerClick",
@@ -105,7 +105,7 @@ export const projectDailyMetricsConfig: MetricCardConfig[] = [
     format: (v) => formatDollarAmount(v),
     allowedRoles: [Role.ADMIN, Role.ACCOUNTING],
     icon: Calculator,
-    color: "text-rose-500",
+    color: "text-rose-700",
   },
   {
     key: "avgRateFtdPerRef",
@@ -113,7 +113,7 @@ export const projectDailyMetricsConfig: MetricCardConfig[] = [
     format: (v) => `${fixedNumber(v)}%`,
     allowedRoles: [Role.ADMIN, Role.ACCOUNTING],
     icon: Percent,
-    color: "text-violet-500",
+    color: "text-violet-700",
   },
   {
     key: "totalTargetDailyKeyVolume",

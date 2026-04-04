@@ -3,6 +3,7 @@ import { projectStatusApi } from "@/modules/projectStatus/api/projectStatus.api"
 import type { ProjectStatus } from "@/modules/projectStatus/types/projectStatus.type";
 import { projectTypeApi } from "@/modules/projectType/api/projectType.api";
 import type { ProjectType } from "@/modules/projectType/types/projectType.type";
+import { FormArrayInput } from "@/shared/components/form/FormArrayInput";
 import { FormAsyncSelect } from "@/shared/components/form/FormAsyncSelect";
 import { FormDatePicker } from "@/shared/components/form/FormDatePicker";
 import { FormInput } from "@/shared/components/form/FormInput";
@@ -54,6 +55,8 @@ export default function ProjectForm() {
       <FormSelect name='gender' label='Giới tính' options={gendersOptions} />
 
       <FormSelect name='ageRange' label='Độ tuổi' options={ageRangeOptions} isMulti />
+
+      <FormArrayInput name='devices' label='Thiết bị' />
     </div>
   );
 }

@@ -57,4 +57,5 @@ export type UpdateProjectRequest = {
   content: string | null;
   deadline: Date | null;
   startedAt: Date | null;
+  devices: string[] | null;
 };
