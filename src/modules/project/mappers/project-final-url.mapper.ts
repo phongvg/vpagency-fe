@@ -18,6 +18,7 @@ export const transformProjectToFinalUrlForm = (projectFinalUrl?: FinalUrl | unde
   targetCpc: projectFinalUrl?.targetCpc ?? null,
   budget: projectFinalUrl?.budget ?? null,
   suggestedBid: projectFinalUrl?.suggestedBid ?? null,
+  device: projectFinalUrl?.device ? projectFinalUrl.device.map((device) => device) : null,
 });
 
 export const transformFormToFinalUrl = (formData: ProjectFinalUrlFormType, projectId: string): UpdateFinalUrlRequest => ({
@@ -38,4 +39,5 @@ export const transformFormToFinalUrl = (formData: ProjectFinalUrlFormType, proje
   targetCpc: formData.targetCpc,
   budget: formData.budget,
   suggestedBid: formData.suggestedBid,
+  device: formData.device ? formData.device.map((device) => device) : [],
 });

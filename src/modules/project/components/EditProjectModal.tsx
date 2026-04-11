@@ -99,10 +99,8 @@ export default function EditProjectModal({ open, onClose, projectId }: EditProje
       );
     } else {
       await createProject.mutateAsync(transformFormToProject(values), {
-        onSuccess: (res) => {
-          const { id } = res.data;
-          setProjectIdState(id);
-          setTabValue(TABS[1].value);
+        onSuccess: () => {
+          onClose();
         },
       });
     }
@@ -121,7 +119,7 @@ export default function EditProjectModal({ open, onClose, projectId }: EditProje
               <div className='flex items-center pb-2'>
                 <button
                   type='button'
-                  className={cn(tabValue === TABS[0].value && "!text-primary border-primary", "border-b-2 px-2 pb-1 text-white/50")}
+                  className={cn(tabValue === TABS[0].value && "text-primary border-primary", "border-b-2 px-2 pb-1")}
                   onClick={() => setTabValue(TABS[0].value)}>
                   {TABS[0].label}
                 </button>
@@ -129,7 +127,7 @@ export default function EditProjectModal({ open, onClose, projectId }: EditProje
                 {projectIdState && (
                   <button
                     type='button'
-                    className={cn(tabValue === TABS[1].value && "!text-primary border-primary", "border-b-2 px-2 pb-1 text-white/50")}
+                    className={cn(tabValue === TABS[1].value && "text-primary border-primary", "border-b-2 px-2 pb-1")}
                     onClick={() => setTabValue(TABS[1].value)}>
                     {TABS[1].label}
                   </button>
@@ -139,7 +137,7 @@ export default function EditProjectModal({ open, onClose, projectId }: EditProje
               {tabValue === TABS[0].value && <ProjectForm />}
 
               {tabValue === TABS[1].value && (
-                <div className='space-y-2'>
+                <div className='space-y-4'>
                   <AppButton type='button' size='sm' variant='outline' onClick={() => handleEditFinalUrl(null)}>
                     <CirclePlus />
                     Thêm mới

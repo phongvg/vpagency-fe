@@ -126,6 +126,23 @@ export const finalUrlColumnConfig = (onCopy: (text: string) => void): ColumnDef<
     },
   },
   {
+    header: "Thiết bị",
+    accessorKey: "device",
+    cell: (props) => {
+      const device = props.row.original.device ?? [];
+      if (device.length === 0) return null;
+
+      return (
+        <div className='flex items-center gap-2'>
+          <ListTooltip data={device.map((l) => ({ name: l }))} columns={[{ key: "name", label: "Thiết bị" }]} />
+          <button type='button' title='Sao chép' onClick={() => onCopy(device.join("\n"))}>
+            <Copy size={12} />
+          </button>
+        </div>
+      );
+    },
+  },
+  {
     header: "Mục tiêu Ref",
     accessorKey: "targetRef",
     cell: (props) => <span className='font-semibold text-purple-600 dark:text-purple-400'>{props.row.original.targetRef}</span>,

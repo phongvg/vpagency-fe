@@ -17,6 +17,7 @@ export const projectFinalUrlFormSchema = z.object({
   targetCpc: z.number().nullable(),
   budget: z.number().nullable(),
   suggestedBid: z.number().nullable(),
+  device: z.array(z.string()).nullable(),
 });
 
 export type ProjectFinalUrlFormType = z.infer<typeof projectFinalUrlFormSchema>;

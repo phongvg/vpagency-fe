@@ -161,7 +161,7 @@ export const appRoutes: AppRoute[] = [
       },
       {
         path: urls.project,
-        title: "Danh sách dự án",
+        title: "Quản lý dự án",
         pageTitle: "Danh sách dự án",
         element: <ProjectListPage />,
         icon: FolderKanban,

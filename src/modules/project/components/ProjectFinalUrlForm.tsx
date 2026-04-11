@@ -36,6 +36,8 @@ export default function ProjectFinalUrlForm() {
       <FormPriceInput name='budget' label='Ngân sách' />
 
       <FormPriceInput name='suggestedBid' label='Giá thầu đề xuất' />
+
+      <FormArrayInput name='device' label='Thiết bị' />
     </div>
   );
 }

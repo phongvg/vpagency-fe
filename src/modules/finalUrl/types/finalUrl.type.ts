@@ -26,6 +26,7 @@ export type FinalUrl = {
   createdAt: string | Date;
   updatedAt: string | Date;
   project: Project;
+  device: string[];
 };
 
 export type FinalURLGroup = {
@@ -53,4 +54,5 @@ export type UpdateFinalUrlRequest = {
   targetCpc?: number | null;
   budget?: number | null;
   suggestedBid?: number | null;
+  device?: string[] | null;
 };
