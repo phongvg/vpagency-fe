@@ -1,7 +1,6 @@
 import type { Project } from "@/modules/project/types/project.type";
 import BadgeStatus from "@/shared/components/BadgeStatus";
 import AppButton from "@/shared/components/common/AppButton";
-import UserAvatar from "@/shared/components/UserAvatar";
 import type { ColumnDef } from "@tanstack/react-table";
 import { SquarePen, Trash2 } from "lucide-react";
 
@@ -27,8 +26,8 @@ export const projectColumnConfig = (handlers: ProjectColumnHandlers): ColumnDef<
   },
   {
     header: "Người phụ trách",
-    accessorKey: "owner.username",
-    cell: (props) => <UserAvatar data={props.row.original.owner} />,
+    accessorKey: "owner.firstName",
+    cell: (props) => `${props.row.original.owner?.firstName} ${props.row.original.owner?.lastName}`,
   },
   {
     header: "Trạng thái",
