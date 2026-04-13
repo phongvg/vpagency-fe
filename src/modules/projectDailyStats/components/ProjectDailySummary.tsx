@@ -4,8 +4,9 @@ import { useProjectDailyStatsSummary } from "@/modules/projectDailyStats/hooks/u
 import type { ProjectDailyStatsListParams } from "@/modules/projectDailyStats/types/projectDailyStats.type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { DEFAULT_PAGE_SIZE } from "@/shared/constants/pageSize.constant";
+import { useDebounce } from "@/shared/hooks/useDebounce";
 import { formatDate, getMonth, startOfMonth } from "date-fns";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function ProjectDailySummary() {
   const [params, setParams] = useState<ProjectDailyStatsListParams>({
@@ -21,7 +22,13 @@ export default function ProjectDailySummary() {
 
   const month = useMemo(() => getMonth(new Date()) + 1, []);
 
+  const debounceSearch = useDebounce(searchInput, 500);
+
   const { data: projectDailyStatsSummary, isLoading } = useProjectDailyStatsSummary(params);
+
+  useEffect(() => {
+    setParams((prev) => ({ ...prev, projectName: debounceSearch, page: 1 }));
+  }, [debounceSearch]);
 
   return (
     <div className='space-y-4'>
